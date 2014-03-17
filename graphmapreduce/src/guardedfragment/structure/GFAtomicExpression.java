@@ -98,7 +98,6 @@ public class GFAtomicExpression implements GFExpression {
 				if (!variables[i].equals(aex.variables[i]))
 					return false;
 			}
-			System.out.println("ok!");
 			return true;
 
 		}
