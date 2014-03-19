@@ -18,7 +18,7 @@ public class GuardedFragmentExample {
 		GFAtomicExpression T = new GFAtomicExpression("T","y1","y2");
 		GFAtomicExpression U = new GFAtomicExpression("U","y2","y3");
 		GFAtomicExpression V = new GFAtomicExpression("V","y3","x2");
-		GFAtomicExpression W = new GFAtomicExpression("W","x2","y2");
+		GFAtomicExpression W = new GFAtomicExpression("W","x2","y1");
 		
 		GFNotExpression NotT = new GFNotExpression(T);
 		GFNotExpression NotV = new GFNotExpression(V);
