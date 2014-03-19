@@ -50,7 +50,6 @@ public class GFAtomicExpression implements GFExpression {
 
 	@Override
 	public String generateString() {
-		// TODO Auto-generated method stub
 		return relation + "(" + generateVarString() + ")";
 	}
 
@@ -80,7 +79,6 @@ public class GFAtomicExpression implements GFExpression {
 	
 	@Override
 	public int hashCode() {
-		// TODO Auto-generated method stub
 		return relation.hashCode() + variables.length;
 	}
 
