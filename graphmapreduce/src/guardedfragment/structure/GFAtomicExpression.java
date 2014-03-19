@@ -52,6 +52,10 @@ public class GFAtomicExpression implements GFExpression {
 	public String generateString() {
 		return relation + "(" + generateVarString() + ")";
 	}
+	
+	public int noVariables() {
+		return variables.length;
+	}
 
 	private String generateVarString() {
 		String list = "";
