@@ -11,7 +11,7 @@ public class GFAndExpression implements GFExpression{
 	GFExpression child1;
 	GFExpression child2;
 	
-	char operatorSymbol;
+	char operatorSymbol; /**/
 	
 	/**
 	 * An AND-expression in the Guarded Fragment.
