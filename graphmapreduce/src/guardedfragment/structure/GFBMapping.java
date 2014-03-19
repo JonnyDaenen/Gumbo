@@ -2,7 +2,6 @@ package guardedfragment.structure;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import guardedfragment.booleanstructure.BVariable;
 
 

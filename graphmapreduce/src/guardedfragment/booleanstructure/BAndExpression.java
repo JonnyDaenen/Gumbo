@@ -2,11 +2,8 @@ package guardedfragment.booleanstructure;
 
 public class BAndExpression implements BExpression{
 	
-	
 	BExpression child1;
 	BExpression child2;
-	
-	char operatorSymbol;
 	
 	/**
 	 * An AND-expression in the Guarded Fragment.
@@ -16,8 +13,6 @@ public class BAndExpression implements BExpression{
 	public BAndExpression(BExpression c1, BExpression c2) {
 		child1 = c1;
 		child2 = c2;
-		
-		operatorSymbol = '&';
 	}
 
 	
@@ -34,16 +29,9 @@ public class BAndExpression implements BExpression{
 
 	@Override
 	public String generateString() {
-		return "(" + child1.generateString() + " " + operatorSymbol + " " + child2.generateString() + ")";
+		return "(" + child1.generateString() + " && " + child2.generateString() + ")";
 	}
 
 
-//	@Override
-//	public Set<String> getFreeVariables() {
-//		Set<String> freeVars = child1.getFreeVariables();
-//		freeVars.addAll(child2.getFreeVariables());
-//		
-//		return freeVars;
-//	}
 
 }
