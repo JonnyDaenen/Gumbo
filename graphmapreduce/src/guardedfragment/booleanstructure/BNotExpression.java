@@ -1,6 +1,5 @@
 package guardedfragment.booleanstructure;
 
-import java.util.Set;
 
 public class BNotExpression implements BExpression{
 
