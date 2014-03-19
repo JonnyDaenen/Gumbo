@@ -1,7 +1,5 @@
 package guardedfragment.booleanstructure;
 
-import java.util.Set;
-
 public class BVariable implements BExpression {
 	
 	int id;

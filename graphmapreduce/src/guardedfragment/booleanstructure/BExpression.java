@@ -1,8 +1,5 @@
 package guardedfragment.booleanstructure;
 
-import guardedfragment.structure.GFEvaluationContext;
-
-import java.util.Set;
 
 public interface BExpression {
 	

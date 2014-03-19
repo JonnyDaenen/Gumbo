@@ -1,6 +1,5 @@
 package guardedfragment.structure;
 
-import guardedfragment.booleanstructure.BAndExpression;
 import guardedfragment.booleanstructure.BExpression;
 import guardedfragment.booleanstructure.BVariable;
 

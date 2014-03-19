@@ -3,8 +3,6 @@ package guardedfragment.structure;
 import guardedfragment.booleanstructure.BAndExpression;
 import guardedfragment.booleanstructure.BExpression;
 
-import java.util.Set;
-
 public class GFOrExpression extends GFAndExpression{
 
 	
