@@ -1,4 +1,4 @@
-package guardedfragment;
+package guardedfragment.structure;
 
 public class KeyValuePair {
 	

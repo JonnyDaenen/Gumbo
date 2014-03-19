@@ -1,13 +1,19 @@
 package guardedfragment.structure;
 
 import guardedfragment.booleanstructure.BExpression;
+
 import java.util.HashMap;
 
 public class GuardedFragmentExample {
 
 	public static void main(String[] args) {
 		
-		testing2();
+		//testing2();
+		
+		String s = new String("relation(1,4,asb,edt)");
+		
+		MyTuple t = new MyTuple(s);
+		
 		
 	}
 	
