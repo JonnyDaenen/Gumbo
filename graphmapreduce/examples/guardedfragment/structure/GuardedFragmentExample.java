@@ -30,7 +30,7 @@ public class GuardedFragmentExample {
 		GFAndExpression AndSTUV = new GFAndExpression(AndST,OrUV);
 		GFAndExpression STUVW = new GFAndExpression(AndSTUV,NotW);
 		
-		MyMapper mymapper = new MyMapper(R,STUVW);
+		FirstMapper mymapper = new FirstMapper(R,STUVW);
 		
 		Set<KeyValuePair> p = mymapper.getKeyValuePair(new String("Relation(1,4,oe,950,938)"));
 		KeyValuePair[] arrayp = p.toArray(new KeyValuePair[0]);

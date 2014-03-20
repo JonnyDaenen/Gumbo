@@ -5,14 +5,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public class MyMapper {
+public class FirstMapper {
 	
 	GFAtomicExpression guard;
 	GFExpression child;
 	
 	private GFAtomicExpression[] arrayAllAtoms;
 	
-	public MyMapper(GFAtomicExpression g, GFExpression f) {
+	public FirstMapper(GFAtomicExpression g, GFExpression f) {
 		guard = g;
 		child = f;
 		Set<GFAtomicExpression> setAllAtoms = child.getAtomic();
