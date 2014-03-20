@@ -3,6 +3,7 @@ package guardedfragment.structure;
 import guardedfragment.booleanstructure.BExpression;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class GuardedFragmentExample {
 
@@ -10,9 +11,14 @@ public class GuardedFragmentExample {
 		
 		//testing2();
 		
-		String s = new String("relation(1,4,asb,edt)");
+		String s = new String("relation(1,4,6,for,asb,edt)");
 		
 		MyTuple t = new MyTuple(s);
+			
+		GFAtomicExpression R = new GFAtomicExpression("relation","x1","x2","x1","y1","y2","y3");
+		
+		System.out.println(t.belongsTo(R));
+		
 		
 		
 	}

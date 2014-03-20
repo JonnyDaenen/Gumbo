@@ -27,5 +27,27 @@ public class MyTuple {
 		
 	}
 	
+	public boolean belongsTo(GFAtomicExpression R) {
+		
+		String Rname = R.getName();
+		String[] vars = R.getVars();
+		
+		if (! name.equals(Rname)) {
+			return false;
+		}
+		
+		if (vars.length != data.length) {
+			return false;
+		}
+		for(int i = 0; i < data.length ;i++){
+			for(int j = i+1; j < data.length;j++) {
+				if (vars[i].equals(vars[j]) && !data[i].equals(data[j])) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
 
 }

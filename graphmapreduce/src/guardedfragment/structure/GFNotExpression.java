@@ -31,6 +31,11 @@ public class GFNotExpression implements GFExpression{
 	}
 	
 	
+	public Set<GFExpression> getAtomic() {
+		Set<GFExpression> allAtoms = child.getAtomic();
+		return allAtoms;
+	}
+	
 	@Override
 	public Set<String> getFreeVariables() {
 		Set<String> freeVars = child.getFreeVariables();

@@ -36,6 +36,14 @@ public class GFAtomicExpression implements GFExpression {
 
 		return c.lookupTuple(relation, values);
 	}
+	
+	public String getName() {
+		return relation;
+	}
+	
+	public String[] getVars() {
+		return variables;
+	}
 
 	@Override
 	/**
@@ -46,6 +54,12 @@ public class GFAtomicExpression implements GFExpression {
 		Set<String> freevars = new HashSet<String>(varlist);
 
 		return freevars;
+	}
+	
+	public Set<GFExpression> getAtomic() {
+		Set<GFExpression> atom = new HashSet<GFExpression>();
+		atom.add(this);
+		return atom;
 	}
 
 	@Override

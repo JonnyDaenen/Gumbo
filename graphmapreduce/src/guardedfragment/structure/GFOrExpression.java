@@ -5,7 +5,7 @@ import guardedfragment.booleanstructure.BExpression;
 
 public class GFOrExpression extends GFAndExpression{
 
-	
+
 	/**
 	 * An OR-expression in the Guarded Fragment.
 	 * @param c1 first child
@@ -13,7 +13,6 @@ public class GFOrExpression extends GFAndExpression{
 	 */
 	public GFOrExpression(GFExpression c1, GFExpression c2) {
 		super(c1,c2);
-		operatorSymbol = '|';
 	}
 	
 	

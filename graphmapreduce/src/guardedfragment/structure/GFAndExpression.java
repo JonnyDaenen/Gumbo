@@ -4,15 +4,14 @@ import guardedfragment.booleanstructure.BAndExpression;
 import guardedfragment.booleanstructure.BExpression;
 
 import java.util.Set;
+import java.util.HashSet;
 
 public class GFAndExpression implements GFExpression{
 	
 	
 	GFExpression child1;
 	GFExpression child2;
-	
-	char operatorSymbol; /**/
-	
+		
 	/**
 	 * An AND-expression in the Guarded Fragment.
 	 * @param c1 first child
@@ -21,8 +20,6 @@ public class GFAndExpression implements GFExpression{
 	public GFAndExpression(GFExpression c1, GFExpression c2) {
 		child1 = c1;
 		child2 = c2;
-		
-		operatorSymbol = '&';
 	}
 
 	
@@ -45,10 +42,16 @@ public class GFAndExpression implements GFExpression{
 		return freeVars;
 	}
 
+	public Set<GFExpression> getAtomic() {
+		Set<GFExpression> allAtoms = child1.getAtomic();
+		allAtoms.addAll(child2.getAtomic());
+		
+		return allAtoms;
+	}
 
 	@Override
 	public String generateString() {
-		return "(" + child1.generateString() + " " + operatorSymbol + " " + child2.generateString() + ")";
+		return "(" + child1.generateString() + " & " + child2.generateString() + ")";
 	}
 
 

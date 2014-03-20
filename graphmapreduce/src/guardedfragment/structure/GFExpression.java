@@ -29,6 +29,10 @@ public interface GFExpression {
 	 */
 	boolean isGuarded();
 	
+	/* return the set of all atomic formulae */
+	Set<GFExpression> getAtomic();
+	
+	
 	
 	/**
 	 * Checks whether the subformula is a boolean combination of atomic expressions.

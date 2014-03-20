@@ -30,6 +30,10 @@ public class GFExistentialExpression implements GFExpression {
 	}
 
 
+	public Set<GFExpression> getAtomic() {
+		Set<GFExpression> atom = new HashSet<GFExpression>();
+		return atom; // TODO
+	}
 
 	@Override
 	/**
