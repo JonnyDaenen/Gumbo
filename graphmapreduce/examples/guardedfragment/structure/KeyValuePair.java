@@ -18,4 +18,8 @@ public class KeyValuePair {
 		return myvalue;
 	}
 
+	public void printPair() {
+		System.out.println(mykey + " : " + myvalue);
+	}
+	
 }

@@ -22,7 +22,6 @@ public class MyTuple {
 		//System.out.println(f.toString());
 		
 		for(int i =0; i < f.size(); i++){
-			System.out.println(f.get(i) + " ");
 			s = s+","+data[f.get(i)];
 		}
 		return newname + "(" + s.substring(1) + ")";

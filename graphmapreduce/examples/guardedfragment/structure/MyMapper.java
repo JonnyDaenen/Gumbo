@@ -42,9 +42,7 @@ public class MyMapper {
 		String tkey = new String();
 		for (int i =0; i < arrayAllAtoms.length;i++) {
 			f = getVariableMapping(guard,arrayAllAtoms[i]);
-			System.out.println(arrayAllAtoms[i].generateString());
 			tkey = t.getData(arrayAllAtoms[i].relation, f);
-			System.out.println(tkey);
 			p.add(new KeyValuePair(tkey,t.generateString()));
 		}
 		return p;
