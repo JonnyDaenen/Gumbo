@@ -30,7 +30,7 @@ public interface GFExpression {
 	boolean isGuarded();
 	
 	/* return the set of all atomic formulae */
-	Set<GFExpression> getAtomic();
+	Set<GFAtomicExpression> getAtomic();
 	
 	
 	

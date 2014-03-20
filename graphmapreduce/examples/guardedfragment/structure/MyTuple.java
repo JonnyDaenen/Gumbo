@@ -16,15 +16,25 @@ public class MyTuple {
 		}
 	}
 	
-	public String[] getData(HashMap<Integer,Integer> f){
-		String[] s = new String[f.size()];
+	public String getData(String newname, HashMap<Integer,Integer> f){
+		String s = new String();
 		
 		for(int i =0; i < f.size(); i++){
-			s[i] = data[f.get(i)];
+			s = ","+data[f.get(i)];
 		}
 		
-		return s;
+		return newname + "(" + s.substring(1) + ")";
 		
+	}
+	
+	public String generateString() {
+		String t = new String();
+		
+		for(int i =0; i < data.length;i++) {
+			t = t+ "," + data[i];
+		}
+		
+		return name+ "(" + t.substring(1)+")";
 	}
 	
 	public boolean belongsTo(GFAtomicExpression R) {

@@ -42,8 +42,8 @@ public class GFAndExpression implements GFExpression{
 		return freeVars;
 	}
 
-	public Set<GFExpression> getAtomic() {
-		Set<GFExpression> allAtoms = child1.getAtomic();
+	public Set<GFAtomicExpression> getAtomic() {
+		Set<GFAtomicExpression> allAtoms = child1.getAtomic();
 		allAtoms.addAll(child2.getAtomic());
 		
 		return allAtoms;

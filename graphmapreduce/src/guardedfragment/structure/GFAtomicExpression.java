@@ -56,8 +56,8 @@ public class GFAtomicExpression implements GFExpression {
 		return freevars;
 	}
 	
-	public Set<GFExpression> getAtomic() {
-		Set<GFExpression> atom = new HashSet<GFExpression>();
+	public Set<GFAtomicExpression> getAtomic() {
+		Set<GFAtomicExpression> atom = new HashSet<GFAtomicExpression>();
 		atom.add(this);
 		return atom;
 	}

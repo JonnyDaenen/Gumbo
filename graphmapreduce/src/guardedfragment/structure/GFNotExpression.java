@@ -31,8 +31,8 @@ public class GFNotExpression implements GFExpression{
 	}
 	
 	
-	public Set<GFExpression> getAtomic() {
-		Set<GFExpression> allAtoms = child.getAtomic();
+	public Set<GFAtomicExpression> getAtomic() {
+		Set<GFAtomicExpression> allAtoms = child.getAtomic();
 		return allAtoms;
 	}
 	
