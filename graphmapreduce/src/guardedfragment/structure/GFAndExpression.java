@@ -4,7 +4,6 @@ import guardedfragment.booleanstructure.BAndExpression;
 import guardedfragment.booleanstructure.BExpression;
 
 import java.util.Set;
-import java.util.HashSet;
 
 public class GFAndExpression implements GFExpression{
 	

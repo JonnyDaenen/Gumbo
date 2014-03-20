@@ -1,9 +1,5 @@
 package guardedfragment.structure;
 
-import guardedfragment.booleanstructure.BExpression;
-
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 
 public class GuardedFragmentExample {
@@ -61,7 +57,7 @@ public class GuardedFragmentExample {
 	
 
 	
-	private static void testing1() {
+/*	private static void testing1() {
 
 		GFAtomicExpression R = new GFAtomicExpression("R","x1","x2","y1","y2","y3");
 		GFAtomicExpression S = new GFAtomicExpression("S","x1","y1");
@@ -104,7 +100,7 @@ public class GuardedFragmentExample {
 		BExpression bex = gfe2.convertToBExpression(m);
 		return bex;
 	} 
-	
+*/	
 	
 
 }
