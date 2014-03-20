@@ -46,7 +46,7 @@ public class GuardedFragmentExample {
 		
 		MyMapper mymapper = new MyMapper(R,STUVW);
 		
-		Set<KeyValuePair> p = mymapper.getKeyValuePair(new String("S(1,4)"));
+		Set<KeyValuePair> p = mymapper.getKeyValuePair(new String("Relation(1,4,oe,950,938)"));
 		KeyValuePair[] arrayp = p.toArray(new KeyValuePair[0]);
 		
 		for(int i=0;i< arrayp.length;i++) {
