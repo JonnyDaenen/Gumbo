@@ -1,5 +1,7 @@
 package guardedfragment.structure;
 
+import guardedfragment.data.RelationSchema;
+
 import java.util.HashMap;
 
 public class MyTuple {
@@ -14,6 +16,11 @@ public class MyTuple {
 		for(int i=0;i< t.length-1;i++){
 			data[i]=t[i+1];
 		}
+	}
+	
+	public MyTuple(String name, String ... data) {
+		this.name = name;
+		this.data = data;
 	}
 	
 	public String getData(String newname, HashMap<Integer,Integer> f){
@@ -58,6 +65,30 @@ public class MyTuple {
 			}
 		}
 		return true;
+	}
+	
+	public String get(int i ) {
+		return data[i];
+	}
+	
+	public int size() {
+		return data.length;
+	}
+	
+	/**
+	 * Checks whether a tuple satisfies a given relation schema.
+	 * Check is done on number of fields and on relation name.
+	 * 
+	 * @param s a schema
+	 * @return true when the tuple satisfies the schema, false otherwise
+	 */
+	public boolean satisfiesSchema(RelationSchema s) {
+		return data.length == s.getNumFields() && (s.getName().equals(this.name));
+		
+	}
+	
+	public RelationSchema extractSchema() {
+		return new RelationSchema(name, data.length);
 	}
 	
 

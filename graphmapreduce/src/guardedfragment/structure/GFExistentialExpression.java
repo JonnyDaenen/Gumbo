@@ -106,4 +106,9 @@ public class GFExistentialExpression implements GFExpression {
 		throw new GFConversionException("It's not possible to convert formulas that are not a boolean combination of atomic formula's.");
 	}
 	
+	
+	public GFExpression getChild() {
+		return child;
+	}
+	
 }
