@@ -1,8 +1,8 @@
 package guardedfragment.mapreduce.mappers;
 
+import guardedfragment.data.Tuple;
 import guardedfragment.data.Projection;
 import guardedfragment.data.RelationSchema;
-import guardedfragment.structure.MyTuple;
 
 import java.io.IOException;
 import java.util.Map;
@@ -12,13 +12,28 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class ProjectionMapper extends Mapper<LongWritable, Text, Text, Text> {
+/** 
+ * Phase: Basic Guarded - Phase 1 Mapper
+ * 
+ * Input: set of relations Si and one guarded relation R
+ * Output: key:val where key is each value in Si, and the value is either the value of Si, or the value of R
+ * 
+ * For each Si, each value is always output. For a tuple R(a',b'), Si(a,b) : R(a',b') is output when the following holds:
+ * - R(x',y') is the guard
+ * - Si(x,y) appears in the boolean combination
+ * - x subset x' and y subset y'
+ * - each value in {a,b} appears on the "correct" positions in R(a',b') (i.e. according to the equality type)
+ * 
+ * @author Jonny Daenen
+ *
+ */
+public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 	
 	Map<RelationSchema, Projection> projections;
 	boolean passNonMatches;
 	
 	
-	public ProjectionMapper(Map<RelationSchema, Projection> projections, boolean passNonMatches) {
+	public GuardedMapper(Map<RelationSchema, Projection> projections, boolean passNonMatches) {
 		super();
 		this.projections = projections;
 		this.passNonMatches = passNonMatches;
@@ -29,7 +44,7 @@ public class ProjectionMapper extends Mapper<LongWritable, Text, Text, Text> {
 			throws IOException, InterruptedException {
 		
 		// convert value to tuple
-		MyTuple t = new MyTuple(value.toString());
+		Tuple t = new Tuple(value.toString());
 		
 		RelationSchema s = t.extractSchema();
 		
@@ -40,7 +55,7 @@ public class ProjectionMapper extends Mapper<LongWritable, Text, Text, Text> {
 			Projection projection = projections.get(s);
 			
 			// extract relation from tuple
-			MyTuple newTuple = projection.project(t);
+			Tuple newTuple = projection.project(t);
 			
 			// lookup projection associated with relation
 			String newkey = newTuple.generateString();

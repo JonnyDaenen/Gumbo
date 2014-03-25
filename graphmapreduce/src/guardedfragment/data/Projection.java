@@ -4,8 +4,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import guardedfragment.structure.MyTuple;
-
 /**
  * A mapping between relations. Source and target relations are indicated, together with a mapping between them.
  * The mapping indicates for each position in the target relation where to extract it from the source relation.
@@ -53,7 +51,7 @@ public class Projection {
 	 *
 	 * @return a projection of a given source-tuple to the target relation
 	 */
-	public MyTuple project(MyTuple t) {
+	public Tuple project(Tuple t) {
 		
 		String [] s = new String[target.getNumFields()];
 		
@@ -62,7 +60,7 @@ public class Projection {
 			s[i] = t.get(mapping.get(i));
 		
 		// create a new tuple from the generated String
-		return new MyTuple(target.getName(),s);
+		return new Tuple(target.getName(),s);
 		
 	}
 	

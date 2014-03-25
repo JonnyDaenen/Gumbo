@@ -1,5 +1,7 @@
 package guardedfragment.structure;
 
+import guardedfragment.data.Tuple;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +22,7 @@ public class FirstMapper {
 	}
 	
 	public Set<KeyValuePair> getKeyValuePair(String s) {
-		MyTuple t = new MyTuple(s);
+		Tuple t = new Tuple(s);
 		
 		if (t.belongsTo(guard)) {
 			return getKeyValuePairByGuard(t);
@@ -28,14 +30,14 @@ public class FirstMapper {
 	
 		Set<KeyValuePair> p = new HashSet<KeyValuePair>();		
 		for (int i =0; i < arrayAllAtoms.length;i++) {
-			if (t.name.equals(arrayAllAtoms[i].relation)) {
+			if (t.getName().equals(arrayAllAtoms[i].relation)) {
 				p.add(new KeyValuePair(s,s));
 			}
 		}
 		return p;
 	}
 	
-	private Set<KeyValuePair> getKeyValuePairByGuard(MyTuple t) {
+	private Set<KeyValuePair> getKeyValuePairByGuard(Tuple t) {
 		Set<KeyValuePair> p = new HashSet<KeyValuePair>();		
 		
 		HashMap<Integer,Integer> f = new HashMap<Integer,Integer>();

@@ -1,15 +1,15 @@
-package guardedfragment.structure;
+package guardedfragment.data;
 
-import guardedfragment.data.RelationSchema;
+import guardedfragment.structure.GFAtomicExpression;
 
 import java.util.HashMap;
 
-public class MyTuple {
+public class Tuple {
 	
 	String name;
 	String[] data;
 	
-	public MyTuple(String s){
+	public Tuple(String s){
 		String[] t = s.split(new String("\\(|,|\\)"));
 		name = t[0];
 		data = new String[t.length-1];
@@ -18,7 +18,7 @@ public class MyTuple {
 		}
 	}
 	
-	public MyTuple(String name, String ... data) {
+	public Tuple(String name, String ... data) {
 		this.name = name;
 		this.data = data;
 	}
@@ -90,6 +90,10 @@ public class MyTuple {
 	public RelationSchema extractSchema() {
 		return new RelationSchema(name, data.length);
 	}
-	
+
+
+	public String getName() {
+		return name;
+	}
 
 }

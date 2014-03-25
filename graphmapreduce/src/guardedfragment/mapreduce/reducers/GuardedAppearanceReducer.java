@@ -1,7 +1,7 @@
 package guardedfragment.mapreduce.reducers;
 
+import guardedfragment.data.Tuple;
 import guardedfragment.data.RelationSchema;
-import guardedfragment.structure.MyTuple;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -12,21 +12,29 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 /**
- * Reducer that checks the set of each key for the presence of certain relations.
- * When all relations are found, the key is output together with one of the values in the set.
- * This value is indicated by a relation. 
- * TODO what if there are more the same tuples?
+ * Phase: Basic Guarded - Phase 1 Reducer
+ * 
+ * Input: Si(a,b) : set of tuples
+ * Output: Si(a,b);R(a',b') (note the semicolon!)
+ * 
+ * Configuration: Guarding relation R, Guarded relations Si
+ * 
+ * This reducer checks for each data tuple Si(a,b) whether:
+ * - it appears in R
+ * - it appears in Si
+ * 
+ * When this is the case, both existing tuples are output.
  * 
  * 
  * @author Jonny Daenen
  *
  */
-public class PresenceChecker extends Reducer<Text, Text, Text, Text>{
+public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text>{
 	
 	Set<RelationSchema> relations;
 	RelationSchema outputrelation;
 	
-	public PresenceChecker() {
+	public GuardedAppearanceReducer() {
 		// TODO
 	}
 	
@@ -36,13 +44,13 @@ public class PresenceChecker extends Reducer<Text, Text, Text, Text>{
 			throws IOException, InterruptedException {
 		
 		Set<RelationSchema> foundRelations = new HashSet<RelationSchema>();
-		Set<MyTuple> outputTuples = new HashSet<MyTuple>();
+		Set<Tuple> outputTuples = new HashSet<Tuple>();
 		
 		boolean allRelationsFound = false;
 		
 		// Record presence of all required relations
 		for (Text value : values) {
-			MyTuple t = new MyTuple(value.toString());
+			Tuple t = new Tuple(value.toString());
 			
 			if (t.satisfiesSchema(outputrelation))
 				outputTuples.add(t);
@@ -56,7 +64,7 @@ public class PresenceChecker extends Reducer<Text, Text, Text, Text>{
 		
 		// if all relations are found 
 		if(foundRelations.size() == relations.size())
-			for (MyTuple t : outputTuples) {
+			for (Tuple t : outputTuples) {
 				String value = t.generateString();
 				context.write(key, new Text(value));
 			}
