@@ -56,9 +56,12 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text>{
 		for (Text value : values) {
 			Tuple t = new Tuple(value.toString());
 			
+			// check if it is the guarded schema
 			if (t.satisfiesSchema(guardedSchema))
 				guardedFound = true;
 			
+			// check if it is the guard schema (if so, keep track of it)
+			// FIXME what with multiple guard tuples? -> output all?
 			if (t.satisfiesSchema(guardSchema)) {
 				guardFound = true;
 				guardTuple = t;
