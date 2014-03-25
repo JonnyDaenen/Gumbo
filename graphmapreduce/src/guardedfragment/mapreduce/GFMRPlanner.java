@@ -1,31 +1,22 @@
 package guardedfragment.mapreduce;
 
+import guardedfragment.mapreduce.mappers.GuardedBooleanMapper;
+import guardedfragment.mapreduce.mappers.GuardedMapper;
+import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
+import guardedfragment.mapreduce.reducers.GuardedProjectionReducer;
+import guardedfragment.structure.GFExistentialExpression;
+import guardedfragment.structure.GFExpression;
+
 import java.io.IOException;
 
 import mapreduce.MRPlan;
-import mapreduce.maxtemp.IdentityMapper;
-import mapreduce.maxtemp.IdentityReducer;
 
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
-
-import guardedfragment.mapreduce.jobs.BooleanMRJob;
-import guardedfragment.mapreduce.jobs.MRJob;
-import guardedfragment.mapreduce.mappers.GuardedBooleanMapper;
-import guardedfragment.mapreduce.mappers.GuardedMapper;
-import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
-import guardedfragment.mapreduce.reducers.GuardedProjectionReducer;
-import guardedfragment.structure.GFAndExpression;
-import guardedfragment.structure.GFExistentialExpression;
-import guardedfragment.structure.GFExpression;
-import guardedfragment.structure.GFNotExpression;
-import guardedfragment.structure.GFOrExpression;
 
 /**
  * Converter from a GF expression to a Map-reduce ControlledJob (hadoop). For
