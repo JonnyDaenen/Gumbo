@@ -16,7 +16,7 @@ import org.apache.hadoop.mapreduce.Reducer;
  * Input: Si(a,b) : set of tuples
  * Output: Si(a,b);R(a',b') (note the semicolon!)
  * 
- * Configuration: Guarding relation R, Guarded relations Si
+ * Configuration: Guarding relation R (guarded relation is determined from the key)
  * 
  * This reducer checks for each data tuple Si(a,b) whether:
  * - it appears in R
@@ -30,11 +30,11 @@ import org.apache.hadoop.mapreduce.Reducer;
  */
 public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text>{
 	
-	Set<RelationSchema> relations;
-	RelationSchema outputrelation;
+	RelationSchema guardSchema;
 	
-	public GuardedAppearanceReducer() {
-		// TODO
+
+	public GuardedAppearanceReducer(RelationSchema guardSchema) {
+		this.guardSchema = guardSchema;
 	}
 	
 
@@ -42,31 +42,36 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text>{
 	protected void reduce(Text key, Iterable<Text> values, Context context)
 			throws IOException, InterruptedException {
 		
-		Set<RelationSchema> foundRelations = new HashSet<RelationSchema>();
-		Set<Tuple> outputTuples = new HashSet<Tuple>();
+		boolean guardFound = false;
+		boolean guardedFound = false;
 		
-		boolean allRelationsFound = false;
+		Tuple guardTuple = null;
+		Tuple guardedTuple;
 		
-		// Record presence of all required relations
+		// determine guarded tuple and schema
+		guardedTuple = new Tuple(key.toString());
+		RelationSchema guardedSchema = guardedTuple.extractSchema();
+		
+		// checkfor guard and guarded
 		for (Text value : values) {
 			Tuple t = new Tuple(value.toString());
 			
-			if (t.satisfiesSchema(outputrelation))
-				outputTuples.add(t);
+			if (t.satisfiesSchema(guardedSchema))
+				guardedFound = true;
 			
-			RelationSchema s = t.extractSchema();
+			if (t.satisfiesSchema(guardSchema)) {
+				guardFound = true;
+				guardTuple = t;
+			}
 			
-			if(relations.contains(s))
-				foundRelations.add(s);
-			
+			// stop when both are found
+			if (guardFound && guardedFound)
+				break;
 		}
 		
-		// if all relations are found 
-		if(foundRelations.size() == relations.size())
-			for (Tuple t : outputTuples) {
-				String value = t.generateString();
-				context.write(key, new Text(value));
-			}
+		// write output if both are found
+		if ( guardFound && guardedFound )
+			context.write(null, new Text(guardedTuple.generateString()+";"+guardTuple.generateString()));
 		
 	}
 	

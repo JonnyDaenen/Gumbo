@@ -17,6 +17,8 @@ import org.apache.hadoop.mapreduce.Mapper;
  * Input: set of relations Si and one guarded relation R
  * Output: key:val where key is each value in Si, and the value is either the value of Si, or the value of R
  * 
+ * Configuration: Guarding relation R, guarded relations Si, mapping between R and Si
+ * 
  * For each Si, each value is always output. For a tuple R(a',b'), Si(a,b) : R(a',b') is output when the following holds:
  * - R(x',y') is the guard
  * - Si(x,y) appears in the boolean combination
