@@ -1,9 +1,6 @@
 package guardedfragment.mapreduce;
 
-import com.sun.tools.javac.util.Convert;
-
 import guardedfragment.mapreduce.jobs.BooleanMRJob;
-import guardedfragment.mapreduce.jobs.ExistentialMRJob;
 import guardedfragment.mapreduce.jobs.MRJob;
 import guardedfragment.structure.GFAndExpression;
 import guardedfragment.structure.GFExistentialExpression;

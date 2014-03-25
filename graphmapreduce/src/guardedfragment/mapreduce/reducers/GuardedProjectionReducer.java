@@ -1,13 +1,12 @@
 package guardedfragment.mapreduce.reducers;
 
-import guardedfragment.data.Tuple;
 import guardedfragment.data.RelationSchema;
+import guardedfragment.data.Tuple;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 

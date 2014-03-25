@@ -1,12 +1,11 @@
 package guardedfragment.mapreduce.mappers;
 
-import guardedfragment.data.Tuple;
 import guardedfragment.data.Projection;
 import guardedfragment.data.RelationSchema;
+import guardedfragment.data.Tuple;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;

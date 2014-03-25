@@ -1,8 +1,6 @@
 package guardedfragment.data;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A mapping between relations. Source and target relations are indicated, together with a mapping between them.

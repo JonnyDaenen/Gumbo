@@ -1,8 +1,9 @@
 package guardedfragment.structure;
 
+import guardedfragment.booleanstructure.BVariable;
+
 import java.util.HashMap;
 import java.util.Map;
-import guardedfragment.booleanstructure.BVariable;
 
 
 /**

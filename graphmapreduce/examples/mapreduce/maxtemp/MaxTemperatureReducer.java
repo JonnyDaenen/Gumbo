@@ -4,6 +4,7 @@ package mapreduce.maxtemp;
 // cc MaxTemperatureReducer2 Reducer for maximum temperature example
 // vv MaxTemperatureReducer
 import java.io.IOException;
+
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
