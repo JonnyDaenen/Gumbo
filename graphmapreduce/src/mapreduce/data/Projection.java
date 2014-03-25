@@ -34,12 +34,12 @@ public class Projection {
 	
 	/**
 	 * Connect a position in the target relation to a position in the source relation.
-	 * @param pos1 position in the target relation
-	 * @param pos2 position in the source relation
+	 * @param source position in the target relation
+	 * @param target position in the source relation
 	 */
-	public void addMapping(int pos1, int pos2) {
+	public void addMapping(int source, int target) {
 		// TODO add bound control
-		this.mapping.put(pos1, pos2);
+		this.mapping.put(target, source);
 		
 	}
 	

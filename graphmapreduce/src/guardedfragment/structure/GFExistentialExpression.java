@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class GFExistentialExpression implements GFExpression {
+public class GFExistentialExpression extends GFExpression {
 	
 	String [] variables;
 	GFAtomicExpression guard;

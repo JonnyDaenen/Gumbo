@@ -95,5 +95,25 @@ public class Tuple {
 	public String getName() {
 		return name;
 	}
+	
+	@Override
+	public String toString() {
+		
+		String out = "";
+		
+		// concatenate all fields
+		for (int i = 0; i < data.length; i++) {
+			out += "," + data[i];
+		}
+		
+		// dummy value for substring
+		if(out.length() == 0)
+			out = "-";
+		
+		// add name
+		out = name + "(" + out.substring(1)+")";
+		
+		return out;
+	}
 
 }

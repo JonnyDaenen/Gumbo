@@ -5,7 +5,7 @@ import guardedfragment.booleanstructure.BExpression;
 
 import java.util.Set;
 
-public class GFAndExpression implements GFExpression{
+public class GFAndExpression extends GFExpression{
 	
 	
 	GFExpression child1;

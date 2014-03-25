@@ -2,7 +2,7 @@ package mapreduce.data;
 
 public class RelationSchema {
 	
-	static final String COLPREFIX = "field";
+	static final String COLPREFIX = "x";
 
 	String name;
 	String [] fields;
@@ -47,6 +47,26 @@ public class RelationSchema {
 	@Override
 	public int hashCode() {
 		return name.hashCode();
+	}
+	
+	@Override
+	public String toString() {
+		
+		String out = "";
+		
+		// concatenate all fields
+		for (int i = 0; i < fields.length; i++) {
+			out += "," + fields[i];
+		}
+		
+		// dummy value for substring
+		if(out.length() == 0)
+			out = "-";
+		
+		// add name
+		out = name + "(" + out.substring(1)+")";
+		
+		return out;
 	}
 	
 }
