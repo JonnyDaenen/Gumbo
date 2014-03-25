@@ -13,7 +13,7 @@ public class Projection {
 	
 	RelationSchema source;
 	RelationSchema target;
-	Map<Integer, Integer> mapping;
+	Map<Integer, Integer> mapping; // FIXME should be a set!
 	
 	public Projection(RelationSchema source, RelationSchema target) {
 		super();
