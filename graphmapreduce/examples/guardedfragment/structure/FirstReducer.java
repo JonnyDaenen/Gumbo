@@ -1,17 +1,19 @@
 package guardedfragment.structure;
 
+import mapreduce.data.Tuple;
+
 public class FirstReducer {
 	
-	MyTuple key;
+	Tuple key;
 	GFAtomicExpression guard;
 	
 	public FirstReducer(String s, GFAtomicExpression gf) {
-		key = new MyTuple(s);
+		key = new Tuple(s);
 		guard = gf;
 	}
 
 	public void readValue(String s) {
-		MyTuple value = new MyTuple(s);
+		Tuple value = new Tuple(s);
 		// TODO
 		
 	}

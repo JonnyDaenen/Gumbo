@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class GFExistentialExpression implements GFExpression {
+public class GFExistentialExpression extends GFExpression {
 	
 	String [] variables;
 	GFAtomicExpression guard;
@@ -104,6 +104,11 @@ public class GFExistentialExpression implements GFExpression {
 	@Override
 	public BExpression convertToBExpression(GFBMapping m) throws GFConversionException {
 		throw new GFConversionException("It's not possible to convert formulas that are not a boolean combination of atomic formula's.");
+	}
+	
+	
+	public GFExpression getChild() {
+		return child;
 	}
 	
 }

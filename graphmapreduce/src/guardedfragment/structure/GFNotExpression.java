@@ -5,7 +5,7 @@ import guardedfragment.booleanstructure.BNotExpression;
 
 import java.util.Set;
 
-public class GFNotExpression implements GFExpression{
+public class GFNotExpression extends GFExpression{
 
 	
 	GFExpression child;

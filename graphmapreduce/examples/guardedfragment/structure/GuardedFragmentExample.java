@@ -2,6 +2,8 @@ package guardedfragment.structure;
 
 import java.util.Set;
 
+import mapreduce.data.KeyValuePair;
+
 public class GuardedFragmentExample {
 
 	public static void main(String[] args) {

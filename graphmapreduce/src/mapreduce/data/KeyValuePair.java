@@ -1,4 +1,4 @@
-package guardedfragment.structure;
+package mapreduce.data;
 
 public class KeyValuePair {
 	

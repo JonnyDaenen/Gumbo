@@ -8,7 +8,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class GFAtomicExpression implements GFExpression {
+import mapreduce.data.RelationSchema;
+
+public class GFAtomicExpression extends GFExpression {
 
 	String relation;
 	String[] variables;
@@ -117,5 +119,9 @@ public class GFAtomicExpression implements GFExpression {
 
 		}
 		return super.equals(obj);
+	}
+
+	public RelationSchema extractRelationSchema() {
+		return new RelationSchema(relation, variables.length);
 	}
 }

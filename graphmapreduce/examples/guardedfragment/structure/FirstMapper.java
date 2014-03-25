@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import mapreduce.data.KeyValuePair;
+import mapreduce.data.Tuple;
+
 
 public class FirstMapper {
 	
@@ -20,35 +23,48 @@ public class FirstMapper {
 	}
 	
 	public Set<KeyValuePair> getKeyValuePair(String s) {
-		MyTuple t = new MyTuple(s);
+		Tuple t = new Tuple(s);
 		
+		// check if tuple satisfies equality type
 		if (t.belongsTo(guard)) {
 			return getKeyValuePairByGuard(t);
 		}
 	
+		// if not, then check which guared relations it matches
+		// and output the tuple
 		Set<KeyValuePair> p = new HashSet<KeyValuePair>();		
 		for (int i =0; i < arrayAllAtoms.length;i++) {
-			if (t.name.equals(arrayAllAtoms[i].relation)) {
+			if (t.getName().equals(arrayAllAtoms[i].relation)) {
 				p.add(new KeyValuePair(s,s));
 			}
 		}
 		return p;
 	}
 	
-	private Set<KeyValuePair> getKeyValuePairByGuard(MyTuple t) {
+	private Set<KeyValuePair> getKeyValuePairByGuard(Tuple t) {
 		Set<KeyValuePair> p = new HashSet<KeyValuePair>();		
 		
 		HashMap<Integer,Integer> f = new HashMap<Integer,Integer>();
 		String tkey = new String();
+		
+		// get mapping from guard relation to each guarded relation
+		// and project it
 		for (int i =0; i < arrayAllAtoms.length;i++) {
+			
+			// get mapping
 			f = getVariableMapping(guard,arrayAllAtoms[i]);
+			
+			// project
 			tkey = t.getData(arrayAllAtoms[i].relation, f);
+			
+			// add to output
 			p.add(new KeyValuePair(tkey,t.generateString()));
 		}
 		return p;
 	}
 	
 	private HashMap<Integer,Integer> getVariableMapping(GFAtomicExpression gf1, GFAtomicExpression gf2){
+		
 		HashMap<Integer,Integer> f = new HashMap<Integer,Integer>(gf1.noVariables());
 		
 		String[] vars1 = gf1.variables;
@@ -57,7 +73,7 @@ public class FirstMapper {
 		for(int i=0; i<vars2.length; i++){
 			for(int j=0; j<vars1.length;j++){
 				if (vars2[i].equals(vars1[j])){
-					f.put(i,j);
+					f.put(i,j); // TODO this is not a set, so is this the correct way?
 				}
 			}
 			

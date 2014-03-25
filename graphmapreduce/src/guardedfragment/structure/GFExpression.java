@@ -4,13 +4,13 @@ import guardedfragment.booleanstructure.BExpression;
 
 import java.util.Set;
 
-public interface GFExpression {
+public abstract class GFExpression {
 	
-	boolean evaluate(GFEvaluationContext c);
+	public abstract boolean evaluate(GFEvaluationContext c);
 	
-	Set<String> getFreeVariables();
+	public abstract Set<String> getFreeVariables();
 	
-	String generateString();
+	public abstract String generateString();
 	
 	/**
 	 * Checks whether the formula is guarded.
@@ -27,10 +27,10 @@ public interface GFExpression {
 	 * 
 	 * @return true if the formula is a GF-expression, false otherwise
 	 */
-	boolean isGuarded();
+	public abstract boolean isGuarded();
 	
 	/* return the set of all atomic formulae */
-	Set<GFAtomicExpression> getAtomic();
+	public abstract Set<GFAtomicExpression> getAtomic();
 	
 	
 	
@@ -38,7 +38,7 @@ public interface GFExpression {
 	 * Checks whether the subformula is a boolean combination of atomic expressions.
 	 * @return true if the formula is a boolean combination of atomic expressions, false otherwise
 	 */
-	boolean isAtomicBooleanCombination();
+	public abstract boolean isAtomicBooleanCombination();
 
 	
 	/**
@@ -52,6 +52,11 @@ public interface GFExpression {
 	 * @return a boolean expression
 	 * @throws GFConversionException when it's not a boolean combination of atomic expressions
 	 */
-	BExpression convertToBExpression(GFBMapping m) throws GFConversionException;
+	public abstract BExpression convertToBExpression(GFBMapping m) throws GFConversionException;
 
+	@Override
+	public String toString() {
+		return generateString();
+	}
+	
 }
