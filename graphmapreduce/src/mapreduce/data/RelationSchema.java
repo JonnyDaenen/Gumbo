@@ -1,4 +1,4 @@
-package guardedfragment.data;
+package mapreduce.data;
 
 public class RelationSchema {
 	

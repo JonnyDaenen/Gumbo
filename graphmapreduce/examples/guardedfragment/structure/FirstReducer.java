@@ -1,6 +1,6 @@
 package guardedfragment.structure;
 
-import guardedfragment.data.Tuple;
+import mapreduce.data.Tuple;
 
 public class FirstReducer {
 	

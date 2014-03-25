@@ -1,11 +1,11 @@
 package guardedfragment.mapreduce.jobs;
 
-import guardedfragment.data.RelationSchema;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
+import mapreduce.data.RelationSchema;
 
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;

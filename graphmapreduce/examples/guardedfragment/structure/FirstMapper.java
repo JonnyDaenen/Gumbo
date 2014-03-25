@@ -1,10 +1,10 @@
 package guardedfragment.structure;
 
-import guardedfragment.data.Tuple;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
+import mapreduce.data.Tuple;
 
 
 public class FirstMapper {

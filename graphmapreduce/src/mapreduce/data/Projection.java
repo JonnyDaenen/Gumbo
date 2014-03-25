@@ -1,4 +1,4 @@
-package guardedfragment.data;
+package mapreduce.data;
 
 import java.util.Map;
 
