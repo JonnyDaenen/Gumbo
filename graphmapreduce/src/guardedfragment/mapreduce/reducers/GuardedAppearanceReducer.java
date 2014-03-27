@@ -24,6 +24,7 @@ import org.apache.hadoop.mapreduce.Reducer;
  * 
  * 
  * @author Jonny Daenen
+ * @author Tony Tan
  *
  */
 public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text>{

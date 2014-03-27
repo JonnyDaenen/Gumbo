@@ -26,7 +26,7 @@ public class FirstMapper {
 		Tuple t = new Tuple(s);
 		
 		// check if tuple satisfies equality type
-		if (t.belongsTo(guard)) {
+		if (guard.matches(t)) {
 			return getKeyValuePairByGuard(t);
 		}
 	

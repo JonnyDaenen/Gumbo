@@ -31,6 +31,7 @@ import org.apache.hadoop.mapreduce.Mapper;
  * positions in R(a',b') (i.e. according to the equality type)
  * 
  * @author Jonny Daenen
+ * @author Tony Tan
  * 
  */
 public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {

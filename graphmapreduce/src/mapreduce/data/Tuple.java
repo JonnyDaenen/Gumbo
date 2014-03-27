@@ -4,6 +4,12 @@ import guardedfragment.structure.GFAtomicExpression;
 
 import java.util.HashMap;
 
+/**
+ * 
+ * @author Tony Tan
+ * @author Jonny Daenen
+ *
+ */
 public class Tuple {
 	
 	String name;

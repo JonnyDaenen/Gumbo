@@ -12,6 +12,7 @@ import java.io.IOException;
 import mapreduce.MRPlan;
 
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -75,7 +76,12 @@ public class GFMRPlanner {
 
 			// add jobs to plan
 			plan.addJob(phase1job);
-			plan.addJob(phase1job);
+			plan.addJob(phase2job);
+			
+			// TODO is this necessary?
+			plan.addTempDir(tmpDir.toString());
+			plan.setInputFolder(inputDir.toString());
+			plan.setOutputFolder(outputDir.toString());
 
 		} else
 			throw new ConversionNotImplementedException();
@@ -110,7 +116,7 @@ public class GFMRPlanner {
 		job.setMapOutputValueClass(Text.class);
 
 		// set reducer output
-		job.setOutputKeyClass(null);
+		job.setOutputKeyClass(NullWritable.class);
 		job.setOutputValueClass(Text.class);
 
 		return new ControlledJob(job, null);
@@ -137,7 +143,7 @@ public class GFMRPlanner {
 		job.setMapOutputValueClass(Text.class);
 
 		// set reducer output
-		job.setOutputKeyClass(null);
+		job.setOutputKeyClass(NullWritable.class);
 		job.setOutputValueClass(Text.class);
 
 		return new ControlledJob(job, null);

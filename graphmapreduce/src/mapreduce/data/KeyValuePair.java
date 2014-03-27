@@ -1,5 +1,11 @@
 package mapreduce.data;
 
+
+/**
+ * 
+ * @author Tony Tan
+ *
+ */
 public class KeyValuePair {
 	
 	String mykey;

@@ -13,7 +13,7 @@ public class FirstReducer {
 	}
 
 	public void readValue(String s) {
-		Tuple value = new Tuple(s);
+//		Tuple value = new Tuple(s);
 		// TODO
 		
 	}
