@@ -3,7 +3,6 @@ package guardedfragment.structure;
 import java.util.HashMap;
 import java.util.Map;
 
-import mapreduce.data.RelationSchema;
 import mapreduce.data.Tuple;
 
 /**

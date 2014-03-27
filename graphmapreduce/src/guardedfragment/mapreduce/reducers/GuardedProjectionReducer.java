@@ -45,7 +45,7 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text>{
 		Set<RelationSchema> foundRelations = new HashSet<RelationSchema>();
 		Set<Tuple> outputTuples = new HashSet<Tuple>();
 		
-		boolean allRelationsFound = false;
+//		boolean allRelationsFound = false;
 		
 		// Record presence of all required relations
 		for (Text value : values) {

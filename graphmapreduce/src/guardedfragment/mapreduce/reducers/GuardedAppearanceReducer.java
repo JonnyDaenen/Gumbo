@@ -1,8 +1,6 @@
 package guardedfragment.mapreduce.reducers;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 import mapreduce.data.RelationSchema;
 import mapreduce.data.Tuple;

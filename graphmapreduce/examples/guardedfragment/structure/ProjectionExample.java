@@ -1,6 +1,5 @@
 package guardedfragment.structure;
 
-import mapreduce.data.Projection;
 import mapreduce.data.RelationSchema;
 import mapreduce.data.Tuple;
 

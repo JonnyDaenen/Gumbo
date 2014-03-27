@@ -5,11 +5,8 @@ import guardedfragment.structure.GuardedProjection;
 import guardedfragment.structure.NonMatchingTupleException;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
-import mapreduce.data.Projection;
 import mapreduce.data.RelationSchema;
 import mapreduce.data.Tuple;
 
@@ -38,14 +35,13 @@ import org.apache.hadoop.mapreduce.Mapper;
  */
 public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 
-	Map<RelationSchema, Projection> projections;
 
 	GFAtomicExpression guard;
 	Set<GFAtomicExpression> guardedRelations;
 
 	public GuardedMapper(GFAtomicExpression guard, Set<GFAtomicExpression> guardedRelations) {
 		super();
-		this.projections = projections;
+		this.guard = guard;
 		this.guardedRelations = guardedRelations;
 	}
 
