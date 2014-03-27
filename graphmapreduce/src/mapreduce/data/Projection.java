@@ -9,6 +9,7 @@ import java.util.Map;
  * @author Jonny Daenen
  *
  */
+@Deprecated
 public class Projection {
 	
 	RelationSchema source;

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import mapreduce.data.RelationSchema;
+import mapreduce.data.Tuple;
 
 public class GFAtomicExpression extends GFExpression {
 
@@ -121,7 +122,52 @@ public class GFAtomicExpression extends GFExpression {
 		return super.equals(obj);
 	}
 
+	/**
+	 * Generates and returns a RelationSchema of this expression.
+	 * @return the relationschema of this relation
+	 */
 	public RelationSchema extractRelationSchema() {
 		return new RelationSchema(relation, variables.length);
+	}
+
+	/**
+	 * @return the number of fields of the relation
+	 */
+	public int getNumFields() {
+		return variables.length;
+	}
+
+	public boolean matches(Tuple t) {
+		
+		// name must be equal
+		if (!relation.equals(t.getName())) {
+			return false;
+		}
+		
+		// number of fields must be equal
+		if (size() != t.size()) {
+			return false;
+		}
+		
+		// compare field names 
+		for (int i = 0; i < size(); i++) {
+			// next fields
+			for (int j = i + 1; j < size(); j++) {
+				// atom equality implies value equality
+				if (variables[i].equals(variables[j]) && !t.get(i).equals(t.get(j))) {
+					return false;
+				}
+				
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 
+	 * @return the number of fields
+	 */
+	public int size() {
+		return variables.length;
 	}
 }
