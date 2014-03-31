@@ -1,6 +1,9 @@
 package guardedfragment.mapreduce.mappers;
 
+import guardedfragment.structure.GFAtomicExpression;
+
 import java.io.IOException;
+import java.util.Set;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -22,20 +25,30 @@ import org.apache.hadoop.mapreduce.Mapper;
  */
 public class GuardedBooleanMapper extends Mapper<LongWritable, Text, Text, Text> {
 	
+	GFAtomicExpression guard;
+	Set<GFAtomicExpression> guardedRelations;
+
+	public GuardedBooleanMapper(GFAtomicExpression guard, Set<GFAtomicExpression> guardedRelations) {
+		super();
+		this.guard = guard;
+		this.guardedRelations = guardedRelations;
+	}
+	
+	
 	@Override
 	protected void map(LongWritable key, Text value, Context context)
 			throws IOException, InterruptedException {
 		
-		// input has the form Si(a,b);R(a',b')
-		// split input
+		String stringValue = value.toString();
+		if (stringValue.contains(";")) {
+			
+			String[] t = stringValue.split(new String(";"));
+			if (t.length == 2) {
+				context.write(new Text(t[0]), new Text(t[1]));				
+			}
+		}
 		
-		// convert to 2 tuples
-		
-		// get tuple that matches R
-		
-		// convert Si-tuple to boolean variable ti
-		
-		// output R(a',b'):ti
+
 		
 		
 	}

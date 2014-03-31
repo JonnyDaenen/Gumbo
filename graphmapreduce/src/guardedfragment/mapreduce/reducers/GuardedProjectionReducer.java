@@ -1,5 +1,8 @@
 package guardedfragment.mapreduce.reducers;
 
+import guardedfragment.structure.*;
+import guardedfragment.booleanstructure.*;
+
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,18 +33,82 @@ import org.apache.hadoop.mapreduce.Reducer;
  */
 public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text>{
 	
-	Set<RelationSchema> relations;
-	RelationSchema outputrelation;
+	GFAtomicExpression guard;
+	GFExpression child;
+	GFBMapping mapGFtoB;
+	BExpression Bchild;
 
-	
-	
-	public GuardedProjectionReducer() {
-		// TODO
+	public GuardedProjectionReducer(GFAtomicExpression g, GFExpression c) {
+		super();
+		this.guard=g;
+		this.child=c;
+		
+		mapGFtoB = new GFBMapping();
+		Set<GFAtomicExpression> allAtom = child.getAtomic();
+		for (GFAtomicExpression atom : allAtom) {
+			mapGFtoB.insertElement(atom);
+		}
+
+		try {
+			Bchild = child.convertToBExpression(mapGFtoB);
+		} catch (GFConversionException e) {
+			// should not happen!
+			e.printStackTrace();
+		}
+		
 	}
 	
 
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context context)
+			throws IOException, InterruptedException {
+		
+		String s = key.toString();
+		if(guard.matches(new Tuple(s))) {
+			
+			BEvaluationContext BchildEval = new BEvaluationContext();
+			Set<GFAtomicExpression> allAtom = child.getAtomic();
+			
+			for (GFAtomicExpression atom : allAtom) {
+				BchildEval.setValue(mapGFtoB.getVariable(atom), false);
+			}
+			
+			Tuple t;
+			GFAtomicExpression dummy;
+			for (Text value : values) {
+				t = new Tuple(value.toString());
+				dummy = new GFAtomicExpression(t.getName(),t.getAllData());
+				
+				BchildEval.setValue(mapGFtoB.getVariable(dummy), true);
+				
+			}
+			
+			try
+			{
+				if (Bchild.evaluate(BchildEval)) {
+					context.write(new Text(new String()), key);
+				}
+			} catch (VariableNotFoundException e) {
+				// should not happen
+				e.printStackTrace();
+			}
+			
+			
+
+			
+		}
+		
+		
+		
+		
+		
+		
+
+		
+	}
+	
+/*
+	protected void oldreduce(Text key, Iterable<Text> values, Context context)
 			throws IOException, InterruptedException {
 		
 		Set<RelationSchema> foundRelations = new HashSet<RelationSchema>();
@@ -71,7 +138,7 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text>{
 			}
 		
 	}
-	
-	
+*/
+
 
 }

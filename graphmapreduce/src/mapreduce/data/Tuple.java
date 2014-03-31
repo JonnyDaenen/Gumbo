@@ -89,6 +89,10 @@ public class Tuple {
 		return name;
 	}
 	
+	public String[] getAllData() {
+		return data;
+	}
+	
 	@Override
 	public String toString() {
 		

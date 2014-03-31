@@ -94,6 +94,7 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 				// if so, output tuple with same key and value
 				if (guarded.matches(t)) {
 					context.write(new Text(t.toString()), new Text(t.toString()));
+					break;
 				}
 			}
 		}
