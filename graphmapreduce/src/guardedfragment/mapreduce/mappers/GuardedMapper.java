@@ -36,7 +36,6 @@ import org.apache.hadoop.mapreduce.Mapper;
  */
 public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 
-
 	GFAtomicExpression guard;
 	Set<GFAtomicExpression> guardedRelations;
 
@@ -97,8 +96,6 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 					context.write(new Text(t.toString()), new Text(t.toString()));
 				}
 			}
-
 		}
 	}
-
 }
