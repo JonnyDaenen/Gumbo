@@ -4,10 +4,8 @@ import guardedfragment.structure.*;
 import guardedfragment.booleanstructure.*;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Set;
 
-import mapreduce.data.RelationSchema;
 import mapreduce.data.Tuple;
 
 import org.apache.hadoop.io.Text;
