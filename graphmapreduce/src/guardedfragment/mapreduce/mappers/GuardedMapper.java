@@ -1,6 +1,9 @@
 package guardedfragment.mapreduce.mappers;
 
+import guardedfragment.mapreduce.GFMRlevel1Example;
+import guardedfragment.structure.DeserializeException;
 import guardedfragment.structure.GFAtomicExpression;
+import guardedfragment.structure.GFSerializer;
 import guardedfragment.structure.GuardedProjection;
 import guardedfragment.structure.NonMatchingTupleException;
 
@@ -10,6 +13,9 @@ import java.util.Set;
 import mapreduce.data.RelationSchema;
 import mapreduce.data.Tuple;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -36,13 +42,40 @@ import org.apache.hadoop.mapreduce.Mapper;
  */
 public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 
+	private static final Log LOG = LogFactory.getLog(GuardedMapper.class);
+
 	GFAtomicExpression guard;
 	Set<GFAtomicExpression> guardedRelations;
-
-	public GuardedMapper(GFAtomicExpression guard, Set<GFAtomicExpression> guardedRelations) {
-		super();
-		this.guard = guard;
-		this.guardedRelations = guardedRelations;
+	
+	
+	/**
+	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
+	 */
+	@Override
+	protected void setup(org.apache.hadoop.mapreduce.Mapper.Context context) throws IOException, InterruptedException {
+		
+		super.setup(context);
+		Configuration conf = context.getConfiguration();
+		GFSerializer serializer = new GFSerializer();
+		
+		// load guard
+		try {
+			String guardString = conf.get("guard");
+			this.guard = serializer.deserializeGuard(guardString);
+			LOG.error(guard);
+		} catch (Exception e) {
+			throw new InterruptedException("No guard information supplied");
+		}
+		
+		// load guarded
+		try {
+			String guardString = conf.get("guarded");
+			this.guardedRelations = serializer.deserializeGuarded(guardString);
+			LOG.error(guardedRelations);
+		} catch (Exception e) {
+			throw new InterruptedException("No guarded information supplied");
+		}
+		
 	}
 
 	@Override

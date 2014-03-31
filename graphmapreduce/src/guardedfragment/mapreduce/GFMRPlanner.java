@@ -4,13 +4,17 @@ import guardedfragment.mapreduce.mappers.GuardedBooleanMapper;
 import guardedfragment.mapreduce.mappers.GuardedMapper;
 import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
 import guardedfragment.mapreduce.reducers.GuardedProjectionReducer;
+import guardedfragment.structure.GFAtomicExpression;
 import guardedfragment.structure.GFExistentialExpression;
 import guardedfragment.structure.GFExpression;
+import guardedfragment.structure.GFSerializer;
 
 import java.io.IOException;
+import java.util.Set;
 
 import mapreduce.MRPlan;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
@@ -43,9 +47,13 @@ public class GFMRPlanner {
 	protected String planName;
 	private int jobCounter;
 	static final String TMPDIRPREFIX = "TMP_JOB";
+	
+	private GFSerializer serializer;
 
 	public GFMRPlanner(String inputDir, String outputDir, String scratchDir) {
 		super();
+		serializer = new GFSerializer();
+		
 		this.inputDir = new Path(inputDir);
 		this.outputDir = new Path(outputDir);
 		this.scratchDir = new Path(scratchDir);
@@ -61,14 +69,19 @@ public class GFMRPlanner {
 			throws ConversionNotImplementedException, IOException {
 
 		MRPlan plan = new MRPlan();
+		
+		GFAtomicExpression guard = e.getGuard();
+		
 
 		// if it is a basic existential expression, convert
 		if (e.getChild().isAtomicBooleanCombination()) {
 
+			Set<GFAtomicExpression> guardedSet = e.getGuardedRelations();
+			
 			Path tmpDir = getTmpDir("" + jobCounter);
 
 			// Phase 1 job
-			ControlledJob phase1job = createBasicGFPhase1Job(inputDir, tmpDir);
+			ControlledJob phase1job = createBasicGFPhase1Job(inputDir, tmpDir, guard, guardedSet);
 
 			// Phase 2 job, which depends on Phase 1 job
 			ControlledJob phase2job = createBasicGFPhase2Job(tmpDir, outputDir);
@@ -98,10 +111,11 @@ public class GFMRPlanner {
 	 * 
 	 * @param in input folder
 	 * @param out output folder
+	 * @param guardedSet 
 	 * @return a ControlledJob, configured properly
 	 * @throws IOException
 	 */
-	private ControlledJob createBasicGFPhase1Job(Path in, Path out)
+	private ControlledJob createBasicGFPhase1Job(Path in, Path out, GFAtomicExpression guard, Set<GFAtomicExpression> guardedSet)
 			throws IOException {
 
 		// create basic job
@@ -110,6 +124,11 @@ public class GFMRPlanner {
 		// set mapper an reducer
 		job.setMapperClass(GuardedMapper.class);
 		job.setReducerClass(GuardedAppearanceReducer.class);
+		
+		// set guard and guarded set
+		Configuration conf = job.getConfiguration();
+		conf.set("guard", serializer.serializeGuard(guard));
+		conf.set("guarded", serializer.serializeGuarded(guardedSet));
 
 		// set intermediate/mapper output
 		job.setMapOutputKeyClass(Text.class);
@@ -137,6 +156,7 @@ public class GFMRPlanner {
 		// set mapper an reducer
 		job.setMapperClass(GuardedBooleanMapper.class);
 		job.setReducerClass(GuardedProjectionReducer.class);
+
 
 		// set intermediate/mapper output
 		job.setMapOutputKeyClass(Text.class);

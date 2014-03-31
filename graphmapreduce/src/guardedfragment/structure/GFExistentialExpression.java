@@ -31,8 +31,9 @@ public class GFExistentialExpression extends GFExpression {
 
 
 	public Set<GFAtomicExpression> getAtomic() {
-		Set<GFAtomicExpression> atom = new HashSet<GFAtomicExpression>();
-		return atom; // TODO
+		Set<GFAtomicExpression> allAtoms = child.getAtomic();
+		allAtoms.add(guard);
+		return allAtoms;
 	}
 
 	@Override
@@ -109,6 +110,19 @@ public class GFExistentialExpression extends GFExpression {
 	
 	public GFExpression getChild() {
 		return child;
+	}
+	
+	public GFAtomicExpression getGuard() {
+		return	guard;
+	}
+
+
+	/**
+	 * Creates a set of atomics on the "right" side.
+	 * @return the set of guarded relations
+	 */
+	public Set<GFAtomicExpression> getGuardedRelations() {
+		return child.getAtomic();
 	}
 	
 }

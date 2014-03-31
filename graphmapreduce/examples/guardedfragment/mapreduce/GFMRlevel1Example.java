@@ -28,14 +28,15 @@ public class GFMRlevel1Example {
 
 		GFExistentialExpression e1 = new GFExistentialExpression(a1, a2, "x");
 
-		GFMRPlanner planner = new GFMRPlanner("./input/dymmyrelations1", "./output/"
-				+ GFMRlevel1Example.class.getName(), "./scratch/" + "./output/" + GFMRlevel1Example.class.getName());
+		GFMRPlanner planner = new GFMRPlanner("./input/dummyrelations1", "./output/"
+				+ GFMRlevel1Example.class.getName(), "./scratch/"  + GFMRlevel1Example.class.getSimpleName());
 
 
 		try {
 			MRPlan plan = planner.convert(e1);
 			System.out.println(plan);
-		} catch (ConversionNotImplementedException | IOException e) {
+			plan.execute();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
