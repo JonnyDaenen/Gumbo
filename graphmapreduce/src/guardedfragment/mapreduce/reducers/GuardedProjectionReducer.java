@@ -92,18 +92,8 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text>{
 				// should not happen
 				e.printStackTrace();
 			}
-			
-			
-
-			
+				
 		}
-		
-		
-		
-		
-		
-		
-
 		
 	}
 	
