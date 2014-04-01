@@ -1,6 +1,6 @@
 package guardedfragment.booleanstructure;
 
-public class BVariable implements BExpression {
+public class BVariable extends BExpression {
 	
 	int id;
 	

@@ -27,6 +27,11 @@ public class GFOrExpression extends GFAndExpression{
 		return child1.evaluate(c) || child2.evaluate(c);
 	}
 	
+	@Override
+	public String generateString() {
+		return "(" + child1.generateString() + " | " + child2.generateString() + ")";
+	}
+	
 	
 	@Override
 	public BExpression convertToBExpression(GFBMapping m) throws GFConversionException {

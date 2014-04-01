@@ -81,7 +81,7 @@ public class MRPlan extends Configured {
 
 		} finally {
 			// remove the temp dirs
-			deleteTmpDirs();
+			//TODO deleteTmpDirs();
 		}
 
 		return success;

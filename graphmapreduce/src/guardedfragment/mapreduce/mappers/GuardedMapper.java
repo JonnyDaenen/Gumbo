@@ -46,36 +46,35 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 
 	GFAtomicExpression guard;
 	Set<GFAtomicExpression> guardedRelations;
-	
-	
+
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
 	 */
 	@Override
 	protected void setup(org.apache.hadoop.mapreduce.Mapper.Context context) throws IOException, InterruptedException {
-		
+
 		super.setup(context);
 		Configuration conf = context.getConfiguration();
 		GFSerializer serializer = new GFSerializer();
-		
+
 		// load guard
 		try {
 			String guardString = conf.get("guard");
 			this.guard = serializer.deserializeGuard(guardString);
-			LOG.error(guard);
+//			LOG.error(guard);
 		} catch (Exception e) {
 			throw new InterruptedException("No guard information supplied");
 		}
-		
+
 		// load guarded
 		try {
 			String guardString = conf.get("guarded");
 			this.guardedRelations = serializer.deserializeGuarded(guardString);
-			LOG.error(guardedRelations);
+//			LOG.error(guardedRelations);
 		} catch (Exception e) {
 			throw new InterruptedException("No guarded information supplied");
 		}
-		
+
 	}
 
 	@Override
@@ -84,40 +83,34 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 		// convert value to tuple
 		Tuple t = new Tuple(value.toString());
 
-		// get schema
-		RelationSchema tupleSchema = t.extractSchema();
-		// OPTIMIZE do this when initializing
-		RelationSchema guardSchema = guard.extractRelationSchema();
+		// check if tuple matches guard
+		if (guard.matches(t)) {
+//			LOG.error(t + " matches " + guard);
+			// check if tuple matches a guarded atom
+			for (GFAtomicExpression guarded : guardedRelations) {
 
-		// if schema is same as guard
-		if (tupleSchema.equals(guardSchema)) {
+				// get projection
+				// OPTIMIZE do this when initializing
+				GuardedProjection gp = new GuardedProjection(guard, guarded);
+				Tuple tprime;
+				try {
+					// project to key
+					tprime = gp.project(t);
+				
+					if (guarded.matches(tprime)) {
 
-			// check if tuple matches guard
-			if (guard.matches(t)) {
-
-				// check if tuple matches a guarded atom
-				for (GFAtomicExpression guarded : guardedRelations) {
-
-					// if so, output mapping to each Si
-					if (guarded.matches(t)) {
-						// get projection
-						// OPTIMIZE do this when initializing
-						GuardedProjection gp = new GuardedProjection(guard, guarded);
-
-						Tuple tprime;
-						try {
-							// project to key and write out
-							tprime = gp.project(t);
-							context.write(new Text(tprime.toString()), new Text(t.toString()));
-						} catch (NonMatchingTupleException e) {
-							// should not happen!
-							e.printStackTrace();
-						}
+						LOG.error(tprime + " matches' " + guarded + " val: " + t);
+						// project to key and write out
+						context.write(new Text(tprime.toString()), new Text(t.toString()));
 
 					}
+				} catch (NonMatchingTupleException e1) {
+					// should not happen!
+					e1.printStackTrace();
 				}
 
 			}
+
 		}
 		// if schema is not same as guard
 		else {
@@ -126,6 +119,7 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 
 				// if so, output tuple with same key and value
 				if (guarded.matches(t)) {
+//					LOG.error(t + " matches " + guarded);
 					context.write(new Text(t.toString()), new Text(t.toString()));
 					break;
 				}

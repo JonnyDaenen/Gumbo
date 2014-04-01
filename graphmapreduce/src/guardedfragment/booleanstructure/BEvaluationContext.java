@@ -32,5 +32,13 @@ public class BEvaluationContext {
 	public void setValue(int id, boolean b) {
 		valuemap.put(id, b);
 	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return valuemap.toString();
+	}
 
 }

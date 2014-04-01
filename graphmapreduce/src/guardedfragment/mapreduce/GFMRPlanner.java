@@ -4,10 +4,12 @@ import guardedfragment.mapreduce.mappers.GuardedBooleanMapper;
 import guardedfragment.mapreduce.mappers.GuardedMapper;
 import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
 import guardedfragment.mapreduce.reducers.GuardedProjectionReducer;
+import guardedfragment.structure.GFAndExpression;
 import guardedfragment.structure.GFAtomicExpression;
 import guardedfragment.structure.GFExistentialExpression;
 import guardedfragment.structure.GFExpression;
 import guardedfragment.structure.GFSerializer;
+import guardedfragment.structure.SerializeException;
 
 import java.io.IOException;
 import java.util.Set;
@@ -71,6 +73,7 @@ public class GFMRPlanner {
 		MRPlan plan = new MRPlan();
 		
 		GFAtomicExpression guard = e.getGuard();
+		GFExpression child = e.getChild();
 		
 
 		// if it is a basic existential expression, convert
@@ -84,7 +87,7 @@ public class GFMRPlanner {
 			ControlledJob phase1job = createBasicGFPhase1Job(inputDir, tmpDir, guard, guardedSet);
 
 			// Phase 2 job, which depends on Phase 1 job
-			ControlledJob phase2job = createBasicGFPhase2Job(tmpDir, outputDir);
+			ControlledJob phase2job = createBasicGFPhase2Job(tmpDir, outputDir, guard, child);
 			phase2job.addDependingJob(phase1job);
 
 			// add jobs to plan
@@ -146,16 +149,27 @@ public class GFMRPlanner {
 	 * 
 	 * @param in input folder
 	 * @param out output folder
+	 * @param guard 
+	 * @param booleanformula 
 	 * @return a ControlledJob, configured properly
 	 * @throws IOException
 	 */
-	private ControlledJob createBasicGFPhase2Job(Path in, Path out) throws IOException {
+	private ControlledJob createBasicGFPhase2Job(Path in, Path out, GFAtomicExpression guard, GFExpression booleanformula) throws IOException {
 		// create basic job
 		Job job = createJob(in, out);
 
 		// set mapper an reducer
 		job.setMapperClass(GuardedBooleanMapper.class);
 		job.setReducerClass(GuardedProjectionReducer.class);
+		
+		
+		try {
+			Configuration conf = job.getConfiguration();
+			conf.set("guard", serializer.serializeGuard(guard));
+			conf.set("booleanformula", serializer.serializeGFBoolean(booleanformula));
+		} catch (SerializeException e) {
+			throw new IOException("Error during serialization: " + e.getMessage());
+		}
 
 
 		// set intermediate/mapper output

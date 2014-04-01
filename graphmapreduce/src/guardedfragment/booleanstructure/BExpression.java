@@ -1,15 +1,23 @@
 package guardedfragment.booleanstructure;
 
 
-public interface BExpression {
+public abstract class BExpression {
 	
-	boolean evaluate(BEvaluationContext c) throws VariableNotFoundException;
+	public abstract boolean evaluate(BEvaluationContext c) throws VariableNotFoundException;
 	
 //	Set<String> getFreeVariables();
 	
 	
-	String generateString();
+	public abstract String generateString();
 	
 //	String generateString(BEvaluationContext c);
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return this.generateString();
+	}
 	
 }

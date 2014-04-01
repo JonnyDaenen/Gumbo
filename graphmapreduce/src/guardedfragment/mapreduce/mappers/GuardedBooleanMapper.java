@@ -21,17 +21,23 @@ import org.apache.hadoop.mapreduce.Mapper;
  * Configuration: Guarding relation R, mapping Si->ti
  * 
  * @author Jonny Daenen
+ * @author Tony Tan
  *
  */
 public class GuardedBooleanMapper extends Mapper<LongWritable, Text, Text, Text> {
 	
-	GFAtomicExpression guard;
-	Set<GFAtomicExpression> guardedRelations;
+//	GFAtomicExpression guard;
+//	Set<GFAtomicExpression> guardedRelations;
 
-	public GuardedBooleanMapper(GFAtomicExpression guard, Set<GFAtomicExpression> guardedRelations) {
+//	public GuardedBooleanMapper(GFAtomicExpression guard, Set<GFAtomicExpression> guardedRelations) {
+//		super();
+//		this.guard = guard;
+//		this.guardedRelations = guardedRelations;
+//	}
+//	
+	
+	public GuardedBooleanMapper() {
 		super();
-		this.guard = guard;
-		this.guardedRelations = guardedRelations;
 	}
 	
 	
@@ -44,6 +50,7 @@ public class GuardedBooleanMapper extends Mapper<LongWritable, Text, Text, Text>
 			
 			String[] t = stringValue.split(new String(";"));
 			if (t.length == 2) {
+				// key is the guard, value is the guarded tuple
 				context.write(new Text(t[0]), new Text(t[1]));				
 			}
 		}

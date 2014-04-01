@@ -1,6 +1,6 @@
 package guardedfragment.booleanstructure;
 
-public class BAndExpression implements BExpression{
+public class BAndExpression extends BExpression{
 	
 	BExpression child1;
 	BExpression child2;

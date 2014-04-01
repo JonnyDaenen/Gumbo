@@ -1,7 +1,7 @@
 package guardedfragment.booleanstructure;
 
 
-public class BNotExpression implements BExpression{
+public class BNotExpression extends BExpression{
 
 	
 	BExpression child;
