@@ -1,7 +1,5 @@
 package guardedfragment.mapreduce.mappers;
 
-import guardedfragment.mapreduce.GFMRlevel1Example;
-import guardedfragment.structure.DeserializeException;
 import guardedfragment.structure.GFAtomicExpression;
 import guardedfragment.structure.GFSerializer;
 import guardedfragment.structure.GuardedProjection;
@@ -10,7 +8,6 @@ import guardedfragment.structure.NonMatchingTupleException;
 import java.io.IOException;
 import java.util.Set;
 
-import mapreduce.data.RelationSchema;
 import mapreduce.data.Tuple;
 
 import org.apache.commons.logging.Log;
@@ -51,7 +48,7 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
 	 */
 	@Override
-	protected void setup(org.apache.hadoop.mapreduce.Mapper.Context context) throws IOException, InterruptedException {
+	protected void setup(Context context) throws IOException, InterruptedException {
 
 		super.setup(context);
 		Configuration conf = context.getConfiguration();

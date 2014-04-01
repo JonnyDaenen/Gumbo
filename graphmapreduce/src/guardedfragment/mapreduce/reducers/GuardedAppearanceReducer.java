@@ -1,11 +1,10 @@
 package guardedfragment.mapreduce.reducers;
 
-import guardedfragment.mapreduce.mappers.GuardedMapper;
 import guardedfragment.structure.GFAtomicExpression;
 import guardedfragment.structure.GFSerializer;
 
-import java.util.Set;
 import java.io.IOException;
+import java.util.Set;
 
 import mapreduce.data.Tuple;
 

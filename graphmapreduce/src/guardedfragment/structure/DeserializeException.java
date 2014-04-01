@@ -4,10 +4,15 @@
 package guardedfragment.structure;
 
 /**
- * @author jonny
+ * @author Jonny Daenen
  *
  */
 public class DeserializeException extends Exception {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @param string

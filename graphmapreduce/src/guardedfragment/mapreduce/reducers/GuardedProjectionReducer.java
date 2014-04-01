@@ -1,7 +1,14 @@
 package guardedfragment.mapreduce.reducers;
 
-import guardedfragment.structure.*;
-import guardedfragment.booleanstructure.*;
+import guardedfragment.booleanstructure.BEvaluationContext;
+import guardedfragment.booleanstructure.BExpression;
+import guardedfragment.booleanstructure.VariableNotFoundException;
+import guardedfragment.structure.DeserializeException;
+import guardedfragment.structure.GFAtomicExpression;
+import guardedfragment.structure.GFBMapping;
+import guardedfragment.structure.GFConversionException;
+import guardedfragment.structure.GFExpression;
+import guardedfragment.structure.GFSerializer;
 
 import java.io.IOException;
 import java.util.Set;

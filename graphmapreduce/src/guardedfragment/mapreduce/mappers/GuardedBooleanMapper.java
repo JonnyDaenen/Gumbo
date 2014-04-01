@@ -1,9 +1,6 @@
 package guardedfragment.mapreduce.mappers;
 
-import guardedfragment.structure.GFAtomicExpression;
-
 import java.io.IOException;
-import java.util.Set;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;

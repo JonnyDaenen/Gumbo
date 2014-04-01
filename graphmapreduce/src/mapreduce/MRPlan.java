@@ -89,9 +89,11 @@ public class MRPlan extends Configured {
 
 	/**
 	 * Delete all temporary dirs from the file system
+	 * FIXME this is broken
 	 * 
 	 * @throws IOException
 	 */
+	@SuppressWarnings("unused")
 	private void deleteTmpDirs() {
 		FileSystem fs;
 		try {

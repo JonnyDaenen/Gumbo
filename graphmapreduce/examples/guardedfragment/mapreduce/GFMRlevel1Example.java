@@ -5,9 +5,6 @@ package guardedfragment.mapreduce;
 
 import guardedfragment.structure.GFAtomicExpression;
 import guardedfragment.structure.GFExistentialExpression;
-
-import java.io.IOException;
-
 import mapreduce.MRPlan;
 
 import org.apache.commons.logging.Log;

@@ -4,7 +4,6 @@ import guardedfragment.mapreduce.mappers.GuardedBooleanMapper;
 import guardedfragment.mapreduce.mappers.GuardedMapper;
 import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
 import guardedfragment.mapreduce.reducers.GuardedProjectionReducer;
-import guardedfragment.structure.GFAndExpression;
 import guardedfragment.structure.GFAtomicExpression;
 import guardedfragment.structure.GFExistentialExpression;
 import guardedfragment.structure.GFExpression;

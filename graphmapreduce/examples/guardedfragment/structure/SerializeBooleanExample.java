@@ -3,8 +3,6 @@
  */
 package guardedfragment.structure;
 
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Jonny Daenen
