@@ -20,12 +20,14 @@ public class GFMRlevel1Example {
 	public static void main(String[] args) {
 
 		GFAtomicExpression a1 = new GFAtomicExpression("R", "x", "y", "x");
-		GFAtomicExpression a2 = new GFAtomicExpression("S", "y", "x");
-		GFAtomicExpression a3 = new GFAtomicExpression("S","x","y");
-		GFOrExpression a4 = new GFOrExpression(a2,a3);
+		GFAtomicExpression a2 = new GFAtomicExpression("S", "y", "y");
+		GFAtomicExpression a3 = new GFAtomicExpression("S","x","x");
+		GFAndExpression a4 = new GFAndExpression(a2,a3);
+		GFAtomicExpression a6 = new GFAtomicExpression("T","x");
+		GFOrExpression a7 = new GFOrExpression(a4,a6);
 		GFNotExpression a5 = new GFNotExpression(a2);
 
-		GFExistentialExpression e1 = new GFExistentialExpression(a1, a5, "x");
+		GFExistentialExpression e1 = new GFExistentialExpression(a1, a7, "x");
 
 		GFMRPlanner planner = new GFMRPlanner("./input/dummyrelations1", "./output/"
 				+ GFMRlevel1Example.class.getName(), "./scratch/"  + GFMRlevel1Example.class.getSimpleName());
