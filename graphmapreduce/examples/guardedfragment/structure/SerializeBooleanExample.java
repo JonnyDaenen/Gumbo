@@ -18,10 +18,11 @@ public class SerializeBooleanExample {
 		
 		GFAndExpression gfe4 = new GFAndExpression(gfe1, gfe2);
 		GFNotExpression gfe5 = new GFNotExpression(gfe4);
-		GFOrExpression gfe6 = new GFOrExpression(gfe5, gfe3);
+		GFNotExpression gfe6 = new GFNotExpression(gfe3);
+		GFOrExpression gfe7 = new GFOrExpression(gfe5, gfe6);
 		
 		GFSerializer serializer = new GFSerializer();
-		String ser = serializer.serializeGFBoolean(gfe6);
+		String ser = serializer.serializeGFBoolean(gfe7);
 		System.out.println(ser);
 		
 		GFExpression deser = serializer.deserializeGFBoolean(ser);

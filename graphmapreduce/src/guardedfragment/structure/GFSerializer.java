@@ -84,7 +84,8 @@ public class GFSerializer {
 	 */
 	public GFExpression deserializeGFBoolean(String s) throws DeserializeException {
 
-		System.out.println(s);
+//	System.out.println(s);
+		
 		if (s.length() < 2)
 			throw new DeserializeException("Too short string to be a boolean GFExpression");
 
@@ -104,13 +105,13 @@ public class GFSerializer {
 
 		if (s.charAt(0) != '!') {
 			part1 = extractPart1(s);
-			System.out.println("part1" + part1);
 			gfe1 = deserializeGFBoolean(part1);
 		}
 		// extract part 2
 		String part2 = extractPart2(s);
 		GFExpression gfe2 = deserializeGFBoolean(part2);
 
+		
 		// extract operator
 		GFExpression gfe3 = extractOperator(s, part1, part2, gfe1, gfe2);
 
@@ -154,6 +155,8 @@ public class GFSerializer {
 		if (s.charAt(s.length() - 1) == ')' && s.charAt(s.length() - 2) == ')') { // CLEAN blergh :(
 			int index = findPrevOpen(s, s.length() - 2);
 			return s.substring(index, s.length());
+		} else if (s.charAt(0) == '!') {
+			return s.substring(1);
 		} else {
 			// atom
 			int index = s.lastIndexOf("(");
@@ -228,7 +231,6 @@ public class GFSerializer {
 	 */
 	public String serializeGFBoolean(GFExpression booleanformula) throws SerializeException {
 		// CLEAN dirty code
-		System.out.println(booleanformula.getClass().getSimpleName());
 //		if(booleanformula instanceof GFAtomicExpression || booleanformula instanceof GFAndExpression || booleanformula instanceof GFOrExpression || booleanformula instanceof GFNotExpression)
 //			return serializeGFBoolean(booleanformula);
 		if(booleanformula instanceof GFAtomicExpression)
