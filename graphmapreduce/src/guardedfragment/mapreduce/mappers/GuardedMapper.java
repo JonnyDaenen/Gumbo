@@ -83,11 +83,8 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 
 		// check if tuple matches guard
 		if (guard.matches(t)) {
-//			LOG.error(t + " matches " + guard);
-			// check if tuple matches a guarded atom
-			
-			//LOG.error(t + " matches' " + guard);
-			// project to key and write out
+
+			// output guard:guard
 			context.write(new Text(t.toString()), new Text(t.toString()));
 			LOG.error("The first Mapper outputs the pair: " + t.toString() + " : " + t.toString());
 			

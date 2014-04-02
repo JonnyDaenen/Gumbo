@@ -42,6 +42,8 @@ public class GuardedProjection {
 		String[] sourceVars = source.variables;
 		String[] targetVars = target.variables;
 
+		// TODO what is mapping is not possible? -> test using projection of the variable tuple??
+		
 		// check for equal variable identifiers
 		// for each position of the target
 		for (int i = 0; i < targetVars.length; i++) {
