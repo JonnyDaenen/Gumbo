@@ -93,6 +93,21 @@ public class Tuple {
 		return data;
 	}
 	
+	public boolean equal(Tuple t) {
+		if (!name.equals(t.getName())) {
+			return false;
+		}
+		if (data.length != t.size()) {
+			return false;
+		}
+		for (int i =0; i< data.length;i++) {
+			if (!data[i].equals(t.get(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	@Override
 	public String toString() {
 		

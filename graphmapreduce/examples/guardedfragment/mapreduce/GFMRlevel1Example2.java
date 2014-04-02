@@ -6,6 +6,7 @@ package guardedfragment.mapreduce;
 import guardedfragment.structure.GFAndExpression;
 import guardedfragment.structure.GFAtomicExpression;
 import guardedfragment.structure.GFExistentialExpression;
+import guardedfragment.structure.GFNotExpression;
 import mapreduce.MRPlan;
 
 import org.apache.commons.logging.Log;
@@ -24,9 +25,10 @@ public class GFMRlevel1Example2 {
 		GFAtomicExpression a1 = new GFAtomicExpression("R", "x", "y", "z");
 		GFAtomicExpression a2 = new GFAtomicExpression("S", "x", "y");
 		GFAtomicExpression a3 = new GFAtomicExpression("S","y","z");
-		GFAndExpression a4 = new GFAndExpression(a2,a3);
+		GFNotExpression a4 = new GFNotExpression(a3);
+		GFAndExpression a5 = new GFAndExpression(a2,a4);
 
-		GFExistentialExpression e1 = new GFExistentialExpression(a1, a4, "x");
+		GFExistentialExpression e1 = new GFExistentialExpression(a1, a5, "x");
 
 		GFMRPlanner planner = new GFMRPlanner("./input/dummyrelations2", "./output/"
 				+ GFMRlevel1Example2.class.getName()+"/"+System.currentTimeMillis(), "./scratch/"  + GFMRlevel1Example2.class.getSimpleName()+"/"+System.currentTimeMillis());

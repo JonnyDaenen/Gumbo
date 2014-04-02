@@ -2,11 +2,14 @@ package guardedfragment.mapreduce.reducers;
 
 import guardedfragment.structure.GFAtomicExpression;
 import guardedfragment.structure.GFSerializer;
+import guardedfragment.structure.GuardedProjection;
+import guardedfragment.structure.NonMatchingTupleException;
 
 import java.io.IOException;
 import java.util.Set;
 import java.util.ArrayList;
 
+import mapreduce.data.RelationSchema;
 import mapreduce.data.Tuple;
 
 import org.apache.commons.logging.Log;
@@ -124,6 +127,9 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 		// if it is
 
 		Tuple t;
+		GuardedProjection p;
+		RelationSchema R1;
+		RelationSchema R2;
 		if (foundKey) {
 			// check the tuples that match the guard
 			//LOG.error("Inside the if after the foundKey");
@@ -131,14 +137,20 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 				//LOG.error("Inside for loop");
 				//LOG.error("inspecting value:" + values[i]);
 				t = new Tuple(values[i]);
-				
+
+						
 				if (guard.matches(t)) {
 					
 					// TODO comment, this works because of guarding
 					for (GFAtomicExpression gf : guarded) {
-						if (gf.matches(tKey)) {
-							//LOG.error("inspecting value:" + values[i]);
-							context.write(null, new Text(t.generateString() + ";" + gf.generateString()));
+						p = new GuardedProjection(guard,gf);				
+						try {
+							if (p.project(t).equal(tKey)) {
+								//LOG.error("inspecting value:" + values[i]);
+								context.write(null, new Text(t.generateString() + ";" + gf.generateString()));
+							}
+						} catch (NonMatchingTupleException e) {
+							e.printStackTrace();
 						}
 					}
 				}
