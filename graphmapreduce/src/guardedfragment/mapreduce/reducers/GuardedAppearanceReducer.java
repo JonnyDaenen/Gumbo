@@ -5,6 +5,7 @@ import guardedfragment.structure.GFSerializer;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.ArrayList;
 
 import mapreduce.data.Tuple;
 
@@ -72,48 +73,179 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 			throw new InterruptedException("No guarded information supplied");
 		}
 	}
-
+	
+	
 	@Override
-	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-
+	protected void reduce(Text key, Iterable<Text> tvalues, Context context) throws IOException, InterruptedException {
+	
 		boolean foundKey = false;
 		String stringKey = key.toString();
+		Tuple tKey = new Tuple(stringKey);
+		Text vvv;
+		
+		ArrayList<String> ttvalues = new ArrayList<String>();
+		LOG.error("The reducer for the key "+stringKey);
+		for (Text vv : tvalues) {
+			vvv = vv;
+			LOG.error(vv.toString());
+			ttvalues.add(vv.toString());
+		}
+		LOG.error("The values in the ArrayList: "+ttvalues.toString());
+		LOG.error("=============================");
 
-		LOG.error("KEY: " + key.toString());
+		String[] values = ttvalues.toArray(new String[ttvalues.size()]);
+
+		
+			
+		if (guard.matches(tKey)) {
+			//LOG.error("the guard tuple " + tKey.toString());
+			context.write(null, new Text(tKey.generateString() + ";"));
+			return;
+		}
+		
+		
+
 		
 		// look if data is present in the guarded relation
-		for (Text value : values) {
-			if (stringKey.equals(value.toString())) {
-				LOG.error("Key found:" + value.toString());
+		for (int i=0;i<values.length;i++) {
+			//LOG.error("Inside the loop");
+			if (stringKey.equals(values[i])) {
+				//LOG.error("Key found:" + values[i]);
 				foundKey = true;
 				break;
 			}
 		}
+		
+		//LOG.error("After searching the KEY in VALUES");	
+		
+		
+		
 
 		// if it is
-		if (foundKey) {
-			Tuple tKey = new Tuple(stringKey);
 
+		Tuple t;
+		if (foundKey) {
 			// check the tuples that match the guard
-			for (Text value : values) {
-				LOG.error("inspecting value:" + value.toString());
-				Tuple t = new Tuple(value.toString());
+			//LOG.error("Inside the if after the foundKey");
+			for (int i=0;i<values.length;i++) {
+				//LOG.error("Inside for loop");
+				//LOG.error("inspecting value:" + values[i]);
+				t = new Tuple(values[i]);
 				
 				if (guard.matches(t)) {
 					
 					// TODO comment, this works because of guarding
 					for (GFAtomicExpression gf : guarded) {
 						if (gf.matches(tKey)) {
-							LOG.error("inspecting value:" + value.toString());
+							//LOG.error("inspecting value:" + values[i]);
 							context.write(null, new Text(t.generateString() + ";" + gf.generateString()));
 						}
 					}
 				}
 			}
+		} else {
+			
+			for (int i=0;i<values.length;i++) {
+				//LOG.error("inspecting value:" + values[i]);
+				t = new Tuple(values[i]);
+				
+				if (guard.matches(t)) {
+					//LOG.error("inspecting value:" + values[i]);
+					context.write(null, new Text(t.generateString() + ";"));
+						
+				}
+			}			
+			
+			
 		}
 
 	}
+	
+	
+	
+/*
+	@Override
+	protected void notsoreduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
+		
+		boolean foundKey = false;
+		String stringKey = key.toString();
+		Tuple tKey = new Tuple(stringKey);
+		
+		if (guard.matches(tKey)) {
+			LOG.error("the guard tuple " + tKey.toString());
+			context.write(null, new Text(tKey.generateString() + ";"));
+			return;
+		}
+		
+		
+		LOG.error("The values in the ArrayList");
+		LOG.error("KEY: " + key.toString());
+		LOG.error("VALUES:");
+		for (Text value : values) {
+			LOG.error(value.toString());
+		}
+		LOG.error("Going to the next step");
+		
+		// look if data is present in the guarded relation
+		for (Text value : values) {
+			LOG.error("Inside the loop");
+			if (stringKey.equals(value.toString())) {
+				LOG.error("Key found:" + value.toString());
+				foundKey = true;
+				break;
+			}
+		}
+		
+		
+		
+		
+		
+
+		// if it is
+
+		Tuple t;
+		if (foundKey) {
+			// check the tuples that match the guard
+			LOG.error("Inside the if after the foundKey");
+			for (Text value2 : values) {
+				LOG.error("Inside for loop");
+				LOG.error("inspecting value:" + value2.toString());
+				t = new Tuple(value2.toString());
+				
+				if (guard.matches(t)) {
+					
+					// TODO comment, this works because of guarding
+					for (GFAtomicExpression gf : guarded) {
+						if (gf.matches(tKey)) {
+							LOG.error("inspecting value:" + value2.toString());
+							context.write(null, new Text(t.generateString() + ";" + gf.generateString()));
+						}
+					}
+				}
+			}
+		} else {
+			
+			for (Text value : values) {
+				LOG.error("inspecting value:" + value.toString());
+				t = new Tuple(value.toString());
+				
+				if (guard.matches(t)) {
+					LOG.error("inspecting value:" + value.toString());
+					context.write(null, new Text(t.generateString() + ";"));
+						
+				}
+			}			
+			
+			
+		}
+
+	}
+*/
+	
+	
+	
+	
 	/*
 	 * protected void oldreduce(Text key, Iterable<Text> values, Context
 	 * context) throws IOException, InterruptedException {

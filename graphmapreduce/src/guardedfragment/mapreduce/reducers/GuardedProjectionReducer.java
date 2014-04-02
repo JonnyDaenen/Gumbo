@@ -109,21 +109,27 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 
 			Tuple t;
 			GFAtomicExpression dummy;
+			String sd;
 			// set certain values to true
 			for (Text value : values) {
-				LOG.error("value: " + value);
-				t = new Tuple(value.toString());
-				dummy = new GFAtomicExpression(t.getName(), t.getAllData());
-				
-				BchildEval.setValue(mapGFtoB.getVariable(dummy), true);
+				sd = value.toString();
+				if (sd.length() != 0) {
+					LOG.error("value: " + value);
+					t = new Tuple(value.toString());
+					dummy = new GFAtomicExpression(t.getName(), t.getAllData());
+					
+					BchildEval.setValue(mapGFtoB.getVariable(dummy), true);
 
-				LOG.error(BchildEval);
-
+					LOG.error("EVALUATING THE CHILD: " + BchildEval);
+					
+				}
 			}
 
+			LOG.error("=====================");
+			
 			try {
 				if (Bchild.evaluate(BchildEval)) {
-					context.write(new Text(new String()), key);
+					context.write(null, key);
 					
 					// FIXME we should add some projection
 				}

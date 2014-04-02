@@ -1,6 +1,6 @@
 package guardedfragment.structure;
 
-import guardedfragment.booleanstructure.BAndExpression;
+import guardedfragment.booleanstructure.BOrExpression;
 import guardedfragment.booleanstructure.BExpression;
 
 public class GFOrExpression extends GFAndExpression{
@@ -37,7 +37,7 @@ public class GFOrExpression extends GFAndExpression{
 	public BExpression convertToBExpression(GFBMapping m) throws GFConversionException {
 		BExpression nc1 = child1.convertToBExpression(m);
 		BExpression nc2 = child2.convertToBExpression(m);
-		return new BAndExpression(nc1, nc2);
+		return new BOrExpression(nc1, nc2);
 	}
 	
 
