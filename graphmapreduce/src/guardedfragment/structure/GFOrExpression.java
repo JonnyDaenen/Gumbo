@@ -1,7 +1,7 @@
 package guardedfragment.structure;
 
-import guardedfragment.booleanstructure.BOrExpression;
 import guardedfragment.booleanstructure.BExpression;
+import guardedfragment.booleanstructure.BOrExpression;
 
 public class GFOrExpression extends GFAndExpression{
 
