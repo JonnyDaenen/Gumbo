@@ -137,7 +137,7 @@ public class GFSerializer {
 			return new GFAndExpression(gfe1, gfe2);
 		case "|":
 			return new GFOrExpression(gfe1, gfe2);
-		case "!":
+		case "!":  // TODO: There maybe something wrong here
 			return new GFNotExpression(gfe2);
 
 		}

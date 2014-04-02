@@ -81,14 +81,14 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 		boolean foundKey = false;
 		String stringKey = key.toString();
 		Tuple tKey = new Tuple(stringKey);
-		Text vvv;
+		//Text vv;
 		
 		ArrayList<String> ttvalues = new ArrayList<String>();
 		LOG.error("The reducer for the key "+stringKey);
-		for (Text vv : tvalues) {
-			vvv = vv;
-			LOG.error(vv.toString());
-			ttvalues.add(vv.toString());
+		for (Text v : tvalues) {
+			//vv = vvv;
+			LOG.error(v.toString());
+			ttvalues.add(v.toString());
 		}
 		LOG.error("The values in the ArrayList: "+ttvalues.toString());
 		LOG.error("=============================");
