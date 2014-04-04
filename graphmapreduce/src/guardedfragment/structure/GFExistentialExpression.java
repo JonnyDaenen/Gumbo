@@ -13,6 +13,8 @@ public class GFExistentialExpression extends GFExpression {
 	GFAtomicExpression guard;
 	GFExpression child;
 	
+	GFAtomicExpression output;
+	
 	char quantifierSymbol = 'E';
 	
 	
@@ -20,12 +22,14 @@ public class GFExistentialExpression extends GFExpression {
 	 * Creates an existential expression, consisting of a guard (atomic expression) and a child expression.
 	 * @param guard an atomic expression
 	 * @param child a child expression
+	 * @param name the name of the output
 	 * @param variables the PROJECTED variables
 	 */
-	public GFExistentialExpression(GFAtomicExpression guard, GFExpression child, String ... variables) {
+	public GFExistentialExpression(GFAtomicExpression guard, GFExpression child, String name, String ... variables) {
 		super();
 		this.guard = guard;
 		this.child = child;
+		this.output = new GFAtomicExpression(name,variables);
 		this.variables = variables;
 	}
 
@@ -34,6 +38,10 @@ public class GFExistentialExpression extends GFExpression {
 		Set<GFAtomicExpression> allAtoms = child.getAtomic();
 		allAtoms.add(guard);
 		return allAtoms;
+	}
+	
+	public GFAtomicExpression getOutputSchema() {
+		return output;
 	}
 
 	@Override
@@ -51,26 +59,36 @@ public class GFExistentialExpression extends GFExpression {
 
 	@Override
 	public Set<String> getFreeVariables() {
-		Set<String> freeVars = guard.getFreeVariables();
-		freeVars.addAll(child.getFreeVariables());
+		//Set<String> freeVars = guard.getFreeVariables();
+		//freeVars.addAll(child.getFreeVariables());	
+		//List<String> varlist = Arrays.asList(variables);
+		//freeVars.removeAll(varlist);
 		
-		List<String> varlist = Arrays.asList(variables);
-		freeVars.removeAll(varlist);
+		return output.getFreeVariables();
+	}
+	
+	private Set<String> getQuantifiedVariables() {
+		Set<String> guardVars = guard.getFreeVariables();
+		Set<String> freevars = output.getFreeVariables();
 		
-		return freeVars;
+		guardVars.removeAll(freevars);
+		return guardVars;
 	}
 	
 	@Override
 	public String generateString() {
-		return "(" + quantifierSymbol + " " + generateVarString()+ " " + guard.generateString() + " & " + child.generateString() + ")";
+		return "(" + quantifierSymbol + " " + generateQuantifiedVarString()+ " " + guard.generateString() + " & " + child.generateString() + ")";
 	}
 
 
-
-	private String generateVarString() {
+	private String generateQuantifiedVarString() {
+		Set<String> set = getQuantifiedVariables();
+		String[] array = set.toArray(new String[0]);
+		
 		String list = "";
-		for(String v : variables)
-			list += "," + v;
+		for(int i=0;i< array.length;i++) {
+			list += "," +array[i];
+		}
 		
 		return list.substring(1);
 	}

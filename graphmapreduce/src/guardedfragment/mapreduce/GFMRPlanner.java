@@ -74,8 +74,7 @@ public class GFMRPlanner {
 		GFAtomicExpression guard = e.getGuard();
 		GFExpression child = e.getChild();
 		// tony's addition to get the free vars of e
-		Set<String> setFreeVars = e.getFreeVariables();
-		String[] freeVars = setFreeVars.toArray(new String[0]);		
+		GFAtomicExpression output = e.getOutputSchema();	
 
 		// if it is a basic existential expression, convert
 		if (e.getChild().isAtomicBooleanCombination()) {
@@ -90,7 +89,7 @@ public class GFMRPlanner {
 			// Phase 2 job, which depends on Phase 1 job
 			// The first line is without the free variables
 			//ControlledJob phase2job = createBasicGFPhase2Job(tmpDir, outputDir, guard, child);
-			ControlledJob phase2job = createBasicGFPhase2Job(tmpDir, outputDir, guard, child,freeVars);
+			ControlledJob phase2job = createBasicGFPhase2Job(tmpDir, outputDir, guard, child,output);
 			phase2job.addDependingJob(phase1job);
 
 			// add jobs to plan
@@ -157,7 +156,7 @@ public class GFMRPlanner {
 	 * @return a ControlledJob, configured properly
 	 * @throws IOException
 	 */
-	private ControlledJob createBasicGFPhase2Job(Path in, Path out, GFAtomicExpression guard, GFExpression booleanformula, String[] vars) throws IOException {
+	private ControlledJob createBasicGFPhase2Job(Path in, Path out, GFAtomicExpression guard, GFExpression booleanformula, GFAtomicExpression output) throws IOException {
 		// create basic job
 		Job job = createJob(in, out);
 
@@ -170,7 +169,7 @@ public class GFMRPlanner {
 			Configuration conf = job.getConfiguration();
 			conf.set("guard", serializer.serializeGuard(guard));
 			conf.set("booleanformula", serializer.serializeGFBoolean(booleanformula));
-			conf.set("freevars", serializer.serializeVars(vars));
+			conf.set("outputname", serializer.serializeGFBoolean(output));
 		} catch (SerializeException e) {
 			throw new IOException("Error during serialization: " + e.getMessage());
 		}

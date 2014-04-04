@@ -46,6 +46,7 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 	GFExpression child;
 	GFBMapping mapGFtoB;
 	BExpression Bchild;
+	GFAtomicExpression output;
 	String[] freevars;
 
 	
@@ -70,7 +71,7 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 			// get parameters
 			this.guard = serializer.deserializeGuard(conf.get("guard"));
 			this.child = serializer.deserializeGFBoolean(conf.get("booleanformula"));
-			this.freevars = serializer.deserializeVars(conf.get("freevars"));
+			this.output = serializer.deserializeGFAtom(conf.get("outputname"));
 
 			// create mapping
 			mapGFtoB = new GFBMapping();
@@ -98,9 +99,7 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 		LOG.error("boolean: " + child);
 		LOG.error("boolean: " + Bchild);
 		LOG.error("key: " + key.toString());
-		LOG.error("freevars " + freevars);
 		
-		GFAtomicExpression output = new GFAtomicExpression("OUTPUT",freevars);
 		GuardedProjection p = new GuardedProjection(guard,output);
 		
 		String s = key.toString();

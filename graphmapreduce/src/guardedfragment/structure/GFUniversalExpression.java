@@ -9,8 +9,8 @@ public class GFUniversalExpression extends GFExistentialExpression {
 	 * @param child a child expression
 	 * @param variables the quantified variables
 	 */
-	public GFUniversalExpression(GFAtomicExpression guard, GFExpression child, String[] variables) {
-		super(guard, child, variables);
+	public GFUniversalExpression(GFAtomicExpression guard, GFExpression child, String name, String[] variables) {
+		super(guard, child, name, variables);
 		super.quantifierSymbol = 'A';
 	}
 
