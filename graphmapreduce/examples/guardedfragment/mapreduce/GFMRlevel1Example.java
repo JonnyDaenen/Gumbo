@@ -48,7 +48,6 @@ public class GFMRlevel1Example {
 		
 		LOG.info("Done.");
 
-
 	}
 
 }

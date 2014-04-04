@@ -34,6 +34,7 @@ public class GuardedProjection {
 
 		initialize();
 	}
+	
 
 	private void initialize() {
 		

@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.ArrayList;
 
-import mapreduce.data.RelationSchema;
 import mapreduce.data.Tuple;
 
 import org.apache.commons.logging.Log;
@@ -89,7 +88,6 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 		ArrayList<String> ttvalues = new ArrayList<String>();
 		LOG.error("The reducer for the key "+stringKey);
 		for (Text v : tvalues) {
-			//w = vvv;
 			LOG.error(v.toString());
 			ttvalues.add(v.toString());
 		}
@@ -128,8 +126,7 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 
 		Tuple t;
 		GuardedProjection p;
-		RelationSchema R1;
-		RelationSchema R2;
+
 		if (foundKey) {
 			// check the tuples that match the guard
 			//LOG.error("Inside the if after the foundKey");
@@ -137,8 +134,7 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 				//LOG.error("Inside for loop");
 				//LOG.error("inspecting value:" + values[i]);
 				t = new Tuple(values[i]);
-
-						
+			
 				if (guard.matches(t)) {
 					
 					// TODO comment, this works because of guarding
@@ -172,120 +168,5 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 		}
 
 	}
-	
-	
-	
-/*
-	@Override
-	protected void notsoreduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-
-		
-		boolean foundKey = false;
-		String stringKey = key.toString();
-		Tuple tKey = new Tuple(stringKey);
-		
-		if (guard.matches(tKey)) {
-			LOG.error("the guard tuple " + tKey.toString());
-			context.write(null, new Text(tKey.generateString() + ";"));
-			return;
-		}
-		
-		
-		LOG.error("The values in the ArrayList");
-		LOG.error("KEY: " + key.toString());
-		LOG.error("VALUES:");
-		for (Text value : values) {
-			LOG.error(value.toString());
-		}
-		LOG.error("Going to the next step");
-		
-		// look if data is present in the guarded relation
-		for (Text value : values) {
-			LOG.error("Inside the loop");
-			if (stringKey.equals(value.toString())) {
-				LOG.error("Key found:" + value.toString());
-				foundKey = true;
-				break;
-			}
-		}
-		
-		
-		
-		
-		
-
-		// if it is
-
-		Tuple t;
-		if (foundKey) {
-			// check the tuples that match the guard
-			LOG.error("Inside the if after the foundKey");
-			for (Text value2 : values) {
-				LOG.error("Inside for loop");
-				LOG.error("inspecting value:" + value2.toString());
-				t = new Tuple(value2.toString());
-				
-				if (guard.matches(t)) {
-					
-					// TODO comment, this works because of guarding
-					for (GFAtomicExpression gf : guarded) {
-						if (gf.matches(tKey)) {
-							LOG.error("inspecting value:" + value2.toString());
-							context.write(null, new Text(t.generateString() + ";" + gf.generateString()));
-						}
-					}
-				}
-			}
-		} else {
-			
-			for (Text value : values) {
-				LOG.error("inspecting value:" + value.toString());
-				t = new Tuple(value.toString());
-				
-				if (guard.matches(t)) {
-					LOG.error("inspecting value:" + value.toString());
-					context.write(null, new Text(t.generateString() + ";"));
-						
-				}
-			}			
-			
-			
-		}
-
-	}
-*/
-	
-	
-	
-	
-	/*
-	 * protected void oldreduce(Text key, Iterable<Text> values, Context
-	 * context) throws IOException, InterruptedException {
-	 * 
-	 * boolean guardFound = false; boolean guardedFound = false;
-	 * 
-	 * Tuple guardTuple = null; Tuple guardedTuple;
-	 * 
-	 * // determine guarded tuple and schema guardedTuple = new
-	 * Tuple(key.toString()); RelationSchema guardedSchema =
-	 * guardedTuple.extractSchema();
-	 * 
-	 * // checkfor guard and guarded for (Text value : values) { Tuple t = new
-	 * Tuple(value.toString());
-	 * 
-	 * // check if it is the guarded schema if
-	 * (t.satisfiesSchema(guardedSchema)) guardedFound = true;
-	 * 
-	 * // check if it is the guard schema (if so, keep track of it) if
-	 * (t.satisfiesSchema(guardSchema)) { guardFound = true; guardTuple = t; }
-	 * 
-	 * // stop when both are found if (guardFound && guardedFound) break; }
-	 * 
-	 * // write output if both are found if ( guardFound && guardedFound )
-	 * context.write(null, new
-	 * Text(guardedTuple.generateString()+";"+guardTuple.generateString()));
-	 * 
-	 * }
-	 */
 
 }

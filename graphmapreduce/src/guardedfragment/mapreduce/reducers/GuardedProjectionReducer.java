@@ -9,6 +9,8 @@ import guardedfragment.structure.GFBMapping;
 import guardedfragment.structure.GFConversionException;
 import guardedfragment.structure.GFExpression;
 import guardedfragment.structure.GFSerializer;
+import guardedfragment.structure.GuardedProjection;
+import guardedfragment.structure.NonMatchingTupleException;
 
 import java.io.IOException;
 import java.util.Set;
@@ -44,6 +46,8 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 	GFExpression child;
 	GFBMapping mapGFtoB;
 	BExpression Bchild;
+	String[] freevars;
+
 	
 	private static final Log LOG = LogFactory.getLog(GuardedProjectionReducer.class);
 
@@ -66,6 +70,7 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 			// get parameters
 			this.guard = serializer.deserializeGuard(conf.get("guard"));
 			this.child = serializer.deserializeGFBoolean(conf.get("booleanformula"));
+			this.freevars = serializer.deserializeVars(conf.get("freevars"));
 
 			// create mapping
 			mapGFtoB = new GFBMapping();
@@ -93,9 +98,14 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 		LOG.error("boolean: " + child);
 		LOG.error("boolean: " + Bchild);
 		LOG.error("key: " + key.toString());
+		LOG.error("freevars " + freevars);
+		
+		GFAtomicExpression output = new GFAtomicExpression("OUTPUT",freevars);
+		GuardedProjection p = new GuardedProjection(guard,output);
 		
 		String s = key.toString();
-		if (guard.matches(new Tuple(s))) {
+		Tuple tkey = new Tuple(s);
+		if (guard.matches(tkey)) {
 
 			// get all guarded relations from the formula
 			BEvaluationContext BchildEval = new BEvaluationContext();
@@ -107,6 +117,8 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 				BchildEval.setValue(mapGFtoB.getVariable(atom), false);
 			}
 
+
+			
 			Tuple t;
 			GFAtomicExpression dummy;
 			String sd;
@@ -129,11 +141,11 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 			
 			try {
 				if (Bchild.evaluate(BchildEval)) {
-					context.write(null, key);
+					context.write(null, new Text(p.project(tkey).generateString()));
 					
 					// FIXME we should add some projection
 				}
-			} catch (VariableNotFoundException e) {
+			} catch (VariableNotFoundException | NonMatchingTupleException e) {
 				// should not happen
 				e.printStackTrace();
 			}
@@ -142,31 +154,6 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 
 	}
 
-	/*
-	 * protected void oldreduce(Text key, Iterable<Text> values, Context
-	 * context) throws IOException, InterruptedException {
-	 * 
-	 * Set<RelationSchema> foundRelations = new HashSet<RelationSchema>();
-	 * Set<Tuple> outputTuples = new HashSet<Tuple>();
-	 * 
-	 * // boolean allRelationsFound = false;
-	 * 
-	 * // Record presence of all required relations for (Text value : values) {
-	 * Tuple t = new Tuple(value.toString());
-	 * 
-	 * if (t.satisfiesSchema(outputrelation)) outputTuples.add(t);
-	 * 
-	 * RelationSchema s = t.extractSchema();
-	 * 
-	 * if(relations.contains(s)) foundRelations.add(s);
-	 * 
-	 * }
-	 * 
-	 * // if all relations are found if(foundRelations.size() ==
-	 * relations.size()) for (Tuple t : outputTuples) { String value =
-	 * t.generateString(); context.write(key, new Text(value)); }
-	 * 
-	 * }
-	 */
+
 
 }

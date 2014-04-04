@@ -20,7 +20,7 @@ public class GFExistentialExpression extends GFExpression {
 	 * Creates an existential expression, consisting of a guard (atomic expression) and a child expression.
 	 * @param guard an atomic expression
 	 * @param child a child expression
-	 * @param variables the quantified variables
+	 * @param variables the PROJECTED variables
 	 */
 	public GFExistentialExpression(GFAtomicExpression guard, GFExpression child, String ... variables) {
 		super();

@@ -223,6 +223,33 @@ public class GFSerializer {
 		throw new DeserializeException("No ')' found in serial String");
 
 	}
+	
+	
+	public String serializeVars(String[] vars) {
+		if (vars.length == 0) {
+			return new String();
+		}
+		
+		String s = "";
+
+		for (int i=0; i< vars.length;i++) {
+			s += ";" + vars[i];
+		}
+		return s.substring(1);
+
+	}
+
+	public String[] deserializeVars(String s) throws DeserializeException {
+		//if (s.length() == 0) {
+		//	return null;
+		//}
+		
+		String[] eset = s.split(";");
+		return eset;
+	}
+	
+	
+	
 
 	/**
 	 * @param booleanformula
