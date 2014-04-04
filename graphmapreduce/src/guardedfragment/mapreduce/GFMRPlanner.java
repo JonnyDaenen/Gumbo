@@ -87,7 +87,7 @@ public class GFMRPlanner {
 			ControlledJob phase1job = createBasicGFPhase1Job(inputDir, tmpDir, guard, guardedSet);
 
 			// Phase 2 job, which depends on Phase 1 job
-			// The first line is without the free variables
+			// The first line is without the output atom
 			//ControlledJob phase2job = createBasicGFPhase2Job(tmpDir, outputDir, guard, child);
 			ControlledJob phase2job = createBasicGFPhase2Job(tmpDir, outputDir, guard, child,output);
 			phase2job.addDependingJob(phase1job);
