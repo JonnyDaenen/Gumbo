@@ -103,14 +103,16 @@ public class GFSerializer {
 		return e.generateString();
 	}
 
+	public String serializeGFBoolean(GFExistentialExpression e) {
+		return e.generateString();
+	}
+	
 	/**
 	 * @param string
 	 * @return
 	 * @throws DeserializeException
 	 */
 	public GFExpression deserializeGFBoolean(String s) throws DeserializeException {
-
-//	System.out.println(s);
 		
 		if (s.length() < 2)
 			throw new DeserializeException("Too short string to be a boolean GFExpression");

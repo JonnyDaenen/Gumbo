@@ -66,7 +66,7 @@ public class GFExistentialExpression extends GFExpression {
 		
 		return output.getFreeVariables();
 	}
-	
+
 	private Set<String> getQuantifiedVariables() {
 		Set<String> guardVars = guard.getFreeVariables();
 		Set<String> freevars = output.getFreeVariables();
@@ -77,10 +77,10 @@ public class GFExistentialExpression extends GFExpression {
 	
 	@Override
 	public String generateString() {
-		return "(" + quantifierSymbol + " " + generateQuantifiedVarString()+ " " + guard.generateString() + " & " + child.generateString() + ")";
+		return "(" + output.generateString() + " = " + guard.generateString() + " & " + child.generateString() + ")";
 	}
 
-
+/*
 	private String generateQuantifiedVarString() {
 		Set<String> set = getQuantifiedVariables();
 		String[] array = set.toArray(new String[0]);
@@ -92,7 +92,7 @@ public class GFExistentialExpression extends GFExpression {
 		
 		return list.substring(1);
 	}
-	
+*/	
 	
 	@Override
 	public boolean isGuarded() {
