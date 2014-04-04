@@ -15,11 +15,12 @@ public class GFAtomicExpression extends GFExpression {
 
 	String relation;
 	String[] variables;
+	int rank;
 
 	public GFAtomicExpression(String relationName, String... variables) {
 		this.relation = relationName;
 		this.variables = variables;
-
+		this.rank = 0;
 	}
 
 	@Override
@@ -169,5 +170,10 @@ public class GFAtomicExpression extends GFExpression {
 	 */
 	public int size() {
 		return variables.length;
+	}
+
+	@Override
+	public int getRank() {
+		return this.rank;
 	}
 }

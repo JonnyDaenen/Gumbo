@@ -10,6 +10,8 @@ public abstract class GFExpression {
 	
 	public abstract Set<String> getFreeVariables();
 	
+	public abstract int getRank();
+	
 	public abstract String generateString();
 	
 	/**

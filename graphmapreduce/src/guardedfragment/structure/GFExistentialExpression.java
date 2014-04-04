@@ -4,7 +4,6 @@ import guardedfragment.booleanstructure.BExpression;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class GFExistentialExpression extends GFExpression {
@@ -12,7 +11,7 @@ public class GFExistentialExpression extends GFExpression {
 	String [] variables;
 	GFAtomicExpression guard;
 	GFExpression child;
-	
+	int rank;
 	GFAtomicExpression output;
 	
 	char quantifierSymbol = 'E';
@@ -31,6 +30,7 @@ public class GFExistentialExpression extends GFExpression {
 		this.child = child;
 		this.output = new GFAtomicExpression(name,variables);
 		this.variables = variables;
+		this.rank = child.getRank()+1;
 	}
 
 
@@ -141,6 +141,12 @@ public class GFExistentialExpression extends GFExpression {
 	 */
 	public Set<GFAtomicExpression> getGuardedRelations() {
 		return child.getAtomic();
+	}
+
+
+	@Override
+	public int getRank() {
+		return this.rank;
 	}
 	
 }

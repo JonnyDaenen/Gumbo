@@ -10,6 +10,7 @@ public class GFAndExpression extends GFExpression{
 	
 	GFExpression child1;
 	GFExpression child2;
+	int rank;
 		
 	/**
 	 * An AND-expression in the Guarded Fragment.
@@ -19,6 +20,7 @@ public class GFAndExpression extends GFExpression{
 	public GFAndExpression(GFExpression c1, GFExpression c2) {
 		child1 = c1;
 		child2 = c2;
+		rank = Math.max(child1.getRank(),child2.getRank());
 	}
 
 	
@@ -70,6 +72,12 @@ public class GFAndExpression extends GFExpression{
 		BExpression nc1 = child1.convertToBExpression(m);
 		BExpression nc2 = child2.convertToBExpression(m);
 		return new BAndExpression(nc1, nc2);
+	}
+
+
+	@Override
+	public int getRank() {
+		return this.rank;
 	}
 
 }

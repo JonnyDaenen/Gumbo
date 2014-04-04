@@ -9,6 +9,7 @@ public class GFNotExpression extends GFExpression{
 
 	
 	GFExpression child;
+	int rank;
 	
 	/**
 	 * An NOT-expression in the Guarded Fragment.
@@ -16,6 +17,7 @@ public class GFNotExpression extends GFExpression{
 	 */
 	public GFNotExpression(GFExpression c) {
 		child = c;
+		rank = c.getRank();
 	}
 	
 	
@@ -64,5 +66,11 @@ public class GFNotExpression extends GFExpression{
 	public BExpression convertToBExpression(GFBMapping m) throws GFConversionException {
 		BExpression c = child.convertToBExpression(m);
 		return new BNotExpression(c);
+	}
+
+
+	@Override
+	public int getRank() {
+		return this.rank;
 	}
 }

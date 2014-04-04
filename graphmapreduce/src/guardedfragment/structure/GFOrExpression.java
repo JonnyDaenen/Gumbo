@@ -13,6 +13,7 @@ public class GFOrExpression extends GFAndExpression{
 	 */
 	public GFOrExpression(GFExpression c1, GFExpression c2) {
 		super(c1,c2);
+		rank = Math.max(c1.getRank(),c2.getRank());
 	}
 	
 	

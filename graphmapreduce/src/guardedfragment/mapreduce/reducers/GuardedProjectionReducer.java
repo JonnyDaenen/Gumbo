@@ -47,7 +47,7 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 	GFBMapping mapGFtoB;
 	BExpression Bchild;
 	GFAtomicExpression output;
-	String[] freevars;
+	//String[] freevars;
 
 	
 	private static final Log LOG = LogFactory.getLog(GuardedProjectionReducer.class);
