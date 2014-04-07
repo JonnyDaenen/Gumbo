@@ -11,6 +11,9 @@ public class MyGFParser {
 	}
 	
 	public GFExpression deserialize() throws DeserializeException {
+		if(start >= formula.length()) {
+			throw new DeserializeException("The string has been parsed");
+		}
 		
 		if(formula.charAt(start) == '!') {
 			start = start+1;
