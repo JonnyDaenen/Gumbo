@@ -71,6 +71,10 @@ public class GFAtomicExpression extends GFExpression {
 		return relation + "(" + generateVarString() + ")";
 	}
 	
+	public String prefixString() {
+		return relation + "(" + generateVarString() + ")";
+	}
+	
 	public int noVariables() {
 		return variables.length;
 	}

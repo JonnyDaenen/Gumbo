@@ -49,6 +49,9 @@ public class GFNotExpression extends GFExpression{
 		return "(!" + child.generateString() + ")";
 	}
 	
+	public String prefixString() {
+		return "!" + child.prefixString();
+	}
 	
 	@Override
 	public boolean isGuarded() {

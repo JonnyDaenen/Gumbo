@@ -33,6 +33,10 @@ public class GFOrExpression extends GFAndExpression{
 		return "(" + child1.generateString() + " | " + child2.generateString() + ")";
 	}
 	
+	public String prefixString() {
+		return "|" + child1.prefixString() + child2.prefixString();
+	}
+	
 	
 	@Override
 	public BExpression convertToBExpression(GFBMapping m) throws GFConversionException {

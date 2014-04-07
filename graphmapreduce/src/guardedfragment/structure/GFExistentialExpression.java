@@ -8,7 +8,6 @@ import java.util.Set;
 
 public class GFExistentialExpression extends GFExpression {
 	
-	String [] variables;
 	GFAtomicExpression guard;
 	GFExpression child;
 	int rank;
@@ -29,10 +28,17 @@ public class GFExistentialExpression extends GFExpression {
 		this.guard = guard;
 		this.child = child;
 		this.output = new GFAtomicExpression(name,variables);
-		this.variables = variables;
 		this.rank = child.getRank()+1;
 	}
 
+	public GFExistentialExpression(GFAtomicExpression guard, GFExpression child, GFAtomicExpression out) {
+		super();
+		this.guard = guard;
+		this.child = child;
+		this.output = out;
+		this.rank = child.getRank()+1;
+	}
+	
 
 	public Set<GFAtomicExpression> getAtomic() {
 		Set<GFAtomicExpression> allAtoms = child.getAtomic();
@@ -67,19 +73,27 @@ public class GFExistentialExpression extends GFExpression {
 		return output.getFreeVariables();
 	}
 
-	private Set<String> getQuantifiedVariables() {
+/*	private Set<String> getQuantifiedVariables() {
 		Set<String> guardVars = guard.getFreeVariables();
 		Set<String> freevars = output.getFreeVariables();
 		
 		guardVars.removeAll(freevars);
 		return guardVars;
 	}
+*/
 	
 	@Override
 	public String generateString() {
 		return "(" + output.generateString() + " = " + guard.generateString() + " & " + child.generateString() + ")";
 	}
+	
 
+	public String prefixString() {
+		return "=" + output.prefixString() + "^" + guard.generateString() +  child.generateString();
+	}
+
+	
+	
 /*
 	private String generateQuantifiedVarString() {
 		Set<String> set = getQuantifiedVariables();
@@ -94,12 +108,12 @@ public class GFExistentialExpression extends GFExpression {
 	}
 */	
 	
-	@Override
+    @Override
 	public boolean isGuarded() {
 		Set<String> guardvars = guard.getFreeVariables();
 		Set<String> phivars = child.getFreeVariables();
 		
-		Set<String> varlist = new HashSet<String>(Arrays.asList(variables));
+		Set<String> varlist = new HashSet<String>(Arrays.asList(output.getVars()));
 		
 		phivars.removeAll(guardvars);
 		varlist.removeAll(guardvars);
@@ -110,7 +124,6 @@ public class GFExistentialExpression extends GFExpression {
 		
 		return phivars.isEmpty() && varlist.isEmpty(); // OPTIMIZE this can be optimized
 	}
-
 
 
 	@Override

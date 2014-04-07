@@ -14,6 +14,8 @@ public abstract class GFExpression {
 	
 	public abstract String generateString();
 	
+	public abstract String prefixString();
+	
 	/**
 	 * Checks whether the formula is guarded.
 	 * A Formula is guarded when it is in the following inductively defined set:

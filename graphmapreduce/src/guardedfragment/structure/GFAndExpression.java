@@ -55,6 +55,10 @@ public class GFAndExpression extends GFExpression{
 		return "(" + child1.generateString() + " & " + child2.generateString() + ")";
 	}
 
+	public String prefixString() {
+		return "&" + child1.prefixString() + child2.prefixString();
+	}
+	
 
 	@Override
 	public boolean isGuarded() {
