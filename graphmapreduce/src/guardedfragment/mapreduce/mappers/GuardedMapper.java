@@ -1,8 +1,10 @@
 package guardedfragment.mapreduce.mappers;
 
 import guardedfragment.structure.GFAtomicExpression;
+import guardedfragment.structure.GFExistentialExpression;
 import guardedfragment.structure.GFSerializer;
 import guardedfragment.structure.GuardedProjection;
+import guardedfragment.structure.MyGFParser;
 import guardedfragment.structure.NonMatchingTupleException;
 
 import java.io.IOException;
@@ -53,24 +55,28 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 		super.setup(context);
 		Configuration conf = context.getConfiguration();
 		GFSerializer serializer = new GFSerializer();
+		MyGFParser parser;
 
 		// load guard
 		try {
-			String guardString = conf.get("guard");
-			this.guard = serializer.deserializeGuard(guardString);
+			String formulaString = conf.get("formula");
+			parser = new MyGFParser(formulaString);
+			GFExistentialExpression f = (GFExistentialExpression) parser.deserialize();
+			this.guard = f.getGuard();
+			this.guardedRelations = f.getAtomic();
 //			LOG.error(guard);
 		} catch (Exception e) {
 			throw new InterruptedException("No guard information supplied");
 		}
 
 		// load guarded
-		try {
-			String guardString = conf.get("guarded");
-			this.guardedRelations = serializer.deserializeGuarded(guardString);
+		//try {
+		//	String guardString = conf.get("guarded");
+		//	this.guardedRelations = serializer.deserializeGuarded(guardString);
 //			LOG.error(guardedRelations);
-		} catch (Exception e) {
-			throw new InterruptedException("No guarded information supplied");
-		}
+		//} catch (Exception e) {
+		//	throw new InterruptedException("No guarded information supplied");
+		//}
 
 	}
 

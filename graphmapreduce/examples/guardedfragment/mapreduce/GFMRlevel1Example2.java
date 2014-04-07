@@ -5,6 +5,7 @@ package guardedfragment.mapreduce;
 
 import guardedfragment.structure.DeserializeException;
 import guardedfragment.structure.GFAndExpression;
+import guardedfragment.structure.GFOrExpression;
 import guardedfragment.structure.GFAtomicExpression;
 import guardedfragment.structure.GFExistentialExpression;
 import guardedfragment.structure.GFExpression;
@@ -25,7 +26,7 @@ public class GFMRlevel1Example2 {
 
 	public static void main(String[] args) throws DeserializeException {
 
-/*		GFAtomicExpression a1 = new GFAtomicExpression("R", "x", "y", "z");
+		GFAtomicExpression a1 = new GFAtomicExpression("R", "x", "y", "z");
 		GFAtomicExpression a2 = new GFAtomicExpression("S", "x", "y");
 		GFAtomicExpression a3 = new GFAtomicExpression("S","y","z");
 		GFNotExpression a4 = new GFNotExpression(a3);
@@ -47,23 +48,27 @@ public class GFMRlevel1Example2 {
 		}
 		
 		LOG.info("Done.");
-*/
+
 		
-		GFAtomicExpression a1 = new GFAtomicExpression("R", "x", "y", "z");
+/*		GFAtomicExpression a1 = new GFAtomicExpression("R", "x", "y", "z");
 		GFAtomicExpression a2 = new GFAtomicExpression("S", "x", "y");
 		GFAtomicExpression a3 = new GFAtomicExpression("S","y","z");
 		GFNotExpression a4 = new GFNotExpression(a3);
 		GFAndExpression a5 = new GFAndExpression(a2,a4);
 
 		GFExistentialExpression e1 = new GFExistentialExpression(a1, a5, "OUTPUT","x");
-		System.out.println(e1.generateString());
+		GFAndExpression f = new GFAndExpression(e1,e1);
+		GFNotExpression g = new GFNotExpression(f);
+		GFOrExpression h = new GFOrExpression(g,a5);
 		
-		String s=e1.prefixString();
+		System.out.println(h.generateString());
+		
+		String s=h.prefixString();
 		MyGFParser parser = new MyGFParser(s);
 		GFExpression es = parser.deserialize();
 
 		System.out.println(es.generateString());
-
+*/
 	}
 
 }

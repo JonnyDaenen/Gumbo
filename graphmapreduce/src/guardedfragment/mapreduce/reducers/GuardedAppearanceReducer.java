@@ -1,8 +1,10 @@
 package guardedfragment.mapreduce.reducers;
 
 import guardedfragment.structure.GFAtomicExpression;
+import guardedfragment.structure.GFExistentialExpression;
 import guardedfragment.structure.GFSerializer;
 import guardedfragment.structure.GuardedProjection;
+import guardedfragment.structure.MyGFParser;
 import guardedfragment.structure.NonMatchingTupleException;
 
 import java.io.IOException;
@@ -43,6 +45,7 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 	// RelationSchema guardSchema;
 	GFAtomicExpression guard;
 	Set<GFAtomicExpression> guarded;
+	MyGFParser parser;
 
 	public GuardedAppearanceReducer() {
 
@@ -59,17 +62,11 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 
 		// load guard
 		try {
-			String guardString = conf.get("guard");
-			this.guard = serializer.deserializeGuard(guardString);
-			// LOG.error(guard);
-		} catch (Exception e) {
-			throw new InterruptedException("No guard information supplied");
-		}
-
-		// load guarded
-		try {
-			String guardString = conf.get("guarded");
-			this.guarded = serializer.deserializeGuarded(guardString);
+			String formulaString = conf.get("formula");
+			parser = new MyGFParser(formulaString);
+			GFExistentialExpression f = (GFExistentialExpression) parser.deserialize();
+			this.guard = f.getGuard();
+			this.guarded = f.getChild().getAtomic();
 			// LOG.error(guardedRelations);
 		} catch (Exception e) {
 			throw new InterruptedException("No guarded information supplied");

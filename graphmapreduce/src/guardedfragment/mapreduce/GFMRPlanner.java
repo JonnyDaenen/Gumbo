@@ -9,6 +9,7 @@ import guardedfragment.structure.GFExistentialExpression;
 import guardedfragment.structure.GFExpression;
 import guardedfragment.structure.GFSerializer;
 import guardedfragment.structure.SerializeException;
+import guardedfragment.structure.MyGFParser;
 
 import java.io.IOException;
 import java.util.Set;
@@ -50,6 +51,7 @@ public class GFMRPlanner {
 	static final String TMPDIRPREFIX = "TMP_JOB";
 	
 	private GFSerializer serializer;
+	private MyGFParser parser;
 
 	public GFMRPlanner(String inputDir, String outputDir, String scratchDir) {
 		super();
@@ -71,25 +73,28 @@ public class GFMRPlanner {
 
 		MRPlan plan = new MRPlan();
 		
-		GFAtomicExpression guard = e.getGuard();
-		GFExpression child = e.getChild();
+		//GFAtomicExpression guard = e.getGuard();
+		//GFExpression child = e.getChild();
 		// tony's addition to get the free vars of e
-		GFAtomicExpression output = e.getOutputSchema();	
+		//GFAtomicExpression output = e.getOutputSchema();	
 
 		// if it is a basic existential expression, convert
 		if (e.getChild().isAtomicBooleanCombination()) {
 
-			Set<GFAtomicExpression> guardedSet = e.getGuardedRelations();
+			//Set<GFAtomicExpression> guardedSet = e.getGuardedRelations();
 			
 			Path tmpDir = getTmpDir("" + jobCounter);
 
 			// Phase 1 job
-			ControlledJob phase1job = createBasicGFPhase1Job(inputDir, tmpDir, guard, guardedSet);
+			//ControlledJob phase1job = createBasicGFPhase1Job(inputDir, tmpDir, guard, guardedSet);
+			ControlledJob phase1job = createBasicGFPhase1Job(inputDir, tmpDir, e);
 
+			
 			// Phase 2 job, which depends on Phase 1 job
 			// The first line is without the output atom
 			//ControlledJob phase2job = createBasicGFPhase2Job(tmpDir, outputDir, guard, child);
-			ControlledJob phase2job = createBasicGFPhase2Job(tmpDir, outputDir, guard, child,output);
+			//ControlledJob phase2job = createBasicGFPhase2Job(tmpDir, outputDir, guard, child,output);
+			ControlledJob phase2job = createBasicGFPhase2Job(tmpDir, outputDir, e);
 			phase2job.addDependingJob(phase1job);
 
 			// add jobs to plan
@@ -110,6 +115,42 @@ public class GFMRPlanner {
 	private Path getTmpDir(String jobName) {
 		return new Path(scratchDir.toString() + "/" + TMPDIRPREFIX + jobName);
 	}
+	
+	
+	/**
+	 * Creates a phase 1 MR-job for a basic existential GFExpression.
+	 * 
+	 * @param in input folder
+	 * @param out output folder
+	 * @param e GFExistentialExpression
+	 * @return a ControlledJob, configured properly
+	 * @throws IOException
+	 */
+	private ControlledJob createBasicGFPhase1Job(Path in, Path out, GFExistentialExpression e)
+			throws IOException {
+
+		// create basic job
+		Job job = createJob(in, out);
+
+		// set mapper an reducer
+		job.setMapperClass(GuardedMapper.class);
+		job.setReducerClass(GuardedAppearanceReducer.class);
+		
+		// set guard and guarded set
+		Configuration conf = job.getConfiguration();
+		conf.set("formula", e.prefixString());
+
+		// set intermediate/mapper output
+		job.setMapOutputKeyClass(Text.class);
+		job.setMapOutputValueClass(Text.class);
+
+		// set reducer output
+		job.setOutputKeyClass(NullWritable.class);
+		job.setOutputValueClass(Text.class);
+
+		return new ControlledJob(job, null);
+	}
+	
 
 	/**
 	 * Creates a phase 1 MR-job for a basic existential GFExpression.
@@ -134,6 +175,39 @@ public class GFMRPlanner {
 		Configuration conf = job.getConfiguration();
 		conf.set("guard", serializer.serializeGuard(guard));
 		conf.set("guarded", serializer.serializeGuarded(guardedSet));
+
+		// set intermediate/mapper output
+		job.setMapOutputKeyClass(Text.class);
+		job.setMapOutputValueClass(Text.class);
+
+		// set reducer output
+		job.setOutputKeyClass(NullWritable.class);
+		job.setOutputValueClass(Text.class);
+
+		return new ControlledJob(job, null);
+	}
+	
+	/**
+	 * Creates a phase 2 MR-job for a basic existential GFExpression.
+	 * 
+	 * @param in input folder
+	 * @param out output folder
+	 * @param guard 
+	 * @param booleanformula 
+	 * @return a ControlledJob, configured properly
+	 * @throws IOException
+	 */
+	private ControlledJob createBasicGFPhase2Job(Path in, Path out, GFExistentialExpression f) throws IOException {
+		// create basic job
+		Job job = createJob(in, out);
+
+		// set mapper an reducer
+		job.setMapperClass(GuardedBooleanMapper.class);
+		job.setReducerClass(GuardedProjectionReducer.class);
+		
+		
+		Configuration conf = job.getConfiguration();
+		conf.set("formula", f.prefixString());
 
 		// set intermediate/mapper output
 		job.setMapOutputKeyClass(Text.class);

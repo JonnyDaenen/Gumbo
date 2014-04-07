@@ -7,9 +7,11 @@ import guardedfragment.structure.DeserializeException;
 import guardedfragment.structure.GFAtomicExpression;
 import guardedfragment.structure.GFBMapping;
 import guardedfragment.structure.GFConversionException;
+import guardedfragment.structure.GFExistentialExpression;
 import guardedfragment.structure.GFExpression;
 import guardedfragment.structure.GFSerializer;
 import guardedfragment.structure.GuardedProjection;
+import guardedfragment.structure.MyGFParser;
 import guardedfragment.structure.NonMatchingTupleException;
 
 import java.io.IOException;
@@ -47,6 +49,7 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 	GFBMapping mapGFtoB;
 	BExpression Bchild;
 	GFAtomicExpression output;
+	MyGFParser parser;
 	//String[] freevars;
 
 	
@@ -69,9 +72,15 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 
 		try {
 			// get parameters
-			this.guard = serializer.deserializeGuard(conf.get("guard"));
-			this.child = serializer.deserializeGFBoolean(conf.get("booleanformula"));
-			this.output = serializer.deserializeGFAtom(conf.get("outputname"));
+			parser = new MyGFParser(conf.get("formula"));
+			GFExistentialExpression f = (GFExistentialExpression) parser.deserialize();
+			
+			//this.guard = serializer.deserializeGuard(conf.get("guard"));
+			//this.child = serializer.deserializeGFBoolean(conf.get("booleanformula"));
+			//this.output = serializer.deserializeGFAtom(conf.get("outputname"));
+			this.guard = f.getGuard();
+			this.child = f.getChild();
+			this.output = f.getOutputSchema();
 
 			// create mapping
 			mapGFtoB = new GFBMapping();
