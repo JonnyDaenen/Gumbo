@@ -2,7 +2,6 @@ package guardedfragment.mapreduce.reducers;
 
 import guardedfragment.structure.GFAtomicExpression;
 import guardedfragment.structure.GFExistentialExpression;
-import guardedfragment.structure.GFSerializer;
 import guardedfragment.structure.GuardedProjection;
 import guardedfragment.structure.MyGFParser;
 import guardedfragment.structure.NonMatchingTupleException;

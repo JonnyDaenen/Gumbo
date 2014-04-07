@@ -50,12 +50,9 @@ public class GFMRPlanner {
 	private int jobCounter;
 	static final String TMPDIRPREFIX = "TMP_JOB";
 	
-	private GFSerializer serializer;
-	private MyGFParser parser;
 
 	public GFMRPlanner(String inputDir, String outputDir, String scratchDir) {
 		super();
-		serializer = new GFSerializer();
 		
 		this.inputDir = new Path(inputDir);
 		this.outputDir = new Path(outputDir);
@@ -153,41 +150,6 @@ public class GFMRPlanner {
 	
 
 	/**
-	 * Creates a phase 1 MR-job for a basic existential GFExpression.
-	 * 
-	 * @param in input folder
-	 * @param out output folder
-	 * @param guardedSet 
-	 * @return a ControlledJob, configured properly
-	 * @throws IOException
-	 */
-	private ControlledJob createBasicGFPhase1Job(Path in, Path out, GFAtomicExpression guard, Set<GFAtomicExpression> guardedSet)
-			throws IOException {
-
-		// create basic job
-		Job job = createJob(in, out);
-
-		// set mapper an reducer
-		job.setMapperClass(GuardedMapper.class);
-		job.setReducerClass(GuardedAppearanceReducer.class);
-		
-		// set guard and guarded set
-		Configuration conf = job.getConfiguration();
-		conf.set("guard", serializer.serializeGuard(guard));
-		conf.set("guarded", serializer.serializeGuarded(guardedSet));
-
-		// set intermediate/mapper output
-		job.setMapOutputKeyClass(Text.class);
-		job.setMapOutputValueClass(Text.class);
-
-		// set reducer output
-		job.setOutputKeyClass(NullWritable.class);
-		job.setOutputValueClass(Text.class);
-
-		return new ControlledJob(job, null);
-	}
-	
-	/**
 	 * Creates a phase 2 MR-job for a basic existential GFExpression.
 	 * 
 	 * @param in input folder
@@ -221,46 +183,6 @@ public class GFMRPlanner {
 	}
 
 	/**
-	 * Creates a phase 2 MR-job for a basic existential GFExpression.
-	 * 
-	 * @param in input folder
-	 * @param out output folder
-	 * @param guard 
-	 * @param booleanformula 
-	 * @return a ControlledJob, configured properly
-	 * @throws IOException
-	 */
-	private ControlledJob createBasicGFPhase2Job(Path in, Path out, GFAtomicExpression guard, GFExpression booleanformula, GFAtomicExpression output) throws IOException {
-		// create basic job
-		Job job = createJob(in, out);
-
-		// set mapper an reducer
-		job.setMapperClass(GuardedBooleanMapper.class);
-		job.setReducerClass(GuardedProjectionReducer.class);
-		
-		
-		try {
-			Configuration conf = job.getConfiguration();
-			conf.set("guard", serializer.serializeGuard(guard));
-			conf.set("booleanformula", serializer.serializeGFBoolean(booleanformula));
-			conf.set("outputname", serializer.serializeGFBoolean(output));
-		} catch (SerializeException e) {
-			throw new IOException("Error during serialization: " + e.getMessage());
-		}
-
-
-		// set intermediate/mapper output
-		job.setMapOutputKeyClass(Text.class);
-		job.setMapOutputValueClass(Text.class);
-
-		// set reducer output
-		job.setOutputKeyClass(NullWritable.class);
-		job.setOutputValueClass(Text.class);
-
-		return new ControlledJob(job, null);
-	}
-
-	/**
 	 * Creates a basic job with IO folders set correctly.
 	 * 
 	 * @param in
@@ -272,7 +194,7 @@ public class GFMRPlanner {
 		// create job
 		Job job = Job.getInstance();
 		job.setJarByClass(getClass());
-		job.setJobName("job" + jobCounter++); // TODO improve
+		job.setJobName("job" + jobCounter++); 
 
 		// set IO
 		FileInputFormat.addInputPath(job, in);

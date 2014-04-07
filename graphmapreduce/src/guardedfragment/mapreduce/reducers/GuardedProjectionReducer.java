@@ -9,7 +9,6 @@ import guardedfragment.structure.GFBMapping;
 import guardedfragment.structure.GFConversionException;
 import guardedfragment.structure.GFExistentialExpression;
 import guardedfragment.structure.GFExpression;
-import guardedfragment.structure.GFSerializer;
 import guardedfragment.structure.GuardedProjection;
 import guardedfragment.structure.MyGFParser;
 import guardedfragment.structure.NonMatchingTupleException;
