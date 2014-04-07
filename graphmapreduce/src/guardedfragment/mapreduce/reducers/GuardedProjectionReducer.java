@@ -44,13 +44,8 @@ import org.apache.hadoop.mapreduce.Reducer;
  */
 public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 
-	GFAtomicExpression guard;
-	GFExpression child;
-	GFBMapping mapGFtoB;
-	BExpression Bchild;
-	GFAtomicExpression output;
-	MyGFParser parser;
-	//String[] freevars;
+	
+	GFExistentialExpression formula;
 
 	
 	private static final Log LOG = LogFactory.getLog(GuardedProjectionReducer.class);
@@ -67,47 +62,41 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
 
-		GFSerializer serializer = new GFSerializer();
 		Configuration conf = context.getConfiguration();
 
-		try {
+
 			// get parameters
-			parser = new MyGFParser(conf.get("formula"));
-			GFExistentialExpression f = (GFExistentialExpression) parser.deserialize();
-			
-			//this.guard = serializer.deserializeGuard(conf.get("guard"));
-			//this.child = serializer.deserializeGFBoolean(conf.get("booleanformula"));
-			//this.output = serializer.deserializeGFAtom(conf.get("outputname"));
-			this.guard = f.getGuard();
-			this.child = f.getChild();
-			this.output = f.getOutputSchema();
-
-			// create mapping
-			mapGFtoB = new GFBMapping();
-			Set<GFAtomicExpression> allAtom = child.getAtomic();
-			for (GFAtomicExpression atom : allAtom) {
-				mapGFtoB.insertElement(atom);
-			}
-
-			Bchild = child.convertToBExpression(mapGFtoB);
-			
-		} catch (GFConversionException e) {
-			// should not happen!
-			e.printStackTrace();
-			throw new InterruptedException("Error during convertion to boolean formula");
-			
+		MyGFParser parser = new MyGFParser(conf.get("formula"));
+		try {
+			formula = (GFExistentialExpression) parser.deserialize();
 		} catch (DeserializeException e) {
 			e.printStackTrace();
-			throw new InterruptedException("Error during parameter recovery");
 		}
+						
 	}
 
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
-		LOG.error("boolean: " + child);
-		LOG.error("boolean: " + Bchild);
-		LOG.error("key: " + key.toString());
+		GFExpression child = formula.getChild();
+		GFBMapping mapGFtoB;
+		GFAtomicExpression output = formula.getOutputSchema();
+		GFAtomicExpression guard = formula.getGuard();
+		
+		// create mapping
+		mapGFtoB = new GFBMapping();
+		Set<GFAtomicExpression> allAtom = child.getAtomic();
+		for (GFAtomicExpression atom : allAtom) {
+			mapGFtoB.insertElement(atom);
+		}
+
+
+		BExpression Bchild = null;
+		try {
+			Bchild = child.convertToBExpression(mapGFtoB);
+		} catch (GFConversionException e1) {
+			e1.printStackTrace();
+		}
 		
 		GuardedProjection p = new GuardedProjection(guard,output);
 		
@@ -115,9 +104,7 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 		Tuple tkey = new Tuple(s);
 		if (guard.matches(tkey)) {
 
-			// get all guarded relations from the formula
 			BEvaluationContext BchildEval = new BEvaluationContext();
-			Set<GFAtomicExpression> allAtom = child.getAtomic();
 			LOG.error("atomics: " + allAtom);
 
 			// set them all to false
@@ -150,8 +137,6 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 			try {
 				if (Bchild.evaluate(BchildEval)) {
 					context.write(null, new Text(p.project(tkey).generateString()));
-					
-					// FIXME we should add some projection
 				}
 			} catch (VariableNotFoundException | NonMatchingTupleException e) {
 				// should not happen

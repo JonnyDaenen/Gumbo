@@ -43,9 +43,8 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 	private static final Log LOG = LogFactory.getLog(GuardedAppearanceReducer.class);
 	
 	// RelationSchema guardSchema;
-	GFAtomicExpression guard;
-	Set<GFAtomicExpression> guarded;
-	MyGFParser parser;
+	GFExistentialExpression formula;
+
 
 	public GuardedAppearanceReducer() {
 
@@ -58,16 +57,12 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
 		Configuration conf = context.getConfiguration();
-		GFSerializer serializer = new GFSerializer();
 
 		// load guard
 		try {
 			String formulaString = conf.get("formula");
-			parser = new MyGFParser(formulaString);
-			GFExistentialExpression f = (GFExistentialExpression) parser.deserialize();
-			this.guard = f.getGuard();
-			this.guarded = f.getChild().getAtomic();
-			// LOG.error(guardedRelations);
+			MyGFParser parser = new MyGFParser(formulaString);
+			formula = (GFExistentialExpression) parser.deserialize();
 		} catch (Exception e) {
 			throw new InterruptedException("No guarded information supplied");
 		}
@@ -93,16 +88,13 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 
 		String[] values = ttvalues.toArray(new String[ttvalues.size()]);
 
-		
+		GFAtomicExpression guard = formula.getGuard();
 			
 		if (guard.matches(tKey)) {
 			//LOG.error("the guard tuple " + tKey.toString());
 			context.write(null, new Text(tKey.generateString() + ";"));
 			return;
 		}
-		
-		
-
 		
 		// look if data is present in the guarded relation
 		for (int i=0;i<values.length;i++) {
@@ -113,16 +105,10 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 				break;
 			}
 		}
-		
-		//LOG.error("After searching the KEY in VALUES");	
-		
-		
-		
-
-		// if it is
 
 		Tuple t;
 		GuardedProjection p;
+		Set<GFAtomicExpression> guarded;
 
 		if (foundKey) {
 			// check the tuples that match the guard
@@ -133,6 +119,8 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 				t = new Tuple(values[i]);
 			
 				if (guard.matches(t)) {
+					
+					guarded = formula.getChild().getAtomic();
 					
 					// TODO comment, this works because of guarding
 					for (GFAtomicExpression gf : guarded) {

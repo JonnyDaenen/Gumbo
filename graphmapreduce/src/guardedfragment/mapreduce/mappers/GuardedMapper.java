@@ -2,7 +2,6 @@ package guardedfragment.mapreduce.mappers;
 
 import guardedfragment.structure.GFAtomicExpression;
 import guardedfragment.structure.GFExistentialExpression;
-import guardedfragment.structure.GFSerializer;
 import guardedfragment.structure.GuardedProjection;
 import guardedfragment.structure.MyGFParser;
 import guardedfragment.structure.NonMatchingTupleException;
@@ -43,8 +42,7 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 
 	private static final Log LOG = LogFactory.getLog(GuardedMapper.class);
 
-	GFAtomicExpression guard;
-	Set<GFAtomicExpression> guardedRelations;
+	GFExistentialExpression formula;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -54,29 +52,16 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 
 		super.setup(context);
 		Configuration conf = context.getConfiguration();
-		GFSerializer serializer = new GFSerializer();
 		MyGFParser parser;
 
 		// load guard
 		try {
 			String formulaString = conf.get("formula");
 			parser = new MyGFParser(formulaString);
-			GFExistentialExpression f = (GFExistentialExpression) parser.deserialize();
-			this.guard = f.getGuard();
-			this.guardedRelations = f.getAtomic();
-//			LOG.error(guard);
+			formula = (GFExistentialExpression) parser.deserialize();
 		} catch (Exception e) {
 			throw new InterruptedException("No guard information supplied");
 		}
-
-		// load guarded
-		//try {
-		//	String guardString = conf.get("guarded");
-		//	this.guardedRelations = serializer.deserializeGuarded(guardString);
-//			LOG.error(guardedRelations);
-		//} catch (Exception e) {
-		//	throw new InterruptedException("No guarded information supplied");
-		//}
 
 	}
 
@@ -86,6 +71,9 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 		// convert value to tuple
 		Tuple t = new Tuple(value.toString());
 		LOG.error("An original value: "+ value.toString());
+		
+		GFAtomicExpression guard = formula.getGuard();
+		Set<GFAtomicExpression> guardedRelations = formula.getChild().getAtomic();
 
 		// check if tuple matches guard
 		if (guard.matches(t)) {
