@@ -84,12 +84,12 @@ public class GFExistentialExpression extends GFExpression {
 	
 	@Override
 	public String generateString() {
-		return "(" + output.generateString() + " = " + guard.generateString() + " & " + child.generateString() + ")";
+		return "(" + output.generateString() + " = " + guard.generateString() + " ^ " + child.generateString() + ")";
 	}
 	
 
 	public String prefixString() {
-		return "=" + output.prefixString() + "^" + guard.generateString() +  child.generateString();
+		return "=" + output.prefixString() + "^" + guard.prefixString() +  child.prefixString();
 	}
 
 	

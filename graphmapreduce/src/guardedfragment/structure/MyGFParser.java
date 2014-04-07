@@ -57,9 +57,9 @@ public class MyGFParser {
 		if(k2 == -1)
 			throw new DeserializeException("Expecting ) after position " + k1);
 		
-		String name = formula.substring(0, k1);
-		if(!name.matches("[a-zA-Z]+")) {
-			throw new DeserializeException("Expecting only alphabetical symbols for relation names");
+		String name = formula.substring(start, k1);
+		if(!name.matches("[a-zA-Z0-9]+")) {
+			throw new DeserializeException("Expecting only alphanumeric symbols for relation names");
 		}
 		String rest = formula.substring(k1 + 1, k2);
 		String[] vars = rest.split(",");
