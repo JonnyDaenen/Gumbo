@@ -7,6 +7,7 @@ import guardedfragment.structure.MyGFParser;
 import guardedfragment.structure.NonMatchingTupleException;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 
 import mapreduce.data.Tuple;
@@ -42,7 +43,7 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 
 	private static final Log LOG = LogFactory.getLog(GuardedMapper.class);
 
-	GFExistentialExpression formula;
+	Set<GFExistentialExpression> formulaSet;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -56,9 +57,15 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 
 		// load guard
 		try {
-			String formulaString = conf.get("formula");
-			parser = new MyGFParser(formulaString);
-			formula = (GFExistentialExpression) parser.deserialize();
+			formulaSet = new HashSet<GFExistentialExpression>();
+			String formulaString = conf.get("formulaset");
+			String[] t = formulaString.split(new String(";"));
+			
+			for (int i=0; i< t.length;i++) {
+				parser = new MyGFParser(t[i]);
+				formulaSet.add((GFExistentialExpression) parser.deserialize());
+			}
+			
 		} catch (Exception e) {
 			throw new InterruptedException("No guard information supplied");
 		}
@@ -68,59 +75,64 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 	@Override
 	protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
-		// convert value to tuple
-		Tuple t = new Tuple(value.toString());
-		LOG.error("An original value: "+ value.toString());
-		
-		GFAtomicExpression guard = formula.getGuard();
-		Set<GFAtomicExpression> guardedRelations = formula.getChild().getAtomic();
-
-		// check if tuple matches guard
-		if (guard.matches(t)) {
-
-			// output guard:guard
-			context.write(new Text(t.toString()), new Text(t.toString()));
-			LOG.error("The first Mapper outputs the pair: " + t.toString() + " : " + t.toString());
+		for (GFExistentialExpression formula: formulaSet) {
 			
-			for (GFAtomicExpression guarded : guardedRelations) {
+			// convert value to tuple
+			Tuple t = new Tuple(value.toString());
+			LOG.error("An original value: "+ value.toString());
+			
+			GFAtomicExpression guard = formula.getGuard();
+			Set<GFAtomicExpression> guardedRelations = formula.getChild().getAtomic();
 
-				// get projection
-				// OPTIMIZE do this when initializing
-				GuardedProjection gp = new GuardedProjection(guard, guarded);
-				Tuple tprime;
-				try {
-					// project to key
-					tprime = gp.project(t);
+			// check if tuple matches guard
+			if (guard.matches(t)) {
+
+				// output guard:guard
+				context.write(new Text(t.toString()), new Text(t.toString()));
+				LOG.error("The first Mapper outputs the pair: " + t.toString() + " : " + t.toString());
 				
-					if (guarded.matches(tprime)) {
+				for (GFAtomicExpression guarded : guardedRelations) {
 
-						//LOG.error(tprime + " matches' " + guarded + " val: " + t);
-						// project to key and write out
-						context.write(new Text(tprime.toString()), new Text(t.toString()));
-						LOG.error("The first Mapper outputs the pair: " + tprime.toString() + " : " + t.toString());
+					// get projection
+					// OPTIMIZE do this when initializing
+					GuardedProjection gp = new GuardedProjection(guard, guarded);
+					Tuple tprime;
+					try {
+						// project to key
+						tprime = gp.project(t);
+					
+						if (guarded.matches(tprime)) {
 
+							//LOG.error(tprime + " matches' " + guarded + " val: " + t);
+							// project to key and write out
+							context.write(new Text(tprime.toString()), new Text(t.toString()));
+							LOG.error("The first Mapper outputs the pair: " + tprime.toString() + " : " + t.toString());
+
+						}
+					} catch (NonMatchingTupleException e1) {
+						// should not happen!
+						e1.printStackTrace();
 					}
-				} catch (NonMatchingTupleException e1) {
-					// should not happen!
-					e1.printStackTrace();
+
 				}
 
 			}
+			// if schema is not same as guard
+			else {
+				// check if tuple matches a guarded atom
+				for (GFAtomicExpression guarded : guardedRelations) {
 
-		}
-		// if schema is not same as guard
-		else {
-			// check if tuple matches a guarded atom
-			for (GFAtomicExpression guarded : guardedRelations) {
-
-				// if so, output tuple with same key and value
-				if (guarded.matches(t)) {
-					//LOG.error(t + " matches " + guarded);
-					context.write(new Text(t.toString()), new Text(t.toString()));
-					LOG.error("The first Mapper outputs the pair: " + t.toString() + " : " + t.toString());
-					//break;
+					// if so, output tuple with same key and value
+					if (guarded.matches(t)) {
+						//LOG.error(t + " matches " + guarded);
+						context.write(new Text(t.toString()), new Text(t.toString()));
+						LOG.error("The first Mapper outputs the pair: " + t.toString() + " : " + t.toString());
+						//break;
+					}
 				}
 			}
+			
 		}
+		
 	}
 }

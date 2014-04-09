@@ -14,6 +14,7 @@ import guardedfragment.structure.MyGFParser;
 import guardedfragment.structure.NonMatchingTupleException;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 
 import mapreduce.data.Tuple;
@@ -44,7 +45,8 @@ import org.apache.hadoop.mapreduce.Reducer;
 public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 
 	
-	GFExistentialExpression formula;
+	//GFExistentialExpression formula;
+	Set<GFExistentialExpression> formulaSet;
 
 	
 	private static final Log LOG = LogFactory.getLog(GuardedProjectionReducer.class);
@@ -65,9 +67,16 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 
 
 			// get parameters
-		MyGFParser parser = new MyGFParser(conf.get("formula"));
+		MyGFParser parser;
 		try {
-			formula = (GFExistentialExpression) parser.deserialize();
+			formulaSet = new HashSet<GFExistentialExpression>();
+			String formulaString = conf.get("formulaset");
+			String[] t = formulaString.split(new String(";"));
+			
+			for (int i=0; i< t.length;i++) {
+				parser = new MyGFParser(t[i]);
+				formulaSet.add((GFExistentialExpression) parser.deserialize());
+			}
 		} catch (DeserializeException e) {
 			e.printStackTrace();
 		}
@@ -77,73 +86,79 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
-		GFExpression child = formula.getChild();
-		GFBMapping mapGFtoB;
-		GFAtomicExpression output = formula.getOutputSchema();
-		GFAtomicExpression guard = formula.getGuard();
-		
-		// create mapping
-		mapGFtoB = new GFBMapping();
-		Set<GFAtomicExpression> allAtom = child.getAtomic();
-		for (GFAtomicExpression atom : allAtom) {
-			mapGFtoB.insertElement(atom);
-		}
-
-
-		BExpression Bchild = null;
-		try {
-			Bchild = child.convertToBExpression(mapGFtoB);
-		} catch (GFConversionException e1) {
-			e1.printStackTrace();
-		}
-		
-		GuardedProjection p = new GuardedProjection(guard,output);
-		
-		String s = key.toString();
-		Tuple tkey = new Tuple(s);
-		if (guard.matches(tkey)) {
-
-			BEvaluationContext BchildEval = new BEvaluationContext();
-			LOG.error("atomics: " + allAtom);
-
-			// set them all to false
+		for (GFExistentialExpression formula: formulaSet) {
+			
+			GFExpression child = formula.getChild();
+			GFBMapping mapGFtoB;
+			GFAtomicExpression output = formula.getOutputSchema();
+			GFAtomicExpression guard = formula.getGuard();
+			
+			// create mapping
+			mapGFtoB = new GFBMapping();
+			Set<GFAtomicExpression> allAtom = child.getAtomic();
 			for (GFAtomicExpression atom : allAtom) {
-				BchildEval.setValue(mapGFtoB.getVariable(atom), false);
+				mapGFtoB.insertElement(atom);
 			}
 
 
-			
-			Tuple t;
-			GFAtomicExpression dummy;
-			String sd;
-			// set certain values to true
-			for (Text value : values) {
-				sd = value.toString();
-				if (sd.length() != 0) {
-					LOG.error("value: " + value);
-					t = new Tuple(value.toString());
-					dummy = new GFAtomicExpression(t.getName(), t.getAllData());
-					
-					BchildEval.setValue(mapGFtoB.getVariable(dummy), true);
-
-					LOG.error("EVALUATING THE CHILD: " + BchildEval);
-					
-				}
-			}
-
-			LOG.error("=====================");
-			
+			BExpression Bchild = null;
 			try {
-				if (Bchild.evaluate(BchildEval)) {
-					context.write(null, new Text(p.project(tkey).generateString()));
+				Bchild = child.convertToBExpression(mapGFtoB);
+			} catch (GFConversionException e1) {
+				e1.printStackTrace();
+			}
+			
+			GuardedProjection p = new GuardedProjection(guard,output);
+			
+			String s = key.toString();
+			Tuple tkey = new Tuple(s);
+			if (guard.matches(tkey)) {
+
+				BEvaluationContext BchildEval = new BEvaluationContext();
+				LOG.error("atomics: " + allAtom);
+
+				// set them all to false
+				for (GFAtomicExpression atom : allAtom) {
+					BchildEval.setValue(mapGFtoB.getVariable(atom), false);
 				}
-			} catch (VariableNotFoundException | NonMatchingTupleException e) {
-				// should not happen
-				e.printStackTrace();
+
+
+				
+				Tuple t;
+				GFAtomicExpression dummy;
+				String sd;
+				// set certain values to true
+				for (Text value : values) {
+					sd = value.toString();
+					if (sd.length() != 0) {
+						LOG.error("value: " + value);
+						t = new Tuple(value.toString());
+						dummy = new GFAtomicExpression(t.getName(), t.getAllData());
+						
+						BchildEval.setValue(mapGFtoB.getVariable(dummy), true);
+
+						LOG.error("EVALUATING THE CHILD: " + BchildEval);
+						
+					}
+				}
+
+				LOG.error("=====================");
+				
+				try {
+					if (Bchild.evaluate(BchildEval)) {
+						context.write(null, new Text(p.project(tkey).generateString()));
+					}
+				} catch (VariableNotFoundException | NonMatchingTupleException e) {
+					// should not happen
+					e.printStackTrace();
+				}
+
 			}
 
+						
 		}
-
+		
+		
 	}
 
 

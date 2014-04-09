@@ -7,6 +7,7 @@ import guardedfragment.structure.MyGFParser;
 import guardedfragment.structure.NonMatchingTupleException;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.ArrayList;
 
@@ -42,7 +43,7 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 	private static final Log LOG = LogFactory.getLog(GuardedAppearanceReducer.class);
 	
 	// RelationSchema guardSchema;
-	GFExistentialExpression formula;
+	Set<GFExistentialExpression> formulaSet;
 
 
 	public GuardedAppearanceReducer() {
@@ -56,12 +57,18 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
 		Configuration conf = context.getConfiguration();
+		MyGFParser parser;
 
 		// load guard
 		try {
-			String formulaString = conf.get("formula");
-			MyGFParser parser = new MyGFParser(formulaString);
-			formula = (GFExistentialExpression) parser.deserialize();
+			formulaSet = new HashSet<GFExistentialExpression>();
+			String formulaString = conf.get("formulaset");
+			String[] t = formulaString.split(new String(";"));
+			
+			for (int i=0; i< t.length;i++) {
+				parser = new MyGFParser(t[i]);
+				formulaSet.add((GFExistentialExpression) parser.deserialize());
+			}
 		} catch (Exception e) {
 			throw new InterruptedException("No guarded information supplied");
 		}
@@ -71,85 +78,92 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 	@Override
 	protected void reduce(Text key, Iterable<Text> tvalues, Context context) throws IOException, InterruptedException {
 	
-		boolean foundKey = false;
-		String stringKey = key.toString();
-		Tuple tKey = new Tuple(stringKey);
-		//Text w;
-		
-		ArrayList<String> ttvalues = new ArrayList<String>();
-		LOG.error("The reducer for the key "+stringKey);
-		for (Text v : tvalues) {
-			LOG.error(v.toString());
-			ttvalues.add(v.toString());
-		}
-		LOG.error("The values in the ArrayList: "+ttvalues.toString());
-		LOG.error("=============================");
-
-		String[] values = ttvalues.toArray(new String[ttvalues.size()]);
-
-		GFAtomicExpression guard = formula.getGuard();
+		for (GFExistentialExpression formula:formulaSet) {
 			
-		if (guard.matches(tKey)) {
-			//LOG.error("the guard tuple " + tKey.toString());
-			context.write(null, new Text(tKey.generateString() + ";"));
-			return;
-		}
-		
-		// look if data is present in the guarded relation
-		for (int i=0;i<values.length;i++) {
-			//LOG.error("Inside the loop");
-			if (stringKey.equals(values[i])) {
-				//LOG.error("Key found:" + values[i]);
-				foundKey = true;
-				break;
+			boolean foundKey = false;
+			String stringKey = key.toString();
+			Tuple tKey = new Tuple(stringKey);
+			//Text w;
+			
+			ArrayList<String> ttvalues = new ArrayList<String>();
+			LOG.error("The reducer for the key "+stringKey);
+			for (Text v : tvalues) {
+				LOG.error(v.toString());
+				ttvalues.add(v.toString());
 			}
-		}
+			LOG.error("The values in the ArrayList: "+ttvalues.toString());
+			LOG.error("=============================");
 
-		Tuple t;
-		GuardedProjection p;
-		Set<GFAtomicExpression> guarded;
+			String[] values = ttvalues.toArray(new String[ttvalues.size()]);
 
-		if (foundKey) {
-			// check the tuples that match the guard
-			//LOG.error("Inside the if after the foundKey");
-			for (int i=0;i<values.length;i++) {
-				//LOG.error("Inside for loop");
-				//LOG.error("inspecting value:" + values[i]);
-				t = new Tuple(values[i]);
+			GFAtomicExpression guard = formula.getGuard();
+				
+			if (guard.matches(tKey)) {
+				//LOG.error("the guard tuple " + tKey.toString());
+				context.write(null, new Text(tKey.generateString() + ";"));
+				return;
+			}
 			
-				if (guard.matches(t)) {
-					
-					guarded = formula.getChild().getAtomic();
-					
-					// TODO comment, this works because of guarding
-					for (GFAtomicExpression gf : guarded) {
-						p = new GuardedProjection(guard,gf);				
-						try {
-							if (p.project(t).equal(tKey)) {
-								//LOG.error("inspecting value:" + values[i]);
-								context.write(null, new Text(t.generateString() + ";" + gf.generateString()));
+			// look if data is present in the guarded relation
+			for (int i=0;i<values.length;i++) {
+				//LOG.error("Inside the loop");
+				if (stringKey.equals(values[i])) {
+					//LOG.error("Key found:" + values[i]);
+					foundKey = true;
+					break;
+				}
+			}
+
+			Tuple t;
+			GuardedProjection p;
+			Set<GFAtomicExpression> guarded;
+
+			if (foundKey) {
+				// check the tuples that match the guard
+				//LOG.error("Inside the if after the foundKey");
+				for (int i=0;i<values.length;i++) {
+					//LOG.error("Inside for loop");
+					//LOG.error("inspecting value:" + values[i]);
+					t = new Tuple(values[i]);
+				
+					if (guard.matches(t)) {
+						
+						guarded = formula.getChild().getAtomic();
+						
+						// TODO comment, this works because of guarding
+						for (GFAtomicExpression gf : guarded) {
+							p = new GuardedProjection(guard,gf);				
+							try {
+								if (p.project(t).equal(tKey)) {
+									//LOG.error("inspecting value:" + values[i]);
+									context.write(null, new Text(t.generateString() + ";" + gf.generateString()));
+								}
+							} catch (NonMatchingTupleException e) {
+								e.printStackTrace();
 							}
-						} catch (NonMatchingTupleException e) {
-							e.printStackTrace();
 						}
 					}
 				}
-			}
-		} else {
-			
-			for (int i=0;i<values.length;i++) {
-				//LOG.error("inspecting value:" + values[i]);
-				t = new Tuple(values[i]);
+			} else {
 				
-				if (guard.matches(t)) {
+				for (int i=0;i<values.length;i++) {
 					//LOG.error("inspecting value:" + values[i]);
-					context.write(null, new Text(t.generateString() + ";"));
-						
-				}
-			}			
+					t = new Tuple(values[i]);
+					
+					if (guard.matches(t)) {
+						//LOG.error("inspecting value:" + values[i]);
+						context.write(null, new Text(t.generateString() + ";"));
+							
+					}
+				}			
+				
+				
+			}
 			
 			
 		}
+		
+		
 
 	}
 

@@ -41,7 +41,7 @@ public class GFMRlevel1Example2 {
 
 
 		try {
-			MRPlan plan = planner.convert(e1);
+			MRPlan plan = planner.convert(e1.getSubExistentialExpression(1));
 			System.out.println(plan);
 			System.out.println("AFTER PLAN");
 			plan.execute();
