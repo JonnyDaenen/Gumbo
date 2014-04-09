@@ -70,27 +70,11 @@ public class GFMRPlanner {
 
 		MRPlan plan = new MRPlan();
 		
-		//GFAtomicExpression guard = e.getGuard();
-		//GFExpression child = e.getChild();
-		// tony's addition to get the free vars of e
-		//GFAtomicExpression output = e.getOutputSchema();	
-
-		// if it is a basic existential expression, convert
 		if (e.getChild().isAtomicBooleanCombination()) {
-
-			//Set<GFAtomicExpression> guardedSet = e.getGuardedRelations();
 			
 			Path tmpDir = getTmpDir("" + jobCounter);
 
-			// Phase 1 job
-			//ControlledJob phase1job = createBasicGFPhase1Job(inputDir, tmpDir, guard, guardedSet);
 			ControlledJob phase1job = createBasicGFPhase1Job(inputDir, tmpDir, e);
-
-			
-			// Phase 2 job, which depends on Phase 1 job
-			// The first line is without the output atom
-			//ControlledJob phase2job = createBasicGFPhase2Job(tmpDir, outputDir, guard, child);
-			//ControlledJob phase2job = createBasicGFPhase2Job(tmpDir, outputDir, guard, child,output);
 			ControlledJob phase2job = createBasicGFPhase2Job(tmpDir, outputDir, e);
 			phase2job.addDependingJob(phase1job);
 

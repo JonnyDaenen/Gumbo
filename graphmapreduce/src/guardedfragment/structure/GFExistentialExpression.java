@@ -38,7 +38,7 @@ public class GFExistentialExpression extends GFExpression {
 		this.output = out;
 		this.rank = child.getRank()+1;
 	}
-	
+		
 
 	public Set<GFAtomicExpression> getAtomic() {
 		Set<GFAtomicExpression> allAtoms = child.getAtomic();
@@ -160,6 +160,20 @@ public class GFExistentialExpression extends GFExpression {
 	@Override
 	public int getRank() {
 		return this.rank;
+	}
+	
+	public Set<GFExistentialExpression> getSubExistentialExpression(int k) {
+		Set<GFExistentialExpression> set = new HashSet<GFExistentialExpression>();
+		
+		if (k > this.rank) {
+			return set;
+		}
+		if (k == this.rank) {
+			set.add(this);
+			return set;
+		}
+		
+		return child.getSubExistentialExpression(k);	
 	}
 	
 }

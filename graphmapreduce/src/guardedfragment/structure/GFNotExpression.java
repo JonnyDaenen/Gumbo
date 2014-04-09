@@ -3,6 +3,7 @@ package guardedfragment.structure;
 import guardedfragment.booleanstructure.BExpression;
 import guardedfragment.booleanstructure.BNotExpression;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class GFNotExpression extends GFExpression{
@@ -75,5 +76,18 @@ public class GFNotExpression extends GFExpression{
 	@Override
 	public int getRank() {
 		return this.rank;
+	}
+
+
+	@Override
+	public Set<GFExistentialExpression> getSubExistentialExpression(int k) {
+		Set<GFExistentialExpression> set = new HashSet<GFExistentialExpression>();
+		
+		if (k > this.rank) {
+			return set;
+		}
+		
+		set.addAll(child.getSubExistentialExpression(k));
+		return set;
 	}
 }

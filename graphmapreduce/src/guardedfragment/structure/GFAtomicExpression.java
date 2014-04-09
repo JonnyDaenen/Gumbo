@@ -180,4 +180,10 @@ public class GFAtomicExpression extends GFExpression {
 	public int getRank() {
 		return this.rank;
 	}
+
+	@Override
+	public Set<GFExistentialExpression> getSubExistentialExpression(int k) {
+		Set<GFExistentialExpression> set = new HashSet<GFExistentialExpression>();
+		return set;
+	}
 }

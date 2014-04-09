@@ -14,6 +14,8 @@ public abstract class GFExpression {
 	
 	public abstract String generateString();
 	
+	public abstract Set<GFExistentialExpression> getSubExistentialExpression(int k);
+	
 	public abstract String prefixString();
 	
 	/**

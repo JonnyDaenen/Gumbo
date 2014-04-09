@@ -3,15 +3,17 @@
  */
 package guardedfragment.mapreduce;
 
+import java.util.Set;
+
 import guardedfragment.structure.DeserializeException;
 import guardedfragment.structure.GFAndExpression;
-import guardedfragment.structure.GFOrExpression;
 import guardedfragment.structure.GFAtomicExpression;
 import guardedfragment.structure.GFExistentialExpression;
 import guardedfragment.structure.GFExpression;
 import guardedfragment.structure.GFNotExpression;
-import mapreduce.MRPlan;
+import guardedfragment.structure.GFOrExpression;
 import guardedfragment.structure.MyGFParser;
+import mapreduce.MRPlan;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,8 +51,13 @@ public class GFMRlevel1Example2 {
 		
 		LOG.info("Done.");
 
-		
-/*		GFAtomicExpression a1 = new GFAtomicExpression("R", "x", "y", "z");
+		testing();
+
+	}
+	
+	
+	private static void testing() {
+		GFAtomicExpression a1 = new GFAtomicExpression("R", "x", "y", "z");
 		GFAtomicExpression a2 = new GFAtomicExpression("S", "x", "y");
 		GFAtomicExpression a3 = new GFAtomicExpression("S","y","z");
 		GFNotExpression a4 = new GFNotExpression(a3);
@@ -60,15 +67,24 @@ public class GFMRlevel1Example2 {
 		GFAndExpression f = new GFAndExpression(e1,e1);
 		GFNotExpression g = new GFNotExpression(f);
 		GFOrExpression h = new GFOrExpression(g,a5);
-		
-		System.out.println(h.generateString());
-		
-		String s=h.prefixString();
-		MyGFParser parser = new MyGFParser(s);
-		GFExpression es = parser.deserialize();
 
-		System.out.println(es.generateString());
-*/
+
+		
+		GFExistentialExpression h1 = new GFExistentialExpression(a3,h, "Out2", "y");
+		
+		System.out.println("The rank of h1: "+h1.getRank());
+		System.out.println(h1.generateString());
+		
+		Set<GFExistentialExpression> set = h1.getSubExistentialExpression(1);
+		for (GFExistentialExpression s : set) {
+		    System.out.println(s.generateString());
+		}
+
+		for (GFExistentialExpression s : set) {
+		    System.out.println(s.generateString());
+		}
+
+		
 	}
 
 }
