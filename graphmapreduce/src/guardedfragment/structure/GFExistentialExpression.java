@@ -162,6 +162,8 @@ public class GFExistentialExpression extends GFExpression {
 		return this.rank;
 	}
 	
+	
+	// return all sub ExistentialExpression of rank k
 	public Set<GFExistentialExpression> getSubExistentialExpression(int k) {
 		Set<GFExistentialExpression> set = new HashSet<GFExistentialExpression>();
 		
