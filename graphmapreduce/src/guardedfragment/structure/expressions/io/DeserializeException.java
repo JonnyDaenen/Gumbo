@@ -1,7 +1,7 @@
 /**
  * Created: 31 Mar 2014
  */
-package guardedfragment.structure;
+package guardedfragment.structure.expressions.io;
 
 /**
  * @author Jonny Daenen

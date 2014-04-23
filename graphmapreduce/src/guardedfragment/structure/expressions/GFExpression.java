@@ -1,6 +1,9 @@
-package guardedfragment.structure;
+package guardedfragment.structure.expressions;
 
 import guardedfragment.booleanstructure.BExpression;
+import guardedfragment.structure.GFBMapping;
+import guardedfragment.structure.GFConversionException;
+import guardedfragment.structure.GFEvaluationContext;
 
 import java.util.Set;
 
@@ -63,6 +66,10 @@ public abstract class GFExpression {
 	@Override
 	public String toString() {
 		return generateString();
+	}
+	
+	public <R> R accept(GFVisitor<R> v) {
+		return v.visit(this);
 	}
 	
 }

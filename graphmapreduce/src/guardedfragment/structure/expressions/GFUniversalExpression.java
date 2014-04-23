@@ -1,5 +1,8 @@
-package guardedfragment.structure;
+package guardedfragment.structure.expressions;
 
+import guardedfragment.structure.GFEvaluationContext;
+
+@Deprecated
 public class GFUniversalExpression extends GFExistentialExpression {
 
 	/**
@@ -27,6 +30,12 @@ public class GFUniversalExpression extends GFExistentialExpression {
 		
 		// evaluate the implication
 		return !guard.evaluate(c) || child.evaluate(c);
+	}
+	
+	
+	@Override
+	public <R> R accept(GFVisitor<R> v) {
+		return v.visit(this);
 	}
 
 }

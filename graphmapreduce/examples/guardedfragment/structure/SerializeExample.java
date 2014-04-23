@@ -3,6 +3,9 @@
  */
 package guardedfragment.structure;
 
+import guardedfragment.structure.expressions.GFAtomicExpression;
+import guardedfragment.structure.expressions.io.GFInfixSerializer;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +19,7 @@ public class SerializeExample {
 		
 		GFAtomicExpression gfe1 = new GFAtomicExpression("R", "x", "y", "x");
 		
-		GFSerializer ser = new GFSerializer();
+		GFInfixSerializer ser = new GFInfixSerializer();
 		String s1 = ser.serializeGuard(gfe1);
 		GFAtomicExpression gfe2 = ser.deserializeGuard(s1);
 		

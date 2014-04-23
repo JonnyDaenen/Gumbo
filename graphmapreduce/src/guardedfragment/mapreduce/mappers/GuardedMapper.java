@@ -1,10 +1,10 @@
 package guardedfragment.mapreduce.mappers;
 
-import guardedfragment.structure.GFAtomicExpression;
-import guardedfragment.structure.GFExistentialExpression;
 import guardedfragment.structure.GuardedProjection;
 import guardedfragment.structure.MyGFParser;
 import guardedfragment.structure.NonMatchingTupleException;
+import guardedfragment.structure.expressions.GFAtomicExpression;
+import guardedfragment.structure.expressions.GFExistentialExpression;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -20,7 +20,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 /**
- * Phase: Basic Guarded - Phase 1 Mapper
+ * Phase: Basic Guarded - Round 1 Mapper
  * 
  * Input: set of relations Si and one guarded relation R Output: key:val where
  * key is each value in Si, and the value is either the value of Si, or the

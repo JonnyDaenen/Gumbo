@@ -1,7 +1,14 @@
 /**
  * Created: 31 Mar 2014
  */
-package guardedfragment.structure;
+package guardedfragment.structure.expressions.io;
+
+import guardedfragment.structure.expressions.GFAndExpression;
+import guardedfragment.structure.expressions.GFAtomicExpression;
+import guardedfragment.structure.expressions.GFExistentialExpression;
+import guardedfragment.structure.expressions.GFExpression;
+import guardedfragment.structure.expressions.GFNotExpression;
+import guardedfragment.structure.expressions.GFOrExpression;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +17,7 @@ import java.util.Set;
  * @author Jonny Daenen
  * 
  */
-public class GFSerializer {
+public class GFInfixSerializer {
 
 	public String serializeGuard(GFAtomicExpression e) {
 		return e.generateString();

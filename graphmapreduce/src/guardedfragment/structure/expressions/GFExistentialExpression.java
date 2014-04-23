@@ -1,6 +1,9 @@
-package guardedfragment.structure;
+package guardedfragment.structure.expressions;
 
 import guardedfragment.booleanstructure.BExpression;
+import guardedfragment.structure.GFBMapping;
+import guardedfragment.structure.GFConversionException;
+import guardedfragment.structure.GFEvaluationContext;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -146,6 +149,10 @@ public class GFExistentialExpression extends GFExpression {
 	public GFAtomicExpression getGuard() {
 		return	guard;
 	}
+	
+	public GFAtomicExpression getOutput() {
+		return output;
+	}
 
 
 	/**
@@ -176,6 +183,11 @@ public class GFExistentialExpression extends GFExpression {
 		}
 		
 		return child.getSubExistentialExpression(k);	
+	}
+	
+	@Override
+	public <R> R accept(GFVisitor<R> v) {
+		return v.visit(this);
 	}
 	
 }

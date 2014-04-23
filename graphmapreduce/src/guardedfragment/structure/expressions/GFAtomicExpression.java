@@ -1,7 +1,9 @@
-package guardedfragment.structure;
+package guardedfragment.structure.expressions;
 
 import guardedfragment.booleanstructure.BExpression;
 import guardedfragment.booleanstructure.BVariable;
+import guardedfragment.structure.GFBMapping;
+import guardedfragment.structure.GFEvaluationContext;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -185,5 +187,10 @@ public class GFAtomicExpression extends GFExpression {
 	public Set<GFExistentialExpression> getSubExistentialExpression(int k) {
 		Set<GFExistentialExpression> set = new HashSet<GFExistentialExpression>();
 		return set;
+	}
+	
+	@Override
+	public <R> R accept(GFVisitor<R> v) {
+		return v.visit(this);
 	}
 }

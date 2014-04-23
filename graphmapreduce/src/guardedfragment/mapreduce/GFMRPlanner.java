@@ -4,12 +4,12 @@ import guardedfragment.mapreduce.mappers.GuardedBooleanMapper;
 import guardedfragment.mapreduce.mappers.GuardedMapper;
 import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
 import guardedfragment.mapreduce.reducers.GuardedProjectionReducer;
-import guardedfragment.structure.GFAtomicExpression;
-import guardedfragment.structure.GFExistentialExpression;
-import guardedfragment.structure.GFExpression;
-import guardedfragment.structure.GFSerializer;
-import guardedfragment.structure.SerializeException;
 import guardedfragment.structure.MyGFParser;
+import guardedfragment.structure.expressions.GFAtomicExpression;
+import guardedfragment.structure.expressions.GFExistentialExpression;
+import guardedfragment.structure.expressions.GFExpression;
+import guardedfragment.structure.expressions.io.GFInfixSerializer;
+import guardedfragment.structure.expressions.io.SerializeException;
 
 import java.io.IOException;
 import java.util.Set;
@@ -31,10 +31,13 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
  * 
  * Configuration: - scratch dir - input dir - output dir
  * 
- * Tasks: - create jobs with correct mapper and reducer - set job dependencies -
- * determine intermediate output (tmp) folders - link output to input of
- * dependent jobs - TODO basic clean up of tmp folders - TODO clean up tmp
- * folders as soon as possible
+ * Tasks: 
+ * - create jobs with correct mapper and reducer 
+ * - set job dependencies 
+ * - determine intermediate output (tmp) folders 
+ * - link output to input of dependent jobs 
+ * - TODO basic clean up of tmp folders 
+ * - TODO clean up tmp folders as soon as possible
  * 
  * @author Jonny Daenen
  * 

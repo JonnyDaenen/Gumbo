@@ -1,7 +1,10 @@
-package guardedfragment.structure;
+package guardedfragment.structure.expressions;
 
 import guardedfragment.booleanstructure.BExpression;
 import guardedfragment.booleanstructure.BNotExpression;
+import guardedfragment.structure.GFBMapping;
+import guardedfragment.structure.GFConversionException;
+import guardedfragment.structure.GFEvaluationContext;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -77,6 +80,13 @@ public class GFNotExpression extends GFExpression{
 	public int getRank() {
 		return this.rank;
 	}
+	
+	/**
+	 * @return the argument
+	 */
+	public GFExpression getChild() {
+		return child;
+	}
 
 
 	@Override
@@ -89,5 +99,10 @@ public class GFNotExpression extends GFExpression{
 		
 		set.addAll(child.getSubExistentialExpression(k));
 		return set;
+	}
+	
+	@Override
+	public <R> R accept(GFVisitor<R> v) {
+		return v.visit(this);
 	}
 }

@@ -3,6 +3,13 @@
  */
 package guardedfragment.structure;
 
+import guardedfragment.structure.expressions.GFAndExpression;
+import guardedfragment.structure.expressions.GFAtomicExpression;
+import guardedfragment.structure.expressions.GFExpression;
+import guardedfragment.structure.expressions.GFNotExpression;
+import guardedfragment.structure.expressions.GFOrExpression;
+import guardedfragment.structure.expressions.io.GFInfixSerializer;
+
 
 /**
  * @author Jonny Daenen
@@ -21,7 +28,7 @@ public class SerializeBooleanExample {
 		GFNotExpression gfe6 = new GFNotExpression(gfe3);
 		GFOrExpression gfe7 = new GFOrExpression(gfe5, gfe6);
 		
-		GFSerializer serializer = new GFSerializer();
+		GFInfixSerializer serializer = new GFInfixSerializer();
 		String ser = serializer.serializeGFBoolean(gfe7);
 		System.out.println(ser);
 		

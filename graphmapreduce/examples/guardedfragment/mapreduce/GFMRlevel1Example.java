@@ -3,11 +3,11 @@
  */
 package guardedfragment.mapreduce;
 
-import guardedfragment.structure.GFAndExpression;
-import guardedfragment.structure.GFAtomicExpression;
-import guardedfragment.structure.GFExistentialExpression;
-import guardedfragment.structure.GFNotExpression;
-import guardedfragment.structure.GFOrExpression;
+import guardedfragment.structure.expressions.GFAndExpression;
+import guardedfragment.structure.expressions.GFAtomicExpression;
+import guardedfragment.structure.expressions.GFExistentialExpression;
+import guardedfragment.structure.expressions.GFNotExpression;
+import guardedfragment.structure.expressions.GFOrExpression;
 import mapreduce.MRPlan;
 
 import org.apache.commons.logging.Log;

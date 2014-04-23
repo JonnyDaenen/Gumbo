@@ -1,7 +1,10 @@
-package guardedfragment.structure;
+package guardedfragment.structure.expressions;
 
 import guardedfragment.booleanstructure.BExpression;
 import guardedfragment.booleanstructure.BOrExpression;
+import guardedfragment.structure.GFBMapping;
+import guardedfragment.structure.GFConversionException;
+import guardedfragment.structure.GFEvaluationContext;
 
 public class GFOrExpression extends GFAndExpression{
 
@@ -43,6 +46,11 @@ public class GFOrExpression extends GFAndExpression{
 		BExpression nc1 = child1.convertToBExpression(m);
 		BExpression nc2 = child2.convertToBExpression(m);
 		return new BOrExpression(nc1, nc2);
+	}
+	
+	@Override
+	public <R> R accept(GFVisitor<R> v) {
+		return v.visit(this);
 	}
 	
 

@@ -1,5 +1,10 @@
 package guardedfragment.structure;
 
+import guardedfragment.structure.expressions.GFAndExpression;
+import guardedfragment.structure.expressions.GFAtomicExpression;
+import guardedfragment.structure.expressions.GFNotExpression;
+import guardedfragment.structure.expressions.GFOrExpression;
+
 import java.util.Set;
 
 import mapreduce.data.KeyValuePair;

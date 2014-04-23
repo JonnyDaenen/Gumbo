@@ -1,6 +1,10 @@
 package guardedfragment.structure;
 
 import guardedfragment.booleanstructure.BExpression;
+import guardedfragment.structure.expressions.GFAndExpression;
+import guardedfragment.structure.expressions.GFAtomicExpression;
+import guardedfragment.structure.expressions.GFExistentialExpression;
+import guardedfragment.structure.expressions.GFExpression;
 
 public class GuardedFragmentExample2 {
 

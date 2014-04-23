@@ -3,15 +3,15 @@ package guardedfragment.mapreduce.reducers;
 import guardedfragment.booleanstructure.BEvaluationContext;
 import guardedfragment.booleanstructure.BExpression;
 import guardedfragment.booleanstructure.VariableNotFoundException;
-import guardedfragment.structure.DeserializeException;
-import guardedfragment.structure.GFAtomicExpression;
 import guardedfragment.structure.GFBMapping;
 import guardedfragment.structure.GFConversionException;
-import guardedfragment.structure.GFExistentialExpression;
-import guardedfragment.structure.GFExpression;
 import guardedfragment.structure.GuardedProjection;
 import guardedfragment.structure.MyGFParser;
 import guardedfragment.structure.NonMatchingTupleException;
+import guardedfragment.structure.expressions.GFAtomicExpression;
+import guardedfragment.structure.expressions.GFExistentialExpression;
+import guardedfragment.structure.expressions.GFExpression;
+import guardedfragment.structure.expressions.io.DeserializeException;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -26,7 +26,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 /**
- * Phase: Basic Guarded - Phase 2 Reducer
+ * Phase: Basic Guarded - Round 2 Reducer
  * 
  * Input: Si(a,b) : set of tuples Output: Si(a,b);R(a',b') (note the semicolon!)
  * 

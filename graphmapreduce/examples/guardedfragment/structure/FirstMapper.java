@@ -1,5 +1,8 @@
 package guardedfragment.structure;
 
+import guardedfragment.structure.expressions.GFAtomicExpression;
+import guardedfragment.structure.expressions.GFExpression;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,7 +37,7 @@ public class FirstMapper {
 		// and output the tuple
 		Set<KeyValuePair> p = new HashSet<KeyValuePair>();		
 		for (int i =0; i < arrayAllAtoms.length;i++) {
-			if (t.getName().equals(arrayAllAtoms[i].relation)) {
+			if (t.getName().equals(arrayAllAtoms[i].getName())) {
 				p.add(new KeyValuePair(s,s));
 			}
 		}
@@ -55,7 +58,7 @@ public class FirstMapper {
 			f = getVariableMapping(guard,arrayAllAtoms[i]);
 			
 			// project
-			tkey = t.getData(arrayAllAtoms[i].relation, f);
+			tkey = t.getData(arrayAllAtoms[i].getName(), f);
 			
 			// add to output
 			p.add(new KeyValuePair(tkey,t.generateString()));
@@ -67,8 +70,8 @@ public class FirstMapper {
 		
 		HashMap<Integer,Integer> f = new HashMap<Integer,Integer>(gf1.noVariables());
 		
-		String[] vars1 = gf1.variables;
-		String[] vars2 = gf2.variables;
+		String[] vars1 = gf1.getVars();
+		String[] vars2 = gf2.getVars();
 		
 		for(int i=0; i<vars2.length; i++){
 			for(int j=0; j<vars1.length;j++){

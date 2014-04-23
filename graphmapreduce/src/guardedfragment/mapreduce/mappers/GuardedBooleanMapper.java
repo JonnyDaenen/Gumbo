@@ -12,7 +12,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 
 /** 
- * Phase: Basic Guarded - Phase 2 Mapper
+ * Phase: Basic Guarded - Round 2 Mapper
  * 
  * Input: a sets of 2 tuples Si(a,b);R(a',b').
  * Output: R(a',b'):ti, where ti is the boolean variable corresponding to Si.

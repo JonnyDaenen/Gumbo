@@ -1,5 +1,7 @@
 package guardedfragment.structure;
 
+import guardedfragment.structure.expressions.GFAtomicExpression;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,10 +42,10 @@ public class GuardedProjection {
 		
 		mapping.clear();
 		
-		String[] sourceVars = source.variables;
-		String[] targetVars = target.variables;
+		String[] sourceVars = source.getVars();
+		String[] targetVars = target.getVars();
 
-		// TODO what is mapping is not possible? -> test using projection of the variable tuple??
+		// TODO what if mapping is not possible? -> test using projection of the variable tuple??
 		
 		// check for equal variable identifiers
 		// for each position of the target
@@ -106,7 +108,7 @@ public class GuardedProjection {
 	 */
 	public Tuple project(Tuple t) throws NonMatchingTupleException {
 		
-		// TODO throw exception
+		// TODO throw exception if non-matching
 		
 
 		String[] s = new String[target.getNumFields()];

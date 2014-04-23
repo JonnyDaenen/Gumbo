@@ -1,5 +1,19 @@
 package guardedfragment.structure;
 
+import guardedfragment.structure.expressions.GFAndExpression;
+import guardedfragment.structure.expressions.GFAtomicExpression;
+import guardedfragment.structure.expressions.GFExistentialExpression;
+import guardedfragment.structure.expressions.GFExpression;
+import guardedfragment.structure.expressions.GFNotExpression;
+import guardedfragment.structure.expressions.GFOrExpression;
+import guardedfragment.structure.expressions.io.DeserializeException;
+
+/**
+ * 
+ * @author Tony Tan
+ *
+ */
+@Deprecated
 public class MyGFParser {
 	
 	String formula;
@@ -15,17 +29,23 @@ public class MyGFParser {
 			throw new DeserializeException("The string has been parsed");
 		}
 		
+		
+		// negation
 		if(formula.charAt(start) == '!') {
 			start = start+1;
 			GFExpression g = deserialize();
 			return new GFNotExpression(g);
 		}
+		
+		// or
 		if(formula.charAt(start) == '|') {
 			start = start+1;
 			GFExpression g1 = deserialize();
 			GFExpression g2 = deserialize();
 			return new GFOrExpression(g1,g2);
 		}
+		
+		// and
 		if(formula.charAt(start) == '&') {
 			start = start+1;
 			GFExpression g1 = deserialize();

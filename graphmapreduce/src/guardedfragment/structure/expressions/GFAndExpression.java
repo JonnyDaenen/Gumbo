@@ -1,7 +1,10 @@
-package guardedfragment.structure;
+package guardedfragment.structure.expressions;
 
 import guardedfragment.booleanstructure.BAndExpression;
 import guardedfragment.booleanstructure.BExpression;
+import guardedfragment.structure.GFBMapping;
+import guardedfragment.structure.GFConversionException;
+import guardedfragment.structure.GFEvaluationContext;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -98,6 +101,27 @@ public class GFAndExpression extends GFExpression{
 		set.addAll(child1.getSubExistentialExpression(k));
 		set.addAll(child2.getSubExistentialExpression(k));
 		return set;
+	}
+	
+	
+	/**
+	 * @return left argument
+	 */
+	public GFExpression getChild1() {
+		return child1;
+	}
+	
+	/**
+	 * @return right argument
+	 */
+	public GFExpression getChild2() {
+		return child2;
+	}
+
+
+	@Override
+	public <R> R accept(GFVisitor<R> v) {
+		return v.visit(this);
 	}
 
 }

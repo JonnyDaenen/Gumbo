@@ -1,6 +1,9 @@
 package guardedfragment.structure;
 
 import guardedfragment.booleanstructure.BVariable;
+import guardedfragment.structure.expressions.GFAtomicExpression;
+import guardedfragment.structure.expressions.GFExistentialExpression;
+import guardedfragment.structure.expressions.GFExpression;
 
 import java.util.HashMap;
 import java.util.Map;

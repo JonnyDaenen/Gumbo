@@ -1,10 +1,10 @@
 package guardedfragment.mapreduce.reducers;
 
-import guardedfragment.structure.GFAtomicExpression;
-import guardedfragment.structure.GFExistentialExpression;
 import guardedfragment.structure.GuardedProjection;
 import guardedfragment.structure.MyGFParser;
 import guardedfragment.structure.NonMatchingTupleException;
+import guardedfragment.structure.expressions.GFAtomicExpression;
+import guardedfragment.structure.expressions.GFExistentialExpression;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -20,7 +20,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 /**
- * Phase: Basic Guarded - Phase 1 Reducer
+ * Phase: Basic Guarded - Round 1 Reducer
  * 
  * Input: Si(a,b) : set of tuples 
  * Output: Si(a,b);R(a',b') (note the semicolon!)
