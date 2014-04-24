@@ -19,7 +19,7 @@ public class GFUniversalExpression extends GFExistentialExpression {
 
 	
 	@Override
-	public <R> R accept(GFVisitor<R> v) {
+	public <R> R accept(GFVisitor<R> v) throws GFVisitorException {
 		return v.visit(this);
 	}
 

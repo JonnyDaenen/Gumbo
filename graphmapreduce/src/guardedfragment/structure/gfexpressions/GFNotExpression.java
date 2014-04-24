@@ -60,11 +60,6 @@ public class GFNotExpression extends GFExpression{
 	}
 
 
-	@Override
-	public BExpression convertToBExpression(GFBooleanMapping m) throws GFtoBooleanConversionException {
-		BExpression c = child.convertToBExpression(m);
-		return new BNotExpression(c);
-	}
 
 
 	@Override
@@ -93,7 +88,7 @@ public class GFNotExpression extends GFExpression{
 	}
 	
 	@Override
-	public <R> R accept(GFVisitor<R> v) {
+	public <R> R accept(GFVisitor<R> v) throws GFVisitorException {
 		return v.visit(this);
 	}
 }

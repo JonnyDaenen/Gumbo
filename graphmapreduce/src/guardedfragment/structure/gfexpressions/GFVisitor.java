@@ -10,16 +10,16 @@ package guardedfragment.structure.gfexpressions;
  */
 public interface GFVisitor<R> {
 	
-	abstract R visit(GFExpression e);
+	abstract R visit(GFExpression e) throws GFVisitorException;
 	
-	abstract R visit(GFAtomicExpression e);
+	abstract R visit(GFAtomicExpression e) throws GFVisitorException;
 	
-	abstract R visit(GFAndExpression e);
-	abstract R visit(GFOrExpression e);
-	abstract R visit(GFNotExpression e);
+	abstract R visit(GFAndExpression e) throws GFVisitorException;
+	abstract R visit(GFOrExpression e) throws GFVisitorException;
+	abstract R visit(GFNotExpression e) throws GFVisitorException;
 	
-	abstract R visit(GFExistentialExpression e);
-	abstract R visit(GFUniversalExpression e);
+	abstract R visit(GFExistentialExpression e) throws GFVisitorException;
+	abstract R visit(GFUniversalExpression e) throws GFVisitorException;
 	
 }
 

@@ -126,13 +126,6 @@ public class GFExistentialExpression extends GFExpression {
 		return child.isAtomicBooleanCombination();
 	}
 
-
-
-	@Override
-	public BExpression convertToBExpression(GFBooleanMapping m) throws GFtoBooleanConversionException {
-		throw new GFtoBooleanConversionException("It's not possible to convert formulas that are not a boolean combination of atomic formula's.");
-	}
-	
 	
 	public GFExpression getChild() {
 		return child;
@@ -178,7 +171,7 @@ public class GFExistentialExpression extends GFExpression {
 	}
 	
 	@Override
-	public <R> R accept(GFVisitor<R> v) {
+	public <R> R accept(GFVisitor<R> v) throws GFVisitorException {
 		return v.visit(this);
 	}
 	

@@ -5,6 +5,7 @@ import guardedfragment.structure.booleanexpressions.BExpression;
 import guardedfragment.structure.booleanexpressions.VariableNotFoundException;
 import guardedfragment.structure.conversion.GFBooleanMapping;
 import guardedfragment.structure.conversion.GFtoBooleanConversionException;
+import guardedfragment.structure.conversion.GFtoBooleanConvertor;
 import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import guardedfragment.structure.gfexpressions.GFExpression;
@@ -46,6 +47,9 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 
 	// GFExistentialExpression formula;
 	Set<GFExistentialExpression> formulaSet;
+	
+
+	GFtoBooleanConvertor convertor;
 
 	private static final Log LOG = LogFactory.getLog(GuardedProjectionReducer.class);
 
@@ -62,6 +66,7 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 		super.setup(context);
 		Configuration conf = context.getConfiguration();
 
+		convertor = new GFtoBooleanConvertor();
 		GFPrefixSerializer serializer = new GFPrefixSerializer();
 
 		// load guard
@@ -120,14 +125,17 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 			// OPTIMIZE this can be done in advance
 			GFAtomProjection p = new GFAtomProjection(guard, output);
 
-			// create empty mapping, will be filled in automatically
-			GFBooleanMapping mapGFtoB = new GFBooleanMapping();
+			
 
 			// convert to boolean formula, while constructing the mapping
 			// automatically
 			BExpression booleanChildExpression = null;
+			// mapping will be created by convertor
+			GFBooleanMapping mapGFtoB = null;
 			try {
-				booleanChildExpression = child.convertToBExpression(mapGFtoB);
+				booleanChildExpression = convertor.convert(child);
+				mapGFtoB = convertor.getMapping();
+				
 			} catch (GFtoBooleanConversionException e1) {
 				LOG.error("Something went wrong when converting GF to boolean, skipping: " + e1.getMessage());
 				continue;

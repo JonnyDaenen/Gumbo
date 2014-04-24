@@ -66,14 +66,6 @@ public class GFAndExpression extends GFExpression{
 
 
 	@Override
-	public BExpression convertToBExpression(GFBooleanMapping m) throws GFtoBooleanConversionException {
-		BExpression nc1 = child1.convertToBExpression(m);
-		BExpression nc2 = child2.convertToBExpression(m);
-		return new BAndExpression(nc1, nc2);
-	}
-
-
-	@Override
 	public int getRank() {
 		return this.rank;
 	}
@@ -110,7 +102,7 @@ public class GFAndExpression extends GFExpression{
 
 
 	@Override
-	public <R> R accept(GFVisitor<R> v) {
+	public <R> R accept(GFVisitor<R> v) throws GFVisitorException {
 		return v.visit(this);
 	}
 

@@ -57,28 +57,12 @@ public abstract class GFExpression {
 		return false;
 	}
 
-	/**
-	 * Convert the GFExpression to a boolean expression. A mapping from atomic
-	 * values to boolean variables is created if necessary. Note that identical
-	 * relations are mapped to the same variable. E.g., B(x) & B(x) is mapped
-	 * onto v0 & v0. This is the case even when the GFAtomicExpressions are
-	 * different.
-	 * 
-	 * @param m
-	 *            a mapping from atomic values to variables; missing values are
-	 *            added
-	 * @return a boolean expression
-	 * @throws GFtoBooleanConversionException
-	 *             when it's not a boolean combination of atomic expressions
-	 */
-	public abstract BExpression convertToBExpression(GFBooleanMapping m) throws GFtoBooleanConversionException;
-
 	@Override
 	public String toString() {
 		return generateString();
 	}
 
-	public <R> R accept(GFVisitor<R> v) {
+	public <R> R accept(GFVisitor<R> v) throws GFVisitorException {
 		return v.visit(this);
 	}
 

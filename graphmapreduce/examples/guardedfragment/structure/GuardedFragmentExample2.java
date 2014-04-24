@@ -3,6 +3,7 @@ package guardedfragment.structure;
 import guardedfragment.structure.booleanexpressions.BExpression;
 import guardedfragment.structure.conversion.GFBooleanMapping;
 import guardedfragment.structure.conversion.GFtoBooleanConversionException;
+import guardedfragment.structure.conversion.GFtoBooleanConvertor;
 import guardedfragment.structure.gfexpressions.GFAndExpression;
 import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
@@ -49,9 +50,12 @@ public class GuardedFragmentExample2 {
 
 	private static void convert(GFExpression gfe2) {
 		try {
-			GFBooleanMapping m = new GFBooleanMapping();
-			BExpression bex = gfe2.convertToBExpression(m);
-			System.out.println(bex.generateString());
+			
+			GFtoBooleanConvertor convertor = new GFtoBooleanConvertor();
+			BExpression bex = convertor.convert(gfe2);
+			GFBooleanMapping m = convertor.getMapping();
+			
+			System.out.println(bex);
 			System.out.println(m);
 		} catch (GFtoBooleanConversionException e) {
 			e.printStackTrace();

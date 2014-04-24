@@ -3,6 +3,7 @@
  */
 package guardedfragment.structure.gfexpressions.io;
 
+import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
 import guardedfragment.structure.gfexpressions.GFAndExpression;
 import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
@@ -11,9 +12,13 @@ import guardedfragment.structure.gfexpressions.GFNotExpression;
 import guardedfragment.structure.gfexpressions.GFOrExpression;
 import guardedfragment.structure.gfexpressions.GFUniversalExpression;
 import guardedfragment.structure.gfexpressions.GFVisitor;
+import guardedfragment.structure.gfexpressions.GFVisitorException;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.sun.tools.javac.util.Pair;
 
@@ -26,6 +31,10 @@ import com.sun.tools.javac.util.Pair;
  */
 public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpression> {
 
+
+	private static final Log LOG = LogFactory.getLog(GFPrefixSerializer.class);
+	
+	
 	StringSetSerializer setSerializer;
 
 	public GFPrefixSerializer() {
@@ -38,9 +47,17 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 	 * 
 	 * @param e
 	 * @return
+	 * @throws GFVisitorException 
 	 */
 	public String serialize(GFExpression e) {
-		return e.accept(this);
+		try {
+			return e.accept(this);
+		} catch (GFVisitorException e1) {
+			// should not happen
+			LOG.info("Unexpected exception during serialization of "+e+": " + e1.getMessage());
+			e1.printStackTrace();
+		}
+		return "";
 	}
 
 	public String serializeSet(Set<? extends GFExpression> set) {

@@ -11,13 +11,19 @@ public class BEvaluationContext {
 	public BEvaluationContext() {
 		valuemap = new HashMap<Integer, Boolean>();
 	}
-
+	/**
+	 * Lookup the truth value of a variable. When it is not found, an exception is thrown.
+	 * @param v the variable
+	 * @return
+	 * @throws VariableNotFoundException when the requested variable is not found
+	 */
 	public boolean lookupValue(BVariable v) throws VariableNotFoundException {
 		return lookupValue(v.id);
 	}
 	
 	
-	public boolean lookupValue(int id) throws VariableNotFoundException {
+	
+	protected boolean lookupValue(int id) throws VariableNotFoundException {
 		
 		if(!valuemap.containsKey(id))
 			throw new VariableNotFoundException("Variable with id "+id+" was not found in the value map!");
@@ -25,11 +31,17 @@ public class BEvaluationContext {
 		return valuemap.get(id);
 	}
 
+
+	/**
+	 * Sets the truth value of the given variable.
+	 * @param v
+	 * @param b
+	 */
 	public void setValue(BVariable v, boolean b) {
 		setValue(v.id, b);
 	}
 	
-	public void setValue(int id, boolean b) {
+	protected void setValue(int id, boolean b) {
 		valuemap.put(id, b);
 	}
 	

@@ -86,11 +86,6 @@ public class GFAtomicExpression extends GFExpression {
 		return true;
 	}
 
-	@Override
-	public BExpression convertToBExpression(GFBooleanMapping m) {
-		BVariable v = m.getVariable(this);
-		return v;
-	}
 
 	@Override
 	public int hashCode() {
@@ -177,7 +172,7 @@ public class GFAtomicExpression extends GFExpression {
 	}
 
 	@Override
-	public <R> R accept(GFVisitor<R> v) {
+	public <R> R accept(GFVisitor<R> v) throws GFVisitorException {
 		return v.visit(this);
 	}
 }

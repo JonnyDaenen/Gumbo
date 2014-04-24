@@ -68,6 +68,7 @@ public class GFBooleanMapping {
 	
 	public BVariable getVariable(GFAtomicExpression aex) {
 		
+		System.out.println("request " + aex);
 		BVariable v;
 		
 		// create new var if necessary  
@@ -77,10 +78,11 @@ public class GFBooleanMapping {
 			// update id counter
 			nextId++;
 		} else {
+			System.out.println("exists");
 			v = mapping.get(aex);
 		}
 			
-		
+		System.out.println("return " + v);
 		return v;
 	}
 	
