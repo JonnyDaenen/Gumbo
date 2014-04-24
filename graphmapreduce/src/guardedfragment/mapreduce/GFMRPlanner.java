@@ -4,13 +4,9 @@ import guardedfragment.mapreduce.mappers.GuardedBooleanMapper;
 import guardedfragment.mapreduce.mappers.GuardedMapper;
 import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
 import guardedfragment.mapreduce.reducers.GuardedProjectionReducer;
-import guardedfragment.structure.MyGFParser;
-import guardedfragment.structure.expressions.GFAtomicExpression;
 import guardedfragment.structure.expressions.GFExistentialExpression;
 import guardedfragment.structure.expressions.GFExpression;
-import guardedfragment.structure.expressions.io.GFInfixSerializer;
 import guardedfragment.structure.expressions.io.GFPrefixSerializer;
-import guardedfragment.structure.expressions.io.SerializeException;
 
 import java.io.IOException;
 import java.util.HashSet;

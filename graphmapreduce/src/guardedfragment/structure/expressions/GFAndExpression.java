@@ -73,6 +73,7 @@ public class GFAndExpression extends GFExpression{
 	public boolean isAtomicBooleanCombination() {
 		return child1.isAtomicBooleanCombination() && child2.isAtomicBooleanCombination();
 	}
+	
 
 
 	@Override
@@ -123,5 +124,7 @@ public class GFAndExpression extends GFExpression{
 	public <R> R accept(GFVisitor<R> v) {
 		return v.visit(this);
 	}
+
+
 
 }

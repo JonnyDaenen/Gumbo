@@ -133,6 +133,11 @@ public class GFExistentialExpression extends GFExpression {
 	public boolean isAtomicBooleanCombination() {
 		return false;
 	}
+	
+	@Override
+	public boolean isBasicGF() {
+		return child.isAtomicBooleanCombination();
+	}
 
 
 

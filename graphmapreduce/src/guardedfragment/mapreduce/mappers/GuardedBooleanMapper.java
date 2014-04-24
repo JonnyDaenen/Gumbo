@@ -1,7 +1,6 @@
 package guardedfragment.mapreduce.mappers;
 
 import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
-import guardedfragment.structure.expressions.io.GFPrefixSerializer;
 
 import java.io.IOException;
 

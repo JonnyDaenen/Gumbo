@@ -6,7 +6,6 @@ import guardedfragment.booleanstructure.VariableNotFoundException;
 import guardedfragment.structure.GFBMapping;
 import guardedfragment.structure.GFConversionException;
 import guardedfragment.structure.GuardedProjection;
-import guardedfragment.structure.MyGFParser;
 import guardedfragment.structure.NonMatchingTupleException;
 import guardedfragment.structure.expressions.GFAtomicExpression;
 import guardedfragment.structure.expressions.GFExistentialExpression;

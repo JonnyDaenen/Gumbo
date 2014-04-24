@@ -3,22 +3,19 @@
  */
 package guardedfragment.structure.expressions.io;
 
-import static org.junit.Assert.*;
-
-import java.util.HashSet;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import guardedfragment.structure.expressions.GFAndExpression;
 import guardedfragment.structure.expressions.GFAtomicExpression;
 import guardedfragment.structure.expressions.GFExistentialExpression;
 import guardedfragment.structure.expressions.GFExpression;
 import guardedfragment.structure.expressions.GFNotExpression;
 import guardedfragment.structure.expressions.GFOrExpression;
-import guardedfragment.structure.expressions.io.GFPrefixSerializer;
+
+import java.util.HashSet;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**

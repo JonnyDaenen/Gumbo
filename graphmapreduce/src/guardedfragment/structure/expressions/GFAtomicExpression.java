@@ -42,11 +42,11 @@ public class GFAtomicExpression extends GFExpression {
 
 		return c.lookupTuple(relation, values);
 	}
-	
+
 	public String getName() {
 		return relation;
 	}
-	
+
 	public String[] getVars() {
 		return variables;
 	}
@@ -61,7 +61,7 @@ public class GFAtomicExpression extends GFExpression {
 
 		return freevars;
 	}
-	
+
 	public Set<GFAtomicExpression> getAtomic() {
 		Set<GFAtomicExpression> atom = new HashSet<GFAtomicExpression>();
 		atom.add(this);
@@ -72,12 +72,13 @@ public class GFAtomicExpression extends GFExpression {
 	public String generateString() {
 		return relation + "(" + generateVarString() + ")";
 	}
-	
+
+	@Override
 	public String prefixString() {
 		return relation + "(" + generateVarString() + ")";
 	}
-	
-	public int noVariables() {
+
+	public int getNumVariables() {
 		return variables.length;
 	}
 
@@ -104,7 +105,7 @@ public class GFAtomicExpression extends GFExpression {
 		BVariable v = m.getVariable(this);
 		return v;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return relation.hashCode() + variables.length;
@@ -115,8 +116,7 @@ public class GFAtomicExpression extends GFExpression {
 
 		if (obj instanceof GFAtomicExpression) {
 			GFAtomicExpression aex = (GFAtomicExpression) obj;
-			if (aex.variables.length != variables.length
-					|| !aex.relation.equals(relation))
+			if (aex.variables.length != variables.length || !aex.relation.equals(relation))
 				return false;
 
 			for (int i = 0; i < variables.length; i++) {
@@ -131,6 +131,7 @@ public class GFAtomicExpression extends GFExpression {
 
 	/**
 	 * Generates and returns a RelationSchema of this expression.
+	 * 
 	 * @return the relationschema of this relation
 	 */
 	public RelationSchema extractRelationSchema() {
@@ -145,18 +146,18 @@ public class GFAtomicExpression extends GFExpression {
 	}
 
 	public boolean matches(Tuple t) {
-		
+
 		// name must be equal
 		if (!relation.equals(t.getName())) {
 			return false;
 		}
-		
+
 		// number of fields must be equal
 		if (size() != t.size()) {
 			return false;
 		}
-		
-		// compare field names 
+
+		// compare field names
 		for (int i = 0; i < size(); i++) {
 			// next fields
 			for (int j = i + 1; j < size(); j++) {
@@ -164,7 +165,7 @@ public class GFAtomicExpression extends GFExpression {
 				if (variables[i].equals(variables[j]) && !t.get(i).equals(t.get(j))) {
 					return false;
 				}
-				
+
 			}
 		}
 		return true;
@@ -188,7 +189,7 @@ public class GFAtomicExpression extends GFExpression {
 		Set<GFExistentialExpression> set = new HashSet<GFExistentialExpression>();
 		return set;
 	}
-	
+
 	@Override
 	public <R> R accept(GFVisitor<R> v) {
 		return v.visit(this);

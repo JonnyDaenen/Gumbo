@@ -1,7 +1,6 @@
 package guardedfragment.mapreduce.reducers;
 
 import guardedfragment.structure.GuardedProjection;
-import guardedfragment.structure.MyGFParser;
 import guardedfragment.structure.NonMatchingTupleException;
 import guardedfragment.structure.expressions.GFAtomicExpression;
 import guardedfragment.structure.expressions.GFExistentialExpression;
@@ -10,9 +9,9 @@ import guardedfragment.structure.expressions.io.DeserializeException;
 import guardedfragment.structure.expressions.io.GFPrefixSerializer;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.ArrayList;
 
 import mapreduce.data.Tuple;
 

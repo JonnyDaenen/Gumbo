@@ -3,9 +3,6 @@
  */
 package guardedfragment.structure.expressions.io;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import guardedfragment.structure.expressions.GFAndExpression;
 import guardedfragment.structure.expressions.GFAtomicExpression;
 import guardedfragment.structure.expressions.GFExistentialExpression;
@@ -14,6 +11,9 @@ import guardedfragment.structure.expressions.GFNotExpression;
 import guardedfragment.structure.expressions.GFOrExpression;
 import guardedfragment.structure.expressions.GFUniversalExpression;
 import guardedfragment.structure.expressions.GFVisitor;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import com.sun.tools.javac.util.Pair;
 

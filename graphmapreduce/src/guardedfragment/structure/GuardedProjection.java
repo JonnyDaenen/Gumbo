@@ -32,7 +32,7 @@ public class GuardedProjection {
 		this.target = target;
 
 		// initialize mapping
-		mapping = new HashMap<Integer, Integer>(source.noVariables());
+		mapping = new HashMap<Integer, Integer>(source.getNumVariables());
 
 		initialize();
 	}

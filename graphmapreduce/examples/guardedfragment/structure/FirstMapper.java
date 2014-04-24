@@ -68,7 +68,7 @@ public class FirstMapper {
 	
 	private HashMap<Integer,Integer> getVariableMapping(GFAtomicExpression gf1, GFAtomicExpression gf2){
 		
-		HashMap<Integer,Integer> f = new HashMap<Integer,Integer>(gf1.noVariables());
+		HashMap<Integer,Integer> f = new HashMap<Integer,Integer>(gf1.getNumVariables());
 		
 		String[] vars1 = gf1.getVars();
 		String[] vars2 = gf2.getVars();

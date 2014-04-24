@@ -3,16 +3,15 @@
  */
 package guardedfragment.mapreduce;
 
-import java.util.Set;
-
-import guardedfragment.structure.MyGFParser;
 import guardedfragment.structure.expressions.GFAndExpression;
 import guardedfragment.structure.expressions.GFAtomicExpression;
 import guardedfragment.structure.expressions.GFExistentialExpression;
-import guardedfragment.structure.expressions.GFExpression;
 import guardedfragment.structure.expressions.GFNotExpression;
 import guardedfragment.structure.expressions.GFOrExpression;
 import guardedfragment.structure.expressions.io.DeserializeException;
+
+import java.util.Set;
+
 import mapreduce.MRPlan;
 
 import org.apache.commons.logging.Log;
