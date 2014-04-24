@@ -5,6 +5,9 @@ import guardedfragment.structure.MyGFParser;
 import guardedfragment.structure.NonMatchingTupleException;
 import guardedfragment.structure.expressions.GFAtomicExpression;
 import guardedfragment.structure.expressions.GFExistentialExpression;
+import guardedfragment.structure.expressions.GFExpression;
+import guardedfragment.structure.expressions.io.DeserializeException;
+import guardedfragment.structure.expressions.io.GFPrefixSerializer;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -44,6 +47,8 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 	private static final Log LOG = LogFactory.getLog(GuardedMapper.class);
 
 	Set<GFExistentialExpression> formulaSet;
+	
+	
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -53,21 +58,26 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 
 		super.setup(context);
 		Configuration conf = context.getConfiguration();
-		MyGFParser parser;
+		
+		GFPrefixSerializer serializer = new GFPrefixSerializer();
 
 		// load guard
 		try {
 			formulaSet = new HashSet<GFExistentialExpression>();
 			String formulaString = conf.get("formulaset");
-			String[] t = formulaString.split(new String(";"));
+			Set<GFExpression> deserSet = serializer.deserializeSet(formulaString);
 			
-			for (int i=0; i< t.length;i++) {
-				parser = new MyGFParser(t[i]);
-				formulaSet.add((GFExistentialExpression) parser.deserialize());
+			
+			// check whether the type is existential
+			// FUTURE allow other types?
+			for (GFExpression exp : deserSet) {
+				if(exp instanceof GFExistentialExpression) {
+					formulaSet.add((GFExistentialExpression) exp);
+				}
 			}
 			
-		} catch (Exception e) {
-			throw new InterruptedException("No guard information supplied");
+		} catch (DeserializeException e) {
+			throw new InterruptedException("Mapper initialisation error: "+ e.getMessage()); 
 		}
 
 	}

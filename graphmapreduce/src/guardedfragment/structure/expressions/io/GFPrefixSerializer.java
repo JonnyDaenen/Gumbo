@@ -43,7 +43,7 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 		return e.accept(this);
 	}
 
-	public String serializeSet(Set<GFExpression> set) {
+	public String serializeSet(Set<? extends GFExpression> set) {
 
 		HashSet<String> stringSet = new HashSet<String>(set.size());
 

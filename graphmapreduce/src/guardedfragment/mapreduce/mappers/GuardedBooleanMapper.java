@@ -1,6 +1,7 @@
 package guardedfragment.mapreduce.mappers;
 
 import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
+import guardedfragment.structure.expressions.io.GFPrefixSerializer;
 
 import java.io.IOException;
 
@@ -28,15 +29,7 @@ import org.apache.hadoop.mapreduce.Mapper;
  */
 public class GuardedBooleanMapper extends Mapper<LongWritable, Text, Text, Text> {
 	
-//	GFAtomicExpression guard;
-//	Set<GFAtomicExpression> guardedRelations;
 
-//	public GuardedBooleanMapper(GFAtomicExpression guard, Set<GFAtomicExpression> guardedRelations) {
-//		super();
-//		this.guard = guard;
-//		this.guardedRelations = guardedRelations;
-//	}
-//	
 	
 	private static final Log LOG = LogFactory.getLog(GuardedAppearanceReducer.class);
 	

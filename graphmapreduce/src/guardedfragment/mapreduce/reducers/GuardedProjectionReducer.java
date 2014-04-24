@@ -12,6 +12,7 @@ import guardedfragment.structure.expressions.GFAtomicExpression;
 import guardedfragment.structure.expressions.GFExistentialExpression;
 import guardedfragment.structure.expressions.GFExpression;
 import guardedfragment.structure.expressions.io.DeserializeException;
+import guardedfragment.structure.expressions.io.GFPrefixSerializer;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -62,23 +63,27 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 	@Override
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
-
 		Configuration conf = context.getConfiguration();
+		
+		GFPrefixSerializer serializer = new GFPrefixSerializer();
 
-
-			// get parameters
-		MyGFParser parser;
+		// load guard
 		try {
 			formulaSet = new HashSet<GFExistentialExpression>();
 			String formulaString = conf.get("formulaset");
-			String[] t = formulaString.split(new String(";"));
+			Set<GFExpression> deserSet = serializer.deserializeSet(formulaString);
 			
-			for (int i=0; i< t.length;i++) {
-				parser = new MyGFParser(t[i]);
-				formulaSet.add((GFExistentialExpression) parser.deserialize());
+			
+			// check whether the type is existential
+			// FUTURE allow other types?
+			for (GFExpression exp : deserSet) {
+				if(exp instanceof GFExistentialExpression) {
+					formulaSet.add((GFExistentialExpression) exp);
+				}
 			}
+			
 		} catch (DeserializeException e) {
-			e.printStackTrace();
+			throw new InterruptedException("Mapper initialisation error: "+ e.getMessage()); 
 		}
 						
 	}

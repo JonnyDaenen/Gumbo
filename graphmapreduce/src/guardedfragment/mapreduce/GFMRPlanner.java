@@ -9,9 +9,11 @@ import guardedfragment.structure.expressions.GFAtomicExpression;
 import guardedfragment.structure.expressions.GFExistentialExpression;
 import guardedfragment.structure.expressions.GFExpression;
 import guardedfragment.structure.expressions.io.GFInfixSerializer;
+import guardedfragment.structure.expressions.io.GFPrefixSerializer;
 import guardedfragment.structure.expressions.io.SerializeException;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 
 import mapreduce.MRPlan;
@@ -53,6 +55,8 @@ public class GFMRPlanner {
 	private int jobCounter;
 	static final String TMPDIRPREFIX = "TMP_JOB";
 	
+	private GFPrefixSerializer serializer;
+	
 
 	public GFMRPlanner(String inputDir, String outputDir, String scratchDir) {
 		super();
@@ -62,6 +66,8 @@ public class GFMRPlanner {
 		this.scratchDir = new Path(scratchDir);
 		this.planName = "";
 		this.jobCounter = 0;
+		
+		serializer = new GFPrefixSerializer();
 	}
 
 	MRPlan convert(GFExpression e) throws ConversionNotImplementedException {
@@ -71,24 +77,9 @@ public class GFMRPlanner {
 	MRPlan convert(GFExistentialExpression e)
 			throws ConversionNotImplementedException, IOException {
 
-		MRPlan plan = new MRPlan();
-		
-		Path tmpDir = getTmpDir("" + jobCounter);
-
-		ControlledJob phase1job = createBasicGFPhase1Job(inputDir, tmpDir, e);
-		ControlledJob phase2job = createBasicGFPhase2Job(tmpDir, outputDir, e);
-		phase2job.addDependingJob(phase1job);
-
-		// add jobs to plan
-		plan.addJob(phase1job);
-		plan.addJob(phase2job);
-			
-		// TODO is this necessary?
-		plan.addTempDir(tmpDir.toString());
-		plan.setInputFolder(inputDir.toString());
-		plan.setOutputFolder(outputDir.toString());
-
-		return plan;
+		Set<GFExistentialExpression> set = new HashSet<GFExistentialExpression>();
+		set.add(e);
+		return convert(set);
 	}
 	
 	MRPlan convert(Set<GFExistentialExpression> set)
@@ -98,8 +89,8 @@ public class GFMRPlanner {
 		
 		Path tmpDir = getTmpDir("" + jobCounter);
 
-		ControlledJob phase1job = createBasicGFPhase1Job(inputDir, tmpDir, set);
-		ControlledJob phase2job = createBasicGFPhase2Job(tmpDir, outputDir, set);
+		ControlledJob phase1job = createBasicGFRound1Job(inputDir, tmpDir, set);
+		ControlledJob phase2job = createBasicGFRound2Job(tmpDir, outputDir, set);
 		phase2job.addDependingJob(phase1job);
 
 		// add jobs to plan
@@ -119,8 +110,14 @@ public class GFMRPlanner {
 	}
 	
 	
+	
+	
+
+
+	
+	
 	/**
-	 * Creates a phase 1 MR-job for a basic existential GFExpression.
+	 * Creates a round 1 MR-job for a SET of basic existential GFExpressions.
 	 * 
 	 * @param in input folder
 	 * @param out output folder
@@ -128,7 +125,7 @@ public class GFMRPlanner {
 	 * @return a ControlledJob, configured properly
 	 * @throws IOException
 	 */
-	private ControlledJob createBasicGFPhase1Job(Path in, Path out, GFExistentialExpression e)
+	private ControlledJob createBasicGFRound1Job(Path in, Path out, Set<GFExistentialExpression> set)
 			throws IOException {
 
 		// create basic job
@@ -140,7 +137,7 @@ public class GFMRPlanner {
 		
 		// set guard and guarded set
 		Configuration conf = job.getConfiguration();
-		conf.set("formula", e.prefixString());
+		conf.set("formulaset", serializer.serializeSet(set));
 
 		// set intermediate/mapper output
 		job.setMapOutputKeyClass(Text.class);
@@ -153,11 +150,8 @@ public class GFMRPlanner {
 		return new ControlledJob(job, null);
 	}
 	
-	
-
-
 	/**
-	 * Creates a phase 2 MR-job for a basic existential GFExpression.
+	 * Creates a round 2 MR-job for a SET of basic existential GFExpression.
 	 * 
 	 * @param in input folder
 	 * @param out output folder
@@ -166,8 +160,9 @@ public class GFMRPlanner {
 	 * @return a ControlledJob, configured properly
 	 * @throws IOException
 	 */
-	private ControlledJob createBasicGFPhase2Job(Path in, Path out, GFExistentialExpression f) throws IOException {
+	private ControlledJob createBasicGFRound2Job(Path in, Path out, Set<GFExistentialExpression> set) throws IOException {
 		
+
 		// create basic job
 		Job job = createJob(in, out);
 
@@ -177,84 +172,7 @@ public class GFMRPlanner {
 		
 		
 		Configuration conf = job.getConfiguration();
-		conf.set("formula", f.prefixString());
-
-		// set intermediate/mapper output
-		job.setMapOutputKeyClass(Text.class);
-		job.setMapOutputValueClass(Text.class);
-
-		// set reducer output
-		job.setOutputKeyClass(NullWritable.class);
-		job.setOutputValueClass(Text.class);
-
-		return new ControlledJob(job, null);
-	}
-	
-	/**
-	 * Creates a phase 1 MR-job for a SET of basic existential GFExpressions.
-	 * 
-	 * @param in input folder
-	 * @param out output folder
-	 * @param e GFExistentialExpression
-	 * @return a ControlledJob, configured properly
-	 * @throws IOException
-	 */
-	private ControlledJob createBasicGFPhase1Job(Path in, Path out, Set<GFExistentialExpression> set)
-			throws IOException {
-		String s = new String();
-		for(GFExistentialExpression e: set) {
-			s = s+ ";" + e.prefixString();
-		}
-
-		// create basic job
-		Job job = createJob(in, out);
-
-		// set mapper an reducer
-		job.setMapperClass(GuardedMapper.class);
-		job.setReducerClass(GuardedAppearanceReducer.class);
-		
-		// set guard and guarded set
-		Configuration conf = job.getConfiguration();
-		conf.set("formulaset", s.substring(1));
-
-		// set intermediate/mapper output
-		job.setMapOutputKeyClass(Text.class);
-		job.setMapOutputValueClass(Text.class);
-
-		// set reducer output
-		job.setOutputKeyClass(NullWritable.class);
-		job.setOutputValueClass(Text.class);
-
-		return new ControlledJob(job, null);
-	}
-	
-	/**
-	 * Creates a phase 2 MR-job for a SET of basic existential GFExpression.
-	 * 
-	 * @param in input folder
-	 * @param out output folder
-	 * @param guard 
-	 * @param booleanformula 
-	 * @return a ControlledJob, configured properly
-	 * @throws IOException
-	 */
-	private ControlledJob createBasicGFPhase2Job(Path in, Path out, Set<GFExistentialExpression> set) throws IOException {
-		
-		String s = new String();
-		for(GFExistentialExpression e: set) {
-			s = s+ ";" + e.prefixString();
-		}
-		
-		// create basic job
-		Job job = createJob(in, out);
-
-		// set mapper an reducer
-		job.setMapperClass(GuardedBooleanMapper.class);
-		job.setReducerClass(GuardedProjectionReducer.class);
-		
-		
-		Configuration conf = job.getConfiguration();
-		conf.set("formulaset", s.substring(1));
+		conf.set("formulaset", serializer.serializeSet(set));
 
 		// set intermediate/mapper output
 		job.setMapOutputKeyClass(Text.class);
