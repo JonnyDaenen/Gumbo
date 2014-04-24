@@ -70,7 +70,10 @@ public class GFAtomicExpression extends GFExpression {
 		for (String v : variables)
 			list += "," + v;
 
-		return list.substring(1);
+		if (list.length() > 0)
+			return list.substring(1);
+		else
+			return "";
 	}
 
 	@Override

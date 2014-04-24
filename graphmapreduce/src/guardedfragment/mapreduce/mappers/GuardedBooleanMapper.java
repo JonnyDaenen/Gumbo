@@ -42,16 +42,17 @@ public class GuardedBooleanMapper extends Mapper<LongWritable, Text, Text, Text>
 			throws IOException, InterruptedException {
 		
 		String stringValue = value.toString();
-		LOG.error(stringValue);
+		
 		if (stringValue.contains(";")) {
 			
 			String[] t = stringValue.split(new String(";"));
-			if (t.length == 2) {
+			if (t.length == 2) { // guarded atoms that are true
+				
 				// key is the guard, value is the guarded tuple
-				LOG.error("INSIDE THE MAPPER " + t[0] + " and " + t[1]);
 				context.write(new Text(t[0]), new Text(t[1]));				
-			} else {
-				LOG.error("INSIDE THE MAPPER " + t[0] + " END");
+			
+			// propagate keep alive
+			} else { 
 				context.write(new Text(t[0]), new Text(new String()));
 			}
 		}

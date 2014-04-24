@@ -9,7 +9,6 @@ import guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
 import guardedfragment.structure.gfexpressions.operations.NonMatchingTupleException;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
