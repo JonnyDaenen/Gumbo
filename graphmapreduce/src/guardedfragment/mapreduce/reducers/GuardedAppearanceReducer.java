@@ -24,8 +24,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 /**
  * Phase: Basic Guarded - Round 1 Reducer
  * 
- * Input: Si(a,b) : set of tuples 
- * Output: Si(a,b);R(a',b') (note the semicolon!)
+ * Input: Si(a,b) : set of tuples Output: Si(a,b);R(a',b') (note the semicolon!)
  * 
  * Configuration: Guarding relation R (guarded relation is determined from the
  * key)
@@ -43,10 +42,9 @@ import org.apache.hadoop.mapreduce.Reducer;
 public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 
 	private static final Log LOG = LogFactory.getLog(GuardedAppearanceReducer.class);
-	
+
 	// RelationSchema guardSchema;
 	Set<GFExistentialExpression> formulaSet;
-
 
 	public GuardedAppearanceReducer() {
 
@@ -59,7 +57,7 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
 		Configuration conf = context.getConfiguration();
-		
+
 		GFPrefixSerializer serializer = new GFPrefixSerializer();
 
 		// load guard
@@ -67,111 +65,120 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 			formulaSet = new HashSet<GFExistentialExpression>();
 			String formulaString = conf.get("formulaset");
 			Set<GFExpression> deserSet = serializer.deserializeSet(formulaString);
-			
-			
+
 			// check whether the type is existential
 			// FUTURE allow other types?
 			for (GFExpression exp : deserSet) {
-				if(exp instanceof GFExistentialExpression) {
+				if (exp instanceof GFExistentialExpression) {
 					formulaSet.add((GFExistentialExpression) exp);
 				}
 			}
-			
+
 		} catch (DeserializeException e) {
-			throw new InterruptedException("Mapper initialisation error: "+ e.getMessage()); 
+			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}
 	}
-	
-	
+
 	@Override
 	protected void reduce(Text key, Iterable<Text> tvalues, Context context) throws IOException, InterruptedException {
-	
-		for (GFExistentialExpression formula:formulaSet) {
-			
+
+		String stringKey = key.toString();
+		Tuple keyTuple = new Tuple(stringKey);
+
+		// convert value set to tuple set
+		Set<Tuple> tuples = new HashSet<Tuple>();
+
+		for (Text t : tvalues) {
+			Tuple ntuple = new Tuple(t.toString());
+			tuples.add(ntuple);
+		}
+		
+
+		// OPTIMIZE can we push for-loop inside?
+		for (GFExistentialExpression formula : formulaSet) {
+
 			boolean foundKey = false;
-			String stringKey = key.toString();
-			Tuple tKey = new Tuple(stringKey);
-			//Text w;
-			
-			ArrayList<String> ttvalues = new ArrayList<String>();
-			LOG.error("The reducer for the key "+stringKey);
-			for (Text v : tvalues) {
-				LOG.error(v.toString());
-				ttvalues.add(v.toString());
-			}
-			LOG.error("The values in the ArrayList: "+ttvalues.toString());
-			LOG.error("=============================");
-
-			String[] values = ttvalues.toArray(new String[ttvalues.size()]);
-
 			GFAtomicExpression guard = formula.getGuard();
-				
-			if (guard.matches(tKey)) {
-				//LOG.error("the guard tuple " + tKey.toString());
-				context.write(null, new Text(tKey.generateString() + ";"));
-				return;
-			}
-			
-			// look if data is present in the guarded relation
-			for (int i=0;i<values.length;i++) {
-				//LOG.error("Inside the loop");
-				if (stringKey.equals(values[i])) {
-					//LOG.error("Key found:" + values[i]);
+
+			// If the guard matches the key, we output the key itself and then
+			// stop processing this formula
+			// This is because other tuples cannot appear as a value; they need
+			// to ...
+			// TODO this is wrong I think:
+			// consider the following: Ey G(x,y) and G(x,x)
+			// with (1,2) (1,1)
+			// this would not output anything for the guarded part
+//			if (guard.matches(keyTuple)) {
+//				// LOG.error("the guard tuple " + tKey.toString());
+//				context.write(null, new Text(keyTuple.generateString() + ";"));
+//				continue; // go to next formula
+//			}
+
+			// look if data (key) is present in a guarded relation (one of the
+			// values)
+			for (Tuple tuple : tuples) {
+				if (keyTuple.equals(tuple)) {
 					foundKey = true;
 					break;
 				}
 			}
 
-			Tuple t;
-			GFAtomProjection p;
-			Set<GFAtomicExpression> guarded;
 
+			// if the guarded tuple is actually in the database
 			if (foundKey) {
-				// check the tuples that match the guard
-				//LOG.error("Inside the if after the foundKey");
-				for (int i=0;i<values.length;i++) {
-					//LOG.error("Inside for loop");
-					//LOG.error("inspecting value:" + values[i]);
-					t = new Tuple(values[i]);
-				
-					if (guard.matches(t)) {
-						
-						guarded = formula.getChild().getAtomic();
-						
-						// TODO comment, this works because of guarding
-						for (GFAtomicExpression gf : guarded) {
-							p = new GFAtomProjection(guard,gf);				
+
+				// find tuples...
+				for (Tuple tuple : tuples) {
+
+					// ...that match the guard
+					if (guard.matches(tuple)) {
+
+						Tuple guardTuple = tuple;
+
+						// get all atomics in the formula
+						Set<GFAtomicExpression> guarded = formula.getChild().getAtomic();
+
+						// for each atomic
+						for (GFAtomicExpression guardedAtom : guarded) {
+
+							// project the guard tuple onto current atom
+							GFAtomProjection p = new GFAtomProjection(guard, guardedAtom);
+							Tuple projectedTuple;
 							try {
-								if (p.project(t).equal(tKey)) {
-									//LOG.error("inspecting value:" + values[i]);
-									context.write(null, new Text(t.generateString() + ";" + gf.generateString()));
+								projectedTuple = p.project(guardTuple); // TODO
+																		// is
+																		// this
+																		// MRT?
+
+								// check link between guard variables and atom
+								// variables
+								// TODO explain
+								if (projectedTuple.equals(keyTuple)) {
+									context.write(null,
+											new Text(guardTuple.generateString() + ";" + guardedAtom.generateString()));
 								}
+
 							} catch (NonMatchingTupleException e) {
+								// should not happen
 								e.printStackTrace();
 							}
+
 						}
 					}
 				}
-			} else {
-				
-				for (int i=0;i<values.length;i++) {
-					//LOG.error("inspecting value:" + values[i]);
-					t = new Tuple(values[i]);
-					
-					if (guard.matches(t)) {
-						//LOG.error("inspecting value:" + values[i]);
-						context.write(null, new Text(t.generateString() + ";"));
-							
-					}
-				}			
-				
-				
+
 			}
-			
-			
+
+			// when only guards appear in the value set, we need to keep those
+			// alive (Si's are all FALSE).
+			// OPTIMIZE This is not necessary when others have been output
+			for (Tuple tuple : tuples) {
+				if (guard.matches(tuple)) {
+					context.write(null, new Text(tuple.generateString() + ";"));
+				}
+			}
+
 		}
-		
-		
 
 	}
 

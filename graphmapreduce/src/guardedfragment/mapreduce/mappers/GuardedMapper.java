@@ -46,8 +46,6 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 	private static final Log LOG = LogFactory.getLog(GuardedMapper.class);
 
 	Set<GFExistentialExpression> formulaSet;
-	
-	
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -57,7 +55,7 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 
 		super.setup(context);
 		Configuration conf = context.getConfiguration();
-		
+
 		GFPrefixSerializer serializer = new GFPrefixSerializer();
 
 		// load guard
@@ -65,18 +63,17 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 			formulaSet = new HashSet<GFExistentialExpression>();
 			String formulaString = conf.get("formulaset");
 			Set<GFExpression> deserSet = serializer.deserializeSet(formulaString);
-			
-			
+
 			// check whether the type is existential
 			// FUTURE allow other types?
 			for (GFExpression exp : deserSet) {
-				if(exp instanceof GFExistentialExpression) {
+				if (exp instanceof GFExistentialExpression) {
 					formulaSet.add((GFExistentialExpression) exp);
 				}
 			}
-			
+
 		} catch (DeserializeException e) {
-			throw new InterruptedException("Mapper initialisation error: "+ e.getMessage()); 
+			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}
 
 	}
@@ -84,12 +81,12 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 	@Override
 	protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
-		for (GFExistentialExpression formula: formulaSet) {
-			
+		for (GFExistentialExpression formula : formulaSet) {
+
 			// convert value to tuple
 			Tuple t = new Tuple(value.toString());
-			LOG.error("An original value: "+ value.toString());
-			
+			LOG.error("An original value: " + value.toString());
+
 			GFAtomicExpression guard = formula.getGuard();
 			Set<GFAtomicExpression> guardedRelations = formula.getChild().getAtomic();
 
@@ -99,7 +96,7 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 				// output guard:guard
 				context.write(new Text(t.toString()), new Text(t.toString()));
 				LOG.error("The first Mapper outputs the pair: " + t.toString() + " : " + t.toString());
-				
+
 				for (GFAtomicExpression guarded : guardedRelations) {
 
 					// get projection
@@ -109,10 +106,11 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 					try {
 						// project to key
 						tprime = gp.project(t);
-					
+
 						if (guarded.matches(tprime)) {
 
-							//LOG.error(tprime + " matches' " + guarded + " val: " + t);
+							// LOG.error(tprime + " matches' " + guarded +
+							// " val: " + t);
 							// project to key and write out
 							context.write(new Text(tprime.toString()), new Text(t.toString()));
 							LOG.error("The first Mapper outputs the pair: " + tprime.toString() + " : " + t.toString());
@@ -126,22 +124,24 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 				}
 
 			}
-			// if schema is not same as guard
-			else {
-				// check if tuple matches a guarded atom
-				for (GFAtomicExpression guarded : guardedRelations) {
 
-					// if so, output tuple with same key and value
-					if (guarded.matches(t)) {
-						//LOG.error(t + " matches " + guarded);
-						context.write(new Text(t.toString()), new Text(t.toString()));
-						LOG.error("The first Mapper outputs the pair: " + t.toString() + " : " + t.toString());
-						//break;
-					}
+			
+			// ATTENTION: do not use ELSE here
+			// the guard can appear as guarded too!
+			
+			// check if tuple matches a guarded atom
+			for (GFAtomicExpression guarded : guardedRelations) {
+
+				// if so, output tuple with same key and value
+				if (guarded.matches(t)) {
+					// LOG.error(t + " matches " + guarded);
+					context.write(new Text(t.toString()), new Text(t.toString()));
+					LOG.error("The first Mapper outputs the pair: " + t.toString() + " : " + t.toString());
+					// break;
 				}
 			}
-			
+
 		}
-		
+
 	}
 }

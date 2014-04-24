@@ -93,7 +93,7 @@ public class Tuple {
 		return data;
 	}
 	
-	public boolean equal(Tuple t) {
+	public boolean equals(Tuple t) {
 		if (!name.equals(t.getName())) {
 			return false;
 		}
