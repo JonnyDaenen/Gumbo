@@ -1,7 +1,7 @@
 package guardedfragment.structure;
 
-import guardedfragment.structure.expressions.GFAtomicExpression;
-import guardedfragment.structure.expressions.GFExpression;
+import guardedfragment.structure.gfexpressions.GFAtomicExpression;
+import guardedfragment.structure.gfexpressions.GFExpression;
 
 import java.util.HashMap;
 import java.util.HashSet;

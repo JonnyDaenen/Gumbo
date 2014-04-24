@@ -1,9 +1,9 @@
-package guardedfragment.structure;
+package guardedfragment.structure.conversion;
 
-import guardedfragment.booleanstructure.BVariable;
-import guardedfragment.structure.expressions.GFAtomicExpression;
-import guardedfragment.structure.expressions.GFExistentialExpression;
-import guardedfragment.structure.expressions.GFExpression;
+import guardedfragment.structure.booleanexpressions.BVariable;
+import guardedfragment.structure.gfexpressions.GFAtomicExpression;
+import guardedfragment.structure.gfexpressions.GFExistentialExpression;
+import guardedfragment.structure.gfexpressions.GFExpression;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,12 +15,12 @@ import java.util.Map;
  * @author Jonny Daenen
  *
  */
-public class GFBMapping {
+public class GFBooleanMapping {
 	
 	int nextId;
 	Map<GFExpression, BVariable> mapping;
 	
-	public GFBMapping() {
+	public GFBooleanMapping() {
 		mapping = new HashMap<GFExpression, BVariable>();
 		nextId = 0;
 	}

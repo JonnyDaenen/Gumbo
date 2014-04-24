@@ -1,4 +1,4 @@
-package guardedfragment.booleanstructure;
+package guardedfragment.structure.booleanexpressions;
 
 
 public abstract class BExpression {

@@ -1,6 +1,6 @@
 package guardedfragment.structure;
 
-import guardedfragment.structure.expressions.GFAtomicExpression;
+import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import mapreduce.data.Tuple;
 
 public class FirstReducer {

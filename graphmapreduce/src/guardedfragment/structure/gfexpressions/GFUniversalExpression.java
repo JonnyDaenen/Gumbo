@@ -1,6 +1,5 @@
-package guardedfragment.structure.expressions;
+package guardedfragment.structure.gfexpressions;
 
-import guardedfragment.structure.GFEvaluationContext;
 
 @Deprecated
 public class GFUniversalExpression extends GFExistentialExpression {
@@ -17,21 +16,7 @@ public class GFUniversalExpression extends GFExistentialExpression {
 		super.quantifierSymbol = 'A';
 	}
 
-	@Override
-	/**
-	 * Checks if the formula evaluates to true for all assignments 
-	 * (of values in the domain) to the quantified variables.
-	 * 
-	 * @return true iff the formula evaluates to true for all values
-	 */
-	public boolean evaluate(GFEvaluationContext c) {
-		
-		// TODO Auto-generated method stub
-		
-		// evaluate the implication
-		return !guard.evaluate(c) || child.evaluate(c);
-	}
-	
+
 	
 	@Override
 	public <R> R accept(GFVisitor<R> v) {

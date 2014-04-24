@@ -1,12 +1,12 @@
 package guardedfragment.mapreduce.reducers;
 
-import guardedfragment.structure.GuardedProjection;
-import guardedfragment.structure.NonMatchingTupleException;
-import guardedfragment.structure.expressions.GFAtomicExpression;
-import guardedfragment.structure.expressions.GFExistentialExpression;
-import guardedfragment.structure.expressions.GFExpression;
-import guardedfragment.structure.expressions.io.DeserializeException;
-import guardedfragment.structure.expressions.io.GFPrefixSerializer;
+import guardedfragment.structure.gfexpressions.GFAtomicExpression;
+import guardedfragment.structure.gfexpressions.GFExistentialExpression;
+import guardedfragment.structure.gfexpressions.GFExpression;
+import guardedfragment.structure.gfexpressions.io.DeserializeException;
+import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
+import guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
+import guardedfragment.structure.gfexpressions.operations.NonMatchingTupleException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -123,7 +123,7 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 			}
 
 			Tuple t;
-			GuardedProjection p;
+			GFAtomProjection p;
 			Set<GFAtomicExpression> guarded;
 
 			if (foundKey) {
@@ -140,7 +140,7 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 						
 						// TODO comment, this works because of guarding
 						for (GFAtomicExpression gf : guarded) {
-							p = new GuardedProjection(guard,gf);				
+							p = new GFAtomProjection(guard,gf);				
 							try {
 								if (p.project(t).equal(tKey)) {
 									//LOG.error("inspecting value:" + values[i]);

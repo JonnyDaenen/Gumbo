@@ -1,9 +1,8 @@
-package guardedfragment.structure.expressions;
+package guardedfragment.structure.gfexpressions;
 
-import guardedfragment.booleanstructure.BExpression;
-import guardedfragment.structure.GFBMapping;
-import guardedfragment.structure.GFConversionException;
-import guardedfragment.structure.GFEvaluationContext;
+import guardedfragment.structure.booleanexpressions.BExpression;
+import guardedfragment.structure.conversion.GFBooleanMapping;
+import guardedfragment.structure.conversion.GFtoBooleanConversionException;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -53,18 +52,6 @@ public class GFExistentialExpression extends GFExpression {
 		return output;
 	}
 
-	@Override
-	/**
-	 * Checks if there exist values for the supplied variables for which the formula evaluates to true.
-	 * 
-	 * @return true iff there exist values for the variables that make the formula true
-	 */
-	public boolean evaluate(GFEvaluationContext c) {
-		
-		// TODO assign values to variables? (add to context)
-		
-		return guard.evaluate(c) && child.evaluate(c);
-	}
 
 	@Override
 	public Set<String> getFreeVariables() {
@@ -142,8 +129,8 @@ public class GFExistentialExpression extends GFExpression {
 
 
 	@Override
-	public BExpression convertToBExpression(GFBMapping m) throws GFConversionException {
-		throw new GFConversionException("It's not possible to convert formulas that are not a boolean combination of atomic formula's.");
+	public BExpression convertToBExpression(GFBooleanMapping m) throws GFtoBooleanConversionException {
+		throw new GFtoBooleanConversionException("It's not possible to convert formulas that are not a boolean combination of atomic formula's.");
 	}
 	
 	

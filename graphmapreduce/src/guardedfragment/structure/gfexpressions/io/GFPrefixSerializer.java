@@ -1,16 +1,16 @@
 /**
  * Created: 31 Mar 2014
  */
-package guardedfragment.structure.expressions.io;
+package guardedfragment.structure.gfexpressions.io;
 
-import guardedfragment.structure.expressions.GFAndExpression;
-import guardedfragment.structure.expressions.GFAtomicExpression;
-import guardedfragment.structure.expressions.GFExistentialExpression;
-import guardedfragment.structure.expressions.GFExpression;
-import guardedfragment.structure.expressions.GFNotExpression;
-import guardedfragment.structure.expressions.GFOrExpression;
-import guardedfragment.structure.expressions.GFUniversalExpression;
-import guardedfragment.structure.expressions.GFVisitor;
+import guardedfragment.structure.gfexpressions.GFAndExpression;
+import guardedfragment.structure.gfexpressions.GFAtomicExpression;
+import guardedfragment.structure.gfexpressions.GFExistentialExpression;
+import guardedfragment.structure.gfexpressions.GFExpression;
+import guardedfragment.structure.gfexpressions.GFNotExpression;
+import guardedfragment.structure.gfexpressions.GFOrExpression;
+import guardedfragment.structure.gfexpressions.GFUniversalExpression;
+import guardedfragment.structure.gfexpressions.GFVisitor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -222,7 +222,7 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 	}
 
 	/**
-	 * @see guardedfragment.structure.expressions.GFVisitor#visit(guardedfragment.structure.expressions.GFExpression)
+	 * @see guardedfragment.structure.gfexpressions.GFVisitor#visit(guardedfragment.structure.gfexpressions.GFExpression)
 	 */
 	@Override
 	public String visit(GFExpression e) {
@@ -230,7 +230,7 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 	}
 
 	/**
-	 * @see guardedfragment.structure.expressions.GFVisitor#visit(guardedfragment.structure.expressions.GFAtomicExpression)
+	 * @see guardedfragment.structure.gfexpressions.GFVisitor#visit(guardedfragment.structure.gfexpressions.GFAtomicExpression)
 	 */
 	@Override
 	public String visit(GFAtomicExpression e) {
@@ -245,7 +245,7 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 	}
 
 	/**
-	 * @see guardedfragment.structure.expressions.GFVisitor#visit(guardedfragment.structure.expressions.GFAndExpression)
+	 * @see guardedfragment.structure.gfexpressions.GFVisitor#visit(guardedfragment.structure.gfexpressions.GFAndExpression)
 	 */
 	@Override
 	public String visit(GFAndExpression e) {
@@ -257,7 +257,7 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 	}
 
 	/**
-	 * @see guardedfragment.structure.expressions.GFVisitor#visit(guardedfragment.structure.expressions.GFOrExpression)
+	 * @see guardedfragment.structure.gfexpressions.GFVisitor#visit(guardedfragment.structure.gfexpressions.GFOrExpression)
 	 */
 	@Override
 	public String visit(GFOrExpression e) {
@@ -268,7 +268,7 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 	}
 
 	/**
-	 * @see guardedfragment.structure.expressions.GFVisitor#visit(guardedfragment.structure.expressions.GFNotExpression)
+	 * @see guardedfragment.structure.gfexpressions.GFVisitor#visit(guardedfragment.structure.gfexpressions.GFNotExpression)
 	 */
 	@Override
 	public String visit(GFNotExpression e) {
@@ -277,7 +277,7 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 	}
 
 	/**
-	 * @see guardedfragment.structure.expressions.GFVisitor#visit(guardedfragment.structure.expressions.GFExistentialExpression)
+	 * @see guardedfragment.structure.gfexpressions.GFVisitor#visit(guardedfragment.structure.gfexpressions.GFExistentialExpression)
 	 */
 	@Override
 	public String visit(GFExistentialExpression e) {
@@ -288,7 +288,7 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 	}
 
 	/**
-	 * @see guardedfragment.structure.expressions.GFVisitor#visit(guardedfragment.structure.expressions.GFUniversalExpression)
+	 * @see guardedfragment.structure.gfexpressions.GFVisitor#visit(guardedfragment.structure.gfexpressions.GFUniversalExpression)
 	 */
 	@Override
 	public String visit(GFUniversalExpression e) {

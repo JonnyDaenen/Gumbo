@@ -1,10 +1,9 @@
-package guardedfragment.structure.expressions;
+package guardedfragment.structure.gfexpressions;
 
-import guardedfragment.booleanstructure.BAndExpression;
-import guardedfragment.booleanstructure.BExpression;
-import guardedfragment.structure.GFBMapping;
-import guardedfragment.structure.GFConversionException;
-import guardedfragment.structure.GFEvaluationContext;
+import guardedfragment.structure.booleanexpressions.BAndExpression;
+import guardedfragment.structure.booleanexpressions.BExpression;
+import guardedfragment.structure.conversion.GFBooleanMapping;
+import guardedfragment.structure.conversion.GFtoBooleanConversionException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,16 +27,6 @@ public class GFAndExpression extends GFExpression{
 	}
 
 	
-	@Override
-	/**
-	 * Evaluates this subtree in the given context by evaluating both children and combining the result.
-	 * 
-	 * @return true iff both children evaluate to true
-	 */
-	public boolean evaluate(GFEvaluationContext c) {
-		return child1.evaluate(c) && child2.evaluate(c);
-	}
-
 
 	@Override
 	public Set<String> getFreeVariables() {
@@ -77,7 +66,7 @@ public class GFAndExpression extends GFExpression{
 
 
 	@Override
-	public BExpression convertToBExpression(GFBMapping m) throws GFConversionException {
+	public BExpression convertToBExpression(GFBooleanMapping m) throws GFtoBooleanConversionException {
 		BExpression nc1 = child1.convertToBExpression(m);
 		BExpression nc2 = child2.convertToBExpression(m);
 		return new BAndExpression(nc1, nc2);

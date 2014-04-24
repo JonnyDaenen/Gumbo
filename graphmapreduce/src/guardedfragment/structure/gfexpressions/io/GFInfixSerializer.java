@@ -1,14 +1,14 @@
 /**
  * Created: 31 Mar 2014
  */
-package guardedfragment.structure.expressions.io;
+package guardedfragment.structure.gfexpressions.io;
 
-import guardedfragment.structure.expressions.GFAndExpression;
-import guardedfragment.structure.expressions.GFAtomicExpression;
-import guardedfragment.structure.expressions.GFExistentialExpression;
-import guardedfragment.structure.expressions.GFExpression;
-import guardedfragment.structure.expressions.GFNotExpression;
-import guardedfragment.structure.expressions.GFOrExpression;
+import guardedfragment.structure.gfexpressions.GFAndExpression;
+import guardedfragment.structure.gfexpressions.GFAtomicExpression;
+import guardedfragment.structure.gfexpressions.GFExistentialExpression;
+import guardedfragment.structure.gfexpressions.GFExpression;
+import guardedfragment.structure.gfexpressions.GFNotExpression;
+import guardedfragment.structure.gfexpressions.GFOrExpression;
 
 import java.util.HashSet;
 import java.util.Set;

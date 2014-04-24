@@ -1,17 +1,17 @@
 package guardedfragment.mapreduce.reducers;
 
-import guardedfragment.booleanstructure.BEvaluationContext;
-import guardedfragment.booleanstructure.BExpression;
-import guardedfragment.booleanstructure.VariableNotFoundException;
-import guardedfragment.structure.GFBMapping;
-import guardedfragment.structure.GFConversionException;
-import guardedfragment.structure.GuardedProjection;
-import guardedfragment.structure.NonMatchingTupleException;
-import guardedfragment.structure.expressions.GFAtomicExpression;
-import guardedfragment.structure.expressions.GFExistentialExpression;
-import guardedfragment.structure.expressions.GFExpression;
-import guardedfragment.structure.expressions.io.DeserializeException;
-import guardedfragment.structure.expressions.io.GFPrefixSerializer;
+import guardedfragment.structure.booleanexpressions.BEvaluationContext;
+import guardedfragment.structure.booleanexpressions.BExpression;
+import guardedfragment.structure.booleanexpressions.VariableNotFoundException;
+import guardedfragment.structure.conversion.GFBooleanMapping;
+import guardedfragment.structure.conversion.GFtoBooleanConversionException;
+import guardedfragment.structure.gfexpressions.GFAtomicExpression;
+import guardedfragment.structure.gfexpressions.GFExistentialExpression;
+import guardedfragment.structure.gfexpressions.GFExpression;
+import guardedfragment.structure.gfexpressions.io.DeserializeException;
+import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
+import guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
+import guardedfragment.structure.gfexpressions.operations.NonMatchingTupleException;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -93,12 +93,12 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 		for (GFExistentialExpression formula: formulaSet) {
 			
 			GFExpression child = formula.getChild();
-			GFBMapping mapGFtoB;
+			GFBooleanMapping mapGFtoB;
 			GFAtomicExpression output = formula.getOutputSchema();
 			GFAtomicExpression guard = formula.getGuard();
 			
 			// create mapping
-			mapGFtoB = new GFBMapping();
+			mapGFtoB = new GFBooleanMapping();
 			Set<GFAtomicExpression> allAtom = child.getAtomic();
 			for (GFAtomicExpression atom : allAtom) {
 				mapGFtoB.insertElement(atom);
@@ -108,11 +108,11 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 			BExpression Bchild = null;
 			try {
 				Bchild = child.convertToBExpression(mapGFtoB);
-			} catch (GFConversionException e1) {
+			} catch (GFtoBooleanConversionException e1) {
 				e1.printStackTrace();
 			}
 			
-			GuardedProjection p = new GuardedProjection(guard,output);
+			GFAtomProjection p = new GFAtomProjection(guard,output);
 			
 			String s = key.toString();
 			Tuple tkey = new Tuple(s);

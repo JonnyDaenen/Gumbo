@@ -1,7 +1,7 @@
 /**
  * Created: 11 Apr 2014
  */
-package guardedfragment.structure.expressions;
+package guardedfragment.structure.gfexpressions;
 
 
 /**

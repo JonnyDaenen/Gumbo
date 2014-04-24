@@ -1,4 +1,4 @@
-package guardedfragment.booleanstructure;
+package guardedfragment.structure.booleanexpressions;
 
 import java.util.HashMap;
 import java.util.Map;

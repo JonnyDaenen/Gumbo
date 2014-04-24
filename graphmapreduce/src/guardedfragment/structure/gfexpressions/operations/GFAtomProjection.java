@@ -1,6 +1,6 @@
-package guardedfragment.structure;
+package guardedfragment.structure.gfexpressions.operations;
 
-import guardedfragment.structure.expressions.GFAtomicExpression;
+import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,11 +8,12 @@ import java.util.Map;
 import mapreduce.data.Tuple;
 
 /**
-
+ * Represents a projection from a atom to another.
+ * 
  * @author Jonny Daenen
  * 
  */
-public class GuardedProjection {
+public class GFAtomProjection {
 
 	GFAtomicExpression source;
 	GFAtomicExpression target;
@@ -25,7 +26,7 @@ public class GuardedProjection {
 	 * @param source the guard expression
 	 * @param target the guarded expression on which to project
 	 */
-	public GuardedProjection(GFAtomicExpression source,
+	public GFAtomProjection(GFAtomicExpression source,
 			GFAtomicExpression target) {
 		
 		this.source = source;
@@ -38,6 +39,20 @@ public class GuardedProjection {
 	}
 	
 
+	/**
+	 * Constructs a mapping between the atoms.
+	 * For each position in the target atom, an index in the source tuple is kept.
+	 * This index indicates where to get the value to fill in on this position.
+	 * Example:
+	 * source: T(x,y,x,z)
+	 * target: S(x,z)
+	 * mapping:
+	 * 	- 0 -> 0
+	 * 	- 1 -> 3
+	 * 
+	 * There is no guarantee on which position is chosen when there are several options
+	 * 
+	 */
 	private void initialize() {
 		
 		mapping.clear();

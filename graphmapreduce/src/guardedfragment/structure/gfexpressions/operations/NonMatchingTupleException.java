@@ -1,4 +1,4 @@
-package guardedfragment.structure;
+package guardedfragment.structure.gfexpressions.operations;
 
 public class NonMatchingTupleException extends Exception {
 

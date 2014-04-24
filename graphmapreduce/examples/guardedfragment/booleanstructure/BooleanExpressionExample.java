@@ -1,5 +1,13 @@
 package guardedfragment.booleanstructure;
 
+import guardedfragment.structure.booleanexpressions.BAndExpression;
+import guardedfragment.structure.booleanexpressions.BEvaluationContext;
+import guardedfragment.structure.booleanexpressions.BExpression;
+import guardedfragment.structure.booleanexpressions.BNotExpression;
+import guardedfragment.structure.booleanexpressions.BOrExpression;
+import guardedfragment.structure.booleanexpressions.BVariable;
+import guardedfragment.structure.booleanexpressions.VariableNotFoundException;
+
 public class BooleanExpressionExample {
 	
 	public static void main(String[] args) {

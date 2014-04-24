@@ -3,8 +3,8 @@
  */
 package guardedfragment.structure;
 
-import guardedfragment.structure.expressions.GFAtomicExpression;
-import guardedfragment.structure.expressions.io.GFInfixSerializer;
+import guardedfragment.structure.gfexpressions.GFAtomicExpression;
+import guardedfragment.structure.gfexpressions.io.GFInfixSerializer;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,9 +1,9 @@
-package guardedfragment.structure.expressions;
+package guardedfragment.structure.gfexpressions;
 
-import guardedfragment.booleanstructure.BExpression;
-import guardedfragment.booleanstructure.BVariable;
-import guardedfragment.structure.GFBMapping;
-import guardedfragment.structure.GFEvaluationContext;
+
+import guardedfragment.structure.booleanexpressions.BExpression;
+import guardedfragment.structure.booleanexpressions.BVariable;
+import guardedfragment.structure.conversion.GFBooleanMapping;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -25,23 +25,6 @@ public class GFAtomicExpression extends GFExpression {
 		this.rank = 0;
 	}
 
-	@Override
-	/**
-	 * Forms a tuple using the context information and checks if this tuple exists.
-	 * 
-	 * @return true iff the tuple derived from the context exists
-	 */
-	public boolean evaluate(GFEvaluationContext c) {
-		// get the required variables
-		String[] values = new String[variables.length];
-
-		for (int i = 0; i < values.length; i++) {
-			values[i] = c.lookupValue(variables[i]);
-
-		}
-
-		return c.lookupTuple(relation, values);
-	}
 
 	public String getName() {
 		return relation;
@@ -101,7 +84,7 @@ public class GFAtomicExpression extends GFExpression {
 	}
 
 	@Override
-	public BExpression convertToBExpression(GFBMapping m) {
+	public BExpression convertToBExpression(GFBooleanMapping m) {
 		BVariable v = m.getVariable(this);
 		return v;
 	}

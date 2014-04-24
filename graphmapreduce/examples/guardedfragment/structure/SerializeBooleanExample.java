@@ -3,12 +3,12 @@
  */
 package guardedfragment.structure;
 
-import guardedfragment.structure.expressions.GFAndExpression;
-import guardedfragment.structure.expressions.GFAtomicExpression;
-import guardedfragment.structure.expressions.GFExpression;
-import guardedfragment.structure.expressions.GFNotExpression;
-import guardedfragment.structure.expressions.GFOrExpression;
-import guardedfragment.structure.expressions.io.GFInfixSerializer;
+import guardedfragment.structure.gfexpressions.GFAndExpression;
+import guardedfragment.structure.gfexpressions.GFAtomicExpression;
+import guardedfragment.structure.gfexpressions.GFExpression;
+import guardedfragment.structure.gfexpressions.GFNotExpression;
+import guardedfragment.structure.gfexpressions.GFOrExpression;
+import guardedfragment.structure.gfexpressions.io.GFInfixSerializer;
 
 
 /**

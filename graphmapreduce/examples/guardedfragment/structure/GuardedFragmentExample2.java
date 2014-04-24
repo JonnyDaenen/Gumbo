@@ -1,10 +1,12 @@
 package guardedfragment.structure;
 
-import guardedfragment.booleanstructure.BExpression;
-import guardedfragment.structure.expressions.GFAndExpression;
-import guardedfragment.structure.expressions.GFAtomicExpression;
-import guardedfragment.structure.expressions.GFExistentialExpression;
-import guardedfragment.structure.expressions.GFExpression;
+import guardedfragment.structure.booleanexpressions.BExpression;
+import guardedfragment.structure.conversion.GFBooleanMapping;
+import guardedfragment.structure.conversion.GFtoBooleanConversionException;
+import guardedfragment.structure.gfexpressions.GFAndExpression;
+import guardedfragment.structure.gfexpressions.GFAtomicExpression;
+import guardedfragment.structure.gfexpressions.GFExistentialExpression;
+import guardedfragment.structure.gfexpressions.GFExpression;
 
 public class GuardedFragmentExample2 {
 
@@ -47,11 +49,11 @@ public class GuardedFragmentExample2 {
 
 	private static void convert(GFExpression gfe2) {
 		try {
-			GFBMapping m = new GFBMapping();
+			GFBooleanMapping m = new GFBooleanMapping();
 			BExpression bex = gfe2.convertToBExpression(m);
 			System.out.println(bex.generateString());
 			System.out.println(m);
-		} catch (GFConversionException e) {
+		} catch (GFtoBooleanConversionException e) {
 			e.printStackTrace();
 		}
 	}

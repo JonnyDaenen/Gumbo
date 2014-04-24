@@ -1,10 +1,10 @@
-package guardedfragment.structure.expressions;
+package guardedfragment.structure.gfexpressions;
 
-import guardedfragment.booleanstructure.BExpression;
-import guardedfragment.booleanstructure.BNotExpression;
-import guardedfragment.structure.GFBMapping;
-import guardedfragment.structure.GFConversionException;
-import guardedfragment.structure.GFEvaluationContext;
+
+import guardedfragment.structure.booleanexpressions.BExpression;
+import guardedfragment.structure.booleanexpressions.BNotExpression;
+import guardedfragment.structure.conversion.GFBooleanMapping;
+import guardedfragment.structure.conversion.GFtoBooleanConversionException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,16 +25,7 @@ public class GFNotExpression extends GFExpression{
 	}
 	
 	
-	@Override
-	/**
-	 * Evaluates this subtree in the given context by evaluating the child and negating the result.	 
-	 * 
-	 * @return true iff the child returns false
-	 */
-	public boolean evaluate(GFEvaluationContext c) {
 
-		return !child.evaluate(c) ;
-	}
 	
 	
 	public Set<GFAtomicExpression> getAtomic() {
@@ -70,7 +61,7 @@ public class GFNotExpression extends GFExpression{
 
 
 	@Override
-	public BExpression convertToBExpression(GFBMapping m) throws GFConversionException {
+	public BExpression convertToBExpression(GFBooleanMapping m) throws GFtoBooleanConversionException {
 		BExpression c = child.convertToBExpression(m);
 		return new BNotExpression(c);
 	}

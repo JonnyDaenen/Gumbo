@@ -5,12 +5,14 @@ package guardedfragment.structure.expressions.io;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import guardedfragment.structure.expressions.GFAndExpression;
-import guardedfragment.structure.expressions.GFAtomicExpression;
-import guardedfragment.structure.expressions.GFExistentialExpression;
-import guardedfragment.structure.expressions.GFExpression;
-import guardedfragment.structure.expressions.GFNotExpression;
-import guardedfragment.structure.expressions.GFOrExpression;
+import guardedfragment.structure.gfexpressions.GFAndExpression;
+import guardedfragment.structure.gfexpressions.GFAtomicExpression;
+import guardedfragment.structure.gfexpressions.GFExistentialExpression;
+import guardedfragment.structure.gfexpressions.GFExpression;
+import guardedfragment.structure.gfexpressions.GFNotExpression;
+import guardedfragment.structure.gfexpressions.GFOrExpression;
+import guardedfragment.structure.gfexpressions.io.DeserializeException;
+import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 
 import java.util.HashSet;
 

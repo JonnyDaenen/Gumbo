@@ -1,15 +1,13 @@
-package guardedfragment.structure.expressions;
+package guardedfragment.structure.gfexpressions;
 
-import guardedfragment.booleanstructure.BExpression;
-import guardedfragment.structure.GFBMapping;
-import guardedfragment.structure.GFConversionException;
-import guardedfragment.structure.GFEvaluationContext;
+import guardedfragment.structure.booleanexpressions.BExpression;
+import guardedfragment.structure.conversion.GFBooleanMapping;
+import guardedfragment.structure.conversion.GFtoBooleanConversionException;
 
 import java.util.Set;
 
 public abstract class GFExpression {
 
-	public abstract boolean evaluate(GFEvaluationContext c);
 
 	public abstract Set<String> getFreeVariables();
 
@@ -70,10 +68,10 @@ public abstract class GFExpression {
 	 *            a mapping from atomic values to variables; missing values are
 	 *            added
 	 * @return a boolean expression
-	 * @throws GFConversionException
+	 * @throws GFtoBooleanConversionException
 	 *             when it's not a boolean combination of atomic expressions
 	 */
-	public abstract BExpression convertToBExpression(GFBMapping m) throws GFConversionException;
+	public abstract BExpression convertToBExpression(GFBooleanMapping m) throws GFtoBooleanConversionException;
 
 	@Override
 	public String toString() {

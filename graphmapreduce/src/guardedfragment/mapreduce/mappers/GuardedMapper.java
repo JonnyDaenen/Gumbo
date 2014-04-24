@@ -1,12 +1,12 @@
 package guardedfragment.mapreduce.mappers;
 
-import guardedfragment.structure.GuardedProjection;
-import guardedfragment.structure.NonMatchingTupleException;
-import guardedfragment.structure.expressions.GFAtomicExpression;
-import guardedfragment.structure.expressions.GFExistentialExpression;
-import guardedfragment.structure.expressions.GFExpression;
-import guardedfragment.structure.expressions.io.DeserializeException;
-import guardedfragment.structure.expressions.io.GFPrefixSerializer;
+import guardedfragment.structure.gfexpressions.GFAtomicExpression;
+import guardedfragment.structure.gfexpressions.GFExistentialExpression;
+import guardedfragment.structure.gfexpressions.GFExpression;
+import guardedfragment.structure.gfexpressions.io.DeserializeException;
+import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
+import guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
+import guardedfragment.structure.gfexpressions.operations.NonMatchingTupleException;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -104,7 +104,7 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 
 					// get projection
 					// OPTIMIZE do this when initializing
-					GuardedProjection gp = new GuardedProjection(guard, guarded);
+					GFAtomProjection gp = new GFAtomProjection(guard, guarded);
 					Tuple tprime;
 					try {
 						// project to key

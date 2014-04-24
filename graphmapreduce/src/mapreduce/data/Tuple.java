@@ -1,6 +1,6 @@
 package mapreduce.data;
 
-import guardedfragment.structure.expressions.GFAtomicExpression;
+import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 
 import java.util.HashMap;
 

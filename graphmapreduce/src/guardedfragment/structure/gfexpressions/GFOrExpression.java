@@ -1,10 +1,10 @@
-package guardedfragment.structure.expressions;
+package guardedfragment.structure.gfexpressions;
 
-import guardedfragment.booleanstructure.BExpression;
-import guardedfragment.booleanstructure.BOrExpression;
-import guardedfragment.structure.GFBMapping;
-import guardedfragment.structure.GFConversionException;
-import guardedfragment.structure.GFEvaluationContext;
+
+import guardedfragment.structure.booleanexpressions.BExpression;
+import guardedfragment.structure.booleanexpressions.BOrExpression;
+import guardedfragment.structure.conversion.GFBooleanMapping;
+import guardedfragment.structure.conversion.GFtoBooleanConversionException;
 
 public class GFOrExpression extends GFAndExpression{
 
@@ -19,18 +19,7 @@ public class GFOrExpression extends GFAndExpression{
 		rank = Math.max(c1.getRank(),c2.getRank());
 	}
 	
-	
-	@Override
-	/**
-	 * Evaluates this subtree in the given context by evaluating both children and combining the result.
-	 * 
-	 * @return true if at least one child evaluates to true, false otherwise
-	 */
-	public boolean evaluate(GFEvaluationContext c) {
 
-		return child1.evaluate(c) || child2.evaluate(c);
-	}
-	
 	@Override
 	public String generateString() {
 		return "(" + child1.generateString() + " | " + child2.generateString() + ")";
@@ -42,7 +31,7 @@ public class GFOrExpression extends GFAndExpression{
 	
 	
 	@Override
-	public BExpression convertToBExpression(GFBMapping m) throws GFConversionException {
+	public BExpression convertToBExpression(GFBooleanMapping m) throws GFtoBooleanConversionException {
 		BExpression nc1 = child1.convertToBExpression(m);
 		BExpression nc2 = child2.convertToBExpression(m);
 		return new BOrExpression(nc1, nc2);
