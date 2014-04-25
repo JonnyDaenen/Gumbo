@@ -17,7 +17,7 @@ public class BVariable extends BExpression {
 		if (obj instanceof BVariable) {
 			BVariable var2 = (BVariable) obj;
 			
-			return var2.id == this.id; // TODO make faster
+			return var2.id == this.id;
 			
 		} else
 			return false;
@@ -36,11 +36,5 @@ public class BVariable extends BExpression {
 	}
 
 
-
-//	@Override
-//	public Set<String> getFreeVariables() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 
 }

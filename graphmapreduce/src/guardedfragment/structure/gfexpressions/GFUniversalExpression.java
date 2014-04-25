@@ -13,7 +13,7 @@ public class GFUniversalExpression extends GFExistentialExpression {
 	 */
 	public GFUniversalExpression(GFAtomicExpression guard, GFExpression child, String name, String[] variables) {
 		super(guard, child, name, variables);
-		super.quantifierSymbol = 'A';
+		super.quantifierSymbol = '*';
 	}
 
 
@@ -21,6 +21,11 @@ public class GFUniversalExpression extends GFExistentialExpression {
 	@Override
 	public <R> R accept(GFVisitor<R> v) throws GFVisitorException {
 		return v.visit(this);
+	}
+	
+	@Override
+	public String generateString() {
+		return "(" + output.generateString() + " * (!" + guard.generateString() + ") | " + child.generateString() + ")";
 	}
 
 }

@@ -1,13 +1,14 @@
 package guardedfragment.structure.conversion;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import guardedfragment.structure.booleanexpressions.BEvaluationContext;
 import guardedfragment.structure.booleanexpressions.BExpression;
 import guardedfragment.structure.booleanexpressions.BVariable;
 import guardedfragment.structure.booleanexpressions.VariableNotFoundException;
 import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import guardedfragment.structure.gfexpressions.GFExpression;
-import guardedfragment.structure.gfexpressions.io.DeserializeException;
 import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 
 import org.junit.After;

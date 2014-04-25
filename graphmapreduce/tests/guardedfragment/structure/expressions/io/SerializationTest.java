@@ -229,7 +229,7 @@ public class SerializationTest {
 	
 	@Test
 	public void noException() throws DeserializeException{
-		prefixSerializer.deserialize("#O(x,y)&R(x,y)&T(x)|S(x,y)T(x)"); // TODO wrong schema detection?
+		prefixSerializer.deserialize("#O(x,y)&R(x,y)&T(x)|S(x,y)T(x)");
 	}
 	
 	

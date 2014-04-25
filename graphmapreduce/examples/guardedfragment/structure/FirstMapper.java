@@ -10,7 +10,7 @@ import java.util.Set;
 import mapreduce.data.KeyValuePair;
 import mapreduce.data.Tuple;
 
-
+@Deprecated
 public class FirstMapper {
 	
 	GFAtomicExpression guard;

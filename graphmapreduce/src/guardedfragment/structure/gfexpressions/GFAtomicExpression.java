@@ -1,10 +1,6 @@
 package guardedfragment.structure.gfexpressions;
 
 
-import guardedfragment.structure.booleanexpressions.BExpression;
-import guardedfragment.structure.booleanexpressions.BVariable;
-import guardedfragment.structure.conversion.GFBooleanMapping;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -53,11 +49,6 @@ public class GFAtomicExpression extends GFExpression {
 
 	@Override
 	public String generateString() {
-		return relation + "(" + generateVarString() + ")";
-	}
-
-	@Override
-	public String prefixString() {
 		return relation + "(" + generateVarString() + ")";
 	}
 

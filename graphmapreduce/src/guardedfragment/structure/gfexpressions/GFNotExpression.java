@@ -1,11 +1,6 @@
 package guardedfragment.structure.gfexpressions;
 
 
-import guardedfragment.structure.booleanexpressions.BExpression;
-import guardedfragment.structure.booleanexpressions.BNotExpression;
-import guardedfragment.structure.conversion.GFBooleanMapping;
-import guardedfragment.structure.conversion.GFtoBooleanConversionException;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,10 +39,7 @@ public class GFNotExpression extends GFExpression{
 		return "(!" + child.generateString() + ")";
 	}
 	
-	public String prefixString() {
-		return "!" + child.prefixString();
-	}
-	
+
 	@Override
 	public boolean isGuarded() {
 		return child.isGuarded();

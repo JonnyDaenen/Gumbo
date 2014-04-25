@@ -1,10 +1,6 @@
 package guardedfragment.structure.gfexpressions;
 
 
-import guardedfragment.structure.booleanexpressions.BExpression;
-import guardedfragment.structure.booleanexpressions.BOrExpression;
-import guardedfragment.structure.conversion.GFBooleanMapping;
-import guardedfragment.structure.conversion.GFtoBooleanConversionException;
 
 public class GFOrExpression extends GFAndExpression{
 
@@ -25,10 +21,7 @@ public class GFOrExpression extends GFAndExpression{
 		return "(" + child1.generateString() + " | " + child2.generateString() + ")";
 	}
 	
-	public String prefixString() {
-		return "|" + child1.prefixString() + child2.prefixString();
-	}
-	
+
 	
 
 	

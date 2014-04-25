@@ -1,10 +1,5 @@
 package guardedfragment.structure.gfexpressions;
 
-import guardedfragment.structure.booleanexpressions.BAndExpression;
-import guardedfragment.structure.booleanexpressions.BExpression;
-import guardedfragment.structure.conversion.GFBooleanMapping;
-import guardedfragment.structure.conversion.GFtoBooleanConversionException;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -48,9 +43,6 @@ public class GFAndExpression extends GFExpression{
 		return "(" + child1.generateString() + " & " + child2.generateString() + ")";
 	}
 
-	public String prefixString() {
-		return "&" + child1.prefixString() + child2.prefixString();
-	}
 	
 
 	@Override

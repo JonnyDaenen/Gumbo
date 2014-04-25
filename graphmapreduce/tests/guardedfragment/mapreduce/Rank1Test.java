@@ -3,23 +3,18 @@
  */
 package guardedfragment.mapreduce;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
+import guardedfragment.structure.gfexpressions.GFExpression;
+import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
-import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import guardedfragment.structure.gfexpressions.GFExpression;
-import guardedfragment.structure.gfexpressions.io.DeserializeException;
-import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 import mapreduce.MRPlan;
 
 import org.junit.After;

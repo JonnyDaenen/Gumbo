@@ -52,7 +52,6 @@ public class BooleanExpressionExample {
 			
 			
 		} catch (VariableNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

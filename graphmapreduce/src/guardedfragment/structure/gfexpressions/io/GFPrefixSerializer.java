@@ -3,7 +3,6 @@
  */
 package guardedfragment.structure.gfexpressions.io;
 
-import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
 import guardedfragment.structure.gfexpressions.GFAndExpression;
 import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
@@ -156,6 +155,10 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 		case "#":
 			result = processExistential(s, startpos);
 			break;
+			
+		case "*":
+			// TODO add support for universal
+			break;
 
 		default: // found relationname
 			result = processAtom(s, startpos);
@@ -209,7 +212,9 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 		GFExpression arg;
 
 		// check atomicy of output schema
-		// TODO forbid duplicate var names?
+		
+		// NOTE forbid duplicate var names in output relation? -> no, this causes no harm
+		
 		arg = pass1.fst;
 		if (!(arg instanceof GFAtomicExpression))
 			throw new DeserializeException("Output relation is non-atomic at postion " + startpos + 1 + " (" + s + ")");
@@ -305,12 +310,13 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 	}
 
 	/**
+	 * @throws GFVisitorException 
 	 * @see guardedfragment.structure.gfexpressions.GFVisitor#visit(guardedfragment.structure.gfexpressions.GFUniversalExpression)
 	 */
 	@Override
-	public String visit(GFUniversalExpression e) {
-		// TODO Auto-generated method stub
-		return "";
+	public String visit(GFUniversalExpression e) throws GFVisitorException {
+		// TODO support it
+		throw new GFVisitorException("Universal expressions are not supported");
 	}
 
 }

@@ -1,9 +1,5 @@
 package guardedfragment.structure.gfexpressions;
 
-import guardedfragment.structure.booleanexpressions.BExpression;
-import guardedfragment.structure.conversion.GFBooleanMapping;
-import guardedfragment.structure.conversion.GFtoBooleanConversionException;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +11,7 @@ public class GFExistentialExpression extends GFExpression {
 	int rank;
 	GFAtomicExpression output;
 	
-	char quantifierSymbol = 'E';
+	char quantifierSymbol = '#';
 	
 	
 	/**
@@ -74,13 +70,9 @@ public class GFExistentialExpression extends GFExpression {
 	
 	@Override
 	public String generateString() {
-		return "(" + output.generateString() + " = " + guard.generateString() + " ^ " + child.generateString() + ")";
+		return "(" + output.generateString() + " # " + guard.generateString() + " & " + child.generateString() + ")";
 	}
 	
-
-	public String prefixString() {
-		return "=" + output.prefixString() + "^" + guard.prefixString() +  child.prefixString();
-	}
 
 	
 	
@@ -107,10 +99,6 @@ public class GFExistentialExpression extends GFExpression {
 		
 		phivars.removeAll(guardvars);
 		varlist.removeAll(guardvars);
-		
-//		System.out.println(phivars);
-//		System.out.println(varlist);
-//		System.out.println(guardvars);
 		
 		return phivars.isEmpty() && varlist.isEmpty(); // OPTIMIZE this can be optimized
 	}

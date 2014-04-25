@@ -1,9 +1,5 @@
 package guardedfragment.structure.gfexpressions;
 
-import guardedfragment.structure.booleanexpressions.BExpression;
-import guardedfragment.structure.conversion.GFBooleanMapping;
-import guardedfragment.structure.conversion.GFtoBooleanConversionException;
-
 import java.util.Set;
 
 public abstract class GFExpression {
@@ -17,8 +13,6 @@ public abstract class GFExpression {
 
 	public abstract Set<GFExistentialExpression> getSubExistentialExpression(int k);
 
-	@Deprecated
-	public abstract String prefixString();
 
 	/**
 	 * @return the set of all atomic formulae
