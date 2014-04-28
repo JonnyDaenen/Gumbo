@@ -2,7 +2,7 @@ package guardedfragment.structure.gfexpressions;
 
 
 
-public class GFOrExpression extends GFAndExpression{
+public class GFOrExpression extends GFAndExpression{ // TODO decouple from AND for safety
 
 
 	/**

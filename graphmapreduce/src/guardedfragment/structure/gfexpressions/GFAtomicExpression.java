@@ -13,12 +13,19 @@ public class GFAtomicExpression extends GFExpression {
 
 	String relation;
 	String[] variables;
-	int rank;
 
 	public GFAtomicExpression(String relationName, String... variables) {
 		this.relation = relationName;
 		this.variables = variables;
-		this.rank = 0;
+	}
+
+
+	/**
+	 * @param guard
+	 */
+	public GFAtomicExpression(GFAtomicExpression guard) {
+		this.relation = guard.relation;
+		this.variables = guard.variables.clone();
 	}
 
 
@@ -153,7 +160,7 @@ public class GFAtomicExpression extends GFExpression {
 
 	@Override
 	public int getRank() {
-		return this.rank;
+		return 0;
 	}
 
 	@Override

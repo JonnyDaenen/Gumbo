@@ -4,8 +4,15 @@ import guardedfragment.mapreduce.mappers.GuardedBooleanMapper;
 import guardedfragment.mapreduce.mappers.GuardedMapper;
 import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
 import guardedfragment.mapreduce.reducers.GuardedProjectionReducer;
+import guardedfragment.structure.gfexpressions.GFAndExpression;
+import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import guardedfragment.structure.gfexpressions.GFExpression;
+import guardedfragment.structure.gfexpressions.GFNotExpression;
+import guardedfragment.structure.gfexpressions.GFOrExpression;
+import guardedfragment.structure.gfexpressions.GFUniversalExpression;
+import guardedfragment.structure.gfexpressions.GFVisitor;
+import guardedfragment.structure.gfexpressions.GFVisitorException;
 import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 
 import java.io.IOException;
@@ -14,6 +21,8 @@ import java.util.Set;
 
 import mapreduce.MRPlan;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
@@ -22,6 +31,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.zookeeper.KeeperException.UnimplementedException;
 
 /**
  * Converter from a GF expression to a Map-reduce ControlledJob (hadoop). For
@@ -41,7 +51,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
  * 
  * 
  */
-public class GFMRPlanner {
+public class GFMRPlanner implements GFVisitor<MRPlan>{
 
 	protected Path inputDir;
 	protected Path outputDir;
@@ -52,6 +62,10 @@ public class GFMRPlanner {
 	static final String TMPDIRPREFIX = "TMP_JOB";
 	
 	private GFPrefixSerializer serializer;
+	
+
+
+	private static final Log LOG = LogFactory.getLog(GFMRPlanner.class);
 	
 
 	public GFMRPlanner(String inputDir, String outputDir, String scratchDir) {
@@ -66,20 +80,42 @@ public class GFMRPlanner {
 		serializer = new GFPrefixSerializer();
 	}
 
-	MRPlan convert(GFExpression e) throws ConversionNotImplementedException {
-		throw new ConversionNotImplementedException();
-	}
-
-	MRPlan convert(GFExistentialExpression e)
-			throws ConversionNotImplementedException, IOException {
-
-		Set<GFExistentialExpression> set = new HashSet<GFExistentialExpression>();
-		set.add(e);
-		return convert(set);
+	MRPlan convert(GFExpression e) throws GFMRPlannerException {
+		
+//		Set<GFExpression> set = new HashSet<GFExpression>();
+//		set.add(e);
+//		return convert(set);
+		
+		MRPlan plan = new MRPlan();
+		// set basic properties
+		plan.setInputFolder(inputDir);
+		plan.setOutputFolder(outputDir);
+		plan.setScratchFolder(scratchDir);
+		
+		try {
+			plan =  e.accept(this);
+			
+		} catch (GFMRPlannerException e2) {
+			// throw further
+			throw e2;
+		} catch (GFVisitorException e1) {
+			LOG.error("Unknown exception");
+			e1.printStackTrace();
+		}
+		
+		
+		
+		return plan;
 	}
 	
+//	MRPlan convert(Set<GFExpression> set) {
+//		// TODO implement
+//		return null;
+//	}
+
+	
 	MRPlan convert(Set<GFExistentialExpression> set)
-			throws ConversionNotImplementedException, IOException {
+			throws GFMRPlannerException, IOException {
 
 		MRPlan plan = new MRPlan();
 		
@@ -95,8 +131,8 @@ public class GFMRPlanner {
 			
 		// TODO is this necessary?
 		plan.addTempDir(tmpDir.toString());
-		plan.setInputFolder(inputDir.toString());
-		plan.setOutputFolder(outputDir.toString());
+		plan.setInputFolder(inputDir);
+		plan.setOutputFolder(outputDir);
 
 		return plan;
 	}
@@ -105,10 +141,6 @@ public class GFMRPlanner {
 		return new Path(scratchDir.toString() + "/" + TMPDIRPREFIX + jobName);
 	}
 	
-	
-	
-	
-
 
 	
 	
@@ -236,19 +268,49 @@ public class GFMRPlanner {
 		this.planName = planName;
 	}
 
-	/*
-	 * TODO add later MRJob convert(GFAndExpression e) throws
-	 * ConversionNotImplementedException { return convertBoolean(e); }
-	 * 
-	 * MRJob convert(GFOrExpression e) throws ConversionNotImplementedException
-	 * { return convertBoolean(e); }
-	 * 
-	 * MRJob convert(GFNotExpression e) throws ConversionNotImplementedException
-	 * { return convertBoolean(e); }
-	 * 
-	 * BooleanMRJob convertBoolean(GFExpression e) throws
-	 * ConversionNotImplementedException { if (e.isAtomicBooleanCombination())
-	 * return null; // TODO new BooleanMRJob(); else
-	 */
+
+	/* CONVERSIOM*/
+	
+	@Override
+	public MRPlan visit(GFExpression e) throws GFVisitorException {
+		throw new GFMRPlannerException("Unsupported GFExpression: " + e);
+	}
+
+
+	@Override
+	public MRPlan visit(GFAtomicExpression e) throws GFVisitorException {
+		throw new GFMRPlannerException("Unsupported conversion: Atom " + e);
+	}
+
+
+	@Override
+	public MRPlan visit(GFAndExpression e) throws GFVisitorException {
+		throw new GFMRPlannerException("Unsupported conversion: AND-operator " + e);
+	}
+
+	@Override
+	public MRPlan visit(GFOrExpression e) throws GFVisitorException {
+		throw new GFMRPlannerException("Unsupported conversion: OR-operator " + e);
+	}
+
+
+	@Override
+	public MRPlan visit(GFNotExpression e) throws GFVisitorException {
+		throw new GFMRPlannerException("Unsupported conversion: NOT-operator " + e);
+	}
+
+
+	@Override
+	public MRPlan visit(GFExistentialExpression e) throws GFVisitorException {
+		throw new GFMRPlannerException("Unsupported conversion: Existential-operator " + e);
+	}
+
+
+	@Override
+	public MRPlan visit(GFUniversalExpression e) throws GFVisitorException {
+		throw new GFMRPlannerException("Unsupported conversion: Forall-operator " + e);
+	}
+
+
 
 }
