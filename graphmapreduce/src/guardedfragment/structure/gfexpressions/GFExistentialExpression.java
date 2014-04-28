@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import mapreduce.data.RelationSchema;
+
 public class GFExistentialExpression extends GFExpression {
 	
 	GFAtomicExpression guard;
@@ -44,8 +46,28 @@ public class GFExistentialExpression extends GFExpression {
 		return allAtoms;
 	}
 	
-	public GFAtomicExpression getOutputSchema() {
+	/**
+	 * 
+	 * @return the set of relation schemas this expressions depends on.
+	 */
+	public Set<RelationSchema> getRelationDependencies() {
+		Set<GFAtomicExpression> allAtoms = getAtomic();
+		Set<RelationSchema> schemas = new HashSet<RelationSchema>();
+		
+		for (GFAtomicExpression atom : allAtoms) {
+			RelationSchema schema = atom.getRelationSchema();
+			schemas.add(schema);
+		}
+		
+		return schemas;
+	}
+	
+	public GFAtomicExpression getOutputRelation() {
 		return output;
+	}
+	
+	public RelationSchema getOutputSchema() {
+		return output.getRelationSchema();
 	}
 
 

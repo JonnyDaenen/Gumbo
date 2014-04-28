@@ -37,7 +37,7 @@ public class GFDecomposer implements GFVisitor<Pair<GFExpression,Set<GFExistenti
 
 	private static final Log LOG = LogFactory.getLog(GFDecomposer.class);
 
-	Set<GFExistentialExpression> decompose(GFExpression e) throws GFDecomposerException {
+	public Set<GFExistentialExpression> decompose(GFExpression e) throws GFDecomposerException {
 		
 		// TODO reject non-existentials
 		

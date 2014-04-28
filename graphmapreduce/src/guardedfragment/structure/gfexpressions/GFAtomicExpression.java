@@ -173,4 +173,12 @@ public class GFAtomicExpression extends GFExpression {
 	public <R> R accept(GFVisitor<R> v) throws GFVisitorException {
 		return v.visit(this);
 	}
+
+
+	/**
+	 * @return the relation schema of this atom (column names are arbitrary).
+	 */
+	public RelationSchema getRelationSchema() {
+		return new RelationSchema(this.relation, this.variables.length);
+	}
 }

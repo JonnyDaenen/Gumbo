@@ -51,7 +51,7 @@ import org.apache.zookeeper.KeeperException.UnimplementedException;
  * 
  * 
  */
-public class GFMRPlanner implements GFVisitor<MRPlan>{
+public class GFMRPlanner {
 
 	protected Path inputDir;
 	protected Path outputDir;
@@ -92,17 +92,7 @@ public class GFMRPlanner implements GFVisitor<MRPlan>{
 		plan.setOutputFolder(outputDir);
 		plan.setScratchFolder(scratchDir);
 		
-		try {
-			plan =  e.accept(this);
-			
-		} catch (GFMRPlannerException e2) {
-			// throw further
-			throw e2;
-		} catch (GFVisitorException e1) {
-			LOG.error("Unknown exception");
-			e1.printStackTrace();
-		}
-		
+		// TODO implement
 		
 		
 		return plan;
@@ -266,49 +256,6 @@ public class GFMRPlanner implements GFVisitor<MRPlan>{
 
 	public void setPlanName(String planName) {
 		this.planName = planName;
-	}
-
-
-	/* CONVERSIOM*/
-	
-	@Override
-	public MRPlan visit(GFExpression e) throws GFVisitorException {
-		throw new GFMRPlannerException("Unsupported GFExpression: " + e);
-	}
-
-
-	@Override
-	public MRPlan visit(GFAtomicExpression e) throws GFVisitorException {
-		throw new GFMRPlannerException("Unsupported conversion: Atom " + e);
-	}
-
-
-	@Override
-	public MRPlan visit(GFAndExpression e) throws GFVisitorException {
-		throw new GFMRPlannerException("Unsupported conversion: AND-operator " + e);
-	}
-
-	@Override
-	public MRPlan visit(GFOrExpression e) throws GFVisitorException {
-		throw new GFMRPlannerException("Unsupported conversion: OR-operator " + e);
-	}
-
-
-	@Override
-	public MRPlan visit(GFNotExpression e) throws GFVisitorException {
-		throw new GFMRPlannerException("Unsupported conversion: NOT-operator " + e);
-	}
-
-
-	@Override
-	public MRPlan visit(GFExistentialExpression e) throws GFVisitorException {
-		throw new GFMRPlannerException("Unsupported conversion: Existential-operator " + e);
-	}
-
-
-	@Override
-	public MRPlan visit(GFUniversalExpression e) throws GFVisitorException {
-		throw new GFMRPlannerException("Unsupported conversion: Forall-operator " + e);
 	}
 
 

@@ -116,7 +116,7 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 			}
 
 			// 3 crucial parts of the expression
-			GFAtomicExpression output = formula.getOutputSchema();
+			GFAtomicExpression output = formula.getOutputRelation();
 			GFAtomicExpression guard = formula.getGuard();
 			GFExpression child = formula.getChild();
 			Set<GFAtomicExpression> allAtoms = child.getAtomic();
