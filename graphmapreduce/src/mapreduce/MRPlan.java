@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import mapreduce.data.RelationSchema;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -36,11 +38,15 @@ public class MRPlan extends Configured {
 	private static final Log LOG = LogFactory.getLog(MRPlan.class);
 
 	protected String name = "FonjoPlan"; // FUTURE change
-	protected String inputFolder; // FUTURE I think this should be a set
-	protected String outputFolder;
-	protected String scratchFolder;
+	
+	protected Path inputFolder; // FUTURE I think this should be a set
+	protected Path outputFolder;
+	protected Path scratchFolder;
+	
 	protected Set<ControlledJob> jobs;
 	protected Set<Path> tempdirs;
+	
+	protected Set<RelationSchema> relations; // TODO add to description
 	
 	boolean deleteTmpDirs;
 
@@ -222,27 +228,27 @@ public class MRPlan extends Configured {
 
 	/* GETTERS & SETTERS */
 
-	public String getInputFolder() {
+	public Path getInputFolder() {
 		return inputFolder;
 	}
 
-	public void setInputFolder(String inputFolder) {
+	public void setInputFolder(Path inputFolder) {
 		this.inputFolder = inputFolder;
 	}
 
-	public String getOutputFolder() {
+	public Path getOutputFolder() {
 		return outputFolder;
 	}
 
-	public void setOutputFolder(String outputFolder) {
+	public void setOutputFolder(Path outputFolder) {
 		this.outputFolder = outputFolder;
 	}
 	
-	public String getScratchFolder() {
+	public Path getScratchFolder() {
 		return scratchFolder;
 	}
 	
-	public void setScratchFolder(String scratchFolder) {
+	public void setScratchFolder(Path scratchFolder) {
 		this.scratchFolder = scratchFolder;
 	}
 
