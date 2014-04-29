@@ -1,7 +1,9 @@
 /**
  * Created: 28 Apr 2014
  */
-package guardedfragment.mapreduce.planner;
+package guardedfragment.mapreduce.planner.calculations;
+
+import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 
 import java.util.Set;
 
@@ -17,6 +19,17 @@ import org.apache.hadoop.mapreduce.Reducer;
  *
  */
 public class BasicGFCalculationUnit extends CalculationUnit {
+	
+	GFExistentialExpression basicExpression;
+	
+	public BasicGFCalculationUnit(GFExistentialExpression basicExpression ) throws CalculationUnitException {
+		
+		if(!basicExpression.isBasicGF())
+			throw new CalculationUnitException("Supplied expression is not basic");
+		
+		this.basicExpression = basicExpression;
+		
+	}
 
 	/**
 	 * 
@@ -26,7 +39,7 @@ public class BasicGFCalculationUnit extends CalculationUnit {
 	}
 
 	/**
-	 * @see guardedfragment.mapreduce.planner.CalculationUnit#getNumRounds()
+	 * @see guardedfragment.mapreduce.planner.calculations.CalculationUnit#getNumRounds()
 	 */
 	@Override
 	int getNumRounds() {
@@ -35,16 +48,17 @@ public class BasicGFCalculationUnit extends CalculationUnit {
 	}
 
 	/**
-	 * @see guardedfragment.mapreduce.planner.CalculationUnit#getDependencies()
+	 * @see guardedfragment.mapreduce.planner.calculations.CalculationUnit#getDependencies()
 	 */
 	@Override
+	public
 	Set<CalculationUnit> getDependencies() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	/**
-	 * @see guardedfragment.mapreduce.planner.CalculationUnit#getOutputSchema()
+	 * @see guardedfragment.mapreduce.planner.calculations.CalculationUnit#getOutputSchema()
 	 */
 	@Override
 	RelationSchema getOutputSchema() {
@@ -53,7 +67,7 @@ public class BasicGFCalculationUnit extends CalculationUnit {
 	}
 
 	/**
-	 * @see guardedfragment.mapreduce.planner.CalculationUnit#getMapper(int)
+	 * @see guardedfragment.mapreduce.planner.calculations.CalculationUnit#getMapper(int)
 	 */
 	@Override
 	Mapper<LongWritable, Text, Text, Text> getMapper(int round) {
@@ -62,12 +76,20 @@ public class BasicGFCalculationUnit extends CalculationUnit {
 	}
 
 	/**
-	 * @see guardedfragment.mapreduce.planner.CalculationUnit#getReducer(int)
+	 * @see guardedfragment.mapreduce.planner.calculations.CalculationUnit#getReducer(int)
 	 */
 	@Override
 	Reducer<LongWritable, Text, Text, Text> getReducer(int round) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	
+	/**
+	 * @return the basicExpression
+	 */
+	public GFExistentialExpression getBasicExpression() {
+		return basicExpression;
 	}
 
 }

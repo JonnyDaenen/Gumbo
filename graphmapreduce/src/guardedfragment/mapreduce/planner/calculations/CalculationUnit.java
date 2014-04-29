@@ -1,8 +1,12 @@
 /**
  * Created: 28 Apr 2014
  */
-package guardedfragment.mapreduce.planner;
+package guardedfragment.mapreduce.planner.calculations;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.hadoop.io.LongWritable;
@@ -20,6 +24,15 @@ import mapreduce.data.RelationSchema;
  */
 public abstract class CalculationUnit {
 	
+	Map<RelationSchema,CalculationUnit> directDependencies;
+	Set<RelationSchema> inputRelations;
+	
+	
+
+	public CalculationUnit() {
+		directDependencies = new HashMap<RelationSchema,CalculationUnit>();
+		inputRelations = new HashSet<RelationSchema>();
+	}
 
 	
 	
@@ -29,9 +42,30 @@ public abstract class CalculationUnit {
 	abstract int getNumRounds();
 	
 	/**
-	 * @return set of dependent calculations
+	 * @return set of direct dependent
 	 */
-	abstract Set<CalculationUnit> getDependencies();
+	public Collection<CalculationUnit> getDependencies() {
+		return directDependencies.values();
+	}
+	
+	/**
+	 * @param cu a CU on which this CU depends
+	 * @param rs the relation of the CU
+	 */
+	public void setDependency(RelationSchema rs,CalculationUnit cu) {
+		directDependencies.put(rs, cu);
+	}
+	
+	
+	public void addInputRelation(RelationSchema rs) {
+		inputRelations.add(rs);
+	}
+	
+	public Set<RelationSchema> getInputRelations() {
+		return inputRelations;
+	}
+	
+
 	
 	/**
 	 * @return the output schema
