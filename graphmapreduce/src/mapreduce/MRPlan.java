@@ -37,7 +37,7 @@ public class MRPlan extends Configured {
 
 	private static final Log LOG = LogFactory.getLog(MRPlan.class);
 
-	protected String name = "FonjoPlan"; // FUTURE change
+	protected String name = "FronjoPlan"; // FUTURE change
 	
 	protected Path inputFolder; // FUTURE I think this should be a set
 	protected Path outputFolder;

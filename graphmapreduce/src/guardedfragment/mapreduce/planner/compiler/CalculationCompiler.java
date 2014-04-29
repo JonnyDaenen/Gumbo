@@ -3,7 +3,7 @@
  */
 package guardedfragment.mapreduce.planner.compiler;
 
-import guardedfragment.mapreduce.planner.partitioner.CalculationPartition;
+import guardedfragment.mapreduce.planner.calculations.CalculationPartition;
 
 import java.util.List;
 

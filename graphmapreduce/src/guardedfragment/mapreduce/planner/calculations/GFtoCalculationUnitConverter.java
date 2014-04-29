@@ -38,7 +38,7 @@ public class GFtoCalculationUnitConverter {
 		decomposer = new GFDecomposer();
 	}
 
-	Collection<BasicGFCalculationUnit> createCalculationUnits(Set<GFExistentialExpression> gfeset) {
+	CalculationPartition createCalculationUnits(Set<GFExistentialExpression> gfeset) {
 
 		// convert all non-basic expressions to basic
 		Map<RelationSchema, BasicGFCalculationUnit> basics = toBasic(gfeset);
@@ -78,7 +78,12 @@ public class GFtoCalculationUnitConverter {
 		
 		
 
-		return basics.values();
+		CalculationPartition partition = new CalculationPartition();
+		for (CalculationUnit c : basics.values()) {
+			partition.addCalculation(c);
+		}
+		
+		return partition;
 	}
 
 	/**

@@ -99,19 +99,7 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 			boolean foundKey = false;
 			GFAtomicExpression guard = formula.getGuard();
 
-			// If the guard matches the key, we output the key itself and then
-			// stop processing this formula
-			// This is because other tuples cannot appear as a value; they need
-			// to ...
-			// TODO this is wrong I think:
-			// consider the following: Ey G(x,y) and G(x,x)
-			// with (1,2) (1,1)
-			// this would not output anything for the guarded part
-//			if (guard.matches(keyTuple)) {
-//				// LOG.error("the guard tuple " + tKey.toString());
-//				context.write(null, new Text(keyTuple.generateString() + ";"));
-//				continue; // go to next formula
-//			}
+
 
 			// look if data (key) is present in a guarded relation (one of the
 			// values)

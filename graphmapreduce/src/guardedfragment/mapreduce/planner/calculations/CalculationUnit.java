@@ -14,6 +14,8 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 
+import com.sun.tools.classfile.Dependencies;
+
 import mapreduce.data.RelationSchema;
 
 /**
@@ -86,4 +88,30 @@ public abstract class CalculationUnit {
 	 */
 	abstract Reducer<LongWritable, Text, Text, Text> getReducer(int round);
 
+
+
+	/**
+	 * @return true if this calculation has no dependencies
+	 */
+	public boolean isLeaf() {
+		return directDependencies.isEmpty();
+	}
+
+	/**
+	 * Calculates the height of the DAG rooted here, leafs have height 0.
+	 * @return the height of the DAG rooted at this node
+	 */
+	public int getHeight() {
+		
+		if (directDependencies.isEmpty())
+			return 1;
+		
+		int max = 0;
+		for (CalculationUnit dep : directDependencies.values()) {
+			max = Math.max(max, dep.getHeight());
+		}
+			
+		return max + 1;
+		
+	}
 }

@@ -3,6 +3,7 @@
  */
 package guardedfragment.mapreduce.planner.partitioner;
 
+import guardedfragment.mapreduce.planner.calculations.CalculationPartition;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnit;
 
 import java.util.Collection;
@@ -19,6 +20,6 @@ import java.util.Set;
 public interface CalculationPartitioner {
 
 
-	List<CalculationPartition> partition(Collection<CalculationUnit> c);
+	List<CalculationPartition> partition(CalculationPartition calculationSet);
 
 }
