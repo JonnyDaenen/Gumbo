@@ -28,6 +28,11 @@ public class CalculationPartition implements Iterable<CalculationUnit> {
 	}
 	
 	
+	/**
+	 * Adds a finished calculation to the partition. All dependencies should be set correctly,
+	 * because while adding it is determined whether this is a root/leaf/... 
+	 * @param c
+	 */
 	public void addCalculation(CalculationUnit c) {
 		calculations.add(c);
 		
@@ -40,6 +45,7 @@ public class CalculationPartition implements Iterable<CalculationUnit> {
 		boolean isRoot = true;
 		
 		for (CalculationUnit oldCalc : calculations) {
+			
 			if (oldCalc.getDependencies().contains(c)){
 				isRoot = false;
 				break;
@@ -107,4 +113,26 @@ public class CalculationPartition implements Iterable<CalculationUnit> {
 		return cp;
 	}
 
+
+	/**
+	 * @return
+	 */
+	public int size() {
+		return calculations.size();
+	}
+
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		String s = "Partition: {"+ System.lineSeparator();
+		for (CalculationUnit c : calculations) {
+			s += c + System.lineSeparator();
+		}
+		s += "}";
+		
+		return s;
+	}
 }

@@ -26,12 +26,19 @@ import mapreduce.data.RelationSchema;
  */
 public abstract class CalculationUnit {
 	
+	static int COUNTER = 0; // CLEAN dirty code
+	int id;
 	Map<RelationSchema,CalculationUnit> directDependencies;
 	Set<RelationSchema> inputRelations;
 	
 	
-
 	public CalculationUnit() {
+		this(COUNTER);
+	}
+
+	public CalculationUnit(int id) {
+		this.id = id;
+		COUNTER = Math.max(COUNTER, id) + 1;
 		directDependencies = new HashMap<RelationSchema,CalculationUnit>();
 		inputRelations = new HashSet<RelationSchema>();
 	}
@@ -98,13 +105,10 @@ public abstract class CalculationUnit {
 	}
 
 	/**
-	 * Calculates the height of the DAG rooted here, leafs have height 0.
+	 * Calculates the height of the DAG rooted here, leafs have height 1.
 	 * @return the height of the DAG rooted at this node
 	 */
 	public int getHeight() {
-		
-		if (directDependencies.isEmpty())
-			return 1;
 		
 		int max = 0;
 		for (CalculationUnit dep : directDependencies.values()) {
@@ -113,5 +117,20 @@ public abstract class CalculationUnit {
 			
 		return max + 1;
 		
+	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		String s = "";
+		s += "id : " + id + " ";
+		s += "Depends on: ";
+		for (CalculationUnit c : directDependencies.values()) {
+			s += c.id +",";
+			
+		}
+		return s;
 	}
 }

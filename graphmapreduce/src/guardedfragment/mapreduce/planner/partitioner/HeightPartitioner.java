@@ -29,7 +29,7 @@ public class HeightPartitioner implements CalculationPartitioner {
 		
 		for (int i = 0; i <= height; i++) {
 			
-			CalculationPartition calcSet = partition.getCalculationsByHeight(height);
+			CalculationPartition calcSet = partition.getCalculationsByHeight(i);
 			list.add(i, calcSet);
 		}
 		

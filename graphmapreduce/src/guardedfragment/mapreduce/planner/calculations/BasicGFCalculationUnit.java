@@ -22,21 +22,25 @@ public class BasicGFCalculationUnit extends CalculationUnit {
 	
 	GFExistentialExpression basicExpression;
 	
-	public BasicGFCalculationUnit(GFExistentialExpression basicExpression ) throws CalculationUnitException {
-		
+	public BasicGFCalculationUnit(int id, GFExistentialExpression basicExpression ) throws CalculationUnitException {
+		super(id);
 		if(!basicExpression.isBasicGF())
 			throw new CalculationUnitException("Supplied expression is not basic");
 		
 		this.basicExpression = basicExpression;
+	}
+	
+	@Deprecated
+	public BasicGFCalculationUnit(GFExistentialExpression basicExpression ) throws CalculationUnitException {
+		if(!basicExpression.isBasicGF())
+			throw new CalculationUnitException("Supplied expression is not basic");
 		
+		this.basicExpression = basicExpression;
 	}
 
-	/**
-	 * 
-	 */
-	public BasicGFCalculationUnit() {
-		// TODO Auto-generated constructor stub
-	}
+
+
+
 
 	/**
 	 * @see guardedfragment.mapreduce.planner.calculations.CalculationUnit#getNumRounds()
@@ -47,15 +51,6 @@ public class BasicGFCalculationUnit extends CalculationUnit {
 		return 0;
 	}
 
-	/**
-	 * @see guardedfragment.mapreduce.planner.calculations.CalculationUnit#getDependencies()
-	 */
-	@Override
-	public
-	Set<CalculationUnit> getDependencies() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	/**
 	 * @see guardedfragment.mapreduce.planner.calculations.CalculationUnit#getOutputSchema()
