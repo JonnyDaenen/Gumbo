@@ -45,8 +45,8 @@ public class PlannerExample {
 		System.out.println(calcUnits);
 		
 		// partition
-		//CalculationPartitioner partitioner = new HeightPartitioner();
-		CalculationPartitioner partitioner = new UnitPartitioner();
+		CalculationPartitioner partitioner = new HeightPartitioner();
+//		CalculationPartitioner partitioner = new UnitPartitioner();
 		PartitionedCalculationUnitDAG partitionedUnits = partitioner.partition(calcUnits);
 		System.out.println("\nPartitioned Units\n-----------------");
 		System.out.println(partitionedUnits);

@@ -85,7 +85,7 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 
 			// convert value to tuple
 			Tuple t = new Tuple(value.toString());
-			LOG.error("An original value: " + value.toString());
+			LOG.trace("An original value: " + value.toString());
 
 			GFAtomicExpression guard = formula.getGuard();
 			Set<GFAtomicExpression> guardedRelations = formula.getChild().getAtomic();
@@ -95,7 +95,7 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 
 				// output guard:guard
 				context.write(new Text(t.toString()), new Text(t.toString()));
-				LOG.error("The first Mapper outputs the pair: " + t.toString() + " : " + t.toString());
+				LOG.trace("The first Mapper outputs the pair: " + t.toString() + " : " + t.toString());
 
 				for (GFAtomicExpression guarded : guardedRelations) {
 
@@ -113,7 +113,7 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 							// " val: " + t);
 							// project to key and write out
 							context.write(new Text(tprime.toString()), new Text(t.toString()));
-							LOG.error("The first Mapper outputs the pair: " + tprime.toString() + " : " + t.toString());
+							LOG.trace("The first Mapper outputs the pair: " + tprime.toString() + " : " + t.toString());
 
 						}
 					} catch (NonMatchingTupleException e1) {
@@ -136,7 +136,7 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 				if (guarded.matches(t)) {
 					// LOG.error(t + " matches " + guarded);
 					context.write(new Text(t.toString()), new Text(t.toString()));
-					LOG.error("The first Mapper outputs the pair: " + t.toString() + " : " + t.toString());
+					LOG.trace("The first Mapper outputs the pair: " + t.toString() + " : " + t.toString());
 					// break;
 				}
 			}

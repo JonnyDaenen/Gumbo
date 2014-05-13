@@ -10,6 +10,7 @@ import guardedfragment.mapreduce.planner.calculations.CalculationUnit;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
 import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
 import guardedfragment.mapreduce.reducers.GuardedProjectionReducer;
+import guardedfragment.mapreduce.reducers.KeyBasedMultipleTextOutputFormat;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 
@@ -19,6 +20,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import mapreduce.data.RelationSchema;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
@@ -27,6 +30,8 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.LazyOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 /**
  * Compiles a set of basic GF expressions into a 2-round MR-job
@@ -95,7 +100,8 @@ public class BasicGFCompiler {
 			expressions.add(bcu.getBasicExpression());
 			
 			// update output path
-			dirManager.updatePath(bcu.getOutputSchema(), output);
+			RelationSchema schema = bcu.getOutputSchema();
+			dirManager.updatePath(schema, output.suffix(Path.SEPARATOR+GuardedProjectionReducer.generateFolder(schema))); // CLEAN other object to do this
 			
 		}
 		
@@ -182,8 +188,13 @@ public class BasicGFCompiler {
 		job.setMapOutputValueClass(Text.class);
 
 		// set reducer output
+		// CLEAN maybe this can be removed?
 		job.setOutputKeyClass(NullWritable.class);
 		job.setOutputValueClass(Text.class);
+//		job.setOutputValueClass(KeyBasedMultipleTextOutputFormat.class);
+		
+		// avoid empty files
+		LazyOutputFormat.setOutputFormatClass(job, TextOutputFormat.class); 
 
 		return new ControlledJob(job, null);
 	}

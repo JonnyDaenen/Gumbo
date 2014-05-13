@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import mapreduce.data.RelationSchema;
 import mapreduce.data.Tuple;
 
 import org.apache.commons.logging.Log;
@@ -25,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 /**
  * Phase: Basic Guarded - Round 2 Reducer
@@ -38,6 +40,8 @@ import org.apache.hadoop.mapreduce.Reducer;
  * 
  * When this is the case, both existing tuples are output.
  * 
+ * The output is written to relation specific files. <code>$outputdir/relationdescription/relationdescription...</code>
+ * 
  * 
  * @author Jonny Daenen
  * @author Tony Tan
@@ -47,9 +51,9 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 
 	// GFExistentialExpression formula;
 	Set<GFExistentialExpression> formulaSet;
-	
 
 	GFtoBooleanConvertor convertor;
+	private MultipleOutputs<Text, Text> mos;
 
 	private static final Log LOG = LogFactory.getLog(GuardedProjectionReducer.class);
 
@@ -64,6 +68,8 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 	@Override
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
+		mos = new MultipleOutputs(context);
+
 		Configuration conf = context.getConfiguration();
 
 		convertor = new GFtoBooleanConvertor();
@@ -124,8 +130,7 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 			// calculate projection to output relation
 			// OPTIMIZE this can be done in advance
 			GFAtomProjection p = new GFAtomProjection(guard, output);
-
-			
+			String outfile = generateFileName(p.getOutputSchema());
 
 			// convert to boolean formula, while constructing the mapping
 			// automatically
@@ -135,7 +140,7 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 			try {
 				booleanChildExpression = convertor.convert(child);
 				mapGFtoB = convertor.getMapping();
-				
+
 			} catch (GFtoBooleanConversionException e1) {
 				LOG.error("Something went wrong when converting GF to boolean, skipping: " + e1.getMessage());
 				continue;
@@ -162,7 +167,8 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 					if (booleanChildExpression.evaluate(booleanContext)) {
 						// project the tuple and output it
 						String outputTuple = p.project(keyTuple).generateString();
-						context.write(null, new Text(outputTuple));
+						// context.write(null, new Text(outputTuple));
+						mos.write((Text) null, new Text(outputTuple), outfile);
 					}
 				} catch (VariableNotFoundException | NonMatchingTupleException e) {
 					// should not happen
@@ -174,6 +180,25 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 
 		}
 
+	}
+
+	public static String generateFileName(RelationSchema relationSchema) {
+		String rel = relationSchema.getShortDescription();
+		String name = generateFolder(relationSchema) + "/" + rel;
+		LOG.info("file:" + name);
+		return name;
+	}
+	
+	public static String generateFolder(RelationSchema relationSchema) {
+		return relationSchema.getShortDescription();
+	}
+
+	/**
+	 * @see org.apache.hadoop.mapreduce.Reducer#cleanup(org.apache.hadoop.mapreduce.Reducer.Context)
+	 */
+	@Override
+	protected void cleanup(Context context) throws IOException, InterruptedException {
+		mos.close();
 	}
 
 }

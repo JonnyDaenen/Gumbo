@@ -253,12 +253,20 @@ public class MRPlan {
 		output += System.getProperty("line.separator");
 		output += "scratch: " + scratchFolder;
 		output += System.getProperty("line.separator");
-
+		
+		output += "Output-dirs: ";
+		output += System.getProperty("line.separator");
+		for (Path dir : tempdirs) {
+			output += "\t" + dir.toString();
+		}
+		output += System.getProperty("line.separator");
+		
 		output += "Temp-dirs: ";
 		output += System.getProperty("line.separator");
 		for (Path dir : tempdirs) {
 			output += "\t" + dir.toString();
 		}
+		output += System.getProperty("line.separator");
 
 		return output;
 	}

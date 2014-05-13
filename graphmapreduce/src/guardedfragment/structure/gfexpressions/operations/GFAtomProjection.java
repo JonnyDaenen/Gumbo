@@ -5,6 +5,7 @@ import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import java.util.HashMap;
 import java.util.Map;
 
+import mapreduce.data.RelationSchema;
 import mapreduce.data.Tuple;
 
 /**
@@ -135,6 +136,14 @@ public class GFAtomProjection {
 		// create a new tuple from the generated String
 		return new Tuple(target.getName(), s);
 
+	}
+
+
+	/**
+	 * @return relation schema of the output relation
+	 */
+	public RelationSchema getOutputSchema() {
+		return target.getRelationSchema();
 	}
 
 }
