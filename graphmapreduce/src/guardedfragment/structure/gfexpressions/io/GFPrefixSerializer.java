@@ -13,6 +13,7 @@ import guardedfragment.structure.gfexpressions.GFUniversalExpression;
 import guardedfragment.structure.gfexpressions.GFVisitor;
 import guardedfragment.structure.gfexpressions.GFVisitorException;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,7 +60,7 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 		return "";
 	}
 
-	public String serializeSet(Set<? extends GFExpression> set) {
+	public String serializeSet(Collection<? extends GFExpression> set) {
 
 		HashSet<String> stringSet = new HashSet<String>(set.size());
 

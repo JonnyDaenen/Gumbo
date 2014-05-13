@@ -8,8 +8,8 @@ import static org.junit.Assert.*;
 import java.util.List;
 
 import guardedfragment.mapreduce.planner.calculations.BasicGFCalculationUnit;
-import guardedfragment.mapreduce.planner.calculations.CalculationPartition;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnit;
+import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
 import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.data.RelationSchema;
@@ -24,7 +24,7 @@ import org.junit.Test;
  */
 public class PartitionerTest {
 
-	CalculationPartition cp;
+	CalculationUnitDAG cp;
 
 	/**
 	 * Dependency setup
@@ -53,7 +53,7 @@ public class PartitionerTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		cp = new CalculationPartition();
+		cp = new CalculationUnitDAG();
 
 		GFAtomicExpression guard = new GFAtomicExpression("G", "x");
 		GFAtomicExpression output = new GFAtomicExpression("O", "x");
@@ -82,15 +82,15 @@ public class PartitionerTest {
 
 		c5.setDependency(new RelationSchema("Dummy8", "x"), c8);
 
-		cp.addCalculation(c1);
-		cp.addCalculation(c2);
-		cp.addCalculation(c3);
-		cp.addCalculation(c4);
-		cp.addCalculation(c5);
-		cp.addCalculation(c6);
-		cp.addCalculation(c7);
-		cp.addCalculation(c8);
-		cp.addCalculation(c9);
+		cp.add(c1);
+		cp.add(c2);
+		cp.add(c3);
+		cp.add(c4);
+		cp.add(c5);
+		cp.add(c6);
+		cp.add(c7);
+		cp.add(c8);
+		cp.add(c9);
 
 	}
 
@@ -108,17 +108,19 @@ public class PartitionerTest {
 	public void heightPartitioner() {
 		HeightPartitioner partitioner = new HeightPartitioner();
 
-		List<CalculationPartition> list = partitioner.partition(cp);
+		PartitionedCalculationUnitDAG partitioned = partitioner.partition(cp);
+		
+		List<CalculationUnitDAG> list = partitioned.getList();
 
-		assertEquals(4, list.size());
+		assertEquals(3, list.size());
 
 
-		assertEquals(0, list.get(0).size());
-		assertEquals(4, list.get(1).size());
-		assertEquals(3, list.get(2).size());
-		assertEquals(2, list.get(3).size());
+		//assertEquals(0, list.get(0).size());
+		assertEquals(4, list.get(0).size());
+		assertEquals(3, list.get(1).size());
+		assertEquals(2, list.get(2).size());
 		try {
-			assertEquals(0, list.get(4).size());
+			assertEquals(0, list.get(3).size());
 			fail("should throw IndexOutOfBoundsException");
 		} catch (IndexOutOfBoundsException e) {
 

@@ -3,7 +3,10 @@ package mapreduce;
 import guardedfragment.mapreduce.GFMRlevel1Example2;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import mapreduce.data.RelationSchema;
@@ -14,40 +17,43 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.mapred.FileInputFormat;
+import org.apache.hadoop.mapred.FileOutputFormat;
+import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
 
 /**
- * Provides a way to execute a set of MR jobs that are possibly dependent.
- * All jobs are executed in a seperate thread, which is polled for completion.
- * Input, output, scratch and temporary directories are to be specified.
- * Scratch and temp folders are removed after completion, unless suppressed with the supplied preference.
+ * Provides a way to execute a set of MR jobs that are possibly dependent. All
+ * jobs are executed in a seperate thread, which is polled for completion.
+ * Input, output, scratch and temporary directories are to be specified. Scratch
+ * and temp folders are removed after completion, unless suppressed with the
+ * supplied preference.
  * 
- * The output and scratch folders should belong to one plan.
- * The temp folders should be located inside the scratch folder, but can later be used
- * to provide a more early temp folder deletion mechanism. 
+ * The output and scratch folders should belong to one plan. The temp folders
+ * should be located inside the scratch folder, but can later be used to provide
+ * a more early temp folder deletion mechanism.
  * 
  * A summary of the plan is placed inside the output folder.
  * 
  * @author Jonny Daenen
- *
+ * 
  */
-public class MRPlan extends Configured {
-	
+public class MRPlan {
 
 	private static final Log LOG = LogFactory.getLog(MRPlan.class);
 
 	protected String name = "FronjoPlan"; // FUTURE change
-	
+
 	protected Path inputFolder; // FUTURE I think this should be a set
 	protected Path outputFolder;
 	protected Path scratchFolder;
-	
+
 	protected Set<ControlledJob> jobs;
 	protected Set<Path> tempdirs;
-	
+
 	protected Set<RelationSchema> relations; // TODO add to description
-	
+
 	boolean deleteTmpDirs;
 
 	public MRPlan() {
@@ -66,8 +72,17 @@ public class MRPlan extends Configured {
 		jobs.add(job);
 	}
 
-	public void addTempDir(String tmpDir) {
-		tempdirs.add(new Path(tmpDir));
+	public void addAllJobs(Collection<ControlledJob> jobs) {
+		this.jobs.addAll(jobs);
+	}
+
+	public void addTempDir(Path tmpDir) {
+		tempdirs.add(tmpDir);
+	}
+
+	public void addTempDirs(Collection<Path> tmpDirs) {
+		tempdirs.addAll(tmpDirs);
+		
 	}
 
 	/**
@@ -90,9 +105,9 @@ public class MRPlan extends Configured {
 			jc.addJobCollection(jobs);
 
 			// 3. we execute the jobcontrol in a Thread
-			Thread workflowThread = new Thread(jc, "Fronjo-Workflow-Thread_"+name);
+			Thread workflowThread = new Thread(jc, "Fronjo-Workflow-Thread_" + name);
 			workflowThread.setDaemon(true); // will not avoid JVM to shutdown
-			
+
 			LOG.info("Starting Job-control thread: " + workflowThread.getName());
 			workflowThread.start();
 
@@ -131,13 +146,13 @@ public class MRPlan extends Configured {
 	 */
 	private void deleteTmpDirs() {
 		FileSystem fs;
-		
+
 		// delete temp dirs
 		try {
 			fs = FileSystem.get(new Configuration());
 
 			for (Path p : tempdirs) {
-				System.out.println("Checking: "+ p);
+				System.out.println("Checking: " + p);
 				if (fs.exists(p)) {
 					fs.delete(p, true); // delete recursive
 				}
@@ -146,13 +161,13 @@ public class MRPlan extends Configured {
 			System.err.println("WARNING: problem deleting temporary folders!");
 			e.printStackTrace();
 		}
-		
+
 		// delete scratch dir
 		try {
 			fs = FileSystem.get(new Configuration());
 
 			for (Path p : tempdirs) {
-				System.out.println("Checking: "+ p);
+				System.out.println("Checking: " + p);
 				if (fs.exists(p)) {
 					fs.delete(p, true); // delete recursive
 				}
@@ -170,53 +185,41 @@ public class MRPlan extends Configured {
 	@Override
 	public String toString() {
 		String output = "";
-		
-		
+
 		// TODO add date
-		
+
 		// name
 		output += System.getProperty("line.separator");
 		output += "MR-plan:";
 		output += System.getProperty("line.separator");
 		output += name;
 		output += System.getProperty("line.separator");
-		
+
 		// jobs
 		output += System.getProperty("line.separator");
 		output += "Jobs:";
 		output += System.getProperty("line.separator");
 		output += "-----";
 		output += System.getProperty("line.separator");
-		
-		for (ControlledJob job : jobs) {
-			// jobid will be unassigned in beginning
-			output += "Job: " + job.getJobName();
 
-			String deps = "";
-			if (job.getDependentJobs() != null) {
-				for (ControlledJob dep : job.getDependentJobs()) {
-					deps += "," + dep.getJobName();
-				}
-				output += "Depending on: {" + deps.substring(1) + "}";
-			}
-			
-			output += System.getProperty("line.separator");
+		for (ControlledJob job : jobs) {
+			output += jobsummary(job);
 		}
-		
+
 		// folders
 		output += System.getProperty("line.separator");
 		output += "Folders:";
 		output += System.getProperty("line.separator");
 		output += "-------";
 		output += System.getProperty("line.separator");
-		
+
 		output += "input: " + inputFolder;
 		output += System.getProperty("line.separator");
 		output += "output: " + outputFolder;
 		output += System.getProperty("line.separator");
 		output += "scratch: " + scratchFolder;
 		output += System.getProperty("line.separator");
-		
+
 		output += "Temp-dirs: ";
 		output += System.getProperty("line.separator");
 		for (Path dir : tempdirs) {
@@ -227,6 +230,37 @@ public class MRPlan extends Configured {
 	}
 
 	/* GETTERS & SETTERS */
+
+	/**
+	 * @param job
+	 * @return
+	 */
+	private String jobsummary(ControlledJob job) {
+		String output = "";
+		// jobid will be unassigned in beginning
+		output += "Job: " + job.getJobName();
+		
+		output += System.getProperty("line.separator");
+		Path[] inputs1 = FileInputFormat.getInputPaths(new JobConf(job.getJob().getConfiguration()));
+		List<Path> inputs = Arrays.asList(inputs1);
+		output += "Input paths: " + inputs;
+		output += System.getProperty("line.separator");
+
+		output += "Output path: " + FileOutputFormat.getOutputPath(new JobConf(job.getJob().getConfiguration()));
+		output += System.getProperty("line.separator");
+
+		if (job.getDependentJobs() != null) {
+			String deps = "";
+			for (ControlledJob dep : job.getDependentJobs()) {
+				deps += "," + dep.getJobName();
+			}
+			output += "Depending on: {" + deps.substring(1) + "}";
+		}
+
+		output += System.getProperty("line.separator");
+		
+		return output;
+	}
 
 	public Path getInputFolder() {
 		return inputFolder;
@@ -243,23 +277,25 @@ public class MRPlan extends Configured {
 	public void setOutputFolder(Path outputFolder) {
 		this.outputFolder = outputFolder;
 	}
-	
+
 	public Path getScratchFolder() {
 		return scratchFolder;
 	}
-	
+
 	public void setScratchFolder(Path scratchFolder) {
 		this.scratchFolder = scratchFolder;
 	}
 
 	/**
-	 * Toggles deletion of tmp dirs after execution. 
-	 * When enabled, they are also deleted when something has gone wrong.
+	 * Toggles deletion of tmp dirs after execution. When enabled, they are also
+	 * deleted when something has gone wrong.
 	 * 
 	 * @param deleteTmpDirs
 	 */
 	public void setDeleteTmpDirs(boolean deleteTmpDirs) {
 		this.deleteTmpDirs = deleteTmpDirs;
 	}
+
+	
 
 }

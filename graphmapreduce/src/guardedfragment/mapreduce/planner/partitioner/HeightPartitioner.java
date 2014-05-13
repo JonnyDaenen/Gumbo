@@ -3,8 +3,8 @@
  */
 package guardedfragment.mapreduce.planner.partitioner;
 
-import guardedfragment.mapreduce.planner.calculations.CalculationPartition;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnit;
+import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,20 +21,19 @@ public class HeightPartitioner implements CalculationPartitioner {
 	 * @see guardedfragment.mapreduce.planner.partitioner.CalculationPartitioner#partition(guardedfragment.mapreduce.planner.calculations.CalculationPartition)
 	 */
 	@Override
-	public List<CalculationPartition> partition(CalculationPartition partition) {
+	public PartitionedCalculationUnitDAG partition(CalculationUnitDAG partition) {
 		
 		int height = partition.getHeight();
+		PartitionedCalculationUnitDAG partitionedDAG = new PartitionedCalculationUnitDAG();
 		
-		ArrayList<CalculationPartition> list = new ArrayList<CalculationPartition>(height+1);
-		
-		for (int i = 0; i <= height; i++) {
+		for (int i = 1; i <= height; i++) {
 			
-			CalculationPartition calcSet = partition.getCalculationsByHeight(i);
-			list.add(i, calcSet);
+			CalculationUnitDAG calcSet = partition.getCalculationsByHeight(i);
+			partitionedDAG.add(calcSet);
 		}
 		
 		
-		return list;
+		return partitionedDAG;
 	}
 
 }

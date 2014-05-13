@@ -3,10 +3,9 @@
  */
 package guardedfragment.mapreduce.planner.compiler;
 
-import guardedfragment.mapreduce.planner.calculations.CalculationPartition;
+import org.apache.hadoop.fs.Path;
 
-import java.util.List;
-
+import guardedfragment.mapreduce.planner.partitioner.PartitionedCalculationUnitDAG;
 import mapreduce.MRPlan;
 
 /**
@@ -15,6 +14,6 @@ import mapreduce.MRPlan;
  */
 public interface CalculationCompiler {
 	
-	MRPlan compile(List<CalculationPartition> partitions);
+	MRPlan compile(PartitionedCalculationUnitDAG partitionedDAG, Path indir, Path outdir, Path scratchdir) throws UnsupportedCalculationUnitException, CompilerException;
 
 }

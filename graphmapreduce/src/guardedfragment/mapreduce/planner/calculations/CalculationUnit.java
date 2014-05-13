@@ -29,7 +29,6 @@ public abstract class CalculationUnit {
 	static int COUNTER = 0; // CLEAN dirty code
 	int id;
 	Map<RelationSchema,CalculationUnit> directDependencies;
-	Set<RelationSchema> inputRelations;
 	
 	
 	public CalculationUnit() {
@@ -40,7 +39,6 @@ public abstract class CalculationUnit {
 		this.id = id;
 		COUNTER = Math.max(COUNTER, id) + 1;
 		directDependencies = new HashMap<RelationSchema,CalculationUnit>();
-		inputRelations = new HashSet<RelationSchema>();
 	}
 
 	
@@ -66,35 +64,16 @@ public abstract class CalculationUnit {
 	}
 	
 	
-	public void addInputRelation(RelationSchema rs) {
-		inputRelations.add(rs);
-	}
 	
-	public Set<RelationSchema> getInputRelations() {
-		return inputRelations;
-	}
+	abstract public Set<RelationSchema> getInputRelations();
 	
 
 	
 	/**
 	 * @return the output schema
 	 */
-	abstract RelationSchema getOutputSchema();
+	abstract public RelationSchema getOutputSchema();
 	
-	/**
-	 * 
-	 * @param round the round for which to look up the mapper
-	 * @return the mapper for the specified round
-	 */
-	abstract Mapper<LongWritable, Text, Text, Text> getMapper(int round);
-	
-	/**
-	 * 
-	 * @param round the round for which to look up the reducer
-	 * @return the reducer for the specified round
-	 */
-	abstract Reducer<LongWritable, Text, Text, Text> getReducer(int round);
-
 
 
 	/**
@@ -127,10 +106,19 @@ public abstract class CalculationUnit {
 		String s = "";
 		s += "id : " + id + " ";
 		s += "Depends on: ";
+		if(directDependencies.size() == 0)
+			s += "None.";
 		for (CalculationUnit c : directDependencies.values()) {
 			s += c.id +",";
 			
 		}
 		return s;
+	}
+	
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
 	}
 }

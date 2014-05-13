@@ -120,7 +120,7 @@ public class GFMRPlanner {
 		plan.addJob(phase2job);
 			
 		// TODO is this necessary?
-		plan.addTempDir(tmpDir.toString());
+		plan.addTempDir(tmpDir);
 		plan.setInputFolder(inputDir);
 		plan.setOutputFolder(outputDir);
 

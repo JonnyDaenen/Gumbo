@@ -18,7 +18,7 @@ public class RelationSchema {
 		// generate fields with generic name
 		fields = new String [numfields];
 		for (int i = 0; i < fields.length; i++) {
-			fields[i] = COLPREFIX+1;
+			fields[i] = COLPREFIX+i;
 		}
 		
 	}

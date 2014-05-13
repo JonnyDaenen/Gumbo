@@ -47,8 +47,7 @@ public class BasicGFCalculationUnit extends CalculationUnit {
 	 */
 	@Override
 	int getNumRounds() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 2;
 	}
 
 
@@ -56,35 +55,32 @@ public class BasicGFCalculationUnit extends CalculationUnit {
 	 * @see guardedfragment.mapreduce.planner.calculations.CalculationUnit#getOutputSchema()
 	 */
 	@Override
-	RelationSchema getOutputSchema() {
-		// TODO Auto-generated method stub
-		return null;
+	public RelationSchema getOutputSchema() {
+		return basicExpression.getOutputSchema();
 	}
 
-	/**
-	 * @see guardedfragment.mapreduce.planner.calculations.CalculationUnit#getMapper(int)
-	 */
-	@Override
-	Mapper<LongWritable, Text, Text, Text> getMapper(int round) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * @see guardedfragment.mapreduce.planner.calculations.CalculationUnit#getReducer(int)
-	 */
-	@Override
-	Reducer<LongWritable, Text, Text, Text> getReducer(int round) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	
 	/**
 	 * @return the basicExpression
 	 */
 	public GFExistentialExpression getBasicExpression() {
 		return basicExpression;
+	}
+	
+	/**
+	 * @see guardedfragment.mapreduce.planner.calculations.CalculationUnit#toString()
+	 */
+	@Override
+	public String toString() {
+		return super.toString() + " - " + basicExpression.toString() ;
+	}
+
+	/**
+	 * @see guardedfragment.mapreduce.planner.calculations.CalculationUnit#getInputRelations()
+	 */
+	@Override
+	public Set<RelationSchema> getInputRelations() {
+		return basicExpression.getRelationDependencies();
 	}
 
 }

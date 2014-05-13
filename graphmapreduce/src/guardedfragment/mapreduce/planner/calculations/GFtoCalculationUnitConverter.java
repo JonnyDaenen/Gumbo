@@ -38,7 +38,13 @@ public class GFtoCalculationUnitConverter {
 		decomposer = new GFDecomposer();
 	}
 
-	CalculationPartition createCalculationUnits(Set<GFExistentialExpression> gfeset) {
+	public CalculationUnitDAG createCalculationUnits(GFExistentialExpression gfe) {
+		Set<GFExistentialExpression> gfeset = new HashSet<GFExistentialExpression>();
+		gfeset.add(gfe);
+		return createCalculationUnits(gfeset);
+	}
+	
+	public CalculationUnitDAG createCalculationUnits(Set<GFExistentialExpression> gfeset) {
 
 		// convert all non-basic expressions to basic
 		Map<RelationSchema, BasicGFCalculationUnit> basics = toBasic(gfeset);
@@ -60,7 +66,6 @@ public class GFtoCalculationUnitConverter {
 				// if no dependency found, it is an input relation
 				if(!basics.containsKey(rs)) { 
 					inputRelations.add(rs);
-					cu.addInputRelation(rs);
 				}
 				// otherwise, find and link dependency
 				else {
@@ -78,9 +83,9 @@ public class GFtoCalculationUnitConverter {
 		
 		
 
-		CalculationPartition partition = new CalculationPartition();
+		CalculationUnitDAG partition = new CalculationUnitDAG();
 		for (CalculationUnit c : basics.values()) {
-			partition.addCalculation(c);
+			partition.add(c);
 		}
 		
 		return partition;
