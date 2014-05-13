@@ -10,14 +10,16 @@ import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
  * @author Jonny Daenen
  *
  */
-public class HeightPartitioner implements CalculationPartitioner {
+public class DeptPartitioner implements CalculationPartitioner {
 
 	/**
 	 * @see guardedfragment.mapreduce.planner.partitioner.CalculationPartitioner#partition(guardedfragment.mapreduce.planner.calculations.CalculationPartition)
 	 */
+	@Deprecated
 	@Override
 	public PartitionedCalculationUnitDAG partition(CalculationUnitDAG partition) {
 		
+		// TODO implement
 		int height = partition.getHeight();
 		PartitionedCalculationUnitDAG partitionedDAG = new PartitionedCalculationUnitDAG();
 		

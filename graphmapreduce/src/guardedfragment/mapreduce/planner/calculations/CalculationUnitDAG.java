@@ -39,12 +39,14 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 		calculations.add(c);
 
 		// TODO check for cyclic dependencies
+		
 	}
 
 	
 	public void addAll(CalculationUnitDAG calcSet) {
 		for (CalculationUnit cu : calcSet) {
-			add(cu);
+			calculations.add(cu);
+			// TODO check for cyclic dependencies
 		}
 	}
 

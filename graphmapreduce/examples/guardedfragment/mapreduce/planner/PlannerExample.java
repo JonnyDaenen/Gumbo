@@ -6,8 +6,10 @@ package guardedfragment.mapreduce.planner;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
 import guardedfragment.mapreduce.planner.calculations.GFtoCalculationUnitConverter;
 import guardedfragment.mapreduce.planner.compiler.NaiveCalculationCompiler;
+import guardedfragment.mapreduce.planner.partitioner.CalculationPartitioner;
 import guardedfragment.mapreduce.planner.partitioner.HeightPartitioner;
 import guardedfragment.mapreduce.planner.partitioner.PartitionedCalculationUnitDAG;
+import guardedfragment.mapreduce.planner.partitioner.UnitPartitioner;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 import mapreduce.MRPlan;
@@ -43,7 +45,8 @@ public class PlannerExample {
 		System.out.println(calcUnits);
 		
 		// partition
-		HeightPartitioner partitioner = new HeightPartitioner();
+		//CalculationPartitioner partitioner = new HeightPartitioner();
+		CalculationPartitioner partitioner = new UnitPartitioner();
 		PartitionedCalculationUnitDAG partitionedUnits = partitioner.partition(calcUnits);
 		System.out.println("\nPartitioned Units\n-----------------");
 		System.out.println(partitionedUnits);

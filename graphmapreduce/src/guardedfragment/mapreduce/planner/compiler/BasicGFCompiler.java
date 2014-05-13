@@ -55,10 +55,17 @@ public class BasicGFCompiler {
 	 */
 	public Map<CalculationUnit, Set<ControlledJob>> compileBasicGFCalculationUnit(CalculationUnitDAG partition) throws UnsupportedCalculationUnitException, CompilerException {
 		
+		// determine path suffix for intermediate dirs
+		String suffix = "";
+		for (CalculationUnit cu : partition) {
+			suffix +=  "_" + cu.getOutputSchema().getName()+ cu.getOutputSchema().getNumFields();
+		}
+		suffix = suffix.substring(1);
+		
 		// load paths
 		Set<Path> inputs = dirManager.lookup(partition.getInputRelations());
 		
-		Path tmpDir = dirManager.getNewTmpPath();
+		Path tmpDir = dirManager.getNewTmpPath(suffix);
 		Set<Path> tmpDirs = new HashSet<Path>();
 		tmpDirs.add(tmpDir);
 		
@@ -71,7 +78,8 @@ public class BasicGFCompiler {
 //		Path output = outputs.iterator().next();
 		
 		// for now, we use 1 path for this entire partition
-		Path output = dirManager.getNewOutPath();
+		
+		Path output = dirManager.getNewOutPath(suffix);
 		
 		
 		

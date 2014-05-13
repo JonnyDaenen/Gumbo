@@ -64,18 +64,18 @@ public class DirManager {
 		fillFileMap();
 	}
 
-	public Path getNewTmpPath() {
+	public Path getNewTmpPath(String suffix) {
 
-		Path tmp = tmpdir.suffix(Path.SEPARATOR + TMP_PREFIX + (counter++));
+		Path tmp = tmpdir.suffix(Path.SEPARATOR + TMP_PREFIX + (counter++) +"_" + suffix);
 		tempdirs.add(tmp);
 
 		return tmp;
 
 	}
 
-	public Path getNewOutPath() {
+	public Path getNewOutPath(String suffix) {
 
-		Path out = tmpdir.suffix(Path.SEPARATOR + OUT_PREFIX + (counter++));
+		Path out = tmpdir.suffix(Path.SEPARATOR + OUT_PREFIX + (counter++)+"_" + suffix);
 		outdirs.add(out);
 
 		return out;

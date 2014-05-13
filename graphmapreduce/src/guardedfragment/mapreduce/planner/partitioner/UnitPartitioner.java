@@ -3,14 +3,16 @@
  */
 package guardedfragment.mapreduce.planner.partitioner;
 
+import guardedfragment.mapreduce.planner.calculations.CalculationUnit;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
 
 /**
- * Partitions the CalculationUnits based on their height in the DAG.
+ * Partitions the CalculationUnits in separate partitions. Dependent units will appear later in the list.
+ * 
  * @author Jonny Daenen
  *
  */
-public class HeightPartitioner implements CalculationPartitioner {
+public class UnitPartitioner implements CalculationPartitioner {
 
 	/**
 	 * @see guardedfragment.mapreduce.planner.partitioner.CalculationPartitioner#partition(guardedfragment.mapreduce.planner.calculations.CalculationPartition)
@@ -24,7 +26,10 @@ public class HeightPartitioner implements CalculationPartitioner {
 		for (int i = 1; i <= height; i++) {
 			
 			CalculationUnitDAG calcSet = partition.getCalculationsByHeight(i);
-			partitionedDAG.add(calcSet);
+			for (CalculationUnit cu : calcSet) {
+				partitionedDAG.add(cu);
+			}
+			
 		}
 		
 		

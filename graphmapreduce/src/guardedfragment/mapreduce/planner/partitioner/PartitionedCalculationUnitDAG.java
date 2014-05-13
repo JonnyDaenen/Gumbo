@@ -3,6 +3,7 @@
  */
 package guardedfragment.mapreduce.planner.partitioner;
 
+import guardedfragment.mapreduce.planner.calculations.CalculationUnit;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
 
 import java.util.Collections;
@@ -36,6 +37,17 @@ public class PartitionedCalculationUnitDAG extends CalculationUnitDAG {
 		
 		// add partition
 		partitions.add(partition);
+	}
+	
+	 /**
+	  * Adds the calculation unit as a separate partition to the back of the list.
+	 * @see guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG#add(guardedfragment.mapreduce.planner.calculations.CalculationUnit)
+	 */
+	@Override
+	public void add(CalculationUnit c) {
+		CalculationUnitDAG unitDAG = new CalculationUnitDAG();
+		unitDAG.add(c);
+		add(unitDAG);
 	}
 
 
