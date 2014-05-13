@@ -3,12 +3,7 @@
  */
 package guardedfragment.mapreduce.planner.partitioner;
 
-import guardedfragment.mapreduce.planner.calculations.CalculationUnit;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Divides a set of CalculationUnits into a a sequence of partitions,

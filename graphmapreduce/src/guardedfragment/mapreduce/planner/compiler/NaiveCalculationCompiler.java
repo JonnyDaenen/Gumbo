@@ -11,15 +11,13 @@ import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import mapreduce.MRPlan;
+
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
-
-import mapreduce.MRPlan;
-import mapreduce.data.RelationSchema;
 
 /**
  * Compiles Calculations in partitions into separate MR-jobs.
@@ -93,7 +91,7 @@ public class NaiveCalculationCompiler implements CalculationCompiler {
 		plan.setDeleteTmpDirs(false);
 		
 		plan.addTempDirs(dm.getTempDirs());
-		
+		plan.addOutDirs(dm.getOutDirs());
 
 		return plan;
 	}

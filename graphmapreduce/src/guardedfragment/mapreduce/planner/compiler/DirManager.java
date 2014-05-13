@@ -4,9 +4,7 @@
 package guardedfragment.mapreduce.planner.compiler;
 
 import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
-import guardedfragment.mapreduce.planner.partitioner.PartitionedCalculationUnitDAG;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,7 +20,7 @@ import org.apache.hadoop.fs.Path;
  * 
  * @author Jonny Daenen
  * 
- * TODO add unit tests
+ *         TODO add unit tests
  */
 public class DirManager {
 
@@ -34,9 +32,11 @@ public class DirManager {
 	protected Path tmpdir;
 
 	protected int counter;
-	protected String prefix = "TMP_";
-	
+	protected final static String TMP_PREFIX = "TMP_";
+	protected final static String OUT_PREFIX = "OUT_";
+
 	protected Set<Path> tempdirs;
+	protected Set<Path> outdirs;
 
 	Map<RelationSchema, Path> filemapping;
 
@@ -55,22 +55,30 @@ public class DirManager {
 		this.intdir = scratch.suffix(Path.SEPARATOR + "intermediate");
 		this.tmpdir = scratch.suffix(Path.SEPARATOR + "tmp");
 
-
 		this.filemapping = new HashMap<RelationSchema, Path>();
 		this.tempdirs = new HashSet<Path>();
+		this.outdirs = new HashSet<Path>();
 
 		this.counter = 0;
-		
 
 		fillFileMap();
 	}
 
 	public Path getNewTmpPath() {
-		
-		Path tmp = tmpdir.suffix(Path.SEPARATOR + prefix + (counter++));
+
+		Path tmp = tmpdir.suffix(Path.SEPARATOR + TMP_PREFIX + (counter++));
 		tempdirs.add(tmp);
-		
+
 		return tmp;
+
+	}
+
+	public Path getNewOutPath() {
+
+		Path out = tmpdir.suffix(Path.SEPARATOR + OUT_PREFIX + (counter++));
+		outdirs.add(out);
+
+		return out;
 
 	}
 
@@ -108,7 +116,6 @@ public class DirManager {
 	 *      (correct implementation of getter functions :))
 	 */
 	private void fillFileMap() {
-		
 
 		// input relations
 		for (RelationSchema rs : dag.getInputRelations()) {
@@ -137,20 +144,27 @@ public class DirManager {
 	private Path getIntermediateFolder(Path scratchdir, RelationSchema rs) {
 		return intdir.suffix(Path.SEPARATOR + rs.getName() + rs.getNumFields());
 	}
-	
-	
+
 	/**
 	 * 
 	 * @return a view on the set of generated temporary dirs
 	 */
-	public Set<Path> getTempDirs(){
+	public Set<Path> getTempDirs() {
 		return Collections.unmodifiableSet(tempdirs);
 	}
 	
-	
+	/**
+	 * 
+	 * @return a view on the set of generated output dirs
+	 */
+	public Set<Path> getOutDirs() {
+		return Collections.unmodifiableSet(outdirs);
+	}
+
 	/**
 	 * @see java.lang.Object#toString()
-	 * @return String representation of the mapping from relationschemas to paths
+	 * @return String representation of the mapping from relationschemas to
+	 *         paths
 	 */
 	@Override
 	public String toString() {
@@ -161,8 +175,7 @@ public class DirManager {
 		}
 		return sb.toString();
 	}
-	
-	
+
 	public void updatePath(RelationSchema rs, Path p) {
 		filemapping.put(rs, p);
 	}

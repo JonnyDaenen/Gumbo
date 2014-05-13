@@ -3,16 +3,6 @@
  */
 package guardedfragment.structure.gfexpressions.operations;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import mapreduce.MRPlan;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.sun.tools.javac.util.Pair;
-
 import guardedfragment.structure.gfexpressions.GFAndExpression;
 import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
@@ -22,6 +12,14 @@ import guardedfragment.structure.gfexpressions.GFOrExpression;
 import guardedfragment.structure.gfexpressions.GFUniversalExpression;
 import guardedfragment.structure.gfexpressions.GFVisitor;
 import guardedfragment.structure.gfexpressions.GFVisitorException;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.sun.tools.javac.util.Pair;
 
 /**
  * Decomposes GFExpressions into sets of basicexpression.

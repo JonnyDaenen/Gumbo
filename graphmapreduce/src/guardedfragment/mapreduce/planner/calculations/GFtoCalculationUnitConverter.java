@@ -3,21 +3,19 @@
  */
 package guardedfragment.mapreduce.planner.calculations;
 
-import java.util.Collection;
+import guardedfragment.mapreduce.GFMRPlannerException;
+import guardedfragment.structure.gfexpressions.GFExistentialExpression;
+import guardedfragment.structure.gfexpressions.operations.GFDecomposer;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import mapreduce.data.RelationSchema;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import guardedfragment.mapreduce.GFMRPlannerException;
-import guardedfragment.structure.gfexpressions.GFExistentialExpression;
-import guardedfragment.structure.gfexpressions.operations.GFDecomposer;
-import guardedfragment.structure.gfexpressions.operations.GFDecomposerException;
-import mapreduce.MRPlan;
-import mapreduce.data.RelationSchema;
 
 /**
  * New version of the planner, supports multiple ranks.

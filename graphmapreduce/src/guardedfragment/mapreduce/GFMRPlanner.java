@@ -4,19 +4,11 @@ import guardedfragment.mapreduce.mappers.GuardedBooleanMapper;
 import guardedfragment.mapreduce.mappers.GuardedMapper;
 import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
 import guardedfragment.mapreduce.reducers.GuardedProjectionReducer;
-import guardedfragment.structure.gfexpressions.GFAndExpression;
-import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import guardedfragment.structure.gfexpressions.GFExpression;
-import guardedfragment.structure.gfexpressions.GFNotExpression;
-import guardedfragment.structure.gfexpressions.GFOrExpression;
-import guardedfragment.structure.gfexpressions.GFUniversalExpression;
-import guardedfragment.structure.gfexpressions.GFVisitor;
-import guardedfragment.structure.gfexpressions.GFVisitorException;
 import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Set;
 
 import mapreduce.MRPlan;
@@ -31,7 +23,6 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.zookeeper.KeeperException.UnimplementedException;
 
 /**
  * Converter from a GF expression to a Map-reduce ControlledJob (hadoop). For

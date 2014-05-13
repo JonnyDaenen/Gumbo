@@ -3,13 +3,7 @@
  */
 package guardedfragment.mapreduce.planner.partitioner;
 
-import guardedfragment.mapreduce.planner.calculations.CalculationUnit;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author Jonny Daenen

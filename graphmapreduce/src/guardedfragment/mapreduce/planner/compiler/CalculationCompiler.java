@@ -3,10 +3,10 @@
  */
 package guardedfragment.mapreduce.planner.compiler;
 
-import org.apache.hadoop.fs.Path;
-
 import guardedfragment.mapreduce.planner.partitioner.PartitionedCalculationUnitDAG;
 import mapreduce.MRPlan;
+
+import org.apache.hadoop.fs.Path;
 
 /**
  * @author Jonny Daenen

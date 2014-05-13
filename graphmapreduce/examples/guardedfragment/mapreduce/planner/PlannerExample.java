@@ -3,17 +3,16 @@
  */
 package guardedfragment.mapreduce.planner;
 
-import org.apache.hadoop.fs.Path;
-
-import mapreduce.MRPlan;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
 import guardedfragment.mapreduce.planner.calculations.GFtoCalculationUnitConverter;
 import guardedfragment.mapreduce.planner.compiler.NaiveCalculationCompiler;
 import guardedfragment.mapreduce.planner.partitioner.HeightPartitioner;
 import guardedfragment.mapreduce.planner.partitioner.PartitionedCalculationUnitDAG;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
-import guardedfragment.structure.gfexpressions.GFExpression;
 import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
+import mapreduce.MRPlan;
+
+import org.apache.hadoop.fs.Path;
 
 /**
  * @author Jonny Daenen

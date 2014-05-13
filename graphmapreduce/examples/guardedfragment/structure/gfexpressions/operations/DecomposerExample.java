@@ -3,11 +3,11 @@
  */
 package guardedfragment.structure.gfexpressions.operations;
 
-import java.util.Set;
-
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import guardedfragment.structure.gfexpressions.GFExpression;
 import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
+
+import java.util.Set;
 
 /**
  * @author Jonny Daenen

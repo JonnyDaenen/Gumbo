@@ -3,8 +3,17 @@
  */
 package guardedfragment.mapreduce.planner.compiler;
 
+import guardedfragment.mapreduce.mappers.GuardedBooleanMapper;
+import guardedfragment.mapreduce.mappers.GuardedMapper;
+import guardedfragment.mapreduce.planner.calculations.BasicGFCalculationUnit;
+import guardedfragment.mapreduce.planner.calculations.CalculationUnit;
+import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
+import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
+import guardedfragment.mapreduce.reducers.GuardedProjectionReducer;
+import guardedfragment.structure.gfexpressions.GFExistentialExpression;
+import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
+
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -18,16 +27,6 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-
-import guardedfragment.mapreduce.mappers.GuardedBooleanMapper;
-import guardedfragment.mapreduce.mappers.GuardedMapper;
-import guardedfragment.mapreduce.planner.calculations.BasicGFCalculationUnit;
-import guardedfragment.mapreduce.planner.calculations.CalculationUnit;
-import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
-import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
-import guardedfragment.mapreduce.reducers.GuardedProjectionReducer;
-import guardedfragment.structure.gfexpressions.GFExistentialExpression;
-import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 
 /**
  * Compiles a set of basic GF expressions into a 2-round MR-job
@@ -72,7 +71,7 @@ public class BasicGFCompiler {
 //		Path output = outputs.iterator().next();
 		
 		// for now, we use 1 path for this entire partition
-		Path output = dirManager.getNewTmpPath();
+		Path output = dirManager.getNewOutPath();
 		
 		
 		

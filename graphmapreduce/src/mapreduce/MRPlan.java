@@ -1,7 +1,5 @@
 package mapreduce;
 
-import guardedfragment.mapreduce.GFMRlevel1Example2;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,8 +12,8 @@ import mapreduce.data.RelationSchema;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapred.FileInputFormat;
 import org.apache.hadoop.mapred.FileOutputFormat;
@@ -51,6 +49,7 @@ public class MRPlan {
 
 	protected Set<ControlledJob> jobs;
 	protected Set<Path> tempdirs;
+	protected Set<Path> outdirs;
 
 	protected Set<RelationSchema> relations; // TODO add to description
 
@@ -59,6 +58,7 @@ public class MRPlan {
 	public MRPlan() {
 		jobs = new HashSet<ControlledJob>();
 		tempdirs = new HashSet<Path>();
+		outdirs = new HashSet<Path>();
 		deleteTmpDirs = true;
 	}
 
@@ -82,7 +82,12 @@ public class MRPlan {
 
 	public void addTempDirs(Collection<Path> tmpDirs) {
 		tempdirs.addAll(tmpDirs);
-		
+
+	}
+
+	public void addOutDirs(Collection<Path> outDirs) {
+		outdirs.addAll(outDirs);
+
 	}
 
 	/**
@@ -128,15 +133,44 @@ public class MRPlan {
 			} else {
 				success = true;
 				LOG.info("SUCCESS: all jobs (" + jc.getSuccessfulJobList().size() + ") completed!");
+				// move output to output directory
+				LOG.info("Copying output data...");
+				assembleOutput();
 			}
 
 		} finally {
 			// remove the temp dirs
-			if (deleteTmpDirs)
+			if (deleteTmpDirs) {
+				LOG.info("Removing non-output data...");
 				deleteTmpDirs();
+			}
+
+			LOG.info("Done.");
 		}
 
 		return success;
+	}
+
+	/**
+	 * 
+	 */
+	private void assembleOutput() {
+		
+		Configuration conf = new Configuration();
+		FileSystem fs;
+		try {
+			fs = FileSystem.get(conf);
+			for (Path outDir : outdirs) {
+				Path newLocation = outputFolder.suffix(Path.SEPARATOR + outDir.getName());
+				FileUtil.copy(fs, outDir, fs, newLocation, false, conf);
+			}
+		} catch (IOException e) {
+			LOG.error("WARNING: problem assembling output!");
+			e.printStackTrace();
+		}
+		
+		
+		
 	}
 
 	/**
@@ -158,7 +192,7 @@ public class MRPlan {
 				}
 			}
 		} catch (IOException e) {
-			System.err.println("WARNING: problem deleting temporary folders!");
+			LOG.error("WARNING: problem deleting temporary folders!");
 			e.printStackTrace();
 		}
 
@@ -239,7 +273,7 @@ public class MRPlan {
 		String output = "";
 		// jobid will be unassigned in beginning
 		output += "Job: " + job.getJobName();
-		
+
 		output += System.getProperty("line.separator");
 		Path[] inputs1 = FileInputFormat.getInputPaths(new JobConf(job.getJob().getConfiguration()));
 		List<Path> inputs = Arrays.asList(inputs1);
@@ -258,7 +292,7 @@ public class MRPlan {
 		}
 
 		output += System.getProperty("line.separator");
-		
+
 		return output;
 	}
 
@@ -295,7 +329,5 @@ public class MRPlan {
 	public void setDeleteTmpDirs(boolean deleteTmpDirs) {
 		this.deleteTmpDirs = deleteTmpDirs;
 	}
-
-	
 
 }

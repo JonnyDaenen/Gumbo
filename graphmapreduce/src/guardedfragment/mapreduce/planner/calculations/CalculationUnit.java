@@ -5,16 +5,8 @@ package guardedfragment.mapreduce.planner.calculations;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Reducer;
-
-import com.sun.tools.classfile.Dependencies;
 
 import mapreduce.data.RelationSchema;
 

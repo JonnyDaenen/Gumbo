@@ -3,16 +3,11 @@
  */
 package guardedfragment.mapreduce.planner.partitioner;
 
-import guardedfragment.mapreduce.planner.calculations.CalculationUnit;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-
-import mapreduce.data.RelationSchema;
 
 /**
  * Representation for a list of partitions of calculation units.
