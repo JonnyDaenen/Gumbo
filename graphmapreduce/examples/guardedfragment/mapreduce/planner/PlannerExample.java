@@ -9,7 +9,6 @@ import guardedfragment.mapreduce.planner.compiler.NaiveCalculationCompiler;
 import guardedfragment.mapreduce.planner.partitioner.CalculationPartitioner;
 import guardedfragment.mapreduce.planner.partitioner.HeightPartitioner;
 import guardedfragment.mapreduce.planner.partitioner.PartitionedCalculationUnitDAG;
-import guardedfragment.mapreduce.planner.partitioner.UnitPartitioner;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 import mapreduce.MRPlan;

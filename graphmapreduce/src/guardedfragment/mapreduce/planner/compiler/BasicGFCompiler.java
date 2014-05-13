@@ -10,7 +10,6 @@ import guardedfragment.mapreduce.planner.calculations.CalculationUnit;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
 import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
 import guardedfragment.mapreduce.reducers.GuardedProjectionReducer;
-import guardedfragment.mapreduce.reducers.KeyBasedMultipleTextOutputFormat;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 
