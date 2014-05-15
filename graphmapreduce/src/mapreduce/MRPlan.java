@@ -40,6 +40,8 @@ import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
 public class MRPlan {
 
 	private static final Log LOG = LogFactory.getLog(MRPlan.class);
+	
+	private static final int REFRESH_WAIT = 500; //ms
 
 	protected String name = "FronjoPlan"; // FUTURE change
 
@@ -119,7 +121,8 @@ public class MRPlan {
 			// 4. we wait for it to complete
 			LOG.info("Waiting for thread to complete: " + workflowThread.getName());
 			while (!jc.allFinished()) {
-				Thread.sleep(500);
+				//printStatus(jc);
+				Thread.sleep(REFRESH_WAIT);
 			}
 
 			// 5. clean up in case of failure
@@ -149,6 +152,19 @@ public class MRPlan {
 		}
 
 		return success;
+	}
+
+	/**
+	 * @param jc the jobcontrol
+	 */
+	private void printStatus(JobControl jc) {
+		// TODO Auto-generated method stub
+		
+		LOG.info("Ready: " + jc.getReadyJobsList());
+		LOG.info("Failed: " + jc.getFailedJobList());
+		LOG.info("Running: " + jc.getRunningJobList());
+		LOG.info("Success: " + jc.getSuccessfulJobList());
+		LOG.info("Waiting: " + jc.getWaitingJobList());
 	}
 
 	/**

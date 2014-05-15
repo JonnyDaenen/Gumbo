@@ -38,7 +38,7 @@ public class NewPlannerExample {
 			MRPlan plan = planner.createPlan(expressions, indir, outdir, scratchdir);
 			
 			// execute plan
-			//plan.execute();
+			plan.execute();
 
 		} catch (Exception e) {
 			e.printStackTrace();
