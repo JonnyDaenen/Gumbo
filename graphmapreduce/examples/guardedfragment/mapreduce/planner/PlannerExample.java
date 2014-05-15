@@ -5,7 +5,7 @@ package guardedfragment.mapreduce.planner;
 
 import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
 import guardedfragment.mapreduce.planner.calculations.GFtoCalculationUnitConverter;
-import guardedfragment.mapreduce.planner.compiler.NaiveCalculationCompiler;
+import guardedfragment.mapreduce.planner.compiler.CalculationCompiler;
 import guardedfragment.mapreduce.planner.partitioner.CalculationPartitioner;
 import guardedfragment.mapreduce.planner.partitioner.DepthPartitioner;
 import guardedfragment.mapreduce.planner.partitioner.HeightPartitioner;
@@ -33,7 +33,7 @@ public class PlannerExample {
 		// raw expression
 		GFPrefixSerializer serializer = new GFPrefixSerializer();
 		GFExistentialExpression gfe = (GFExistentialExpression) serializer.deserialize(
-				"#E(x)&A(x,y)&#C(x)&A(x,y)B(x)#D(x)&A(x,y)#F(x,y)&A(x,y)A(x,x)"
+				"#E(x)&A(x,y)&#C(x)&A(x,y)B(x)#D(x)&A(x,y)A(x,x)"
 				);
 		System.out.println("\nGFE\n---");
 		System.out.println(gfe);
@@ -54,7 +54,7 @@ public class PlannerExample {
 		System.out.println(partitionedUnits);
 		
 		// compile
-		NaiveCalculationCompiler compiler = new NaiveCalculationCompiler();
+		CalculationCompiler compiler = new CalculationCompiler();
 		MRPlan plan  = compiler.compile(partitionedUnits, indir, outdir, scratchdir);
 		System.out.println("\nMR-plan\n-------");
 		System.out.println(plan);

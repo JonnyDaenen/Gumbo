@@ -109,7 +109,7 @@ public class DirManager {
 	 * mapped to the output path, intermediate relations are mapped into a
 	 * separate folder in the scratch dir.
 	 * 
-	 * @see NaiveCalculationCompiler.getFolder for the folder naming.
+	 * @see CalculationCompiler.getFolder for the folder naming.
 	 * 
 	 * 
 	 * @pre partitionedDAG contains no overlap in input,intermediate and output

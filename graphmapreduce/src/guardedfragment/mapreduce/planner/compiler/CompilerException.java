@@ -1,11 +1,13 @@
 package guardedfragment.mapreduce.planner.compiler;
 
+import guardedfragment.mapreduce.planner.GFMRPlannerException;
+
 /**
  * 
  * @author Jonny Daenen
  *
  */
-public class CompilerException extends Exception {
+public class CompilerException extends GFMRPlannerException {
 
 	/**
 	 * 

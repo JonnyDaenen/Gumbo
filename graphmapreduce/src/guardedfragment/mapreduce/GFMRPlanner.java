@@ -2,6 +2,7 @@ package guardedfragment.mapreduce;
 
 import guardedfragment.mapreduce.mappers.GuardedBooleanMapper;
 import guardedfragment.mapreduce.mappers.GuardedMapper;
+import guardedfragment.mapreduce.planner.GFMRPlannerException;
 import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
 import guardedfragment.mapreduce.reducers.GuardedProjectionReducer;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
@@ -42,6 +43,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
  * 
  * 
  */
+@Deprecated
 public class GFMRPlanner {
 
 	protected Path inputDir;

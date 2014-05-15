@@ -60,6 +60,10 @@ public class PartitionedCalculationUnitDAG extends CalculationUnitDAG {
 		return Collections.unmodifiableList(partitions);
 	}
 	
+	public int getNumPartitions() {
+		return partitions.size();
+	}
+	
 	
 	/**
 	 * @see java.lang.Object#toString()

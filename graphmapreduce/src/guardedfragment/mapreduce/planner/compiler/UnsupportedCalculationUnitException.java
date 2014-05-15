@@ -3,11 +3,13 @@
  */
 package guardedfragment.mapreduce.planner.compiler;
 
+import guardedfragment.mapreduce.planner.GFMRPlannerException;
+
 /**
  * @author Jonny Daenen
  *
  */
-public class UnsupportedCalculationUnitException extends Exception {
+public class UnsupportedCalculationUnitException extends GFMRPlannerException {
 
 	/**
 	 * 

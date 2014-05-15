@@ -3,7 +3,7 @@
  */
 package guardedfragment.mapreduce.planner.calculations;
 
-import guardedfragment.mapreduce.GFMRPlannerException;
+import guardedfragment.mapreduce.planner.GFMRPlannerException;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import guardedfragment.structure.gfexpressions.operations.GFDecomposer;
 

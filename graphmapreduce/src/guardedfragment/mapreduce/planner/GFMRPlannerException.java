@@ -1,4 +1,4 @@
-package guardedfragment.mapreduce;
+package guardedfragment.mapreduce.planner;
 
 import guardedfragment.structure.gfexpressions.GFVisitorException;
 
