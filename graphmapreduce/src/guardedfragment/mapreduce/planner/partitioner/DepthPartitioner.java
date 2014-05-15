@@ -6,26 +6,25 @@ package guardedfragment.mapreduce.planner.partitioner;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
 
 /**
- * Partitions the CalculationUnits based on their height in the DAG.
+ * Partitions the CalculationUnits based on their depth in the DAG.
  * @author Jonny Daenen
  *
  */
-public class DeptPartitioner implements CalculationPartitioner {
+public class DepthPartitioner implements CalculationPartitioner {
 
 	/**
 	 * @see guardedfragment.mapreduce.planner.partitioner.CalculationPartitioner#partition(guardedfragment.mapreduce.planner.calculations.CalculationPartition)
 	 */
-	@Deprecated
 	@Override
 	public PartitionedCalculationUnitDAG partition(CalculationUnitDAG partition) {
-		
-		// TODO implement
+
 		int height = partition.getHeight();
 		PartitionedCalculationUnitDAG partitionedDAG = new PartitionedCalculationUnitDAG();
 		
-		for (int i = 1; i <= height; i++) {
+		for (int i = height; i > 0; i--) {
 			
-			CalculationUnitDAG calcSet = partition.getCalculationsByHeight(i);
+			CalculationUnitDAG calcSet = partition.getCalculationsByDepth(i);
+
 			partitionedDAG.add(calcSet);
 		}
 		

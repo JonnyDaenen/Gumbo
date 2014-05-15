@@ -37,6 +37,8 @@ public class PartitionedCalculationUnitDAG extends CalculationUnitDAG {
 		
 		// add partition
 		partitions.add(partition);
+		
+		// TODO throw exception when dependencies are missing
 	}
 	
 	 /**

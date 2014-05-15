@@ -7,8 +7,10 @@ import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
 import guardedfragment.mapreduce.planner.calculations.GFtoCalculationUnitConverter;
 import guardedfragment.mapreduce.planner.compiler.NaiveCalculationCompiler;
 import guardedfragment.mapreduce.planner.partitioner.CalculationPartitioner;
+import guardedfragment.mapreduce.planner.partitioner.DepthPartitioner;
 import guardedfragment.mapreduce.planner.partitioner.HeightPartitioner;
 import guardedfragment.mapreduce.planner.partitioner.PartitionedCalculationUnitDAG;
+import guardedfragment.mapreduce.planner.partitioner.UnitPartitioner;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 import mapreduce.MRPlan;
@@ -31,7 +33,7 @@ public class PlannerExample {
 		// raw expression
 		GFPrefixSerializer serializer = new GFPrefixSerializer();
 		GFExistentialExpression gfe = (GFExistentialExpression) serializer.deserialize(
-				"#E(x)&A(x,y)&#C(x)&A(x,y)B(x)#D(x)&A(x,y)A(x,x)"
+				"#E(x)&A(x,y)&#C(x)&A(x,y)B(x)#D(x)&A(x,y)#F(x,y)&A(x,y)A(x,x)"
 				);
 		System.out.println("\nGFE\n---");
 		System.out.println(gfe);
@@ -44,7 +46,8 @@ public class PlannerExample {
 		System.out.println(calcUnits);
 		
 		// partition
-		CalculationPartitioner partitioner = new HeightPartitioner();
+//		CalculationPartitioner partitioner = new HeightPartitioner();
+		CalculationPartitioner partitioner = new DepthPartitioner();
 //		CalculationPartitioner partitioner = new UnitPartitioner();
 		PartitionedCalculationUnitDAG partitionedUnits = partitioner.partition(calcUnits);
 		System.out.println("\nPartitioned Units\n-----------------");
@@ -57,7 +60,7 @@ public class PlannerExample {
 		System.out.println(plan);
 		
 		
-		plan.execute();
+		//plan.execute();
 	}
 	
 }

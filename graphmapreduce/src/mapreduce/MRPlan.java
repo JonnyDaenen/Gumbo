@@ -256,7 +256,7 @@ public class MRPlan {
 		
 		output += "Output-dirs: ";
 		output += System.getProperty("line.separator");
-		for (Path dir : tempdirs) {
+		for (Path dir : outdirs) {
 			output += "\t" + dir.toString();
 		}
 		output += System.getProperty("line.separator");

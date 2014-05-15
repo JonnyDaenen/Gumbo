@@ -49,6 +49,7 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 			// TODO check for cyclic dependencies
 		}
 	}
+	
 
 	/**
 	 * Calculates the set of independent calculations.
@@ -71,10 +72,10 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 	 * 
 	 * @return set of CalculationsUnits on which no others depend
 	 */
-	public Iterable<CalculationUnit> getRoots() {
+	public CalculationUnitDAG getRoots() {
 
 
-		ArrayList<CalculationUnit> roots = new ArrayList<CalculationUnit>();
+		CalculationUnitDAG roots = new CalculationUnitDAG();
 		
 		// add to root set if applicable
 		for (CalculationUnit currentCalc : calculations) {
@@ -133,6 +134,42 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 		}
 
 		return cp;
+	}
+	
+	/**
+	 * Calculates the set of calculation units on a specified depth
+	 * (depth of root calculation units = 1).
+	 * 
+	 * @param depth
+	 * @return partition with all calculations of the specified depth
+	 */
+	public CalculationUnitDAG getCalculationsByDepth(int depth) {
+		
+		// calculate roots (depth = 1)
+		CalculationUnitDAG currentLevel = getRoots();
+		
+		// breadth first expansion
+		for (int level = 2; level <= depth; level++) {
+
+			CalculationUnitDAG newLevel = new CalculationUnitDAG();
+			
+			// for each current cu
+			for (CalculationUnit c : currentLevel) {
+				
+				// add all the children to the new level
+				for (CalculationUnit child : c.getDependencies()) {
+					newLevel.add(child);
+					
+				}
+			}
+			
+			// level complete -> shift
+			currentLevel = newLevel;
+			
+		}
+		
+		// return last calculated level
+		return currentLevel;
 	}
 
 	/**
