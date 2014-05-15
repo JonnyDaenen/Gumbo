@@ -100,4 +100,14 @@ public class GFAndExpression extends GFExpression{
 
 
 
+	/**
+	 * @see guardedfragment.structure.gfexpressions.GFExpression#containsAnd()
+	 */
+	@Override
+	public boolean containsAnd() {
+		return true;
+	}
+
+
+
 }

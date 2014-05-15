@@ -83,4 +83,12 @@ public class GFNotExpression extends GFExpression{
 	public <R> R accept(GFVisitor<R> v) throws GFVisitorException {
 		return v.visit(this);
 	}
+	
+	/**
+	 * @see guardedfragment.structure.gfexpressions.GFExpression#containsAnd()
+	 */
+	@Override
+	public boolean containsAnd() {
+		return child.containsAnd();
+	}
 }

@@ -30,5 +30,12 @@ public class GFOrExpression extends GFAndExpression{ // TODO decouple from AND f
 		return v.visit(this);
 	}
 	
+	/**
+	 * @see guardedfragment.structure.gfexpressions.GFExpression#containsAnd()
+	 */
+	@Override
+	public boolean containsAnd() {
+		return child1.containsAnd() || child2.containsAnd();
+	}
 
 }

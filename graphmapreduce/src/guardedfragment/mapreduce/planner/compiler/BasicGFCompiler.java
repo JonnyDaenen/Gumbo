@@ -33,7 +33,8 @@ import org.apache.hadoop.mapreduce.lib.output.LazyOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 /**
- * Compiles a set of basic GF expressions into a 2-round MR-job
+ * Compiles a set of independent basic GF expressions into a 2-round MR-job.
+ * 
  * 
  * @author Jonny Daenen
  *
@@ -50,12 +51,16 @@ public class BasicGFCompiler {
 	}
 	
 	/**
-	 * Compiles a set of basic GF expressions into a 2-round MR-job
+	 * Compiles a set of basic GF expressions into a 2-round MR-job.
+	 * Each calculation unit's output is sent to its own subdir.
 	 * 
 	 * @param partition
 	 * @return
 	 * @throws UnsupportedCalculationUnitException 
 	 * @throws CompilerException 
+	 * 
+	 * @pre CalculationUnits are independent
+	 * TODO maybe check independence?
 	 */
 	public Map<CalculationUnit, Set<ControlledJob>> compileBasicGFCalculationUnit(CalculationUnitDAG partition) throws UnsupportedCalculationUnitException, CompilerException {
 		
@@ -96,6 +101,9 @@ public class BasicGFCompiler {
 			}
 			
 			BasicGFCalculationUnit bcu = (BasicGFCalculationUnit) cu;	
+			if(bcu.getBasicExpression().isNonConjunctiveBasicGF()){
+				// OPTIMIZE use 1-round MR
+			}
 			expressions.add(bcu.getBasicExpression());
 			
 			// update output path
@@ -110,6 +118,7 @@ public class BasicGFCompiler {
 		String name = generateName(partition);
 		
 		try {
+			
 			ControlledJob round1job = createBasicGFRound1Job(inputs, tmpDir, expressions, name+"_R1");
 			ControlledJob round2job = createBasicGFRound2Job(tmpDirs, output, expressions, name+"_R2");
 			round2job.addDependingJob(round1job);

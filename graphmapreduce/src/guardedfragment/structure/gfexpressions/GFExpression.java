@@ -50,6 +50,18 @@ public abstract class GFExpression {
 	public boolean isBasicGF() {
 		return false;
 	}
+	
+	/**
+	 * Checks whether the GFExpression is *non-conjunctive* and *basic*.
+	 * This kind of expression in a basic existential expression where the guarded part
+	 * solely consists of non-conjunctions. Hence, it has the following form:
+	 * exists x: guard and (or/not combination of atomics).
+	 * 
+	 * @return true when the expression is a *non-conjunctive* and *basic* GF expression
+	 */
+	public boolean isNonConjunctiveBasicGF() {
+		return false;
+	}
 
 	@Override
 	public String toString() {
@@ -59,5 +71,13 @@ public abstract class GFExpression {
 	public <R> R accept(GFVisitor<R> v) throws GFVisitorException {
 		return v.visit(this);
 	}
+
+	/**
+	 * Checks whether the expression contains a conjunction operation (including the guards).
+	 * @return true when the expression contains a conjunction (AND)
+	 */
+	abstract public boolean containsAnd();
+
+	
 
 }

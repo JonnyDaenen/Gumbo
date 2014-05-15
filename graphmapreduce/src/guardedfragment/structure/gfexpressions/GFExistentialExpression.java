@@ -135,6 +135,14 @@ public class GFExistentialExpression extends GFExpression {
 	public boolean isBasicGF() {
 		return child.isAtomicBooleanCombination();
 	}
+	
+	/**
+	 * @see guardedfragment.structure.gfexpressions.GFExpression#isNonConjunctiveBasicGF()
+	 */
+	@Override
+	public boolean isNonConjunctiveBasicGF() {
+		return child.isAtomicBooleanCombination() && child.containsAnd();
+	}
 
 	
 	public GFExpression getChild() {
@@ -184,5 +192,15 @@ public class GFExistentialExpression extends GFExpression {
 	public <R> R accept(GFVisitor<R> v) throws GFVisitorException {
 		return v.visit(this);
 	}
+
+	/**
+	 * @see guardedfragment.structure.gfexpressions.GFExpression#containsAnd()
+	 */
+	@Override
+	public boolean containsAnd() {
+		return true;
+	}
+
+	
 	
 }

@@ -3,6 +3,13 @@
  */
 package guardedfragment.mapreduce.planner;
 
+import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
+import guardedfragment.mapreduce.planner.calculations.GFtoCalculationUnitConverter;
+import guardedfragment.mapreduce.planner.compiler.CalculationCompiler;
+import guardedfragment.mapreduce.planner.partitioner.CalculationPartitioner;
+import guardedfragment.mapreduce.planner.partitioner.PartitionedCalculationUnitDAG;
+import guardedfragment.structure.gfexpressions.GFExistentialExpression;
+
 import java.util.Collection;
 
 import mapreduce.MRPlan;
@@ -10,17 +17,6 @@ import mapreduce.MRPlan;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.Path;
-
-import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
-import guardedfragment.mapreduce.planner.calculations.GFtoCalculationUnitConverter;
-import guardedfragment.mapreduce.planner.compiler.CalculationCompiler;
-import guardedfragment.mapreduce.planner.compiler.CompilerException;
-import guardedfragment.mapreduce.planner.compiler.UnsupportedCalculationUnitException;
-import guardedfragment.mapreduce.planner.partitioner.CalculationPartitioner;
-import guardedfragment.mapreduce.planner.partitioner.DepthPartitioner;
-import guardedfragment.mapreduce.planner.partitioner.PartitionedCalculationUnitDAG;
-import guardedfragment.structure.gfexpressions.GFExistentialExpression;
-import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 
 /**
  * @author Jonny Daenen

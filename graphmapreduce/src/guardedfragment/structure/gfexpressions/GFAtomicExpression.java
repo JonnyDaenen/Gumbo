@@ -181,4 +181,12 @@ public class GFAtomicExpression extends GFExpression {
 	public RelationSchema getRelationSchema() {
 		return new RelationSchema(this.relation, this.variables.length);
 	}
+	
+	/**
+	 * @see guardedfragment.structure.gfexpressions.GFExpression#containsAnd()
+	 */
+	@Override
+	public boolean containsAnd() {
+		return false;
+	}
 }
