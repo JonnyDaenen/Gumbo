@@ -4,7 +4,9 @@
 package guardedfragment.structure.gfexpressions.io;
 
 /**
- * @author jonny
+ * @author Jonny Daenen
+ * 
+ * reverse engineered version of com.sun.tools.javac.util.Pair
  *
  */
 public class Pair<type1,type2> {
