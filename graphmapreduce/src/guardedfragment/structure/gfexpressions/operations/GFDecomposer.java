@@ -12,6 +12,7 @@ import guardedfragment.structure.gfexpressions.GFOrExpression;
 import guardedfragment.structure.gfexpressions.GFUniversalExpression;
 import guardedfragment.structure.gfexpressions.GFVisitor;
 import guardedfragment.structure.gfexpressions.GFVisitorException;
+import guardedfragment.structure.gfexpressions.io.Pair;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +20,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.sun.tools.javac.util.Pair;
+
 
 /**
  * Decomposes GFExpressions into sets of basicexpression.
