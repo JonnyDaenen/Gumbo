@@ -11,6 +11,7 @@ import guardedfragment.mapreduce.planner.partitioner.PartitionedCalculationUnitD
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import mapreduce.MRPlan;
 
@@ -39,6 +40,12 @@ public class GFMRPlanner {
 		
 		converter = new GFtoCalculationUnitConverter();
 		compiler = new CalculationCompiler();
+	}
+
+	public MRPlan createPlan(GFExistentialExpression expression, Path indir, Path outdir, Path scratchdir) throws GFMRPlannerException {
+		HashSet<GFExistentialExpression> expressions = new HashSet<GFExistentialExpression>();
+		expressions.add(expression);
+		return createPlan(expressions, indir, outdir, scratchdir);
 	}
 
 	/**
