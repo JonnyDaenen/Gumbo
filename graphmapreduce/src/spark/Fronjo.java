@@ -28,8 +28,8 @@ public class Fronjo {
 
 		SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
 		JavaSparkContext ctx = new JavaSparkContext(sparkConf);
-		JavaRDD<String> R = ctx.textFile("R.txt", 1);
-		JavaRDD<String> S = ctx.textFile("S.txt", 1);
+		JavaRDD<String> R = ctx.textFile("./input/sparkrelations/R.txt", 1);
+		JavaRDD<String> S = ctx.textFile("./input/sparkrelations/S.txt", 1);
 
 		JavaPairRDD<String, String> Rmap = R.mapToPair(new PairFunction<String, String, String>() {
 			@Override
