@@ -10,6 +10,10 @@
 			<id>cloudera</id>
 			<url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
 		</repository>
+		<repository>
+			<id>Akka repository</id>
+			<url>http://repo.akka.io/releases</url>
+		</repository>
 	</repositories>
 
 
@@ -72,6 +76,11 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
+		</dependency>
+		<dependency> <!-- Spark dependency -->
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-core_2.10</artifactId>
+			<version>1.0.2</version>
 		</dependency>
 	</dependencies>
 	<properties>
