@@ -28,6 +28,31 @@ public class Fronjo {
 
 		SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
 		JavaSparkContext ctx = new JavaSparkContext(sparkConf);
+		JavaRDD<String> input = ctx.textFile("./input/sparkrelations/input.txt", 1);
+		
+		JavaPairRDD<String, Iterable<String>> X = input.flatMapToPair(new PairFlatMapFunction<String, String>() {
+			@Override
+			public Iterable<scala.Tuple2<String,String>> call(String s) {
+				String[] K = COMMA.split(s);
+				//System.out.println(K[0] + ":" + K[1]);
+				return K;
+			}
+		});
+
+	}
+
+	private static void printing(Tuple2<String, Iterable<String>> t) {
+		Iterable<String> T = t._2();
+		for (String ss : T) {
+			if (!ss.equals("SSS"))
+				System.out.println("[OUTPUT] " + t._1() + "," + ss);
+		}
+	}
+	
+	private static void SimpleSemijoin() throws Exception {
+		
+		SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
+		JavaSparkContext ctx = new JavaSparkContext(sparkConf);
 		JavaRDD<String> R = ctx.textFile("./input/sparkrelations/R.txt", 1);
 		JavaRDD<String> S = ctx.textFile("./input/sparkrelations/S.txt", 1);
 
@@ -70,13 +95,8 @@ public class Fronjo {
 		}
 
 		ctx.stop();
-	}
-
-	private static void printing(Tuple2<String, Iterable<String>> t) {
-		Iterable<String> T = t._2();
-		for (String ss : T) {
-			if (!ss.equals("SSS"))
-				System.out.println("[OUTPUT] " + t._1() + "," + ss);
-		}
+		
+		
+		
 	}
 }
