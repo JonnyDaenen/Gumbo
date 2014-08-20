@@ -7,6 +7,7 @@ package spark;
 
 import scala.Tuple2;
 
+import org.apache.hadoop.io.Text;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -17,10 +18,17 @@ import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.api.java.function.Function;
 
+import guardedfragment.structure.gfexpressions.GFAtomicExpression;
+import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import guardedfragment.structure.gfexpressions.GFExpression;
 import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
+import guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
+import guardedfragment.structure.gfexpressions.operations.NonMatchingTupleException;
+import mapreduce.data.Tuple;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
@@ -46,9 +54,50 @@ public class Fronjo {
 		JavaPairRDD<String, String> X1 = input.flatMapToPair(new PairFlatMapFunction<String,String,String>() {
 			@Override
 			public Iterable<Tuple2<String, String>> call(String s) {
-				List<Tuple2<String,String>> K = new ArrayList<Tuple2<String,String>>();
-				K.add(new Tuple2<String,String>(s,s));
-				K.add(new Tuple2<String,String>(s+s,s+s));
+				Set<Tuple2<String,String>> K = new HashSet<Tuple2<String,String>>();
+				Tuple t = new Tuple(s);
+				
+				
+				for (GFExistentialExpression formula : formulaSet) {
+
+					GFAtomicExpression guard = formula.getGuard();
+					Set<GFAtomicExpression> guardedRelations = formula.getChild().getAtomic();
+
+					if (guard.matches(t)) {
+
+						K.add(new Tuple2(s,s));
+
+						for (GFAtomicExpression guarded : guardedRelations) {
+
+							GFAtomProjection gp = new GFAtomProjection(guard, guarded);
+							Tuple tprime;
+							try {
+								// project to key
+								tprime = gp.project(t);
+
+								if (guarded.matches(tprime)) {
+
+									K.add(new Tuple2(tprime.toString(),tprime.toString()));
+								}
+							} catch (NonMatchingTupleException e1) {
+								// should not happen!
+								e1.printStackTrace();
+							}
+
+						}
+
+					}
+
+					for (GFAtomicExpression guarded : guardedRelations) {
+
+						// if so, output tuple with same key and value
+						if (guarded.matches(t)) {
+							// LOG.error(t + " matches " + guarded);
+							K.add(new Tuple2(t.toString(),t.toString()));
+							// break;
+						}
+					}
+				}		
 				return K;
 			}
 		});
