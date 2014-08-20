@@ -11,6 +11,7 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.FlatMapFunction;
+import org.apache.spark.api.java.function.PairFlatMapFunction;
 import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.api.java.function.Function;
@@ -23,22 +24,33 @@ import java.util.regex.Pattern;
 
 public class Fronjo {
 	private static final Pattern COMMA = Pattern.compile(",");
+	private static final Pattern BRACKET = Pattern.compile("()");
 
 	public static void main(String[] args) throws Exception {
 
 		SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
 		JavaSparkContext ctx = new JavaSparkContext(sparkConf);
-		JavaRDD<String> input = ctx.textFile("./input/sparkrelations/input.txt", 1);
 		
-		JavaPairRDD<String, Iterable<String>> X = input.flatMapToPair(new PairFlatMapFunction<String, String>() {
+		JavaRDD<String> input = ctx.textFile(args[0], 1);
+
+		JavaPairRDD<String, String> X1 = input.flatMapToPair(new PairFlatMapFunction<String,String,String>() {
 			@Override
-			public Iterable<scala.Tuple2<String,String>> call(String s) {
-				String[] K = COMMA.split(s);
-				//System.out.println(K[0] + ":" + K[1]);
+			public Iterable<Tuple2<String, String>> call(String s) {
+				List<Tuple2<String,String>> K = new ArrayList<Tuple2<String,String>>();
+				K.add(new Tuple2<String,String>(s,s));
+				K.add(new Tuple2<String,String>(s+s,s+s));
 				return K;
 			}
 		});
-
+		
+		JavaPairRDD<String,Iterable<String>> map1 = X1.groupByKey(1);
+		
+		List<Tuple2<String, Iterable<String>>> output = map1.collect();
+		for (Tuple2<String, Iterable<String>> tuple : output) {
+			printing(tuple);
+		}
+		
+		ctx.stop();
 	}
 
 	private static void printing(Tuple2<String, Iterable<String>> t) {
@@ -49,12 +61,12 @@ public class Fronjo {
 		}
 	}
 	
-	private static void SimpleSemijoin() throws Exception {
+	private static void SimpleSemijoin(String inputR, String inputS) throws Exception {
 		
 		SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
 		JavaSparkContext ctx = new JavaSparkContext(sparkConf);
-		JavaRDD<String> R = ctx.textFile("./input/sparkrelations/R.txt", 1);
-		JavaRDD<String> S = ctx.textFile("./input/sparkrelations/S.txt", 1);
+		JavaRDD<String> R = ctx.textFile(inputR, 1);
+		JavaRDD<String> S = ctx.textFile(inputS, 1);
 
 		JavaPairRDD<String, String> Rmap = R.mapToPair(new PairFunction<String, String, String>() {
 			@Override

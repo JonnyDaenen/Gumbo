@@ -2,8 +2,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>be.uhasselt.graphmapreduce</groupId>
-	<artifactId>GraphMapReduce</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>Fronjo</artifactId>
+	<version>0.9</version>
 
 	<repositories>
 		<repository>
@@ -31,6 +31,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>3.1</version>
 				<configuration>
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>true</downloadJavadocs>
