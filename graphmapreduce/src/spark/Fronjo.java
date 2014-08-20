@@ -6,6 +6,7 @@ package spark;
  */
 
 import scala.Tuple2;
+
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -15,6 +16,9 @@ import org.apache.spark.api.java.function.PairFlatMapFunction;
 import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.api.java.function.Function;
+
+import guardedfragment.structure.gfexpressions.GFExpression;
+import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,11 +31,17 @@ public class Fronjo {
 	private static final Pattern BRACKET = Pattern.compile("()");
 
 	public static void main(String[] args) throws Exception {
+		
+		String inputfile = args[0];
+		String query = args[1];
+		
+		GFPrefixSerializer parser = new GFPrefixSerializer();
+		GFExpression gfe = parser.deserialize(query);
 
 		SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
 		JavaSparkContext ctx = new JavaSparkContext(sparkConf);
 		
-		JavaRDD<String> input = ctx.textFile(args[0], 1);
+		JavaRDD<String> input = ctx.textFile(inputfile, 1);
 
 		JavaPairRDD<String, String> X1 = input.flatMapToPair(new PairFlatMapFunction<String,String,String>() {
 			@Override
