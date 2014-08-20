@@ -288,56 +288,5 @@ public class Fronjo {
 		ctx.stop();
 	}
 
-	private static void SimpleSemijoin(String inputR, String inputS)
-			throws Exception {
 
-		SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
-		JavaSparkContext ctx = new JavaSparkContext(sparkConf);
-		JavaRDD<String> R = ctx.textFile(inputR, 1);
-		JavaRDD<String> S = ctx.textFile(inputS, 1);
-
-		JavaPairRDD<String, String> Rmap = R
-				.mapToPair(new PairFunction<String, String, String>() {
-					@Override
-					public Tuple2<String, String> call(String s) {
-						String[] K = COMMA.split(s);
-						System.out.println(K[0] + ":" + K[1]);
-						return new Tuple2<String, String>(K[1], K[0]);
-					}
-				});
-
-		JavaPairRDD<String, String> Smap = S
-				.mapToPair(new PairFunction<String, String, String>() {
-					@Override
-					public Tuple2<String, String> call(String s) {
-						return new Tuple2<String, String>(s, "SSS");
-					}
-				});
-
-		JavaPairRDD<String, String> p1 = Rmap.union(Smap);
-		JavaPairRDD<String, Iterable<String>> p2 = p1.groupByKey();
-
-		JavaPairRDD<String, Iterable<String>> p3 = p2
-				.filter(new Function<Tuple2<String, Iterable<String>>, Boolean>() {
-					@Override
-					public Boolean call(Tuple2<String, Iterable<String>> t) {
-						String k = t._1();
-						Iterable<String> L = t._2();
-						for (String s : L) {
-							if (s.equals("SSS")) {
-								return true;
-							}
-						}
-						return false;
-					}
-				});
-
-		List<Tuple2<String, Iterable<String>>> output = p3.collect();
-		for (Tuple2<String, Iterable<String>> tuple : output) {
-			System.out.println(tuple);
-		}
-
-		ctx.stop();
-
-	}
 }
