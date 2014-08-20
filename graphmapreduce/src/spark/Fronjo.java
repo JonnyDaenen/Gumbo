@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 
 public class Fronjo {
 	private static final Pattern COMMA = Pattern.compile(",");
-	private static final Pattern BRACKET = Pattern.compile("()");
+	private static GFExpression gfe;
 
 	public static void main(String[] args) throws Exception {
 		
@@ -44,7 +44,8 @@ public class Fronjo {
 		String query = args[1];
 		
 		GFPrefixSerializer parser = new GFPrefixSerializer();
-		GFExpression gfe = parser.deserialize(query);
+		gfe = parser.deserialize(query);
+		Set<GFExistentialExpression> formulaSet = new HashSet<GFExistentialExpression>();
 
 		SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
 		JavaSparkContext ctx = new JavaSparkContext(sparkConf);
