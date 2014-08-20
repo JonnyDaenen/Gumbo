@@ -18,6 +18,12 @@ import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.api.java.function.Function;
 
+import guardedfragment.structure.booleanexpressions.BEvaluationContext;
+import guardedfragment.structure.booleanexpressions.BExpression;
+import guardedfragment.structure.booleanexpressions.VariableNotFoundException;
+import guardedfragment.structure.conversion.GFBooleanMapping;
+import guardedfragment.structure.conversion.GFtoBooleanConversionException;
+import guardedfragment.structure.conversion.GFtoBooleanConvertor;
 import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import guardedfragment.structure.gfexpressions.GFExpression;
@@ -40,141 +46,298 @@ public class Fronjo {
 	private static Set<GFExistentialExpression> formulaSet;
 
 	public static void main(String[] args) throws Exception {
-		
-		String inputfile = args[0];
-		String query = args[1];
-		
+
+		// String inputfile = "input.txt";
+		String query = new String("#O(x)&G(x,y,z)&S(x,z)!S(y,z)");
+
 		formulaSet = new HashSet<GFExistentialExpression>();
-		
+
 		GFPrefixSerializer parser = new GFPrefixSerializer();
 		gfe = parser.deserialize(query);
 		for (GFExistentialExpression ff : gfe.getSubExistentialExpression(1)) {
 			formulaSet.add(ff);
 		}
-		
 
 		SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
 		JavaSparkContext ctx = new JavaSparkContext(sparkConf);
-		
-		JavaRDD<String> input = ctx.textFile(inputfile, 1);
 
-		JavaPairRDD<String, String> X1 = input.flatMapToPair(new PairFlatMapFunction<String,String,String>() {
-			@Override
-			public Iterable<Tuple2<String, String>> call(String s) {
-				Set<Tuple2<String,String>> K = new HashSet<Tuple2<String,String>>();
-				Tuple t = new Tuple(s);
-				
-				
-				for (GFExistentialExpression formula : formulaSet) {
+		JavaRDD<String> input = ctx.textFile("input.txt", 1);
 
-					GFAtomicExpression guard = formula.getGuard();
-					Set<GFAtomicExpression> guardedRelations = formula.getChild().getAtomic();
+		JavaPairRDD<String, String> X1 = input
+				.flatMapToPair(new PairFlatMapFunction<String, String, String>() {
+					@Override
+					public Iterable<Tuple2<String, String>> call(String s) {
+						Set<Tuple2<String, String>> K = new HashSet<Tuple2<String, String>>();
+						Tuple t = new Tuple(s);
 
-					if (guard.matches(t)) {
+						for (GFExistentialExpression formula : formulaSet) {
 
-						K.add(new Tuple2<String,String>(s,s));
+							GFAtomicExpression guard = formula.getGuard();
+							Set<GFAtomicExpression> guardedRelations = formula
+									.getChild().getAtomic();
 
-						for (GFAtomicExpression guarded : guardedRelations) {
+							if (guard.matches(t)) {
 
-							GFAtomProjection gp = new GFAtomProjection(guard, guarded);
-							Tuple tprime;
-							try {
-								// project to key
-								tprime = gp.project(t);
+								for (GFAtomicExpression guarded : guardedRelations) {
 
-								if (guarded.matches(tprime)) {
+									GFAtomProjection gp = new GFAtomProjection(
+											guard, guarded);
+									Tuple tprime;
+									try {
+										// project to key
+										tprime = gp.project(t);
 
-									K.add(new Tuple2<String,String>(tprime.toString(),tprime.toString()));
+										if (guarded.matches(tprime)) {
+
+											K.add(new Tuple2<String, String>(
+													tprime.toString(), t
+															.toString()));
+										}
+									} catch (NonMatchingTupleException e1) {
+										// should not happen!
+										e1.printStackTrace();
+									}
+
 								}
-							} catch (NonMatchingTupleException e1) {
-								// should not happen!
-								e1.printStackTrace();
+
+							}
+
+							for (GFAtomicExpression guarded : guardedRelations) {
+								// if so, output tuple with same key and value
+								if (guarded.matches(t)) {
+									// LOG.error(t + " matches " + guarded);
+									K.add(new Tuple2<String, String>(t
+											.toString(), t.toString()));
+									// break;
+								}
+							}
+						}
+						return K;
+					}
+				});
+
+		JavaPairRDD<String, Iterable<String>> map1 = X1.groupByKey(1);
+
+		List<Tuple2<String, Iterable<String>>> output = map1.collect();
+		for (Tuple2<String, Iterable<String>> tuple : output) {
+			System.out.println(tuple);
+		}
+
+		JavaPairRDD<String, String> reduce1 = map1
+				.flatMapToPair(new PairFlatMapFunction<Tuple2<String, Iterable<String>>, String, String>() {
+					@Override
+					public Iterable<Tuple2<String, String>> call(
+							Tuple2<String, Iterable<String>> kv) {
+						Set<Tuple2<String, String>> K = new HashSet<Tuple2<String, String>>();
+						Tuple tuple;
+						String skey = kv._1();
+						Boolean foundKey = false;
+
+						for (GFExistentialExpression formula : formulaSet) {
+
+							GFAtomicExpression guard = formula.getGuard();
+
+							for (String s : kv._2()) {
+								if (s.equals(skey)) {
+									foundKey = true;
+									break;
+								}
+							}
+
+							// if the guarded tuple is actually in the database
+							if (foundKey) {
+
+								for (String s : kv._2()) {
+
+									tuple = new Tuple(s);
+									if (guard.matches(tuple)) {
+
+										Tuple guardTuple = tuple;
+
+										// get all atomics in the formula
+										Set<GFAtomicExpression> guarded = formula
+												.getChild().getAtomic();
+
+										// for each atomic
+										for (GFAtomicExpression guardedAtom : guarded) {
+
+											// project the guard tuple onto
+											// current atom
+											GFAtomProjection p = new GFAtomProjection(
+													guard, guardedAtom);
+											Tuple projectedTuple;
+
+											try {
+												projectedTuple = p
+														.project(guardTuple);
+												if (projectedTuple
+														.equals(new Tuple(skey))) {
+													K.add(new Tuple2<String, String>(
+															guardTuple
+																	.generateString(),
+															guardedAtom
+																	.generateString()));
+												}
+
+											} catch (NonMatchingTupleException e) {
+												// should not happen
+												e.printStackTrace();
+											}
+
+										}
+									}
+								}
+							} else {
+
+								for (String s : kv._2()) {
+									if (guard.matches(new Tuple(s))) {
+										K.add(new Tuple2<String, String>(s,
+												new String("")));
+									}
+								}
+
 							}
 
 						}
-
+						return K;
 					}
+				});
 
-					for (GFAtomicExpression guarded : guardedRelations) {
+		JavaPairRDD<String, Iterable<String>> map2 = reduce1.groupByKey();
 
-						// if so, output tuple with same key and value
-						if (guarded.matches(t)) {
-							// LOG.error(t + " matches " + guarded);
-							K.add(new Tuple2<String,String>(t.toString(),t.toString()));
-							// break;
+		JavaPairRDD<String, Iterable<String>> reduce2 = map2
+				.filter(new Function<Tuple2<String, Iterable<String>>, Boolean>() {
+					@Override
+					public Boolean call(Tuple2<String, Iterable<String>> t) {
+
+						GFtoBooleanConvertor convertor = new GFtoBooleanConvertor();
+
+						for (GFExistentialExpression formula : formulaSet) {
+
+							GFAtomicExpression output = formula
+									.getOutputRelation();
+							GFAtomicExpression guard = formula.getGuard();
+							GFExpression child = formula.getChild();
+							Set<GFAtomicExpression> allAtoms = child
+									.getAtomic();
+
+							// calculate projection to output relation
+							// OPTIMIZE this can be done in advance
+							GFAtomProjection p = new GFAtomProjection(guard,
+									output);
+
+							// convert to boolean formula, while constructing
+							// the mapping
+							// automatically
+							BExpression booleanChildExpression = null;
+							// mapping will be created by convertor
+							GFBooleanMapping mapGFtoB = null;
+							try {
+								booleanChildExpression = convertor.convert(child);
+								mapGFtoB = convertor.getMapping();
+
+							} catch (GFtoBooleanConversionException e1) {
+								continue;
+							}
+
+							// if this tuple applies to the current formula
+							if (guard.matches(new Tuple(t._1()))) {
+
+								// Create a boolean context, and set all atoms
+								// to false
+								// initially
+								BEvaluationContext booleanContext = new BEvaluationContext();
+								for (GFAtomicExpression atom : allAtoms) {
+									booleanContext.setValue(
+											mapGFtoB.getVariable(atom), false);
+								}
+
+								// atoms that appear as values are set to true
+								for (String vv : t._2()) {
+									Tuple tuple = new Tuple(vv);
+									GFAtomicExpression dummy = new GFAtomicExpression(
+											tuple.getName(), tuple.getAllData());
+									booleanContext.setValue(
+											mapGFtoB.getVariable(dummy), true);
+								}
+
+								// evaluate boolean formula using the created
+								// context
+								try {
+									if (booleanChildExpression.evaluate(booleanContext)) {
+										return true;
+									}
+								} catch (VariableNotFoundException e) {
+									// should not happen
+									e.printStackTrace();
+								}
+
+							}
 						}
+						return false;
 					}
-				}		
-				return K;
-			}
-		});
+				});
 		
-		JavaPairRDD<String,Iterable<String>> map1 = X1.groupByKey(1);
-		
-		List<Tuple2<String, Iterable<String>>> output = map1.collect();
-		for (Tuple2<String, Iterable<String>> tuple : output) {
-			printing(tuple);
+		JavaRDD<String> out = reduce2.keys(); 
+
+		List<String> output2 = out.collect();
+		for (String tuple : output2) {
+			System.out.println("[MY OUTPUT] "+tuple);
 		}
-		
+
 		ctx.stop();
 	}
 
-	private static void printing(Tuple2<String, Iterable<String>> t) {
-		Iterable<String> T = t._2();
-		for (String ss : T) {
-			if (!ss.equals("SSS"))
-				System.out.println("[OUTPUT] " + t._1() + "," + ss);
-		}
-	}
-	
-	private static void SimpleSemijoin(String inputR, String inputS) throws Exception {
-		
+	private static void SimpleSemijoin(String inputR, String inputS)
+			throws Exception {
+
 		SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
 		JavaSparkContext ctx = new JavaSparkContext(sparkConf);
 		JavaRDD<String> R = ctx.textFile(inputR, 1);
 		JavaRDD<String> S = ctx.textFile(inputS, 1);
 
-		JavaPairRDD<String, String> Rmap = R.mapToPair(new PairFunction<String, String, String>() {
-			@Override
-			public Tuple2<String, String> call(String s) {
-				String[] K = COMMA.split(s);
-				System.out.println(K[0] + ":" + K[1]);
-				return new Tuple2<String, String>(K[1], K[0]);
-			}
-		});
+		JavaPairRDD<String, String> Rmap = R
+				.mapToPair(new PairFunction<String, String, String>() {
+					@Override
+					public Tuple2<String, String> call(String s) {
+						String[] K = COMMA.split(s);
+						System.out.println(K[0] + ":" + K[1]);
+						return new Tuple2<String, String>(K[1], K[0]);
+					}
+				});
 
-		JavaPairRDD<String, String> Smap = S.mapToPair(new PairFunction<String, String, String>() {
-			@Override
-			public Tuple2<String, String> call(String s) {
-				return new Tuple2<String, String>(s, "SSS");
-			}
-		});
+		JavaPairRDD<String, String> Smap = S
+				.mapToPair(new PairFunction<String, String, String>() {
+					@Override
+					public Tuple2<String, String> call(String s) {
+						return new Tuple2<String, String>(s, "SSS");
+					}
+				});
 
 		JavaPairRDD<String, String> p1 = Rmap.union(Smap);
 		JavaPairRDD<String, Iterable<String>> p2 = p1.groupByKey();
 
-		JavaPairRDD<String, Iterable<String>> p3 = p2.filter(new Function<Tuple2<String, Iterable<String>>, Boolean>() {
-			@Override
-			public Boolean call(Tuple2<String, Iterable<String>> t) {
-				String k = t._1();
-				Iterable<String> L = t._2();
-				for (String s : L) {
-					if (s.equals("SSS")) {
-						return true;
+		JavaPairRDD<String, Iterable<String>> p3 = p2
+				.filter(new Function<Tuple2<String, Iterable<String>>, Boolean>() {
+					@Override
+					public Boolean call(Tuple2<String, Iterable<String>> t) {
+						String k = t._1();
+						Iterable<String> L = t._2();
+						for (String s : L) {
+							if (s.equals("SSS")) {
+								return true;
+							}
+						}
+						return false;
 					}
-				}
-				return false;
-			}
-		});
+				});
 
 		List<Tuple2<String, Iterable<String>>> output = p3.collect();
 		for (Tuple2<String, Iterable<String>> tuple : output) {
-			printing(tuple);
+			System.out.println(tuple);
 		}
 
 		ctx.stop();
-		
-		
-		
+
 	}
 }
