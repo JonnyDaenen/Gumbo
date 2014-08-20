@@ -37,15 +37,21 @@ import java.util.regex.Pattern;
 public class Fronjo {
 	private static final Pattern COMMA = Pattern.compile(",");
 	private static GFExpression gfe;
+	private static Set<GFExistentialExpression> formulaSet;
 
 	public static void main(String[] args) throws Exception {
 		
 		String inputfile = args[0];
 		String query = args[1];
 		
+		formulaSet = new HashSet<GFExistentialExpression>();
+		
 		GFPrefixSerializer parser = new GFPrefixSerializer();
 		gfe = parser.deserialize(query);
-		Set<GFExistentialExpression> formulaSet = new HashSet<GFExistentialExpression>();
+		for (GFExistentialExpression ff : gfe.getSubExistentialExpression(1)) {
+			formulaSet.add(ff);
+		}
+		
 
 		SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
 		JavaSparkContext ctx = new JavaSparkContext(sparkConf);
@@ -66,7 +72,7 @@ public class Fronjo {
 
 					if (guard.matches(t)) {
 
-						K.add(new Tuple2(s,s));
+						K.add(new Tuple2<String,String>(s,s));
 
 						for (GFAtomicExpression guarded : guardedRelations) {
 
@@ -78,7 +84,7 @@ public class Fronjo {
 
 								if (guarded.matches(tprime)) {
 
-									K.add(new Tuple2(tprime.toString(),tprime.toString()));
+									K.add(new Tuple2<String,String>(tprime.toString(),tprime.toString()));
 								}
 							} catch (NonMatchingTupleException e1) {
 								// should not happen!
@@ -94,7 +100,7 @@ public class Fronjo {
 						// if so, output tuple with same key and value
 						if (guarded.matches(t)) {
 							// LOG.error(t + " matches " + guarded);
-							K.add(new Tuple2(t.toString(),t.toString()));
+							K.add(new Tuple2<String,String>(t.toString(),t.toString()));
 							// break;
 						}
 					}
