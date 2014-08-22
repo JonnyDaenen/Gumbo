@@ -1,5 +1,7 @@
 package guardedfragment.mapreduce.reducers;
 
+import guardedfragment.mapreduce.planner.structures.data.RelationSchema;
+import guardedfragment.mapreduce.planner.structures.data.Tuple;
 import guardedfragment.structure.booleanexpressions.BEvaluationContext;
 import guardedfragment.structure.booleanexpressions.BExpression;
 import guardedfragment.structure.booleanexpressions.VariableNotFoundException;
@@ -17,9 +19,6 @@ import guardedfragment.structure.gfexpressions.operations.NonMatchingTupleExcept
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-
-import mapreduce.data.RelationSchema;
-import mapreduce.data.Tuple;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

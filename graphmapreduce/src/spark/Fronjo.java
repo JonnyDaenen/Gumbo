@@ -18,6 +18,7 @@ import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.api.java.function.Function;
 
+import guardedfragment.mapreduce.planner.structures.data.Tuple;
 import guardedfragment.structure.booleanexpressions.BEvaluationContext;
 import guardedfragment.structure.booleanexpressions.BExpression;
 import guardedfragment.structure.booleanexpressions.VariableNotFoundException;
@@ -30,7 +31,6 @@ import guardedfragment.structure.gfexpressions.GFExpression;
 import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 import guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
 import guardedfragment.structure.gfexpressions.operations.NonMatchingTupleException;
-import mapreduce.data.Tuple;
 
 import java.util.Arrays;
 import java.util.HashSet;

@@ -1,4 +1,6 @@
-package mapreduce;
+package guardedfragment.mapreduce.planner.structures;
+
+import guardedfragment.mapreduce.planner.structures.data.RelationSchema;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -6,8 +8,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import mapreduce.data.RelationSchema;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

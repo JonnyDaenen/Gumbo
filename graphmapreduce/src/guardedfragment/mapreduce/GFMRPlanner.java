@@ -3,6 +3,7 @@ package guardedfragment.mapreduce;
 import guardedfragment.mapreduce.mappers.GuardedBooleanMapper;
 import guardedfragment.mapreduce.mappers.GuardedMapper;
 import guardedfragment.mapreduce.planner.GFMRPlannerException;
+import guardedfragment.mapreduce.planner.structures.MRPlan;
 import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
 import guardedfragment.mapreduce.reducers.GuardedProjectionReducer;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
@@ -11,8 +12,6 @@ import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 
 import java.io.IOException;
 import java.util.Set;
-
-import mapreduce.MRPlan;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

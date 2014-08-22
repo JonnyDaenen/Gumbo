@@ -1,10 +1,10 @@
 package guardedfragment.structure.gfexpressions;
 
+import guardedfragment.mapreduce.planner.structures.data.RelationSchema;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import mapreduce.data.RelationSchema;
 
 public class GFExistentialExpression extends GFExpression {
 	

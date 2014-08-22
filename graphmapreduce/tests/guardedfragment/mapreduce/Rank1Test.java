@@ -5,6 +5,7 @@ package guardedfragment.mapreduce;
 
 import static org.junit.Assert.fail;
 import guardedfragment.mapreduce.planner.partitioner.HeightPartitioner;
+import guardedfragment.mapreduce.planner.structures.MRPlan;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import guardedfragment.structure.gfexpressions.GFExpression;
 import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
@@ -16,8 +17,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import mapreduce.MRPlan;
 
 import org.apache.hadoop.fs.Path;
 import org.junit.After;

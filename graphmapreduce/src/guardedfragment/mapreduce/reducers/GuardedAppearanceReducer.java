@@ -1,5 +1,6 @@
 package guardedfragment.mapreduce.reducers;
 
+import guardedfragment.mapreduce.planner.structures.data.Tuple;
 import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import guardedfragment.structure.gfexpressions.GFExpression;
@@ -11,8 +12,6 @@ import guardedfragment.structure.gfexpressions.operations.NonMatchingTupleExcept
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-
-import mapreduce.data.Tuple;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

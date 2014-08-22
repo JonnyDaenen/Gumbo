@@ -4,6 +4,7 @@
 package guardedfragment.mapreduce;
 
 import guardedfragment.mapreduce.planner.partitioner.HeightPartitioner;
+import guardedfragment.mapreduce.planner.structures.MRPlan;
 import guardedfragment.mapreduce.planner.GFMRPlanner;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import guardedfragment.structure.gfexpressions.GFExpression;
@@ -13,8 +14,6 @@ import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import mapreduce.MRPlan;
 
 import org.apache.hadoop.fs.Path;
 

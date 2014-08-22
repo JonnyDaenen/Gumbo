@@ -1,8 +1,8 @@
 package guardedfragment.structure;
 
+import guardedfragment.mapreduce.planner.structures.data.RelationSchema;
+import guardedfragment.mapreduce.planner.structures.data.Tuple;
 import guardedfragment.structure.gfexpressions.GFAtomicExpression;
-import mapreduce.data.RelationSchema;
-import mapreduce.data.Tuple;
 
 public class ProjectionExample {
 	

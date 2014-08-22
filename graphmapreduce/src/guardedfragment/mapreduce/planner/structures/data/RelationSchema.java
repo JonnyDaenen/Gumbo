@@ -1,4 +1,4 @@
-package mapreduce.data;
+package guardedfragment.mapreduce.planner.structures.data;
 
 public class RelationSchema {
 

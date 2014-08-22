@@ -1,13 +1,13 @@
 package guardedfragment.structure.gfexpressions;
 
 
+import guardedfragment.mapreduce.planner.structures.data.RelationSchema;
+import guardedfragment.mapreduce.planner.structures.data.Tuple;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import mapreduce.data.RelationSchema;
-import mapreduce.data.Tuple;
 
 public class GFAtomicExpression extends GFExpression {
 

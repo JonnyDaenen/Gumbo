@@ -1,12 +1,11 @@
 package guardedfragment.structure.gfexpressions.operations;
 
+import guardedfragment.mapreduce.planner.structures.data.RelationSchema;
+import guardedfragment.mapreduce.planner.structures.data.Tuple;
 import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import mapreduce.data.RelationSchema;
-import mapreduce.data.Tuple;
 
 /**
  * Represents a projection from a atom to another.

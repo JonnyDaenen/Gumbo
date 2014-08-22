@@ -6,11 +6,10 @@ package guardedfragment.mapreduce.planner;
 import java.util.Collection;
 import java.util.HashSet;
 
-import mapreduce.MRPlan;
-
 import org.apache.hadoop.fs.Path;
 
 import guardedfragment.mapreduce.planner.partitioner.HeightPartitioner;
+import guardedfragment.mapreduce.planner.structures.MRPlan;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import guardedfragment.structure.gfexpressions.io.DeserializeException;
 import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;

@@ -4,6 +4,7 @@
 package guardedfragment.mapreduce.planner.calculations;
 
 import guardedfragment.mapreduce.planner.GFMRPlannerException;
+import guardedfragment.mapreduce.planner.structures.data.RelationSchema;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import guardedfragment.structure.gfexpressions.operations.GFDecomposer;
 
@@ -11,8 +12,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import mapreduce.data.RelationSchema;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

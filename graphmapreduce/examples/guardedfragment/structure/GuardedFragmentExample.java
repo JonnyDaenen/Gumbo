@@ -1,13 +1,12 @@
 package guardedfragment.structure;
 
+import guardedfragment.mapreduce.planner.structures.data.KeyValuePair;
 import guardedfragment.structure.gfexpressions.GFAndExpression;
 import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import guardedfragment.structure.gfexpressions.GFNotExpression;
 import guardedfragment.structure.gfexpressions.GFOrExpression;
 
 import java.util.Set;
-
-import mapreduce.data.KeyValuePair;
 
 public class GuardedFragmentExample {
 

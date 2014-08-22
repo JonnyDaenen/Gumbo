@@ -3,13 +3,13 @@
  */
 package guardedfragment.mapreduce.planner.calculations;
 
+import guardedfragment.mapreduce.planner.structures.data.RelationSchema;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import mapreduce.data.RelationSchema;
 
 /**
  * Representation of a (set of) CalculationUnit DAG(s). The DAG indicates which

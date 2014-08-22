@@ -8,12 +8,11 @@ import guardedfragment.mapreduce.planner.calculations.GFtoCalculationUnitConvert
 import guardedfragment.mapreduce.planner.compiler.CalculationCompiler;
 import guardedfragment.mapreduce.planner.partitioner.CalculationPartitioner;
 import guardedfragment.mapreduce.planner.partitioner.PartitionedCalculationUnitDAG;
+import guardedfragment.mapreduce.planner.structures.MRPlan;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 
 import java.util.Collection;
 import java.util.HashSet;
-
-import mapreduce.MRPlan;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

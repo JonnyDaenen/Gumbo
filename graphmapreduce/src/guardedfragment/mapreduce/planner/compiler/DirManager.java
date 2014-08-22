@@ -4,14 +4,13 @@
 package guardedfragment.mapreduce.planner.compiler;
 
 import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
+import guardedfragment.mapreduce.planner.structures.data.RelationSchema;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import mapreduce.data.RelationSchema;
 
 import org.apache.hadoop.fs.Path;
 

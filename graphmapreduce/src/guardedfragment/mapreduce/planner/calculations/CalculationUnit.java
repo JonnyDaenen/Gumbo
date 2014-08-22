@@ -3,15 +3,18 @@
  */
 package guardedfragment.mapreduce.planner.calculations;
 
+import guardedfragment.mapreduce.planner.structures.data.RelationSchema;
+import guardedfragment.mapreduce.reducers.GuardedProjectionReducer;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import mapreduce.data.RelationSchema;
-
 /**
- * Represents 1 calculation unit.
+ * A CalculationUnit is an operation that cannot be split up into parts anymore.
+ *  It will be translated directly into a (set of) MR-jobs. An example is a {@link BasicGFCalculationUnit}.
+ *  
  * 
  * @author Jonny Daenen
  *

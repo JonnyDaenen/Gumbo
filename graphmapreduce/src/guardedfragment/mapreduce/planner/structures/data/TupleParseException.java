@@ -1,7 +1,7 @@
 /**
  * Created: 24 Apr 2014
  */
-package mapreduce.data;
+package guardedfragment.mapreduce.planner.structures.data;
 
 /**
  * @author Jonny Daenen

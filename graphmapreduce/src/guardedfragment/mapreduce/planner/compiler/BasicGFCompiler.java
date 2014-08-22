@@ -8,6 +8,7 @@ import guardedfragment.mapreduce.mappers.GuardedMapper;
 import guardedfragment.mapreduce.planner.calculations.BasicGFCalculationUnit;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnit;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
+import guardedfragment.mapreduce.planner.structures.data.RelationSchema;
 import guardedfragment.mapreduce.reducers.GuardedAppearanceReducer;
 import guardedfragment.mapreduce.reducers.GuardedProjectionReducer;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
@@ -18,8 +19,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import mapreduce.data.RelationSchema;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;

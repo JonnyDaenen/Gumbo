@@ -1,4 +1,4 @@
-package mapreduce.data;
+package guardedfragment.mapreduce.planner.structures.data;
 
 import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 

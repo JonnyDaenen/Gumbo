@@ -1,14 +1,13 @@
 package guardedfragment.structure;
 
+import guardedfragment.mapreduce.planner.structures.data.KeyValuePair;
+import guardedfragment.mapreduce.planner.structures.data.Tuple;
 import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import guardedfragment.structure.gfexpressions.GFExpression;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-
-import mapreduce.data.KeyValuePair;
-import mapreduce.data.Tuple;
 
 @Deprecated
 public class FirstMapper {

@@ -6,6 +6,7 @@ package guardedfragment.mapreduce.planner.compiler;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnit;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
 import guardedfragment.mapreduce.planner.partitioner.PartitionedCalculationUnitDAG;
+import guardedfragment.mapreduce.planner.structures.MRPlan;
 import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 
 import java.util.Collection;
@@ -13,8 +14,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import mapreduce.MRPlan;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
@@ -31,7 +30,7 @@ public class CalculationCompiler {
 	DirManager dm;
 
 	/**
-	 * Creates a <code>MRPlan</code> that will execute the given calculations.
+	 * Creates a {@link MRPlan} that will execute the given calculations.
 	 * 
 	 * 
 	 * @param partitionedDAG

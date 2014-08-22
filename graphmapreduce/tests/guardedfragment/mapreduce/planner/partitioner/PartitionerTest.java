@@ -7,12 +7,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import guardedfragment.mapreduce.planner.calculations.BasicGFCalculationUnit;
 import guardedfragment.mapreduce.planner.calculations.CalculationUnitDAG;
+import guardedfragment.mapreduce.planner.structures.data.RelationSchema;
 import guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 
 import java.util.List;
-
-import mapreduce.data.RelationSchema;
 
 import org.junit.After;
 import org.junit.Before;

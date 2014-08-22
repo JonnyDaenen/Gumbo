@@ -3,11 +3,10 @@
  */
 package guardedfragment.mapreduce.planner.calculations;
 
+import guardedfragment.mapreduce.planner.structures.data.RelationSchema;
 import guardedfragment.structure.gfexpressions.GFExistentialExpression;
 
 import java.util.Set;
-
-import mapreduce.data.RelationSchema;
 
 /**
  * @author Jonny Daenen
