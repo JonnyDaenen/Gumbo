@@ -5,40 +5,33 @@ package spark;
  * Computing the query R(x,y) & S(y)
  */
 
-import scala.Tuple2;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 
-import org.apache.hadoop.io.Text;
+import mapreduce.guardedfragment.planner.structures.data.Tuple;
+import mapreduce.guardedfragment.structure.booleanexpressions.BEvaluationContext;
+import mapreduce.guardedfragment.structure.booleanexpressions.BExpression;
+import mapreduce.guardedfragment.structure.booleanexpressions.VariableNotFoundException;
+import mapreduce.guardedfragment.structure.conversion.GFBooleanMapping;
+import mapreduce.guardedfragment.structure.conversion.GFtoBooleanConversionException;
+import mapreduce.guardedfragment.structure.conversion.GFtoBooleanConvertor;
+import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
+import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
+import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
+import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
+import mapreduce.guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
+import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingTupleException;
+
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.api.java.function.PairFlatMapFunction;
-import org.apache.spark.api.java.function.Function2;
-import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.PairFlatMapFunction;
 
-import guardedfragment.mapreduce.planner.structures.data.Tuple;
-import guardedfragment.structure.booleanexpressions.BEvaluationContext;
-import guardedfragment.structure.booleanexpressions.BExpression;
-import guardedfragment.structure.booleanexpressions.VariableNotFoundException;
-import guardedfragment.structure.conversion.GFBooleanMapping;
-import guardedfragment.structure.conversion.GFtoBooleanConversionException;
-import guardedfragment.structure.conversion.GFtoBooleanConvertor;
-import guardedfragment.structure.gfexpressions.GFAtomicExpression;
-import guardedfragment.structure.gfexpressions.GFExistentialExpression;
-import guardedfragment.structure.gfexpressions.GFExpression;
-import guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
-import guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
-import guardedfragment.structure.gfexpressions.operations.NonMatchingTupleException;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.regex.Pattern;
+import scala.Tuple2;
 
 public class Fronjo {
 	private static final Pattern COMMA = Pattern.compile(",");
