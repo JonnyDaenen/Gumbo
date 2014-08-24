@@ -21,14 +21,14 @@ import org.apache.hadoop.fs.Path;
  * @author Jonny Daenen
  * 
  */
-public class PlannerExample3 {
+public class PlannerExample {
 
 	public static void main(String[] args) throws Exception {
 		
 		// files & folders
 		String input = "./input/q2/";
-		String output = "./output/"+PlannerExample3.class.getSimpleName()+"/"+System.currentTimeMillis();
-		String scratch = "./scratch/"+PlannerExample3.class.getSimpleName()+"/"+System.currentTimeMillis();
+		String output = "./output/"+PlannerExample.class.getSimpleName()+"/"+System.currentTimeMillis();
+		String scratch = "./scratch/"+PlannerExample.class.getSimpleName()+"/"+System.currentTimeMillis();
 		
 		// query 
 		
