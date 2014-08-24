@@ -164,8 +164,8 @@ public class BasicGFCompiler {
 		job.addInputPaths(in);
 		job.setOutputPath(out);
 
-		job.setMapFunction(new GFMapper1Generic());
-		job.setReduceFunction(new GFReducer1Generic());
+		job.setMapFunction(GFMapper1Generic.class);
+		job.setReduceFunction(GFReducer1Generic.class);
 		job.setExpressions(set);
 
 		return job;
@@ -182,8 +182,8 @@ public class BasicGFCompiler {
 		job.addInputPaths(in);
 		job.setOutputPath(out);
 
-		job.setMapFunction(new GFMapper2Generic());
-		job.setReduceFunction(new GFReducer2Generic());
+		job.setMapFunction(GFMapper2Generic.class);
+		job.setReduceFunction(GFReducer2Generic.class);
 		job.setExpressions(set);
 
 		return job;

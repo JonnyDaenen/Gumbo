@@ -35,8 +35,8 @@ public class MRJob {
 	Set<Path> inPaths;
 	Path outFolder;
 
-	GFMapper mapFunction;
-	GFReducer reduceFunction;
+	Class<? extends GFMapper> mapFunction;
+	Class<? extends GFReducer> reduceFunction;
 
 	Set<GFExistentialExpression> expressions;
 
@@ -94,7 +94,7 @@ public class MRJob {
 	 * @param mapFunction
 	 *            the mapFunction to set
 	 */
-	public void setMapFunction(GFMapper mapFunction) {
+	public void setMapFunction(Class<? extends GFMapper> mapFunction) {
 		this.mapFunction = mapFunction;
 	}
 
@@ -102,7 +102,7 @@ public class MRJob {
 	 * @param reduceFunction
 	 *            the reduceFunction to set
 	 */
-	public void setReduceFunction(GFReducer reduceFunction) {
+	public void setReduceFunction(Class<? extends GFReducer> reduceFunction) {
 		this.reduceFunction = reduceFunction;
 	}
 
@@ -222,14 +222,14 @@ public class MRJob {
 	 * @return the class of the mapper.
 	 */
 	public Class<? extends GFMapper> getMapClass() {
-		return mapFunction.getClass();
+		return mapFunction;
 	}
 
 	/**
 	 * @return the class of the reducer.
 	 */
 	public Class<? extends GFReducer> getReduceClass() {
-		return reduceFunction.getClass();
+		return reduceFunction;
 	}
 
 	
