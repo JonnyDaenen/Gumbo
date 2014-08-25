@@ -51,7 +51,8 @@ public class FronjoSpark {
 			formulaSet.add(ff);
 		}
 
-		SparkConf sparkConf = new SparkConf().setMaster("local[1]").setAppName("Fronjo");
+//		SparkConf sparkConf = new SparkConf().setMaster("local[1]").setAppName("Fronjo");
+		SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
 		JavaSparkContext ctx = new JavaSparkContext(sparkConf);
 
 		JavaRDD<String> input = ctx.textFile("input.txt", 1);

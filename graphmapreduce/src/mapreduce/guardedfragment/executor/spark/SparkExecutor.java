@@ -16,6 +16,15 @@ public class SparkExecutor implements GFExecutor {
 	
 	public void execute(MRPlan plan){
 		
+		// for each partition, bottom to top TODO make iterable
+		// TODO are the jobs merged already?
+		
+		// initialize
+		
+		// execute
+		
+		// cleanup
+		
 	}
 
 }
