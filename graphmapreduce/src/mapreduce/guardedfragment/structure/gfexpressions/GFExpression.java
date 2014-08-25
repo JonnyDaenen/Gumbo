@@ -81,6 +81,5 @@ public abstract class GFExpression implements Serializable {
 	abstract public boolean containsAnd();
 
 
-	
 
 }
