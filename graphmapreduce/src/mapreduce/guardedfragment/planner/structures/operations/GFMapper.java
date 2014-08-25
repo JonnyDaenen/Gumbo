@@ -3,6 +3,7 @@
  */
 package mapreduce.guardedfragment.planner.structures.operations;
 
+import java.util.Collection;
 import java.util.Set;
 
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
@@ -18,7 +19,7 @@ import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 public abstract class GFMapper {
 	
 	// OPTIMIZE maybe use a pipe for output as does Hadoop
-	public abstract Set<Pair<String,String>> map(String value, Set<GFExistentialExpression> formulaSet);
+	public abstract Set<Pair<String,String>> map(String value, Collection<GFExistentialExpression> expressionSet);
 
 	/**
 	 * Add a KV-pair to a resultset.

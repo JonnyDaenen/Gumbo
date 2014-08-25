@@ -3,6 +3,7 @@
  */
 package mapreduce.guardedfragment.planner.compiler.mappers;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,7 +31,7 @@ public class GFMapper1Generic extends GFMapper{
 	 * @see mapreduce.guardedfragment.planner.structures.operations.GFMapper#map(java.lang.String)
 	 */
 	@Override
-	public Set<Pair<String,String>> map(String value, Set<GFExistentialExpression> expressionSet) {
+	public Set<Pair<String,String>> map(String value, Collection<GFExistentialExpression> expressionSet) {
 		
 		Set<Pair<String,String>> result = new HashSet<Pair<String,String>>();
 		

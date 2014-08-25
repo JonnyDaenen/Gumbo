@@ -1,8 +1,9 @@
 /**
  * Created: 22 Aug 2014
  */
-package mapreduce.guardedfragment.executor;
+package mapreduce.guardedfragment.executor.spark;
 
+import mapreduce.guardedfragment.executor.GFExecutor;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
 
 /**
