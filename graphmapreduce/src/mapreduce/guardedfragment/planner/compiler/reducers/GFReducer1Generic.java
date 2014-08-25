@@ -3,6 +3,7 @@
  */
 package mapreduce.guardedfragment.planner.compiler.reducers;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,8 +20,9 @@ import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingT
  * @author Jonny Daenen
  * 
  */
-public class GFReducer1Generic extends GFReducer {
+public class GFReducer1Generic extends GFReducer implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private final static String FILENAME = "tmp_round1_red.txt";
 
 	/**

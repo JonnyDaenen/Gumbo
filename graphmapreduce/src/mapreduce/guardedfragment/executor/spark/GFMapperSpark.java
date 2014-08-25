@@ -25,10 +25,12 @@ public class GFMapperSpark implements PairFlatMapFunction<String, String, String
 	GFMapper mapper;
 	
 	/**
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 * 
 	 */
-	public GFMapperSpark(GFMapper mapper, Collection<GFExistentialExpression> expressionSet) {
-		this.mapper = mapper;
+	public GFMapperSpark(Class<? extends GFMapper> mapperclass, Collection<GFExistentialExpression> expressionSet) throws InstantiationException, IllegalAccessException {
+		this.mapper = mapperclass.newInstance();
 		this.expressionSet = expressionSet;
 	}
 	

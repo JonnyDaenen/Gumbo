@@ -3,6 +3,7 @@
  */
 package mapreduce.guardedfragment.planner.compiler.mappers;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +16,9 @@ import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
  * @author Jonny Daenen
  *
  */
-public class GFMapper2Generic extends GFMapper{
+public class GFMapper2Generic extends GFMapper implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see mapreduce.guardedfragment.planner.structures.operations.GFMapper#map(java.lang.String)

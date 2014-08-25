@@ -6,11 +6,11 @@ package mapreduce.guardedfragment.executor;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
 
 /**
- * @author jonny
+ * @author Jonny Daenen
  *
  */
 public interface GFExecutor {
 
-	public void execute(MRPlan plan);
+	public void execute(MRPlan plan) throws ExecutionException;
 	
 }

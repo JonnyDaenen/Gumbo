@@ -30,6 +30,7 @@ public class MRJob {
 
 	String name;
 	long id; 
+	boolean outputJob;
 
 	Set<MRJob> dependencies;
 	Set<Path> inPaths;
@@ -50,6 +51,7 @@ public class MRJob {
 
 		dependencies = new HashSet<MRJob>();
 		inPaths = new HashSet<Path>();
+		outputJob = true;
 	}
 
 	/**
@@ -231,6 +233,22 @@ public class MRJob {
 	public Class<? extends GFReducer> getReduceClass() {
 		return reduceFunction;
 	}
+	
+	/**
+	 * Indicate whether the output of this job is important or temporary.
+	 * @param outputJob whether the results of this job should be part of the final output
+	 */
+	public void setOutputJob(boolean outputJob) {
+		this.outputJob = outputJob;
+	}
+	
+	/**
+	 * @return true if the job output should be kept, false if the output is temporary
+	 */
+	public boolean isOutputJob() {
+		return outputJob;
+	}
+	
 
 	
 }

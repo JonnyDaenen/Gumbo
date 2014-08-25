@@ -167,6 +167,8 @@ public class BasicGFCompiler {
 		job.setMapFunction(GFMapper1Generic.class);
 		job.setReduceFunction(GFReducer1Generic.class);
 		job.setExpressions(set);
+		
+		job.setOutputJob(false);
 
 		return job;
 	}
@@ -185,6 +187,8 @@ public class BasicGFCompiler {
 		job.setMapFunction(GFMapper2Generic.class);
 		job.setReduceFunction(GFReducer2Generic.class);
 		job.setExpressions(set);
+	
+		job.setOutputJob(true);
 
 		return job;
 	}

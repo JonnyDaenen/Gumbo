@@ -3,6 +3,7 @@
  */
 package mapreduce.guardedfragment.planner.compiler.mappers;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,8 +23,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Jonny Daenen
  *
  */
-public class GFMapper1Generic extends GFMapper{
+public class GFMapper1Generic extends GFMapper implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private static final Log LOG = LogFactory.getLog(GFMapper1Generic.class);
 
 	

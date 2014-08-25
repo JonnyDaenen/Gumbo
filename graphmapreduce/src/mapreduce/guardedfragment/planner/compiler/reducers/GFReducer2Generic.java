@@ -3,6 +3,7 @@
  */
 package mapreduce.guardedfragment.planner.compiler.reducers;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,7 +31,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Jonny Daenen
  *
  */
-public class GFReducer2Generic extends GFReducer {
+public class GFReducer2Generic extends GFReducer implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private static final Log LOG = LogFactory.getLog(GFReducer2Generic.class);
 
