@@ -11,7 +11,6 @@ import mapreduce.guardedfragment.planner.structures.operations.GFMapper;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
-import org.apache.hadoop.io.Text;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
 
 import scala.Tuple2;

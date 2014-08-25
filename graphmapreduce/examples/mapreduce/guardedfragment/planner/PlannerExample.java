@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mapreduce.guardedfragment.executor.hadoop.HadoopExecutor;
-import mapreduce.guardedfragment.planner.GFMRPlanner;
 import mapreduce.guardedfragment.planner.partitioner.UnitPartitioner;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;

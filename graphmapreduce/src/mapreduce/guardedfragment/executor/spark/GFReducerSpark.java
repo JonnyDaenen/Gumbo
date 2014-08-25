@@ -7,13 +7,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import mapreduce.guardedfragment.planner.structures.operations.GFMapper;
 import mapreduce.guardedfragment.planner.structures.operations.GFReducer;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
 import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.api.java.function.Function;
 
 import scala.Tuple2;
 
