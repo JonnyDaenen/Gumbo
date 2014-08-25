@@ -51,11 +51,11 @@ public class FronjoSpark {
 			formulaSet.add(ff);
 		}
 
-//		SparkConf sparkConf = new SparkConf().setMaster("local[1]").setAppName("Fronjo");
-		SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
+		SparkConf sparkConf = new SparkConf().setMaster("local[1]").setAppName("Fronjo");
+//	 	SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
 		JavaSparkContext ctx = new JavaSparkContext(sparkConf);
 
-		JavaRDD<String> input = ctx.textFile("input.txt", 1);
+		JavaRDD<String> input = ctx.textFile("./input/sparkrelations/sample_G3S2.txt", 1);
 
 		JavaPairRDD<String, String> X1 = input.flatMapToPair(new PairFlatMapFunction<String, String, String>() {
 					@Override
