@@ -35,4 +35,16 @@ public class BNotExpression extends BExpression{
 //		Set<String> freeVars = child.getFreeVariables();
 //		return freeVars;
 //	}
+	
+	/**
+	 * @return the child
+	 */
+	public BExpression getChild() {
+		return child;
+	}
+	
+	@Override
+	public <T> T accept(BEVisitor<T> e) {
+		return e.visit(this);
+	}
 }

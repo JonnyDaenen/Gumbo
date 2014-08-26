@@ -20,4 +20,7 @@ public abstract class BExpression {
 		return this.generateString();
 	}
 	
+	public abstract <T> T accept(BEVisitor<T> e);
+	
+	
 }

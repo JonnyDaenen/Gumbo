@@ -33,6 +33,24 @@ public class BOrExpression extends BExpression{
 		return "(" + child1.generateString() + " | " + child2.generateString() + ")";
 	}
 	
+	
+	/**
+	 * @return the child1
+	 */
+	public BExpression getChild1() {
+		return child1;
+	}
+	
+	/**
+	 * @return the child2
+	 */
+	public BExpression getChild2() {
+		return child2;
+	}
 
+	@Override
+	public <T> T accept(BEVisitor<T> e) {
+		return e.visit(this);
+	}
 
 }

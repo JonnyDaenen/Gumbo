@@ -11,6 +11,15 @@ public class BVariable extends BExpression {
 
 
 
+	/**
+	 * @param e
+	 */
+	public BVariable(BVariable e) {
+		this.id = e.id;
+	}
+
+
+
 	@Override
 	public boolean equals(Object obj) {
 		
@@ -35,6 +44,10 @@ public class BVariable extends BExpression {
 		return "v"+id;
 	}
 
+	@Override
+	public <T> T accept(BEVisitor<T> e) {
+		return e.visit(this);
+	}
 
 
 }

@@ -1,4 +1,4 @@
-package mapreduce.guardedfragment.booleanstructure;
+package mapreduce.guardedfragment.structure.booleanexpressions;
 
 import mapreduce.guardedfragment.structure.booleanexpressions.BAndExpression;
 import mapreduce.guardedfragment.structure.booleanexpressions.BEvaluationContext;
