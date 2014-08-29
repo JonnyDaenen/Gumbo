@@ -6,13 +6,18 @@ package mapreduce.guardedfragment.structure.conversion;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import mapreduce.guardedfragment.planner.GFMRPlanner;
 import mapreduce.guardedfragment.structure.booleanexpressions.BAndExpression;
 import mapreduce.guardedfragment.structure.booleanexpressions.BEVisitor;
 import mapreduce.guardedfragment.structure.booleanexpressions.BExpression;
 import mapreduce.guardedfragment.structure.booleanexpressions.BNotExpression;
 import mapreduce.guardedfragment.structure.booleanexpressions.BOrExpression;
 import mapreduce.guardedfragment.structure.booleanexpressions.BVariable;
-import mapreduce.guardedfragment.structure.booleanexpressions.DNFOrRemover;
+import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
+import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 
 /**
  * based on pseudo-code from: http://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html
@@ -23,14 +28,64 @@ import mapreduce.guardedfragment.structure.booleanexpressions.DNFOrRemover;
  */
 public class DNFConverter implements BEVisitor<BExpression> {
 	
-	DNFOrRemover orRemover;
+
+	private static final Log LOG = LogFactory.getLog(DNFConverter.class); 
 	
+	DNFOrRemover orRemover;
+	GFtoBooleanConvertor boolConverter;
+	BooleanToGFConvertor gfConverter;
 
 	public DNFConverter() {
 		orRemover = new DNFOrRemover();
+		boolConverter = new GFtoBooleanConvertor();
+		gfConverter = new BooleanToGFConvertor();
+	}
+	
+	/**
+	 * Converts a basic GF to DNF
+	 * @param e
+	 * @return
+	 * @throws DNFConversionException 
+	 * 
+	 * @pre e is a basic {@link GFExpression}
+	 */
+	public GFExpression convert(GFExpression e) throws DNFConversionException {
+		
+		if(!e.isBasicGF()){
+			;
+			// TODO throw excp.
+		}
+		
+		
+		try {
+			GFExistentialExpression gfee = (GFExistentialExpression) e;
+			
+			// extract boolean part
+			BExpression be = boolConverter.convert(gfee.getChild());
+			GFBooleanMapping mapping = boolConverter.getMapping();
+			
+			// convert to DNF
+			BExpression beDNF = convert(be);
+			
+			// re-assemble using variable/atomic mapping
+			gfConverter.setMapping(mapping);
+			GFExpression dnfChild = gfConverter.convert(beDNF);
+			
+			return new GFExistentialExpression(gfee.getGuard(), dnfChild, gfee.getOutputRelation());
+			
+			
+			
+			
+		} catch (GFtoBooleanConversionException e1) {
+			throw new DNFConversionException(e1);
+		}
+		
+		
+		
 	}
 
 	public BExpression convert(BExpression e) {
+
 		return e.accept(this);
 	}
 
@@ -79,12 +134,15 @@ public class DNFConverter implements BEVisitor<BExpression> {
 	 */
 	@Override
 	public BExpression visit(BAndExpression e) {
+		
+
+		
 		// convert children
 		BExpression c1 = convert(e.getChild1());
 		BExpression c2 = convert(e.getChild2());
-		
 		Iterable<BExpression> set1 = orRemover.extractTopLevel(c1);
 		Iterable<BExpression> set2 = orRemover.extractTopLevel(c2);
+		
 		
 		// pairwise combine
 		Set<BAndExpression> andSet = new HashSet<>();

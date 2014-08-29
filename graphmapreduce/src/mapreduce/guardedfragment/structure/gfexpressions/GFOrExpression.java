@@ -1,9 +1,14 @@
 package mapreduce.guardedfragment.structure.gfexpressions;
 
+import java.util.HashSet;
+import java.util.Set;
 
 
-public class GFOrExpression extends GFAndExpression{ // TODO decouple from AND for safety
 
+public class GFOrExpression extends GFExpression{
+
+	GFExpression child1,child2;
+	int rank;
 
 	/**
 	 * An OR-expression in the Guarded Fragment.
@@ -11,7 +16,8 @@ public class GFOrExpression extends GFAndExpression{ // TODO decouple from AND f
 	 * @param c2 second child
 	 */
 	public GFOrExpression(GFExpression c1, GFExpression c2) {
-		super(c1,c2);
+		child1 = c1;
+		child2 = c2;
 		rank = Math.max(c1.getRank(),c2.getRank());
 	}
 	
@@ -30,12 +36,130 @@ public class GFOrExpression extends GFAndExpression{ // TODO decouple from AND f
 		return v.visit(this);
 	}
 	
+	@Override
+	public Set<String> getFreeVariables() {
+		Set<String> freeVars = child1.getFreeVariables();
+		freeVars.addAll(child2.getFreeVariables());
+		
+		return freeVars;
+	}
+
+	public Set<GFAtomicExpression> getAtomic() {
+		Set<GFAtomicExpression> allAtoms = child1.getAtomic();
+		allAtoms.addAll(child2.getAtomic());
+		
+		return allAtoms;
+	}
+
+	
+
+	@Override
+	public boolean isGuarded() {
+		return child1.isGuarded() && child2.isGuarded();
+	}
+	
+	@Override
+	public boolean isAtomicBooleanCombination() {
+		return child1.isAtomicBooleanCombination() && child2.isAtomicBooleanCombination();
+	}
+	
+
+
+	@Override
+	public int getRank() {
+		return this.rank;
+	}
+
+
+	@Override
+	public Set<GFExistentialExpression> getSubExistentialExpression(int k) {
+
+		Set<GFExistentialExpression> set = new HashSet<GFExistentialExpression>();
+		
+		if (k > this.rank) {
+			return set;
+		}
+		
+		set.addAll(child1.getSubExistentialExpression(k));
+		set.addAll(child2.getSubExistentialExpression(k));
+		return set;
+	}
+	
+	
+	/**
+	 * @return left argument
+	 */
+	public GFExpression getChild1() {
+		return child1;
+	}
+	
+	/**
+	 * @return right argument
+	 */
+	public GFExpression getChild2() {
+		return child2;
+	}
+
+
+
+
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#isInDNF()
+	 */
+	@Override
+	public boolean isInDNF() {
+		return child1.isInDNF() && child2.isInDNF();
+	}
+
+
 	/**
 	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#containsAnd()
 	 */
 	@Override
 	public boolean containsAnd() {
 		return child1.containsAnd() || child2.containsAnd();
+	}
+
+
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#containsOr()
+	 */
+	@Override
+	public boolean containsOr() {
+		return true;
+	}
+
+
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#countOccurences(mapreduce.guardedfragment.structure.gfexpressions.GFExpression)
+	 */
+	@Override
+	public int countOccurences(GFExpression ge) {
+		int thisok = 0;
+		if(this == ge) 
+			thisok = 1;
+		
+		return thisok + child1.countOccurences(ge) + child2.countOccurences(ge);
+	}
+
+
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#getParent(mapreduce.guardedfragment.structure.gfexpressions.GFExpression)
+	 */
+	@Override
+	public GFExpression getParent(GFExpression e) {
+		if(child1 == e || child2 == e)
+			return this;
+		
+		GFExpression child1result = child1.getParent(e);
+		if(child1result != null)
+			return child1result;
+		
+		GFExpression child2result = child2.getParent(e);
+		if(child2result != null)
+			return child2result;
+		
+		return null;
 	}
 
 }

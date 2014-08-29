@@ -13,7 +13,6 @@ public class GFExistentialExpression extends GFExpression {
 	int rank;
 	GFAtomicExpression output;
 	
-	char quantifierSymbol = '#';
 	
 	
 	/**
@@ -153,6 +152,7 @@ public class GFExistentialExpression extends GFExpression {
 		return	guard;
 	}
 	
+	@Deprecated
 	public GFAtomicExpression getOutput() {
 		return output;
 	}
@@ -200,7 +200,62 @@ public class GFExistentialExpression extends GFExpression {
 	public boolean containsAnd() {
 		return true;
 	}
+	
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#containsOr()
+	 */
+	@Override
+	public boolean containsOr() {
+		return child.containsOr();
+	}
 
+
+	/**
+	 * Existential is not in DNF
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#isInDNF()
+	 */
+	@Override
+	public boolean isInDNF() {
+		return false;
+	}
+	
+	/**
+	 * Checks whether the guarded relations are in DNF.
+	 * @return true if the guarded relations are in DNF	
+	 */
+	public boolean isGuardedDNF(){
+		return child.isInDNF();
+	}
+
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#countOccurences(mapreduce.guardedfragment.structure.gfexpressions.GFExpression)
+	 */
+	@Override
+	public int countOccurences(GFExpression ge) {
+		int thisok = 0;
+		if(this == ge) 
+			thisok = 1;
+		
+		return thisok + guard.countOccurences(ge) + child.countOccurences(ge) + output.countOccurences(ge);
+	}
+
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#getParent(mapreduce.guardedfragment.structure.gfexpressions.GFExpression)
+	 */
+	@Override
+	public GFExpression getParent(GFExpression e) {
+		if(guard == e || child == e || output == e)
+			return this;
+		
+		GFExpression child1result = child.getParent(e);
+		if(child1result != null)
+			return child1result;
+		
+		
+		return null;
+	}
+
+	
 	
 	
 }

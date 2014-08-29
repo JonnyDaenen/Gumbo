@@ -19,7 +19,6 @@ public interface GFVisitor<R> {
 	abstract R visit(GFNotExpression e) throws GFVisitorException;
 	
 	abstract R visit(GFExistentialExpression e) throws GFVisitorException;
-	abstract R visit(GFUniversalExpression e) throws GFVisitorException;
 	
 }
 

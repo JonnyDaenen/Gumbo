@@ -13,7 +13,6 @@ import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFNotExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFOrExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFUniversalExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFVisitor;
 import mapreduce.guardedfragment.structure.gfexpressions.GFVisitorException;
 
@@ -317,14 +316,5 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 		return "#" + o + "&" + g + c;
 	}
 
-	/**
-	 * @throws GFVisitorException 
-	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFVisitor#visit(mapreduce.guardedfragment.structure.gfexpressions.GFUniversalExpression)
-	 */
-	@Override
-	public String visit(GFUniversalExpression e) throws GFVisitorException {
-		// TODO support it
-		throw new GFVisitorException("Universal expressions are not supported");
-	}
 
 }

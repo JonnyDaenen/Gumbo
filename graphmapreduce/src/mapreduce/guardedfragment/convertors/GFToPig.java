@@ -5,9 +5,15 @@ package mapreduce.guardedfragment.convertors;
 
 import java.util.LinkedList;
 
+import org.mortbay.log.Log;
+
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
+import mapreduce.guardedfragment.structure.conversion.DNFConversionException;
+import mapreduce.guardedfragment.structure.conversion.DNFConverter;
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
+import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
+import mapreduce.guardedfragment.structure.gfexpressions.GFNotExpression;
 
 /**
  * Contains methods to convert a Basic GF Formula to a Pig Latin script.
@@ -31,25 +37,46 @@ public class GFToPig {
 	 */
 	public String convert(GFExistentialExpression gfe) throws GFConversionException {
 
-		if (!gfe.isBasicGF()) {
+		if (!gfe.isBasicGF() ) {
 			throw new GFConversionException("The supplied expression is not a Basic GF: " + gfe);
 		}
+		
+		// convert to DNF
+		DNFConverter converter = new DNFConverter();
+		GFExpression gfe2;
+		try {
+			gfe2 = converter.convert(gfe);
+		} catch (DNFConversionException e) {
+			throw new GFConversionException(e);
+		}
 
+		if(gfe2.containsOr())
+			throw new GFConversionException("DNF-version of "+gfe+" contains an OR-operation: " + gfe2);
+			
+		// work with new formula
+		gfe = (GFExistentialExpression) gfe2;
+		
 		String output = "";
 		
-		RelationSchema outSchema = gfe.getOutputRelation().getRelationSchema();
-		RelationSchema gSchema = gfe.getGuard().getRelationSchema();
+		GFAtomicExpression outSchema = gfe.getOutputRelation();
+		GFAtomicExpression gSchema = gfe.getGuard();
+
 		
 		int i = 1;
 		String gName = gSchema.getName();
 		String oName = gSchema.getName(); // in case the loop is not executed, this is the fallback
 		
 		for( GFAtomicExpression gd : gfe.getGuardedRelations()){
-			RelationSchema gdSchema = gd.getRelationSchema();
+			
+			// find out if it is negated (formula is in DNF with non-nested negation!)
+			GFExpression parent = gfe.getParent(gd);
+			boolean negated = false;
+			if (parent instanceof GFNotExpression)
+				negated = true;
 			
 			oName = outSchema.getName() + i;
 
-			output += convert1Atom(oName,gName, gSchema, gdSchema);
+			output += convert1Atom(oName,gName, gSchema, gd, negated);
 			
 			gName = oName;
 			i++;
@@ -61,14 +88,19 @@ public class GFToPig {
 
 	}
 
-	public String convert1Atom(String currentOutName, String currentGuardName, RelationSchema guardSchema, RelationSchema guardedSchema) {
+	public String convert1Atom(String currentOutName, String currentGuardName, GFAtomicExpression guardSchema, GFAtomicExpression guardedSchema, boolean negated) {
 		String output = "";
 		
-		String match = generateMatch(guardedSchema, guardedSchema);
+		String match = generateMatch(guardSchema, guardedSchema);
 		String tmp = generateNewName(guardedSchema.getName());
 		
-		output += tmp + "_A = " + "COGROUP " + currentGuardName + " BY " + match + "," + guardedSchema.getName() + " BY " + match + ";\n";
-		output += tmp + "_B = " + "FILTER " + tmp+"_A" + " BY IsEmpty("+guardedSchema.getName()+");\n";
+		// if not negated, we need not (!confusing)
+		String negPart = "";
+		if(!negated)
+			negPart = "NOT";
+		
+		output += tmp + "_A = " + "COGROUP " + currentGuardName + " BY " + match + ", " + guardedSchema.getName() + " BY " + match + ";\n";
+		output += tmp + "_B = " + "FILTER " + tmp+"_A" + " BY "+negPart+"(IsEmpty("+guardedSchema.getName()+"));\n";
 		output += currentOutName + " = FOREACH " + tmp+"_B" + " GENERATE flatten(" +currentGuardName+ ");\n";
 		output += "\n";
 		
@@ -90,16 +122,15 @@ public class GFToPig {
 	 * @param guardedSchema2
 	 * @return
 	 */
-	private String generateMatch(RelationSchema s1, RelationSchema s2) {
+	private String generateMatch(GFAtomicExpression s1, GFAtomicExpression s2) {
 		// CLEAN better code + put it in RelationSchema
-		String[] fields1 = s1.getFields();
-		String[] fields2 = s2.getFields();
-		LinkedList<String> common = new LinkedList<>();
-		String result = "";
+		String[] fields1 = s1.getVars();
+		String[] fields2 = s2.getVars();
 		
+		String result = "";
 		for (String x : fields1) {
 			for (String y : fields2) {
-				if(x==y)
+				if(x.equals(y))
 					result += ", " + x;
 			}	
 		}

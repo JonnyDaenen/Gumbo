@@ -12,7 +12,6 @@ import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFNotExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFOrExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFUniversalExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFVisitor;
 import mapreduce.guardedfragment.structure.gfexpressions.GFVisitorException;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
@@ -159,14 +158,6 @@ public class GFDecomposer implements GFVisitor<Pair<GFExpression,Set<GFExistenti
 	
 		
 		return new Pair<GFExpression, Set<GFExistentialExpression>>(newOutput, subexps);
-	}
-
-	/**
-	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFVisitor#visit(mapreduce.guardedfragment.structure.gfexpressions.GFUniversalExpression)
-	 */
-	@Override
-	public Pair<GFExpression,Set<GFExistentialExpression>> visit(GFUniversalExpression e) throws GFVisitorException {
-		throw new GFDecomposerException("GFExistentialExpression is not supported");
 	}
 
 }

@@ -3,6 +3,11 @@ package mapreduce.guardedfragment.structure.gfexpressions;
 import java.io.Serializable;
 import java.util.Set;
 
+/**
+ * Warning: no duplicate objects should be used in GFExpressions.
+ * @author Jonny Daenen
+ *
+ */
 public abstract class GFExpression implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -79,7 +84,32 @@ public abstract class GFExpression implements Serializable {
 	 * @return true when the expression contains a conjunction (AND)
 	 */
 	abstract public boolean containsAnd();
+	
+	/**
+	 * Checks whether the expression contains a disjunction operation.
+	 * @return true when the expression contains a disjunction (OR)
+	 */
+	abstract public boolean containsOr();
 
+	/**
+	 * Checks if the formula is in DNF, see concrete implementations for more detail.
+	 * @return true if the formula is in DNF, false otherwise.
+	 */
+	public abstract boolean isInDNF();
 
+	/**
+	 * Counts the number of times the <b>object</b> is used in the expression. Should be 1.
+	 * Output atomics of existential expressions also counted.
+	 * @param ge the object to look for
+	 * @return the number of times the object appears in the expression.
+	 */
+	public abstract int countOccurences(GFExpression ge);
+	
+	/**
+	 * Locates the parent of a given expression (object, equals is not used).
+	 * @param e the expression to look for
+	 * @return the parent of the expression, null if not found
+	 */
+	public abstract GFExpression getParent(GFExpression e);
 
 }

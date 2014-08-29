@@ -21,11 +21,12 @@ public class GFAtomicExpression extends GFExpression {
 
 
 	/**
-	 * @param guard
+	 * Makes a copy of the object.
+	 * @param aexp
 	 */
-	public GFAtomicExpression(GFAtomicExpression guard) {
-		this.relation = guard.relation;
-		this.variables = guard.variables.clone();
+	public GFAtomicExpression(GFAtomicExpression aexp) {
+		this.relation = aexp.relation;
+		this.variables = aexp.variables.clone();
 	}
 
 
@@ -189,4 +190,49 @@ public class GFAtomicExpression extends GFExpression {
 	public boolean containsAnd() {
 		return false;
 	}
+
+
+	/**
+	 * Returns true, as an atom is trivially in DNF.
+	 * @return true
+	 * 
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#isInDNF()
+	 */
+	@Override
+	public boolean isInDNF() {
+		return true;
+	}
+
+
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#containsOr()
+	 */
+	@Override
+	public boolean containsOr() {
+		return false;
+	}
+
+
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#countOccurences(mapreduce.guardedfragment.structure.gfexpressions.GFExpression)
+	 */
+	@Override
+	public int countOccurences(GFExpression ge) {
+		if(this == ge) 
+			return 1;
+		return 0;
+	}
+
+
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#getParent(mapreduce.guardedfragment.structure.gfexpressions.GFExpression)
+	 */
+	@Override
+	public GFExpression getParent(GFExpression e) {
+		
+		return null;
+	}
+
+
+
 }

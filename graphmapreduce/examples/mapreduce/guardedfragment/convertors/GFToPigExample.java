@@ -20,7 +20,7 @@ public class GFToPigExample {
 
 	public static void main(String[] args) throws DeserializeException, GFConversionException {
 		Set<String> queries = new HashSet<String>();
-		queries.add("#O(x1,x2)&R(x1,x2)&!S1(x1)!S2(x2)");
+		queries.add("#O(x1,x2)&R(x1,x2)&!S1(x1)&!S2(x2)S3(x1)");
 //		queries.add("#P(x1,x2)&R(x1,x2)O(x2,x2)");
 //		queries.add("#Q(x1,x2)&R(x1,x2)O(x1,x1)");
 
@@ -28,9 +28,11 @@ public class GFToPigExample {
 		GFPrefixSerializer parser = new GFPrefixSerializer();
 		
 		Collection<GFExpression> gfes1 = parser.deserialize(queries);
+		GFExistentialExpression ge = (GFExistentialExpression) gfes1.iterator().next();
+		System.out.println(ge);
 		
 		GFToPig convertor = new GFToPig();
-		String result = convertor.convert((GFExistentialExpression) gfes1.iterator().next());
+		String result = convertor.convert(ge);
 		System.out.println(result);
 	}
 }

@@ -1,10 +1,17 @@
 /**
  * Created: 26 Aug 2014
  */
-package mapreduce.guardedfragment.structure.booleanexpressions;
+package mapreduce.guardedfragment.structure.conversion;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import mapreduce.guardedfragment.structure.booleanexpressions.BAndExpression;
+import mapreduce.guardedfragment.structure.booleanexpressions.BEVisitor;
+import mapreduce.guardedfragment.structure.booleanexpressions.BExpression;
+import mapreduce.guardedfragment.structure.booleanexpressions.BNotExpression;
+import mapreduce.guardedfragment.structure.booleanexpressions.BOrExpression;
+import mapreduce.guardedfragment.structure.booleanexpressions.BVariable;
 
 /**
  * @author Jonny Daenen
@@ -77,8 +84,7 @@ public class DNFOrRemover implements BEVisitor<Iterable<BExpression>> {
 	 */
 	@Override
 	public Iterable<BExpression> visit(BVariable e) {
-		// TODO Auto-generated method stub
-		return null;
+		return newSet(e);
 	}
 
 }

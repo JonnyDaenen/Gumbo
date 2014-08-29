@@ -110,4 +110,67 @@ public class GFAndExpression extends GFExpression{
 
 
 
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#isInDNF()
+	 */
+	@Override
+	public boolean isInDNF() {
+		// check direct children, only continue with and or not, or atomics
+		if( !(child1 instanceof GFAndExpression) && ! (child1 instanceof GFNotExpression) && !(child1 instanceof GFAtomicExpression) )
+			return false;
+		
+		if( !(child2 instanceof GFAndExpression) && ! (child2 instanceof GFNotExpression) && !(child2 instanceof GFAtomicExpression) )
+			return false;
+
+		// recursive check children
+		return child1.isInDNF() && child2.isInDNF();
+	}
+
+
+
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#containsOr()
+	 */
+	@Override
+	public boolean containsOr() {
+		return child1.containsOr() || child2.containsOr();
+	}
+
+
+
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#countOccurences(mapreduce.guardedfragment.structure.gfexpressions.GFExpression)
+	 */
+	@Override
+	public int countOccurences(GFExpression ge) {
+		int thisok = 0;
+		if(this == ge) 
+			thisok = 1;
+		
+		return thisok + child1.countOccurences(ge) + child2.countOccurences(ge);
+	}
+
+
+
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#getParent()
+	 */
+	@Override
+	public GFExpression getParent(GFExpression e) {
+		if(child1 == e || child2 == e)
+			return this;
+		
+		GFExpression child1result = child1.getParent(e);
+		if(child1result != null)
+			return child1result;
+		
+		GFExpression child2result = child2.getParent(e);
+		if(child2result != null)
+			return child2result;
+		
+		return null;
+	}
+
+
+
 }

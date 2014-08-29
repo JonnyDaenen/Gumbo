@@ -20,7 +20,6 @@ import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFNotExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFOrExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFUniversalExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFVisitor;
 import mapreduce.guardedfragment.structure.gfexpressions.GFVisitorException;
 
@@ -95,16 +94,6 @@ public class GFtoBooleanConvertor implements GFVisitor<BExpression> {
 	 */
 	@Override
 	public BExpression visit(GFExistentialExpression e) throws GFVisitorException {
-		throw new GFVisitorException(
-				"It's not possible to convert formulas that are not a boolean combination of atomic formula's.");
-	}
-
-	/**
-	 * @throws GFVisitorException
-	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFVisitor#visit(mapreduce.guardedfragment.structure.gfexpressions.GFUniversalExpression)
-	 */
-	@Override
-	public BExpression visit(GFUniversalExpression e) throws GFVisitorException {
 		throw new GFVisitorException(
 				"It's not possible to convert formulas that are not a boolean combination of atomic formula's.");
 	}

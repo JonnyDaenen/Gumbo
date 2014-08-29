@@ -95,4 +95,21 @@ public class GFBooleanMapping {
 		return s;
 	}
 
+	/**
+	 * Reverse lookup of boolean variable
+	 * @param e
+	 * @return the first match found
+	 * 
+	 * @pre the variable appears in the mapping
+	 */
+	public GFExpression getAtomic(BVariable e) {
+		for (GFExpression key : mapping.keySet()) {
+			BVariable val = mapping.get(key);
+			if(val.equals(e))
+				return key;
+		}
+		
+		return null;
+	}
+
 }

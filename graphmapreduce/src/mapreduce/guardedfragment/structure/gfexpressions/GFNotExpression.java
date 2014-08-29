@@ -91,4 +91,70 @@ public class GFNotExpression extends GFExpression{
 	public boolean containsAnd() {
 		return child.containsAnd();
 	}
+
+
+
+
+
+	/**
+	 * Checks DNF, nested NOT is not allowed.
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#isInDNF()
+	 */
+	@Override
+	public boolean isInDNF() {
+		// check direct child, do not allow
+		if( !(child instanceof GFAtomicExpression)  )
+			return false;
+
+		// recursive check child
+		return child.isInDNF();
+		
+	}
+
+
+
+
+
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#containsOr()
+	 */
+	@Override
+	public boolean containsOr() {
+		return child.containsOr();
+	}
+
+
+
+
+
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#countOccurences(mapreduce.guardedfragment.structure.gfexpressions.GFExpression)
+	 */
+	@Override
+	public int countOccurences(GFExpression ge) {
+		int thisok = 0;
+		if(this == ge) 
+			thisok = 1;
+		
+		return thisok + child.countOccurences(ge);
+	}
+
+
+
+
+
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#getParent(mapreduce.guardedfragment.structure.gfexpressions.GFExpression)
+	 */
+	@Override
+	public GFExpression getParent(GFExpression e) {
+		if(child == e )
+			return this;
+		
+		GFExpression child1result = child.getParent(e);
+		if(child1result != null)
+			return child1result;
+		
+		return null;
+	}
 }
