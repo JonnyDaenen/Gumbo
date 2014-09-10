@@ -93,6 +93,7 @@ public class GFReducerHadoop extends Reducer<Text, Text, Text, Text> {
 			String value = pair.fst;
 			String filename = pair.snd;
 			
+//			LOG.debug("writing " + value + " to " + filename);
 			mos.write((Text) null, new Text(value), filename);
 
 		}

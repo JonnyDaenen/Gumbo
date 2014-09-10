@@ -20,7 +20,8 @@ public class GFToPigExample {
 
 	public static void main(String[] args) throws DeserializeException, GFConversionException {
 		Set<String> queries = new HashSet<String>();
-		queries.add("#O(x1,x2)&R(x1,x2)&!S1(x1)&!S2(x2)S3(x1)");
+//		queries.add("#O(x1,x2)&R(x1,x2)&!S1(x1)&!S2(x2)S3(x1)");
+		queries.add("#Out(x2)&R(x2,x3,x4,x5)&!S2(x2)&!S3(x3)&!S4(x4)!S5(x5)");
 //		queries.add("#P(x1,x2)&R(x1,x2)O(x2,x2)");
 //		queries.add("#Q(x1,x2)&R(x1,x2)O(x1,x1)");
 

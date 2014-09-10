@@ -51,6 +51,8 @@ public class GFReducer2Generic extends GFReducer implements Serializable {
 		
 		String s = key.toString();
 		Tuple keyTuple = new Tuple(s);
+		
+
 
 		// convert value set to tuple set
 		Set<Tuple> tuples = new HashSet<Tuple>();
@@ -131,7 +133,6 @@ public class GFReducer2Generic extends GFReducer implements Serializable {
 			}
 
 		}
-		
 		return result;
 		
 	}
@@ -140,7 +141,7 @@ public class GFReducer2Generic extends GFReducer implements Serializable {
 	public static String generateFileName(RelationSchema relationSchema) {
 		String rel = relationSchema.getShortDescription();
 		String name = generateFolder(relationSchema) + "/" + rel;
-		LOG.info("file:" + name);
+//		LOG.info("file:" + name);
 		return name;
 	}
 	

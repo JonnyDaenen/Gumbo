@@ -8,6 +8,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import mapreduce.guardedfragment.planner.structures.operations.GFMapper;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
@@ -19,6 +22,9 @@ import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 public class GFMapper2Generic extends GFMapper implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+
+	private static final Log LOG = LogFactory.getLog(GFMapper2Generic.class);
 
 	/**
 	 * @see mapreduce.guardedfragment.planner.structures.operations.GFMapper#map(java.lang.String)
@@ -29,6 +35,9 @@ public class GFMapper2Generic extends GFMapper implements Serializable {
 		Set<Pair<String,String>> result = new HashSet<Pair<String,String>>();
 		
 		if (value.contains(";")) {
+			
+//			if(value.startsWith("R(0,0,0,0)") || value.startsWith("R(1,1,1,1)"))
+//				LOG.debug("processing: " + value);
 			
 			String[] t = value.split(new String(";"));
 			if (t.length == 2) { // guarded atoms that are true
