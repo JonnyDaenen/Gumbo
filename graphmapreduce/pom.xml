@@ -51,6 +51,7 @@
 						<configuration>
 							<sources>
 								<source>examples</source>
+								<source>experiments</source>
 							</sources>
 						</configuration>
 					</execution>
