@@ -3,6 +3,8 @@
  */
 package mapreduce.experiments.profiling;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,6 +32,13 @@ public class Profiling_q4 {
 	public static void main(String[] args) throws DeserializeException, GFMRPlannerException, IllegalArgumentException, InterruptedException {
 
 		
+		ClassLoader cl = ClassLoader.getSystemClassLoader();
+		 
+        URL[] urls = ((URLClassLoader)cl).getURLs();
+ 
+        for(URL url: urls){
+        	System.out.println(url.getFile());
+        }
 		
 		if (args.length == 0) {
 			System.out.println("Please provide a input pattern as argument");
