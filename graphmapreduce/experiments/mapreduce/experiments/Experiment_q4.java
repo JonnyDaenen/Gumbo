@@ -1,7 +1,7 @@
 /**
  * Created: 10 Sep 2014
  */
-package graphmapreduce;
+package mapreduce.experiments;
 
 import java.util.Collection;
 import java.util.HashSet;
