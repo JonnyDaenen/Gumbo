@@ -46,7 +46,6 @@ public class GFtoCalculationUnitConverter {
 
 		// convert all non-basic expressions to basic
 		Map<RelationSchema, BasicGFCalculationUnit> basics = toBasic(gfeset);
-		System.out.println(basics);
 
 		// determine all relations that appear
 		Set<RelationSchema> relations = getRelations(basics);
@@ -62,17 +61,14 @@ public class GFtoCalculationUnitConverter {
 			Set<RelationSchema> depRelations = cu.getBasicExpression().getRelationDependencies();
 			for (RelationSchema rs : depRelations) {
 				
-				System.out.println(rs);
 				
 				// if no dependency found, it is an input relation
 				if(!basics.containsKey(rs)) { 
 					inputRelations.add(rs);
-					System.out.println("intput");
 				}
 				// otherwise, find and link dependency
 				else {
 
-					System.out.println("link");
 					intermediateRelations.add(rs);
 					BasicGFCalculationUnit cuDep = basics.get(rs);
 					cu.setDependency(rs, cuDep);

@@ -32,20 +32,20 @@ public class Profiling_q4 {
 	public static void main(String[] args) throws DeserializeException, GFMRPlannerException, IllegalArgumentException, InterruptedException {
 
 		
-		ClassLoader cl = ClassLoader.getSystemClassLoader();
-		 
-        URL[] urls = ((URLClassLoader)cl).getURLs();
- 
-        for(URL url: urls){
-        	System.out.println(url.getFile());
-        }
+//		ClassLoader cl = ClassLoader.getSystemClassLoader();
+//		 
+//        URL[] urls = ((URLClassLoader)cl).getURLs();
+// 
+//        for(URL url: urls){
+//        	System.out.println(url.getFile());
+//        }
 		
 		if (args.length == 0) {
 			System.out.println("Please provide a input pattern as argument");
 			System.exit(0);
 		}
 		
-		Thread.sleep(15000);
+//		Thread.sleep(15000);
 		
 		
 		
@@ -74,10 +74,10 @@ public class Profiling_q4 {
 		MRPlan plan = planner.createPlan(gfes, new Path(input), new Path(output), new Path(scratch));
 
 		// print plan in text
-		System.out.println(plan);
+//		System.out.println(plan);
 
 		// print plan in dot
-		System.out.println(plan.toDot());
+//		System.out.println(plan.toDot());
 
 		// execute plan
 		long startTime = System.nanoTime();
