@@ -5,7 +5,6 @@ package mapreduce.guardedfragment.executor.spark;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
 import mapreduce.guardedfragment.planner.structures.operations.GFReducer;

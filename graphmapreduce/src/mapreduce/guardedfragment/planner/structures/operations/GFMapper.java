@@ -3,14 +3,8 @@
  */
 package mapreduce.guardedfragment.planner.structures.operations;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 
-import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
 /**

@@ -5,13 +5,7 @@ package mapreduce.guardedfragment.planner.structures.operations;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import mapreduce.guardedfragment.planner.GFMRPlannerException;
-import mapreduce.guardedfragment.planner.compiler.reducers.GFReducer2Generic;
 import mapreduce.guardedfragment.structure.booleanexpressions.BExpression;
 import mapreduce.guardedfragment.structure.conversion.GFBooleanMapping;
 import mapreduce.guardedfragment.structure.conversion.GFtoBooleanConversionException;
@@ -19,6 +13,9 @@ import mapreduce.guardedfragment.structure.conversion.GFtoBooleanConvertor;
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Jonny Daenen

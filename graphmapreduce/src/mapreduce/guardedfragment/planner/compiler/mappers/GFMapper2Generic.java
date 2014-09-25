@@ -4,12 +4,10 @@
 package mapreduce.guardedfragment.planner.compiler.mappers;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import mapreduce.guardedfragment.planner.structures.operations.GFMapper;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
 import org.apache.commons.logging.Log;

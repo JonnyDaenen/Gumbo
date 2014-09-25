@@ -3,10 +3,6 @@
  */
 package mapreduce.guardedfragment.planner.structures.operations;
 
-import java.util.Collection;
-import java.util.Set;
-
-import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
 /**

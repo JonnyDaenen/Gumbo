@@ -1,6 +1,5 @@
 package mapreduce.guardedfragment.planner;
 
-import mapreduce.guardedfragment.structure.conversion.GFtoBooleanConversionException;
 import mapreduce.guardedfragment.structure.gfexpressions.GFVisitorException;
 
 public class GFMRPlannerException extends GFVisitorException {

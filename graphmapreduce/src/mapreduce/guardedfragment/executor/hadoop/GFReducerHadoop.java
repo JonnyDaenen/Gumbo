@@ -11,7 +11,6 @@ import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitEx
 import mapreduce.guardedfragment.planner.structures.operations.GFReducer;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.io.DeserializeException;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 

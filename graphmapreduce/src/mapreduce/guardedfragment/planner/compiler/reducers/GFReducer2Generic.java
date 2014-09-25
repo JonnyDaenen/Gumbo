@@ -16,11 +16,9 @@ import mapreduce.guardedfragment.structure.booleanexpressions.BEvaluationContext
 import mapreduce.guardedfragment.structure.booleanexpressions.BExpression;
 import mapreduce.guardedfragment.structure.booleanexpressions.VariableNotFoundException;
 import mapreduce.guardedfragment.structure.conversion.GFBooleanMapping;
-import mapreduce.guardedfragment.structure.conversion.GFtoBooleanConversionException;
 import mapreduce.guardedfragment.structure.conversion.GFtoBooleanConvertor;
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 import mapreduce.guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
 import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingTupleException;
