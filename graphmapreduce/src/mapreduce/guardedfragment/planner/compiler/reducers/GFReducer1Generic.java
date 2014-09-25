@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
+import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
 import mapreduce.guardedfragment.planner.structures.operations.GFReducer;
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
@@ -26,12 +27,12 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 	private final static String FILENAME = "tmp_round1_red.txt";
 
 	/**
+	 * @throws GFOperationInitException 
 	 * @see mapreduce.guardedfragment.planner.structures.operations.GFReducer#reduce(java.lang.String,
 	 *      java.lang.Iterable)
 	 */
 	@Override
-	public Set<Pair<String, String>> reduce(String key, Iterable<? extends Object> values,
-			Collection<GFExistentialExpression> expressionSet) {
+	public Iterable<Pair<String, String>> reduce(String key, Iterable<? extends Object> values) throws GFOperationInitException {
 
 		HashSet<Pair<String, String>> result = new HashSet<Pair<String, String>>();
 
@@ -73,7 +74,7 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 						Tuple guardTuple = tuple;
 
 						// get all atomics in the formula
-						Collection<GFAtomicExpression> guarded = formula.getChild().getAtomic();
+						Collection<GFAtomicExpression> guarded = getGuardeds(formula);
 
 						// for each atomic
 						for (GFAtomicExpression guardedAtom : guarded) {

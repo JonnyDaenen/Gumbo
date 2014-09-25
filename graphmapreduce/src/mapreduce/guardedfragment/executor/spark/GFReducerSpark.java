@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
 import mapreduce.guardedfragment.planner.structures.operations.GFReducer;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
@@ -26,13 +27,20 @@ public class GFReducerSpark implements FlatMapFunction<Tuple2<String, Iterable<S
 	Collection<GFExistentialExpression> expressionSet;
 
 	/**
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
 	 * 
 	 */
-	public GFReducerSpark(Class<? extends GFReducer> reducerclass, Collection<GFExistentialExpression> expressionSet) throws InstantiationException, IllegalAccessException {
-		this.reducer = reducerclass.newInstance();
-		this.expressionSet = expressionSet;
+	public GFReducerSpark(Class<? extends GFReducer> reducerclass, Collection<GFExistentialExpression> expressionSet)
+			throws InstantiationException, IllegalAccessException {
+		try {
+			this.reducer = reducerclass.newInstance();
+
+			this.reducer.setExpressionSet(expressionSet);
+			this.expressionSet = expressionSet;
+		} catch (GFOperationInitException e) {
+			throw new InstantiationException(e.getMessage());
+		}
 	}
 
 	/**
@@ -44,7 +52,7 @@ public class GFReducerSpark implements FlatMapFunction<Tuple2<String, Iterable<S
 		String key = keyvalues._1;
 		Iterable<String> values = keyvalues._2;
 
-		Set<Pair<String, String>> redresult = reducer.reduce(key, values, expressionSet);
+		Iterable<Pair<String, String>> redresult = reducer.reduce(key, values);
 
 		HashSet<String> result = new HashSet<String>();
 

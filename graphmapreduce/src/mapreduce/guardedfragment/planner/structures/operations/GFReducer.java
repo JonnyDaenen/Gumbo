@@ -13,7 +13,9 @@ import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
  * @author Jonny Daenen
  *
  */
-public abstract class GFReducer {
+public abstract class GFReducer extends ExpressionSetOperation {
+	
+
 	
 	/**
 	 * 
@@ -24,7 +26,7 @@ public abstract class GFReducer {
 	 * 
 	 * OPTIMIZE give some kind of context to write to
 	 */
-	public abstract Set<Pair<String,String>> reduce(String key, Iterable<? extends Object> values, Collection<GFExistentialExpression> expressionSet);
+	public abstract Iterable<Pair<String,String>> reduce(String key, Iterable<? extends Object> values) throws GFOperationInitException;
 
 
 }

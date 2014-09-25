@@ -10,6 +10,7 @@ import java.util.Set;
 
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
+import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
 import mapreduce.guardedfragment.planner.structures.operations.GFReducer;
 import mapreduce.guardedfragment.structure.booleanexpressions.BEvaluationContext;
 import mapreduce.guardedfragment.structure.booleanexpressions.BExpression;
@@ -40,11 +41,11 @@ public class GFReducer2Generic extends GFReducer implements Serializable {
 	private static GFtoBooleanConvertor convertor = new GFtoBooleanConvertor();
 	
 	/**
+	 * @throws GFOperationInitException 
 	 * @see mapreduce.guardedfragment.planner.structures.operations.GFReducer#reduce(java.lang.String, java.lang.Iterable, java.util.Collection)
 	 */
 	@Override
-	public Set<Pair<String, String>> reduce(String key, Iterable<? extends Object> values,
-			Collection<GFExistentialExpression> expressionSet) {
+	public Iterable<Pair<String, String>> reduce(String key, Iterable<? extends Object> values) throws GFOperationInitException {
 		
 		HashSet<Pair<String, String>> result = new HashSet<Pair<String, String>>();
 
@@ -77,27 +78,18 @@ public class GFReducer2Generic extends GFReducer implements Serializable {
 			// 3 crucial parts of the expression
 			GFAtomicExpression output = formula.getOutputRelation();
 			GFAtomicExpression guard = formula.getGuard();
-			GFExpression child = formula.getChild();
-			Collection<GFAtomicExpression> allAtoms = child.getAtomic();
+			Collection<GFAtomicExpression> allAtoms = getGuardeds(formula);
 
 			// calculate projection to output relation
-			// OPTIMIZE this can be done in advance
-			GFAtomProjection p = new GFAtomProjection(guard, output);
+			// this is now done in advance
+//			GFAtomProjection p = new GFAtomProjection(guard, output);
+			GFAtomProjection p = getProjection(formula);
+			// OPTIMIZE maybe do this in advance too?
 			String outfile = generateFileName(p.getOutputSchema());
 
-			// convert to boolean formula, while constructing the mapping
-			// automatically
-			BExpression booleanChildExpression = null;
-			// mapping will be created by convertor
-			GFBooleanMapping mapGFtoB = null;
-			try {
-				booleanChildExpression = convertor.convert(child);
-				mapGFtoB = convertor.getMapping();
-
-			} catch (GFtoBooleanConversionException e1) {
-				LOG.error("Something went wrong when converting GF to boolean, skipping: " + e1.getMessage());
-				continue;
-			}
+			// request boolean formula and mapping (precalculated)
+			BExpression booleanChildExpression = getBooleanChildExpression(formula);
+			GFBooleanMapping mapGFtoB = getBooleanMapping(formula);
 
 			// if this tuple applies to the current formula
 			if (guard.matches(keyTuple)) {

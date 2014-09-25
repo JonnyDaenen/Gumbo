@@ -4,33 +4,41 @@
 package mapreduce.guardedfragment.planner.structures.operations;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
+import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
+import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
-
 
 /**
  * interface for a map function.
  * 
  * @author Jonny Daenen
- *
+ * 
  */
-public abstract class GFMapper {
-	
-	// OPTIMIZE maybe use a pipe for output as does Hadoop
-	public abstract Set<Pair<String,String>> map(String value, Collection<GFExistentialExpression> expressionSet);
+public abstract class GFMapper extends ExpressionSetOperation {
 
 	/**
 	 * Add a KV-pair to a resultset.
-	 * @param key the key
-	 * @param value the value
-	 * @param resultSet the resultset to add the pair to
+	 * 
+	 * @param key
+	 *            the key
+	 * @param value
+	 *            the value
+	 * @param resultSet
+	 *            the resultset to add the pair to
 	 */
-	protected void addOutput(String key, String value, Set<Pair<String,String>> resultSet){
-		
-		Pair<String, String> p = new Pair<String,String>(key, value);
+	protected void addOutput(String key, String value, Set<Pair<String, String>> resultSet) {
+
+		Pair<String, String> p = new Pair<String, String>(key, value);
 		resultSet.add(p);
-		
+
 	}
+
+	// OPTIMIZE maybe use a pipe for output as does Hadoop
+	public abstract Iterable<Pair<String, String>> map(String value) throws GFOperationInitException;
+
 }

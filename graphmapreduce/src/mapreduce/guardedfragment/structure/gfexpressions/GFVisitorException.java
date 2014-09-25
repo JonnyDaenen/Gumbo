@@ -18,4 +18,12 @@ public class GFVisitorException extends Exception {
 		super(msg);
 	}
 
+
+	/**
+	 * @param e1
+	 */
+	public GFVisitorException(Exception e1) {
+		super(e1);
+	}
+
 }

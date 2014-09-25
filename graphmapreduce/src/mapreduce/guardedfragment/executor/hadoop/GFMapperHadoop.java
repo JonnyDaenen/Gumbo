@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mapreduce.guardedfragment.planner.structures.operations.GFMapper;
+import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.DeserializeException;
@@ -75,8 +76,10 @@ public class GFMapperHadoop extends Mapper<LongWritable, Text, Text, Text> {
 					formulaSet.add((GFExistentialExpression) exp);
 				}
 			}
+			
+			mapper.setExpressionSet(formulaSet);
 
-		} catch (DeserializeException e) {
+		} catch (Exception e) {
 			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}
 
@@ -90,13 +93,21 @@ public class GFMapperHadoop extends Mapper<LongWritable, Text, Text, Text> {
 			throws IOException, InterruptedException {
 		
 		
-		Set<Pair<String, String>> result = mapper.map(value.toString(), formulaSet);
-		
-		for (Pair<String, String> pair : result) {
-			String k = pair.fst;
-			String val = pair.snd;
-			context.write(new Text(k), new Text(val));
+		Iterable<Pair<String, String>> result;
+		try {
+			result = mapper.map(value.toString());
+			
+			for (Pair<String, String> pair : result) {
+				String k = pair.fst;
+				String val = pair.snd;
+				context.write(new Text(k), new Text(val));
+			}
+			
+			
+		} catch (GFOperationInitException e) {
+			throw new InterruptedException(e.getMessage());
 		}
+		
 		
 		
 	}

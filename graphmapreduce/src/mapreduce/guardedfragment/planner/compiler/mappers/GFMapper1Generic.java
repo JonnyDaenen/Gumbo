@@ -10,6 +10,7 @@ import java.util.Set;
 
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
 import mapreduce.guardedfragment.planner.structures.operations.GFMapper;
+import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
@@ -30,10 +31,11 @@ public class GFMapper1Generic extends GFMapper implements Serializable {
 
 	
 	/**
+	 * @throws GFOperationInitException 
 	 * @see mapreduce.guardedfragment.planner.structures.operations.GFMapper#map(java.lang.String)
 	 */
 	@Override
-	public Set<Pair<String,String>> map(String value, Collection<GFExistentialExpression> expressionSet) {
+	public Iterable<Pair<String,String>> map(String value) throws GFOperationInitException {
 		
 		Set<Pair<String,String>> result = new HashSet<Pair<String,String>>();
 		
@@ -44,8 +46,7 @@ public class GFMapper1Generic extends GFMapper implements Serializable {
 			LOG.trace("An original value: " + value.toString());
 
 			GFAtomicExpression guard = formula.getGuard();
-			// OPTIMIZE pre-calculate
-			Collection<GFAtomicExpression> guardedRelations = formula.getChild().getAtomic();
+			Collection<GFAtomicExpression> guardedRelations = getGuardeds(formula); // these are precalculated
 
 			// check if tuple matches guard
 			if (guard.matches(t)) {

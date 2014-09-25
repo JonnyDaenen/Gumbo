@@ -30,7 +30,7 @@ public class GFMapper2Generic extends GFMapper implements Serializable {
 	 * @see mapreduce.guardedfragment.planner.structures.operations.GFMapper#map(java.lang.String)
 	 */
 	@Override
-	public Set<Pair<String, String>> map(String value, Collection<GFExistentialExpression> expressionSet) {
+	public Iterable<Pair<String, String>> map(String value) {
 		
 		Set<Pair<String,String>> result = new HashSet<Pair<String,String>>();
 		
