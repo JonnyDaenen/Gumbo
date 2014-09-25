@@ -85,19 +85,9 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>appassembler-maven-plugin</artifactId>
-				<version>1.8.1</version>
-				<configuration>
-					<programs>
-						<program>
-							<mainClass>mapreduce.experiments.profiling.Profiling_q4</mainClass>
-							<id>Profiling_q4</id>
-						</program>
-					</programs>
-				</configuration>
-			</plugin>
+			<!-- unused <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>appassembler-maven-plugin</artifactId> 
+				<version>1.8.1</version> <configuration> <programs> <program> <mainClass>mapreduce.experiments.profiling.Profiling_q4</mainClass> 
+				<id>Profiling_q4</id> </program> </programs> </configuration> </plugin> -->
 		</plugins>
 	</build>
 	<dependencies>

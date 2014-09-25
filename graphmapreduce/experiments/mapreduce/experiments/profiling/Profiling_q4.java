@@ -45,7 +45,6 @@ public class Profiling_q4 {
 			System.exit(0);
 		}
 		
-//		Thread.sleep(15000);
 		
 		
 		
@@ -79,6 +78,8 @@ public class Profiling_q4 {
 		// print plan in dot
 //		System.out.println(plan.toDot());
 
+
+//		Thread.sleep(15000);
 		// execute plan
 		long startTime = System.nanoTime();
 		

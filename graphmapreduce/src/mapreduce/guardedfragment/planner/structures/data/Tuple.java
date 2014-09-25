@@ -1,6 +1,7 @@
 package mapreduce.guardedfragment.planner.structures.data;
 
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
 
@@ -12,28 +13,44 @@ import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
  */
 public class Tuple {
 
+	private static Pattern p = Pattern.compile("\\(|,|\\)");
+
 	String name;
 	String[] data;
+	String representation;
 
 	/**
 	 * Creates a new tuple based on a given String. When the string is
 	 * empty/blank, a tuple with empty name/vars is created.
 	 * 
-	 * @param s String representation of the tuple, e.g. R(a,2,1)
+	 * @param s
+	 *            String representation of the tuple, e.g. R(a,2,1)
 	 */
 	public Tuple(String s) {
-		String[] t = s.split(new String("\\(|,|\\)"));
 
-		if (s.trim().length() == 0 || t.length == 0) {
-			name = "";
-			data = new String[0];
-		}
+		representation = s;
 
-		name = t[0];
-		data = new String[t.length - 1];
-		for (int i = 0; i < t.length - 1; i++) {
-			data[i] = t[i + 1];
-		}
+		int fb = s.indexOf('(');
+		int lb = s.lastIndexOf(')');
+
+		name = s.substring(0, fb);
+		String rest = s.substring(fb + 1, lb);
+		data = rest.split(",");
+
+		//
+		// String[] t; // = s.split(new String("\\(|,|\\)"));
+		// t = p.split(s);
+		//
+		// if (s.trim().length() == 0 || t.length == 0) {
+		// name = "";
+		// data = new String[0];
+		// }
+		//
+		// name = t[0];
+		// data = new String[t.length - 1];
+		// for (int i = 0; i < t.length - 1; i++) {
+		// data[i] = t[i + 1];
+		// }
 	}
 
 	public Tuple(String name, String... data) {
@@ -54,13 +71,19 @@ public class Tuple {
 	}
 
 	public String generateString() {
-		String t = new String();
+		StringBuilder sb = new StringBuilder(data.length * 5);
 
 		for (int i = 0; i < data.length; i++) {
-			t = t + "," + data[i];
+			sb.append(data[i]);
+			sb.append(',');
 		}
+		sb.deleteCharAt(sb.length()-1);
+		sb.append(')');
+		sb.insert(0, '(');
+		sb.insert(0, name);
 
-		return name + "(" + t.substring(1) + ")";
+		return sb.toString();
+
 	}
 
 	@Deprecated
@@ -123,21 +146,30 @@ public class Tuple {
 	@Override
 	public String toString() {
 
-		String out = "";
-
-		// concatenate all fields
-		for (int i = 0; i < data.length; i++) {
-			out += "," + data[i];
+		if (representation != null) {
+			return representation;
 		}
 
-		// dummy value for substring
-		if (out.length() == 0)
-			out = "-";
+		representation = generateString();
+		return representation;
 
-		// add name
-		out = name + "(" + out.substring(1) + ")";
-
-		return out;
+		//
+		// String out = "";
+		//
+		// // concatenate all fields
+		// for (int i = 0; i < data.length; i++) {
+		// out += "," + data[i];
+		// }
+		//
+		// // dummy value for substring
+		// if (out.length() == 0)
+		// out = "-";
+		//
+		// // add name
+		// out = name + "(" + out.substring(1) + ")";
+		//
+		// representation = out;
+		// return representation;
 	}
 
 }
