@@ -3,7 +3,6 @@
  */
 package mapreduce.experiments.profiling;
 
-import mapreduce.guardedfragment.executor.hadoop.HadoopExecutor;
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
 
 /**

@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import mapreduce.guardedfragment.planner.calculations.CalculationUnit;
-import mapreduce.guardedfragment.planner.calculations.CalculationUnitDAG;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 
 import org.apache.commons.logging.Log;

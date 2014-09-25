@@ -6,10 +6,6 @@ package mapreduce.guardedfragment.structure.conversion;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import mapreduce.guardedfragment.planner.GFMRPlanner;
 import mapreduce.guardedfragment.structure.booleanexpressions.BAndExpression;
 import mapreduce.guardedfragment.structure.booleanexpressions.BEVisitor;
 import mapreduce.guardedfragment.structure.booleanexpressions.BExpression;
@@ -18,6 +14,9 @@ import mapreduce.guardedfragment.structure.booleanexpressions.BOrExpression;
 import mapreduce.guardedfragment.structure.booleanexpressions.BVariable;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * based on pseudo-code from: http://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html

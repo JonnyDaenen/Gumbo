@@ -1,12 +1,5 @@
 package mapreduce.guardedfragment.structure.booleanexpressions;
 
-import mapreduce.guardedfragment.structure.booleanexpressions.BAndExpression;
-import mapreduce.guardedfragment.structure.booleanexpressions.BEvaluationContext;
-import mapreduce.guardedfragment.structure.booleanexpressions.BExpression;
-import mapreduce.guardedfragment.structure.booleanexpressions.BNotExpression;
-import mapreduce.guardedfragment.structure.booleanexpressions.BOrExpression;
-import mapreduce.guardedfragment.structure.booleanexpressions.BVariable;
-import mapreduce.guardedfragment.structure.booleanexpressions.VariableNotFoundException;
 
 public class BooleanExpressionExample {
 	

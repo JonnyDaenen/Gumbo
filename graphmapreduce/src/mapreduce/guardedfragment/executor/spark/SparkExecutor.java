@@ -8,21 +8,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import mapreduce.guardedfragment.executor.ExecutionException;
+import mapreduce.guardedfragment.executor.GFExecutor;
+import mapreduce.guardedfragment.planner.structures.MRJob;
+import mapreduce.guardedfragment.planner.structures.MRPlan;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-
-import scala.Tuple2;
-import mapreduce.guardedfragment.executor.ExecutionException;
-import mapreduce.guardedfragment.executor.GFExecutor;
-import mapreduce.guardedfragment.executor.hadoop.GFMapperHadoop;
-import mapreduce.guardedfragment.planner.structures.MRJob;
-import mapreduce.guardedfragment.planner.structures.MRPlan;
 
 /**
  * Executes an MR-plan on Spark.

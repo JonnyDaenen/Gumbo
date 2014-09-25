@@ -3,11 +3,6 @@
  */
 package mapreduce.guardedfragment.convertors;
 
-import java.util.LinkedList;
-
-import org.mortbay.log.Log;
-
-import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 import mapreduce.guardedfragment.structure.conversion.DNFConversionException;
 import mapreduce.guardedfragment.structure.conversion.DNFConverter;
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
