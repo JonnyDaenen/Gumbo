@@ -37,8 +37,7 @@ public class GFMapper1Generic extends GFMapper implements Serializable {
 	 * @throws GFOperationInitException 
 	 * @see mapreduce.guardedfragment.planner.structures.operations.GFMapper#map(java.lang.String)
 	 */
-	@Override
-	public Iterable<Pair<String,String>> map(String value) throws GFOperationInitException {
+	public Iterable<Pair<String,String>> map_old(String value) throws GFOperationInitException {
 		return new GFMapper1Iterator(getGuardsAll(), getGuardedsAll(), getGGPairsAll(), value);
 	}
 	
@@ -49,7 +48,7 @@ public class GFMapper1Generic extends GFMapper implements Serializable {
 	 * @throws GFOperationInitException
 	 */
 	@Deprecated
-	public Iterable<Pair<String,String>> map_old(String value) throws GFOperationInitException {
+	public Iterable<Pair<String,String>> map(String value) throws GFOperationInitException {
 		
 		Set<Pair<String,String>> result = new HashSet<Pair<String,String>>();
 		
