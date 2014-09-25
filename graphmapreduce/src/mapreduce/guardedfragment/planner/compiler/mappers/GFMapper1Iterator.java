@@ -38,11 +38,12 @@ public class GFMapper1Iterator implements Iterable<Pair<String, String>>, Iterat
 	/**
 	 * 
 	 */
-	public GFMapper1Iterator(Set<GFAtomicExpression> guards, Set<GFAtomicExpression> guardeds, Set<Pair<GFAtomicExpression, GFAtomicExpression>> gAndG, String value) {
+	public GFMapper1Iterator(Set<GFAtomicExpression> guards, Set<GFAtomicExpression> guardeds,
+			Set<Pair<GFAtomicExpression, GFAtomicExpression>> gAndG, String value) {
 		phase = 1;
 		next = null;
 		t = new Tuple(value.toString());
-		
+
 		this.guards = guards.iterator();
 		this.guardeds = guardeds.iterator();
 		this.gAndG = gAndG.iterator();
@@ -68,9 +69,8 @@ public class GFMapper1Iterator implements Iterable<Pair<String, String>>, Iterat
 	 * Adds a new element to the queue if there is none.
 	 */
 	void calculateNext() {
-		
-//		LOG.trace("calculateNext:" + t);
-		
+
+		// LOG.trace("calculateNext:" + t);
 
 		// check if there is a next element, if so, do nothing
 		if (next != null)
@@ -96,27 +96,30 @@ public class GFMapper1Iterator implements Iterable<Pair<String, String>>, Iterat
 
 		// check pairs
 		// OPTIMIZE group by guard
-		while ( gAndG.hasNext() ) {
-			
+		while (gAndG.hasNext()) {
+
 			Pair<GFAtomicExpression, GFAtomicExpression> gpair = gAndG.next();
-			
+
 			GFAtomicExpression guard = gpair.fst;
 			GFAtomicExpression guarded = gpair.snd;
-			
+
 			if (guard.matches(t)) {
 				GFAtomProjection gp = new GFAtomProjection(guard, guarded);
 				Tuple tprime;
 				try {
+
 					tprime = gp.project(t);
-					next = new Pair<String, String>(tprime.toString(), t.toString());
-					return;
+					if (guarded.matches(tprime)) {
+						next = new Pair<String, String>(tprime.toString(), t.toString());
+						return;
+					}
 				} catch (NonMatchingTupleException e) {
 					// should not happen!
 					LOG.error(e.getMessage());
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
 		return;
 
