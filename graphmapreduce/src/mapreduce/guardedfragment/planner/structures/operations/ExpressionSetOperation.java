@@ -5,6 +5,8 @@ package mapreduce.guardedfragment.planner.structures.operations;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import mapreduce.guardedfragment.structure.booleanexpressions.BExpression;
 import mapreduce.guardedfragment.structure.conversion.GFBooleanMapping;
@@ -13,6 +15,7 @@ import mapreduce.guardedfragment.structure.conversion.GFtoBooleanConvertor;
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
+import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,14 +27,17 @@ import org.apache.commons.logging.LogFactory;
 public abstract class ExpressionSetOperation {
 
 	private static final Log LOG = LogFactory.getLog(ExpressionSetOperation.class);
-	
-	
+
 	protected Collection<GFExistentialExpression> expressionSet;
 
 	protected HashMap<GFExistentialExpression, Collection<GFAtomicExpression>> guardeds;
 	protected HashMap<GFExistentialExpression, BExpression> booleanChildExpressions;
 	protected HashMap<GFExistentialExpression, GFBooleanMapping> booleanMapping;
 	protected HashMap<GFExistentialExpression, GFAtomProjection> projections;
+
+	protected Set<GFAtomicExpression> guardsAll;
+	protected Set<GFAtomicExpression> guardedsAll;
+	protected Set<Pair<GFAtomicExpression, GFAtomicExpression>> ggpairsAll;
 
 	/**
 	 * 
@@ -41,9 +47,11 @@ public abstract class ExpressionSetOperation {
 		booleanChildExpressions = new HashMap<>();
 		booleanMapping = new HashMap<>();
 		projections = new HashMap<>();
-	}
 
-	
+		guardsAll = new HashSet<>();
+		guardedsAll = new HashSet<>();
+		ggpairsAll = new HashSet<>();
+	}
 
 	public void setExpressionSet(Collection<GFExistentialExpression> expressionSet) throws GFOperationInitException {
 		this.expressionSet = expressionSet;
@@ -90,6 +98,22 @@ public abstract class ExpressionSetOperation {
 			GFAtomProjection p = new GFAtomProjection(guard, output);
 			projections.put(e, p);
 		}
+
+		// pairs and unions
+		guardsAll.clear();
+		guardedsAll.clear();
+		ggpairsAll.clear();
+		for (GFExistentialExpression e : expressionSet) {
+			GFAtomicExpression guard = e.getGuard();
+			guardsAll.add(guard);
+
+			for (GFAtomicExpression c : e.getGuardedRelations()) {
+				guardedsAll.add(c);
+				ggpairsAll.add(new Pair<>(guard, c));
+			}
+
+		}
+
 	}
 
 	protected Collection<GFAtomicExpression> getGuardeds(GFExistentialExpression e) throws GFOperationInitException {
@@ -119,7 +143,7 @@ public abstract class ExpressionSetOperation {
 
 		return m;
 	}
-	
+
 	protected GFAtomProjection getProjection(GFExistentialExpression e) throws GFOperationInitException {
 		GFAtomProjection p = projections.get(e);
 
@@ -127,6 +151,28 @@ public abstract class ExpressionSetOperation {
 			throw new GFOperationInitException("No projection found for: " + e);
 
 		return p;
+	}
+	
+	/**
+	 * @return the set of all guarded relations
+	 */
+	public Set<GFAtomicExpression> getGuardedsAll() {
+		return guardedsAll;
+	}
+	
+	/**
+	 * @return the set of all guards
+	 */
+	public Set<GFAtomicExpression> getGuardsAll() {
+		return guardsAll;
+	}
+	
+	/**
+	 * Returns the set of all guard-guarded combinations, based on the GFExistentialExpressions
+	 * @return the set of all guard-guarded combinations
+	 */
+	public Set<Pair<GFAtomicExpression, GFAtomicExpression>> getGGPairsAll() {
+		return ggpairsAll;
 	}
 
 	public Collection<GFExistentialExpression> getExpressionSet() {
