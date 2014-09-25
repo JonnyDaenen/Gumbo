@@ -42,6 +42,13 @@ public class GFMapper1Generic extends GFMapper implements Serializable {
 		return new GFMapper1Iterator(getGuardsAll(), getGuardedsAll(), getGGPairsAll(), value);
 	}
 	
+	/**
+	 * Original implementation of map1
+	 * @param value
+	 * @return
+	 * @throws GFOperationInitException
+	 */
+	@Deprecated
 	public Iterable<Pair<String,String>> map_old(String value) throws GFOperationInitException {
 		
 		Set<Pair<String,String>> result = new HashSet<Pair<String,String>>();
