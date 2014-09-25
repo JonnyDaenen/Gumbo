@@ -78,7 +78,7 @@ public class GFReducer2Generic extends GFReducer implements Serializable {
 			GFAtomicExpression output = formula.getOutputRelation();
 			GFAtomicExpression guard = formula.getGuard();
 			GFExpression child = formula.getChild();
-			Set<GFAtomicExpression> allAtoms = child.getAtomic();
+			Collection<GFAtomicExpression> allAtoms = child.getAtomic();
 
 			// calculate projection to output relation
 			// OPTIMIZE this can be done in advance

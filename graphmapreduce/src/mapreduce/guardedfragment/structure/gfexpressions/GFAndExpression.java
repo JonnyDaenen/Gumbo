@@ -1,5 +1,6 @@
 package mapreduce.guardedfragment.structure.gfexpressions;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,12 +32,16 @@ public class GFAndExpression extends GFExpression{
 		return freeVars;
 	}
 
-	public Set<GFAtomicExpression> getAtomic() {
-		Set<GFAtomicExpression> allAtoms = child1.getAtomic();
-		allAtoms.addAll(child2.getAtomic());
-		
-		return allAtoms;
+
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#getAtomic(java.util.Collection)
+	 */
+	@Override
+	public void addAtomic(Collection<GFAtomicExpression> current) {
+		child1.addAtomic(current);
+		child2.addAtomic(current);
 	}
+
 
 	@Override
 	public String generateString() {
@@ -170,6 +175,8 @@ public class GFAndExpression extends GFExpression{
 		
 		return null;
 	}
+
+
 
 
 

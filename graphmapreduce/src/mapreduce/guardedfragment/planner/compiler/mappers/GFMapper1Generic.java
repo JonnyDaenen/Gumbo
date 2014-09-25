@@ -45,7 +45,7 @@ public class GFMapper1Generic extends GFMapper implements Serializable {
 
 			GFAtomicExpression guard = formula.getGuard();
 			// OPTIMIZE pre-calculate
-			Set<GFAtomicExpression> guardedRelations = formula.getChild().getAtomic();
+			Collection<GFAtomicExpression> guardedRelations = formula.getChild().getAtomic();
 
 			// check if tuple matches guard
 			if (guard.matches(t)) {

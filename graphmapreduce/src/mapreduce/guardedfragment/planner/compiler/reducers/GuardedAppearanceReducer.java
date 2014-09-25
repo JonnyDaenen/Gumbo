@@ -1,6 +1,7 @@
 package mapreduce.guardedfragment.planner.compiler.reducers;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -122,7 +123,7 @@ public class GuardedAppearanceReducer extends Reducer<Text, Text, Text, Text> {
 						Tuple guardTuple = tuple;
 
 						// get all atomics in the formula
-						Set<GFAtomicExpression> guarded = formula.getChild().getAtomic();
+						Collection<GFAtomicExpression> guarded = formula.getChild().getAtomic();
 
 						// for each atomic
 						for (GFAtomicExpression guardedAtom : guarded) {

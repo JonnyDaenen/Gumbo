@@ -2,6 +2,7 @@ package mapreduce.guardedfragment.structure.gfexpressions;
 
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,10 +50,12 @@ public class GFAtomicExpression extends GFExpression {
 		return freevars;
 	}
 
-	public Set<GFAtomicExpression> getAtomic() {
-		Set<GFAtomicExpression> atom = new HashSet<GFAtomicExpression>();
-		atom.add(this);
-		return atom;
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#addAtomic(java.util.Collection)
+	 */
+	@Override
+	public void addAtomic(Collection<GFAtomicExpression> current) {
+		current.add(this);
 	}
 
 	@Override
@@ -232,6 +235,9 @@ public class GFAtomicExpression extends GFExpression {
 		
 		return null;
 	}
+
+
+
 
 
 

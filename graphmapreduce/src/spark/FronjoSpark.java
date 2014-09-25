@@ -5,6 +5,7 @@ package spark;
  * Computing the query R(x,y) & S(y)
  */
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -66,7 +67,7 @@ public class FronjoSpark {
 						for (GFExistentialExpression formula : formulaSet) {
 
 							GFAtomicExpression guard = formula.getGuard();
-							Set<GFAtomicExpression> guardedRelations = formula.getChild().getAtomic();
+							Collection<GFAtomicExpression> guardedRelations = formula.getChild().getAtomic();
 
 							if (guard.matches(t)) {
 
@@ -141,7 +142,7 @@ public class FronjoSpark {
 										Tuple guardTuple = tuple;
 
 										// get all atomics in the formula
-										Set<GFAtomicExpression> guarded = formula.getChild().getAtomic();
+										Collection<GFAtomicExpression> guarded = formula.getChild().getAtomic();
 
 										// for each atomic
 										for (GFAtomicExpression guardedAtom : guarded) {
@@ -195,7 +196,7 @@ public class FronjoSpark {
 							GFAtomicExpression output = formula.getOutputRelation();
 							GFAtomicExpression guard = formula.getGuard();
 							GFExpression child = formula.getChild();
-							Set<GFAtomicExpression> allAtoms = child.getAtomic();
+							Collection<GFAtomicExpression> allAtoms = child.getAtomic();
 
 							// calculate projection to output relation
 							// OPTIMIZE this can be done in advance

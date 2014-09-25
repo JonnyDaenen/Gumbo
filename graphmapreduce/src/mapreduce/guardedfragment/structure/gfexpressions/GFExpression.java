@@ -1,6 +1,8 @@
 package mapreduce.guardedfragment.structure.gfexpressions;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -22,9 +24,21 @@ public abstract class GFExpression implements Serializable {
 
 
 	/**
-	 * @return the set of all atomic formulae
+	 * 
+	 * @return a set of all atoms
 	 */
-	public abstract Set<GFAtomicExpression> getAtomic();
+	public Collection<GFAtomicExpression> getAtomic() {
+		Set<GFAtomicExpression> atoms = new HashSet<GFAtomicExpression>();
+		addAtomic(atoms);
+		return atoms;
+	}
+	
+	/**
+	 * Calculates all atomic descendants and adds them to an existing collection.
+	 * The guards are also included as atoms.
+	 * @param current an existing collection to expand into
+	 */
+	public abstract void addAtomic(Collection<GFAtomicExpression> current);
 
 	/**
 	 * Checks whether the formula is guarded. A Formula is guarded when it is in

@@ -73,7 +73,7 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 						Tuple guardTuple = tuple;
 
 						// get all atomics in the formula
-						Set<GFAtomicExpression> guarded = formula.getChild().getAtomic();
+						Collection<GFAtomicExpression> guarded = formula.getChild().getAtomic();
 
 						// for each atomic
 						for (GFAtomicExpression guardedAtom : guarded) {

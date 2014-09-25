@@ -1,6 +1,7 @@
 package mapreduce.guardedfragment.structure.gfexpressions;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,18 +40,22 @@ public class GFExistentialExpression extends GFExpression {
 	}
 		
 
-	public Set<GFAtomicExpression> getAtomic() {
-		Set<GFAtomicExpression> allAtoms = child.getAtomic();
-		allAtoms.add(guard);
-		return allAtoms;
+	/**
+	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#addAtomic(java.util.Collection)
+	 */
+	@Override
+	public void addAtomic(Collection<GFAtomicExpression> current) {
+		child.addAtomic(current);
+		current.add(guard);		
 	}
+
 	
 	/**
 	 * 
 	 * @return the set of relation schemas this expressions depends on.
 	 */
 	public Set<RelationSchema> getRelationDependencies() {
-		Set<GFAtomicExpression> allAtoms = getAtomic();
+		Collection<GFAtomicExpression> allAtoms = getAtomic();
 		Set<RelationSchema> schemas = new HashSet<RelationSchema>();
 		
 		for (GFAtomicExpression atom : allAtoms) {
@@ -162,7 +167,7 @@ public class GFExistentialExpression extends GFExpression {
 	 * Creates a set of atomics on the "right" side.
 	 * @return the set of guarded relations
 	 */
-	public Set<GFAtomicExpression> getGuardedRelations() {
+	public Collection<GFAtomicExpression> getGuardedRelations() {
 		return child.getAtomic();
 	}
 
@@ -254,6 +259,7 @@ public class GFExistentialExpression extends GFExpression {
 		
 		return null;
 	}
+
 
 	
 	

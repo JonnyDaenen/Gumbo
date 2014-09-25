@@ -1,6 +1,7 @@
 package mapreduce.guardedfragment.planner.compiler.mappers;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -87,7 +88,7 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 			LOG.trace("An original value: " + value.toString());
 
 			GFAtomicExpression guard = formula.getGuard();
-			Set<GFAtomicExpression> guardedRelations = formula.getChild().getAtomic();
+			Collection<GFAtomicExpression> guardedRelations = formula.getChild().getAtomic();
 
 			// check if tuple matches guard
 			if (guard.matches(t)) {

@@ -1,5 +1,6 @@
 package mapreduce.guardedfragment.structure;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +21,7 @@ public class FirstMapper {
 	public FirstMapper(GFAtomicExpression g, GFExpression f) {
 		guard = g;
 		child = f;
-		Set<GFAtomicExpression> setAllAtoms = child.getAtomic();
+		Collection<GFAtomicExpression> setAllAtoms = child.getAtomic();
 		arrayAllAtoms = setAllAtoms.toArray(new GFAtomicExpression[0]);
 	}
 	

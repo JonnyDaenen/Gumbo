@@ -1,6 +1,7 @@
 package mapreduce.guardedfragment.planner.compiler.reducers;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -124,7 +125,7 @@ public class GuardedProjectionReducer extends Reducer<Text, Text, Text, Text> {
 			GFAtomicExpression output = formula.getOutputRelation();
 			GFAtomicExpression guard = formula.getGuard();
 			GFExpression child = formula.getChild();
-			Set<GFAtomicExpression> allAtoms = child.getAtomic();
+			Collection<GFAtomicExpression> allAtoms = child.getAtomic();
 
 			// calculate projection to output relation
 			// OPTIMIZE this can be done in advance
