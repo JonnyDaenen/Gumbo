@@ -32,35 +32,34 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 	 *      java.lang.Iterable)
 	 */
 	@Override
+//	/ OPTIMIZE iterable string?
 	public Iterable<Pair<String, String>> reduce(String key, Iterable<? extends Object> values) throws GFOperationInitException {
 
 		HashSet<Pair<String, String>> result = new HashSet<Pair<String, String>>();
 
-		String stringKey = key.toString();
+		String stringKey = key;//.toString();
 		Tuple keyTuple = new Tuple(stringKey);
 
 		// convert value set to tuple set
 		Set<Tuple> tuples = new HashSet<Tuple>();
 
+		boolean foundKey = false;
+		// look if data (key) is present in a guarded relation (one of the
+					// values)
 		for (Object t : values) {
 			Tuple ntuple = new Tuple(t.toString());
 			tuples.add(ntuple);
+			
+			if (keyTuple.equals(ntuple)) {
+				foundKey = true;
+				break;
+			}
 		}
 
 		// OPTIMIZE can we push for-loop inside?
 		for (GFExistentialExpression formula : expressionSet) {
 
-			boolean foundKey = false;
 			GFAtomicExpression guard = formula.getGuard();
-
-			// look if data (key) is present in a guarded relation (one of the
-			// values)
-			for (Tuple tuple : tuples) {
-				if (keyTuple.equals(tuple)) {
-					foundKey = true;
-					break;
-				}
-			}
 
 			// if the guarded tuple is actually in the database
 			if (foundKey) {
@@ -109,7 +108,6 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 
 			// when only guards appear in the value set, we need to keep those
 			// alive (Si's are all FALSE).
-			// TODO what if there is no S to contain a G, is there a G:G kv pair?
 			// OPTIMIZE This is not necessary when others have been output
 			for (Tuple tuple : tuples) {
 				if (guard.matches(tuple)) {
