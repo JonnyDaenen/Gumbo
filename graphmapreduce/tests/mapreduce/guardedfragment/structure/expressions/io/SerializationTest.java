@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import mapreduce.guardedfragment.structure.gfexpressions.GFAndExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
@@ -156,9 +157,27 @@ public class SerializationTest {
 		strings.add(rank2);
 		
 		String ser = prefixSerializer.serializeSet(strings);
-		String ser2 = prefixSerializer.serializeSet(prefixSerializer.deserializeSet(ser));
+		Set<GFExpression> strings2 = prefixSerializer.deserializeSet(ser);
 		
-		assertEquals(ser, ser2);
+		for (GFExpression e : strings) {
+			boolean found = false;
+			for (GFExpression e2 : strings2) {
+				if(e.toString().equals(e2.toString())) { // TODO implement equals
+					found = true;
+				}
+			}
+			assertEquals(true, found);
+		}
+		
+		for (GFExpression e : strings2) {
+			boolean found = false;
+			for (GFExpression e2 : strings) {
+				if(e.toString().equals(e2.toString())) { // TODO implement equals
+					found = true;
+				}
+			}
+			assertEquals(true, found);
+		}
 	}
 	
 	
