@@ -15,8 +15,9 @@ import mapreduce.guardedfragment.planner.structures.data.Tuple;
  */
 public class Tuple_test {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 
+//		Thread.sleep(10000);
 		testInit();
 		
 		// ---

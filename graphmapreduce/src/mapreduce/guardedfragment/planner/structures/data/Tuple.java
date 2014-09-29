@@ -1,6 +1,7 @@
 package mapreduce.guardedfragment.planner.structures.data;
 
 import java.util.HashMap;
+import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,22 +28,51 @@ public class Tuple {
 	 * 
 	 * @param s
 	 *            String representation of the tuple, e.g. R(a,2,1)
+	 * @throws InterruptedException 
 	 */
 	public Tuple(String s) {
 
 		representation = s;
 
-		int fb = s.indexOf('(');
-		int lb = s.lastIndexOf(')');
-
+		int fb = StringUtils.indexOf(s, '('); // s.indexOf('(');
+		int lb = StringUtils.lastIndexOf(s, ')'); // s.lastIndexOf(')');
+		
 
 		name = s.substring(0, fb);
 		String rest = s.substring(fb + 1, lb);
-//		data = rest.split(",");
+		// data = rest.split(",");
+
+		// name = StringUtils.substringBefore(s,"(");
+		// String rest = StringUtils.substringBetween(s,"(",")");
+		// data = StringUtils.split(rest, ',');
+
+		// StringTokenizer st = new StringTokenizer(rest, ",");
+
 		
-//		name = StringUtils.substringBefore(s,"(");
-//		String rest = StringUtils.substringBetween(s,"(",")");
-		data = StringUtils.split(rest,',');
+		int count = 0;
+		for (int i = 0; i < rest.length(); i++) {
+			if (rest.charAt(i) == ',')
+				count++;
+
+		}
+
+				
+		data = new String[count + 1];
+		int i = 0;
+		int start = 0;
+		int end = -1;
+		
+		while (i < count) {
+			start = end + 1;
+//			end = StringUtils.indexOf(rest, ',',start);
+			end = rest.indexOf(',', start);
+//			data[i] = StringUtils.substring(rest, start,end);
+			data[i] = rest.substring(start, end);
+			i++;
+		}
+		// final piece
+		start = end + 1;
+		data[i] = rest.substring(start);
 
 		//
 		// String[] t; // = s.split(new String("\\(|,|\\)"));
