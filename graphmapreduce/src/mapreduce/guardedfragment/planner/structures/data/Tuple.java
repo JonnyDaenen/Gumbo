@@ -26,6 +26,8 @@ public class Tuple {
 	 * Creates a new tuple based on a given String. When the string is
 	 * empty/blank, a tuple with empty name/vars is created.
 	 * 
+	 * OPTIMIZED
+	 * 
 	 * @param s
 	 *            String representation of the tuple, e.g. R(a,2,1)
 	 * @throws InterruptedException 
@@ -171,12 +173,14 @@ public class Tuple {
 	}
 
 	public boolean equals(Tuple t) {
-		if (!name.equals(t.getName())) {
-			return false;
-		}
 		if (data.length != t.size()) {
 			return false;
 		}
+		
+		if (!name.equals(t.getName())) {
+			return false;
+		}
+		
 		for (int i = 0; i < data.length; i++) {
 			if (!data[i].equals(t.get(i))) {
 				return false;

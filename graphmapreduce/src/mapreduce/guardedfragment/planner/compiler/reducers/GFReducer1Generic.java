@@ -61,9 +61,12 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 			if (!foundKey && keyTuple.equals(ntuple)) {
 				foundKey = true;
 			}
+			
+			//  OPTIMIZE perform guard selection here ?
 		}
 
-		// OPTIMIZE can we push for-loop inside?
+
+		// go through all expressions
 		for (GFExistentialExpression formula : expressionSet) {
 
 			GFAtomicExpression guard = formula.getGuard();
@@ -85,10 +88,13 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 						// for each atomic
 						// OPTIMIZE i think we can check in advance if the key matches a guarded relation
 						for (GFAtomicExpression guardedAtom : guarded) {
-
-							// project the guard tuple onto current atom
-							GFAtomProjection p = new GFAtomProjection(guard, guardedAtom);
+							// OPTIMIZE check if atom matches keyTuple?
+							if(!guardedAtom.matches(keyTuple))
+								continue;
+							
 							try {
+								// project the guard tuple onto current atom
+								GFAtomProjection p = new GFAtomProjection(guard, guardedAtom);
 								Tuple projectedTuple = p.project(guardTuple);
 
 								// check link between guard variables and atom
