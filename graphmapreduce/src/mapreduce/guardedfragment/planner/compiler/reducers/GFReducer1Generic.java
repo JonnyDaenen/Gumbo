@@ -8,6 +8,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import mapreduce.guardedfragment.planner.compiler.mappers.GFMapper1Iterator;
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
 import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
 import mapreduce.guardedfragment.planner.structures.operations.GFReducer;
@@ -25,6 +29,9 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private final static String FILENAME = "tmp_round1_red.txt";
+	
+
+	private static final Log LOG = LogFactory.getLog(GFReducer1Generic.class);
 
 	/**
 	 * @throws GFOperationInitException
@@ -51,9 +58,8 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 			Tuple ntuple = new Tuple(t.toString());
 			tuples.add(ntuple);
 
-			if (keyTuple.equals(ntuple)) {
+			if (!foundKey && keyTuple.equals(ntuple)) {
 				foundKey = true;
-				break;
 			}
 		}
 
@@ -77,13 +83,13 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 						String guardTupleString = null;
 
 						// for each atomic
+						// OPTIMIZE i think we can check in advance if the key matches a guarded relation
 						for (GFAtomicExpression guardedAtom : guarded) {
 
 							// project the guard tuple onto current atom
 							GFAtomProjection p = new GFAtomProjection(guard, guardedAtom);
-							Tuple projectedTuple;
 							try {
-								projectedTuple = p.project(guardTuple);
+								Tuple projectedTuple = p.project(guardTuple);
 
 								// check link between guard variables and atom
 								// variables
@@ -93,6 +99,7 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 								// that is why we need to check which one should
 								// be output
 								// e.g. S(x) vs. S(y)
+
 								if (projectedTuple.equals(keyTuple)) {
 									// OLD: context.write(null,new
 									// Text(guardTuple.generateString() + ";" +

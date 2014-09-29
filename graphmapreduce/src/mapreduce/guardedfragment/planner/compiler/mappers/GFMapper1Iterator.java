@@ -133,6 +133,8 @@ public class GFMapper1Iterator implements Iterable<Pair<String, String>>, Iterat
 		calculateNext();
 		Pair<String, String> current = next;
 		next = null;
+//		if(current.fst.contains(",10,") || current.snd.contains(",10,"))
+//			LOG.warn(current.fst + " -  " + current.snd );
 		return current;
 	}
 

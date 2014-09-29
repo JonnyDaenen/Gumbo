@@ -3,6 +3,8 @@ package mapreduce.guardedfragment.planner.structures.data;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
+
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
 
 /**
@@ -33,9 +35,14 @@ public class Tuple {
 		int fb = s.indexOf('(');
 		int lb = s.lastIndexOf(')');
 
+
 		name = s.substring(0, fb);
 		String rest = s.substring(fb + 1, lb);
-		data = rest.split(",");
+//		data = rest.split(",");
+		
+//		name = StringUtils.substringBefore(s,"(");
+//		String rest = StringUtils.substringBetween(s,"(",")");
+		data = StringUtils.split(rest,',');
 
 		//
 		// String[] t; // = s.split(new String("\\(|,|\\)"));
