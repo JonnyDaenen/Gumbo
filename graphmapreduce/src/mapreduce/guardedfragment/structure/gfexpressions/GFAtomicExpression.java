@@ -1,35 +1,44 @@
 package mapreduce.guardedfragment.structure.gfexpressions;
 
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
+import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
 public class GFAtomicExpression extends GFExpression {
+
+	private static final long serialVersionUID = 1L;
 
 	String relation;
 	String[] variables;
 
+	boolean cached;
+	List<Pair<Integer, Integer>> checks;
+
 	public GFAtomicExpression(String relationName, String... variables) {
 		this.relation = relationName;
 		this.variables = variables;
-	}
 
+		cached = false;
+		checks = new LinkedList<Pair<Integer, Integer>>();
+
+	}
 
 	/**
 	 * Makes a copy of the object.
+	 * 
 	 * @param aexp
 	 */
 	public GFAtomicExpression(GFAtomicExpression aexp) {
 		this.relation = aexp.relation;
 		this.variables = aexp.variables.clone();
 	}
-
 
 	public String getName() {
 		return relation;
@@ -88,7 +97,6 @@ public class GFAtomicExpression extends GFExpression {
 		return true;
 	}
 
-
 	@Override
 	public int hashCode() {
 		return relation.hashCode() + variables.length;
@@ -130,28 +138,50 @@ public class GFAtomicExpression extends GFExpression {
 
 	public boolean matches(Tuple t) {
 
-		// name must be equal
-		if (!relation.equals(t.getName())) {
-			return false;
-		}
-
 		// number of fields must be equal
 		if (size() != t.size()) {
 			return false;
 		}
 
-		// compare field names
-		for (int i = 0; i < size(); i++) {
-			// next fields
-			for (int j = i + 1; j < size(); j++) {
-				// atom equality implies value equality
-				if (variables[i].equals(variables[j]) && !t.get(i).equals(t.get(j))) {
+		// name must be equal
+		if (!relation.equals(t.getName())) {
+			return false;
+		}
+
+		if (!cached) {
+			
+			boolean success = true;
+			
+			// compare field names
+			for (int i = 0; i < size(); i++) {
+				// next fields
+				for (int j = i + 1; j < size(); j++) {
+					// atom equality implies value equality
+
+					boolean performCheck = false;
+					if (variables[i].equals(variables[j])) {
+						performCheck = true;
+						checks.add(new Pair<Integer, Integer>(i, j));
+					}
+
+					if (performCheck && !t.get(i).equals(t.get(j))) {
+						success = false;
+					}
+
+				}
+			}
+
+			cached = true;
+			return success;
+		} else {
+			
+			for (Pair<Integer, Integer> p : checks) {
+				if (!t.get(p.fst).equals(t.get(p.snd))) {
 					return false;
 				}
-
 			}
+			return true;
 		}
-		return true;
 	}
 
 	/**
@@ -178,14 +208,13 @@ public class GFAtomicExpression extends GFExpression {
 		return v.visit(this);
 	}
 
-
 	/**
 	 * @return the relation schema of this atom (column names are arbitrary).
 	 */
 	public RelationSchema getRelationSchema() {
 		return new RelationSchema(this.relation, this.variables.length);
 	}
-	
+
 	/**
 	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#containsAnd()
 	 */
@@ -194,9 +223,9 @@ public class GFAtomicExpression extends GFExpression {
 		return false;
 	}
 
-
 	/**
 	 * Returns true, as an atom is trivially in DNF.
+	 * 
 	 * @return true
 	 * 
 	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#isInDNF()
@@ -206,7 +235,6 @@ public class GFAtomicExpression extends GFExpression {
 		return true;
 	}
 
-
 	/**
 	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#containsOr()
 	 */
@@ -215,30 +243,23 @@ public class GFAtomicExpression extends GFExpression {
 		return false;
 	}
 
-
 	/**
 	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#countOccurences(mapreduce.guardedfragment.structure.gfexpressions.GFExpression)
 	 */
 	@Override
 	public int countOccurences(GFExpression ge) {
-		if(this == ge) 
+		if (this == ge)
 			return 1;
 		return 0;
 	}
-
 
 	/**
 	 * @see mapreduce.guardedfragment.structure.gfexpressions.GFExpression#getParent(mapreduce.guardedfragment.structure.gfexpressions.GFExpression)
 	 */
 	@Override
 	public GFExpression getParent(GFExpression e) {
-		
+
 		return null;
 	}
-
-
-
-
-
 
 }

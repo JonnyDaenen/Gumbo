@@ -62,6 +62,8 @@ public class GFAtomProjection {
 
 		// TODO what if mapping is not possible? -> test using projection of the variable tuple??
 		
+		
+		
 		// check for equal variable identifiers
 		// for each position of the target
 		for (int i = 0; i < targetVars.length; i++) {
@@ -125,11 +127,12 @@ public class GFAtomProjection {
 		
 		// TODO throw exception if non-matching
 		
+		int fields = target.getNumFields();
 
-		String[] s = new String[target.getNumFields()];
+		String[] s = new String[fields];
 
 		// copy fields one by one
-		for (int i = 0; i < target.getNumFields(); i++)
+		for (int i = 0; i < fields; i++)
 			s[i] = t.get(mapping.get(i));
 
 		// create a new tuple from the generated String
