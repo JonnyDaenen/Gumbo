@@ -71,18 +71,23 @@ public class Tuple {
 	}
 
 	public String generateString() {
-		StringBuilder sb = new StringBuilder(data.length * 5);
 
-		for (int i = 0; i < data.length; i++) {
-			sb.append(data[i]);
-			sb.append(',');
+		if (representation == null) {
+			StringBuilder sb = new StringBuilder(data.length * 5);
+
+			for (int i = 0; i < data.length; i++) {
+				sb.append(data[i]);
+				sb.append(',');
+			}
+			sb.deleteCharAt(sb.length() - 1);
+			sb.append(')');
+			sb.insert(0, '(');
+			sb.insert(0, name);
+
+			representation = sb.toString();
 		}
-		sb.deleteCharAt(sb.length()-1);
-		sb.append(')');
-		sb.insert(0, '(');
-		sb.insert(0, name);
 
-		return sb.toString();
+		return representation;
 
 	}
 

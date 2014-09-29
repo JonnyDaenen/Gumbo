@@ -27,17 +27,18 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 	private final static String FILENAME = "tmp_round1_red.txt";
 
 	/**
-	 * @throws GFOperationInitException 
+	 * @throws GFOperationInitException
 	 * @see mapreduce.guardedfragment.planner.structures.operations.GFReducer#reduce(java.lang.String,
 	 *      java.lang.Iterable)
 	 */
 	@Override
-//	/ OPTIMIZE iterable string?
-	public Iterable<Pair<String, String>> reduce(String key, Iterable<? extends Object> values) throws GFOperationInitException {
+	// / OPTIMIZE iterable string?
+	public Iterable<Pair<String, String>> reduce(String key, Iterable<? extends Object> values)
+			throws GFOperationInitException {
 
 		HashSet<Pair<String, String>> result = new HashSet<Pair<String, String>>();
 
-		String stringKey = key;//.toString();
+		String stringKey = key;// .toString();
 		Tuple keyTuple = new Tuple(stringKey);
 
 		// convert value set to tuple set
@@ -45,11 +46,11 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 
 		boolean foundKey = false;
 		// look if data (key) is present in a guarded relation (one of the
-					// values)
+		// values)
 		for (Object t : values) {
 			Tuple ntuple = new Tuple(t.toString());
 			tuples.add(ntuple);
-			
+
 			if (keyTuple.equals(ntuple)) {
 				foundKey = true;
 				break;
@@ -60,6 +61,8 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 		for (GFExistentialExpression formula : expressionSet) {
 
 			GFAtomicExpression guard = formula.getGuard();
+			// get all atomics in the formula
+			Collection<GFAtomicExpression> guarded = getGuardeds(formula);
 
 			// if the guarded tuple is actually in the database
 			if (foundKey) {
@@ -67,13 +70,11 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 				// find tuples...
 				for (Tuple tuple : tuples) {
 
-					// ...that match the guard
+					// ...that match the current guard
 					if (guard.matches(tuple)) {
 
 						Tuple guardTuple = tuple;
-
-						// get all atomics in the formula
-						Collection<GFAtomicExpression> guarded = getGuardeds(formula);
+						String guardTupleString = null;
 
 						// for each atomic
 						for (GFAtomicExpression guardedAtom : guarded) {
@@ -82,17 +83,24 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 							GFAtomProjection p = new GFAtomProjection(guard, guardedAtom);
 							Tuple projectedTuple;
 							try {
-								projectedTuple = p.project(guardTuple); // TODO
-																		// is
-																		// this
-																		// MRT?
+								projectedTuple = p.project(guardTuple);
 
 								// check link between guard variables and atom
 								// variables
-								// TODO explain
+								// It is possible that a guard is linked to two
+								// atoms:
+								// e.g. R(x,y) ^ S(x) ^ S(y)
+								// that is why we need to check which one should
+								// be output
+								// e.g. S(x) vs. S(y)
 								if (projectedTuple.equals(keyTuple)) {
-//									context.write(null,new Text(guardTuple.generateString() + ";" + guardedAtom.generateString()));
-									result.add(new Pair<String, String>(guardTuple.generateString() + ";" + guardedAtom.generateString(), FILENAME));
+									// OLD: context.write(null,new
+									// Text(guardTuple.generateString() + ";" +
+									// guardedAtom.generateString()));
+									if(guardTupleString == null)
+										guardTupleString = guardTuple.generateString() + ";";
+									result.add(new Pair<String, String>(
+											guardTupleString + guardedAtom.generateString(), FILENAME));
 								}
 
 							} catch (NonMatchingTupleException e) {
