@@ -29,7 +29,6 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private final static String FILENAME = "tmp_round1_red.txt";
-	
 
 	private static final Log LOG = LogFactory.getLog(GFReducer1Generic.class);
 
@@ -45,7 +44,7 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 
 		HashSet<Pair<String, String>> result = new HashSet<Pair<String, String>>();
 
-		String stringKey = key;// .toString();
+		String stringKey = key;
 		Tuple keyTuple = new Tuple(stringKey);
 
 		// convert value set to tuple set
@@ -61,10 +60,9 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 			if (!foundKey && keyTuple.equals(ntuple)) {
 				foundKey = true;
 			}
-			
-			//  OPTIMIZE perform guard selection here ?
-		}
 
+			// OPTIMIZE perform guard selection here ?
+		}
 
 		// go through all expressions
 		for (GFExistentialExpression formula : expressionSet) {
@@ -82,16 +80,19 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 					// ...that match the current guard
 					if (guard.matches(tuple)) {
 
+						boolean output = false;
+
 						Tuple guardTuple = tuple;
 						String guardTupleString = null;
 
 						// for each atomic
-						// OPTIMIZE i think we can check in advance if the key matches a guarded relation
+						// OPTIMIZE i think we can check in advance if the key
+						// matches a guarded relation
 						for (GFAtomicExpression guardedAtom : guarded) {
 							// OPTIMIZE check if atom matches keyTuple?
-							if(!guardedAtom.matches(keyTuple))
+							if (!guardedAtom.matches(keyTuple))
 								continue;
-							
+
 							try {
 								// project the guard tuple onto current atom
 								GFAtomProjection p = new GFAtomProjection(guard, guardedAtom);
@@ -110,10 +111,11 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 									// OLD: context.write(null,new
 									// Text(guardTuple.generateString() + ";" +
 									// guardedAtom.generateString()));
-									if(guardTupleString == null)
+									if (guardTupleString == null)
 										guardTupleString = guardTuple.generateString() + ";";
 									result.add(new Pair<String, String>(
 											guardTupleString + guardedAtom.generateString(), FILENAME));
+									output = true;
 								}
 
 							} catch (NonMatchingTupleException e) {
@@ -122,22 +124,32 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 							}
 
 						}
+
+						if (!output) {
+
+							guardTupleString = guardTuple.generateString() + ";";
+							result.add(new Pair<String, String>(guardTupleString, FILENAME));
+						}
 					}
 				}
 
-			}
-
-			// when only guards appear in the value set, we need to keep those
-			// alive (Si's are all FALSE).
-			// OPTIMIZE This is not necessary when others have been output
-			for (Tuple tuple : tuples) {
-				if (guard.matches(tuple)) {
-					// context.write(null, new Text(tuple.generateString() +
-					// ";"));
-					result.add(new Pair<String, String>(tuple.generateString() + ";", FILENAME));
-				}
-			}
-
+			} 
+			
+//			else {
+//
+//				// when only guards appear in the value set, we need to keep
+//				// those
+//				// alive (Si's are all FALSE).
+//				// OPTIMIZE This is not necessary when others have been output
+//				for (Tuple tuple : tuples) {
+//					if (guard.matches(tuple)) {
+//						// context.write(null, new Text(tuple.generateString() +
+//						// ";"));
+//						result.add(new Pair<String, String>(tuple.generateString() + ";", FILENAME));
+//					}
+//				}
+//
+//			}
 		}
 
 		return result;
