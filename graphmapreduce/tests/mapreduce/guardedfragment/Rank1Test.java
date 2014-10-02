@@ -88,6 +88,26 @@ public class Rank1Test {
 			fail("expected {O(1,1), O(1,2)}");
 	}
 
+	/**
+	 * Test what happens when the guard appears as guarded as well.
+	 */
+	@Test
+	public void guardAndGuarded2() throws Exception {
+
+		GFExpression gfe = serializer.deserialize("#O(x,y)&G(x,y)!G(x,x)");
+		
+		Set<String> data = new HashSet<String>();
+		data.add("G(1,1)");
+		data.add("G(1,2)");
+		data.add("G(2,1)");
+
+	
+		Set<String> result = doTest(gfe, data,"O2");
+//		System.out.println(result);
+		
+		if(result.size() != 1 || result.contains("O(1,2)") || result.contains("O(1,1)") || !result.contains("O(2,1)"))
+			fail("expected {O(2,1)}");
+	}
 
 	private Set<String> doTest(GFExpression gfe, Set<String> data, String relname) throws Exception {
 		

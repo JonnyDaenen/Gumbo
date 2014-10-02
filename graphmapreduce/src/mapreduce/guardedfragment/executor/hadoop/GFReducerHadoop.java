@@ -86,14 +86,14 @@ public class GFReducerHadoop extends Reducer<Text, Text, Text, Text> {
 
 		// call method
 		try {
-			Iterable<Pair<String, String>> result = reducer.reduce(key.toString(), values);
+			Iterable<Pair<Text, String>> result = reducer.reduce(key.toString(), values);
 
-			for (Pair<String, String> pair : result) {
-				String value = pair.fst;
+			for (Pair<Text, String> pair : result) {
+				Text value = pair.fst;
 				String filename = pair.snd;
 
 				// LOG.debug("writing " + value + " to " + filename);
-				mos.write((Text) null, new Text(value), filename);
+				mos.write((Text) null, value, filename);
 
 			}
 		} catch (GFOperationInitException e) {

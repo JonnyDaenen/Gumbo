@@ -18,4 +18,19 @@ public class Pair<type1,type2> {
 		this.fst = fst;
 		this.snd = snd;
 	}
+
+	// not necessary
+//	/**
+//	 * @see java.lang.Object#equals(java.lang.Object)
+//	 */
+//	@Override
+//	public boolean equals(Object obj) {
+//		if(!(obj instanceof Pair<?,?>))
+//			return false;
+//		
+//		Pair<?, ?> otherPair = (Pair<?,?>) obj;
+//	
+//		
+//		return fst.equals(otherPair.fst) && snd.equals(otherPair.snd);
+//	}
 }

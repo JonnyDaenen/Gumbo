@@ -25,6 +25,7 @@ import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingT
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.io.Text;
 
 /**
  * @author Jonny Daenen
@@ -43,9 +44,9 @@ public class GFReducer2Generic extends GFReducer implements Serializable {
 	 * @see mapreduce.guardedfragment.planner.structures.operations.GFReducer#reduce(java.lang.String, java.lang.Iterable, java.util.Collection)
 	 */
 	@Override
-	public Iterable<Pair<String, String>> reduce(String key, Iterable<? extends Object> values) throws GFOperationInitException {
+	public Iterable<Pair<Text, String>> reduce(String key, Iterable<? extends Object> values) throws GFOperationInitException {
 		
-		HashSet<Pair<String, String>> result = new HashSet<Pair<String, String>>();
+		HashSet<Pair<Text, String>> result = new HashSet<Pair<Text, String>>();
 
 		
 		String s = key.toString();
@@ -112,7 +113,7 @@ public class GFReducer2Generic extends GFReducer implements Serializable {
 						String outputTuple = p.project(keyTuple).generateString();
 						// context.write(null, new Text(outputTuple));
 //						mos.write((Text) null, new Text(outputTuple), outfile);
-						result.add(new Pair<String, String>(outputTuple, outfile));
+						result.add(new Pair<Text, String>(new Text(outputTuple), outfile));
 					}
 				} catch (VariableNotFoundException | NonMatchingTupleException e) {
 					// should not happen

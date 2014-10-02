@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.io.Text;
 
 import mapreduce.guardedfragment.planner.compiler.mappers.GFMapper1Iterator;
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
@@ -39,10 +40,10 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 	 */
 	@Override
 	// / OPTIMIZE iterable string?
-	public Iterable<Pair<String, String>> reduce(String key, Iterable<? extends Object> values)
+	public Iterable<Pair<Text, String>> reduce(String key, Iterable<? extends Object> values)
 			throws GFOperationInitException {
 
-		HashSet<Pair<String, String>> result = new HashSet<Pair<String, String>>();
+		HashSet<Pair<Text, String>> result = new HashSet<Pair<Text, String>>();
 
 		String stringKey = key;
 		Tuple keyTuple = new Tuple(stringKey);
@@ -50,11 +51,13 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 		// convert value set to tuple set
 		Set<Tuple> tuples = new HashSet<Tuple>();
 
+		
+		
 		boolean foundKey = false;
 		// look if data (key) is present in a guarded relation (one of the
 		// values)
-		for (Object t : values) {
-			Tuple ntuple = new Tuple(t.toString());
+		for (Object v : values) {
+			Tuple ntuple = new Tuple(v.toString());
 			tuples.add(ntuple);
 
 			if (!foundKey && keyTuple.equals(ntuple)) {
@@ -113,8 +116,8 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 									// guardedAtom.generateString()));
 									if (guardTupleString == null)
 										guardTupleString = guardTuple.generateString() + ";";
-									result.add(new Pair<String, String>(
-											guardTupleString + guardedAtom.generateString(), FILENAME));
+									result.add(new Pair<Text, String>(
+											new Text(guardTupleString + guardedAtom.generateString()), FILENAME));
 									output = true;
 								}
 
@@ -128,7 +131,7 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 						if (!output) {
 
 							guardTupleString = guardTuple.generateString() + ";";
-							result.add(new Pair<String, String>(guardTupleString, FILENAME));
+							result.add(new Pair<Text, String>(new Text(guardTupleString), FILENAME));
 						}
 					}
 				}

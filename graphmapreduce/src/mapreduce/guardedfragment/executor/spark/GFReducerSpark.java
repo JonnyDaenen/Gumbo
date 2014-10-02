@@ -11,6 +11,7 @@ import mapreduce.guardedfragment.planner.structures.operations.GFReducer;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
+import org.apache.hadoop.io.Text;
 import org.apache.spark.api.java.function.FlatMapFunction;
 
 import scala.Tuple2;
@@ -51,14 +52,14 @@ public class GFReducerSpark implements FlatMapFunction<Tuple2<String, Iterable<S
 		String key = keyvalues._1;
 		Iterable<String> values = keyvalues._2;
 
-		Iterable<Pair<String, String>> redresult = reducer.reduce(key, values);
+		Iterable<Pair<Text, String>> redresult = reducer.reduce(key, values);
 
 		HashSet<String> result = new HashSet<String>();
 
 		// TODO just make an iterable, this goes wrong with big data
 		// OPTIMIZE split into different RDDs?
-		for (Pair<String, String> pair : redresult) {
-			result.add(pair.fst); // only get the data, ignore the filename
+		for (Pair<Text, String> pair : redresult) {
+			result.add(pair.fst.toString()); // only get the data, ignore the filename
 		}
 
 		return result;

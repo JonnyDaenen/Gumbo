@@ -12,8 +12,10 @@ import java.util.Set;
 import mapreduce.guardedfragment.planner.calculations.BasicGFCalculationUnit;
 import mapreduce.guardedfragment.planner.calculations.CalculationUnit;
 import mapreduce.guardedfragment.planner.calculations.CalculationUnitDAG;
+import mapreduce.guardedfragment.planner.compiler.mappers.GFMapper1AtomBased;
 import mapreduce.guardedfragment.planner.compiler.mappers.GFMapper1Generic;
 import mapreduce.guardedfragment.planner.compiler.mappers.GFMapper2Generic;
+import mapreduce.guardedfragment.planner.compiler.reducers.GFReducer1AtomBased;
 import mapreduce.guardedfragment.planner.compiler.reducers.GFReducer1Generic;
 import mapreduce.guardedfragment.planner.compiler.reducers.GFReducer2Generic;
 import mapreduce.guardedfragment.planner.compiler.reducers.GuardedProjectionReducer;
@@ -164,8 +166,12 @@ public class BasicGFCompiler {
 		job.addInputPaths(in);
 		job.setOutputPath(out);
 
-		job.setMapFunction(GFMapper1Generic.class);
-		job.setReduceFunction(GFReducer1Generic.class);
+//		job.setMapFunction(GFMapper1Generic.class);
+//		job.setReduceFunction(GFReducer1Generic.class);
+		
+		job.setMapFunction(GFMapper1AtomBased.class);
+		job.setReduceFunction(GFReducer1AtomBased.class);
+		
 		job.setExpressions(set);
 		
 		job.setOutputJob(false);

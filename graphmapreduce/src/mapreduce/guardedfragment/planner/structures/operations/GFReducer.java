@@ -3,6 +3,10 @@
  */
 package mapreduce.guardedfragment.planner.structures.operations;
 
+import java.util.HashSet;
+
+import org.apache.hadoop.io.Text;
+
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
 /**
@@ -22,7 +26,7 @@ public abstract class GFReducer extends ExpressionSetOperation {
 	 * 
 	 * OPTIMIZE give some kind of context to write to
 	 */
-	public abstract Iterable<Pair<String,String>> reduce(String key, Iterable<? extends Object> values) throws GFOperationInitException;
+	public abstract Iterable<Pair<Text, String>> reduce(String key, Iterable<? extends Object> values) throws GFOperationInitException;
 
 
 }
