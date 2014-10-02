@@ -89,7 +89,7 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 						// OPTIMIZE i think we can check in advance if the key
 						// matches a guarded relation
 						for (GFAtomicExpression guardedAtom : guarded) {
-							// OPTIMIZE check if atom matches keyTuple?
+							// check if atom matches keyTuple, otherwise we can skip it
 							if (!guardedAtom.matches(keyTuple))
 								continue;
 
