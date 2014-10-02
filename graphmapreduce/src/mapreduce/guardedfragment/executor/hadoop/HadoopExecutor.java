@@ -21,6 +21,8 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapred.FileInputFormat;
 import org.apache.hadoop.mapred.FileOutputFormat;
 import org.apache.hadoop.mapred.JobConf;
+import org.apache.hadoop.mapreduce.TaskReport;
+import org.apache.hadoop.mapreduce.TaskType;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
 
@@ -68,6 +70,7 @@ public class HadoopExecutor {
 
 	/**
 	 * Removes temp directories if required.
+	 * 
 	 * @param plan
 	 */
 	private void cleanUp(MRPlan plan) {
@@ -109,8 +112,11 @@ public class HadoopExecutor {
 		// 4. we wait for it to complete
 		LOG.info("Waiting for thread to complete: " + workflowThread.getName());
 		while (!jc.allFinished()) {
-			// printStatus(jc);
+			printStatus(jc);
+			printProgress(jc);
 			Thread.sleep(REFRESH_WAIT);
+
+
 		}
 
 		// 5. clean up in case of failure
@@ -127,9 +133,25 @@ public class HadoopExecutor {
 			// move output to output directory
 			LOG.info("Copying output data...");
 			assembleOutput(plan);
+
 		}
 
 		return success;
+	}
+
+	/**
+	 * @param jc
+	 */
+	private void printProgress(JobControl jc) {
+//		try {
+//			for (ControlledJob job : jc.getRunningJobList()) {
+//				LOG.debug(job.getJob().mapProgress());
+//			}
+//		} catch (IOException  e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+
 	}
 
 	/**
@@ -257,22 +279,18 @@ public class HadoopExecutor {
 
 		return output;
 	}
-	
-
 
 	/**
-	 * @param jc the jobcontrol
+	 * @param jc
+	 *            the jobcontrol
 	 */
 	private void printStatus(JobControl jc) {
-		// TODO Auto-generated method stub
-		
+
 		LOG.debug("Ready: " + jc.getReadyJobsList());
 		LOG.debug("Failed: " + jc.getFailedJobList());
 		LOG.debug("Running: " + jc.getRunningJobList());
 		LOG.debug("Success: " + jc.getSuccessfulJobList());
 		LOG.debug("Waiting: " + jc.getWaitingJobList());
 	}
-
-
 
 }

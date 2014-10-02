@@ -12,6 +12,7 @@ import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.io.Text;
 
 /**
  * @author Jonny Daenen
@@ -28,26 +29,28 @@ public class GFMapper2Generic extends GFMapper implements Serializable {
 	 * @see mapreduce.guardedfragment.planner.structures.operations.GFMapper#map(java.lang.String)
 	 */
 	@Override
-	public Iterable<Pair<String, String>> map(String value) {
+	public Iterable<Pair<Text, Text>> map(Text v) {
 		
-		Set<Pair<String,String>> result = new HashSet<Pair<String,String>>();
+		Set<Pair<Text,Text>> result = new HashSet<Pair<Text,Text>>();
 		
+		String value = v.toString();
 		if (value.contains(";")) {
 			
 //			if(value.startsWith("R(0,0,0,0)") || value.startsWith("R(1,1,1,1)"))
 //				LOG.debug("processing: " + value);
 			
+			// OPTIMIZE use text functions
 			String[] t = value.split(new String(";"));
 			if (t.length == 2) { // guarded atoms that are true
 				
 				// key is the guard, value is the guarded tuple
 				//context.write(new Text(t[0]), new Text(t[1]));
-				addOutput(t[0], t[1], result);
+				addOutput(new Text(t[0]), new Text(t[1]), result);
 			
 			// propagate keep alive
 			} else { 
 				//context.write(new Text(t[0]), new Text(new String()));
-				addOutput(t[0], "", result);
+				addOutput(new Text(t[0]), new Text(""), result);
 			}
 		}
 		

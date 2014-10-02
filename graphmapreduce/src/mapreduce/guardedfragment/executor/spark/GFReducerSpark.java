@@ -52,7 +52,7 @@ public class GFReducerSpark implements FlatMapFunction<Tuple2<String, Iterable<S
 		String key = keyvalues._1;
 		Iterable<String> values = keyvalues._2;
 
-		Iterable<Pair<Text, String>> redresult = reducer.reduce(key, values);
+		Iterable<Pair<Text, String>> redresult = reducer.reduce(new Text(key), values);
 
 		HashSet<String> result = new HashSet<String>();
 

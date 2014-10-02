@@ -44,7 +44,7 @@ public class GFReducer2Generic extends GFReducer implements Serializable {
 	 * @see mapreduce.guardedfragment.planner.structures.operations.GFReducer#reduce(java.lang.String, java.lang.Iterable, java.util.Collection)
 	 */
 	@Override
-	public Iterable<Pair<Text, String>> reduce(String key, Iterable<? extends Object> values) throws GFOperationInitException {
+	public Iterable<Pair<Text, String>> reduce(Text key, Iterable<? extends Object> values) throws GFOperationInitException {
 		
 		HashSet<Pair<Text, String>> result = new HashSet<Pair<Text, String>>();
 

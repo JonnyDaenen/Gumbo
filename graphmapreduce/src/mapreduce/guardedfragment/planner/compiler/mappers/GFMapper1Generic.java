@@ -20,6 +20,7 @@ import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingT
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.io.Text;
 
 /**
  * @author Jonny Daenen
@@ -38,7 +39,7 @@ public class GFMapper1Generic extends GFMapper implements Serializable {
 	 * @see mapreduce.guardedfragment.planner.structures.operations.GFMapper#map(java.lang.String)
 	 */
 	@Override
-	public Iterable<Pair<String,String>> map(String value) throws GFOperationInitException {
+	public Iterable<Pair<Text,Text>> map(Text value) throws GFOperationInitException {
 		return new GFMapper1Iterator(getGuardsAll(), getGuardedsAll(), getGGPairsAll(), value);
 	}
 	
@@ -49,9 +50,9 @@ public class GFMapper1Generic extends GFMapper implements Serializable {
 	 * @throws GFOperationInitException
 	 */
 	@Deprecated
-	public Iterable<Pair<String,String>> map_old(String value) throws GFOperationInitException {
+	public Iterable<Pair<Text,Text>> map_old(String value) throws GFOperationInitException {
 		
-		Set<Pair<String,String>> result = new HashSet<Pair<String,String>>();
+		Set<Pair<Text,Text>> result = new HashSet<Pair<Text,Text>>();
 		
 		for (GFExistentialExpression formula : expressionSet) {
 
@@ -67,7 +68,7 @@ public class GFMapper1Generic extends GFMapper implements Serializable {
 
 				// output guard:guard
 				//context.write(new Text(t.toString()), new Text(t.toString()));
-				addOutput(t.toString(), t.toString(), result);
+				addOutput(new Text(t.toString()), new Text(t.toString()), result);
 				
 //				LOG.trace("The first Mapper outputs the pair: " + t.toString() + " : " + t.toString());
 
@@ -87,7 +88,7 @@ public class GFMapper1Generic extends GFMapper implements Serializable {
 							// " val: " + t);
 							// project to key and write out
 							//context.write(new Text(tprime.toString()), new Text(t.toString()));
-							addOutput(tprime.toString(), t.toString(), result);
+							addOutput(new Text(tprime.toString()),new Text(t.toString()), result);
 //							LOG.trace("The first Mapper outputs the pair: " + tprime.toString() + " : " + t.toString());
 
 						}
@@ -111,7 +112,7 @@ public class GFMapper1Generic extends GFMapper implements Serializable {
 				if (guarded.matches(t)) {
 					// LOG.error(t + " matches " + guarded);
 					//context.write(new Text(t.toString()), new Text(t.toString()));
-					addOutput(t.toString(), t.toString(), result);
+					addOutput(new Text(t.toString()), new Text(t.toString()), result);
 //					LOG.trace("The first Mapper outputs the pair: " + t.toString() + " : " + t.toString());
 					// break;
 				}

@@ -5,6 +5,9 @@ package mapreduce.guardedfragment.planner.structures.operations;
 
 import java.util.Set;
 
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper.Context;
+
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
 /**
@@ -15,24 +18,25 @@ import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
  */
 public abstract class GFMapper extends ExpressionSetOperation {
 
+	// TODO remove this
 	/**
 	 * Add a KV-pair to a resultset.
 	 * 
-	 * @param key
+	 * @param text
 	 *            the key
-	 * @param value
+	 * @param text2
 	 *            the value
-	 * @param resultSet
+	 * @param result
 	 *            the resultset to add the pair to
 	 */
-	protected void addOutput(String key, String value, Set<Pair<String, String>> resultSet) {
+	protected void addOutput(Text text, Text text2, Set<Pair<Text, Text>> result) {
 
-		Pair<String, String> p = new Pair<String, String>(key, value);
-		resultSet.add(p);
+		Pair<Text, Text> p = new Pair<Text, Text>(text, text2);
+		result.add(p);
 
 	}
 
 	// OPTIMIZE maybe use a pipe for output as does Hadoop
-	public abstract Iterable<Pair<String, String>> map(String value) throws GFOperationInitException;
+	public abstract Iterable<Pair<Text, Text>> map(Text value) throws GFOperationInitException;
 
 }

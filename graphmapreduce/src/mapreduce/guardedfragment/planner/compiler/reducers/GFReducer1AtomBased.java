@@ -42,7 +42,7 @@ public class GFReducer1AtomBased extends GFReducer implements Serializable {
 	 */
 	@Override
 	// / OPTIMIZE iterable string?
-	public HashSet<Pair<Text, String>> reduce(String key, Iterable<? extends Object> values)
+	public HashSet<Pair<Text, String>> reduce(Text key, Iterable<? extends Object> values)
 			throws GFOperationInitException {
 
 		HashSet<Pair<Text, String>> result = new HashSet<Pair<Text, String>>();

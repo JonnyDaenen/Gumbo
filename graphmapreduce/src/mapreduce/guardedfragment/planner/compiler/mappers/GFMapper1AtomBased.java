@@ -20,6 +20,7 @@ import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingT
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.io.Text;
 
 /**
  * Also outputs the atoms when a guard is projected onto them.
@@ -40,7 +41,7 @@ public class GFMapper1AtomBased extends GFMapper implements Serializable {
 	 * @see mapreduce.guardedfragment.planner.structures.operations.GFMapper#map(java.lang.String)
 	 */
 	@Override
-	public Iterable<Pair<String,String>> map(String value) throws GFOperationInitException {
+	public Iterable<Pair<Text,Text>> map(Text value) throws GFOperationInitException {
 		return new GFMapper1AtomBasedIterator(getGuardsAll(), getGuardedsAll(), getGGPairsAll(), value);
 	}
 	

@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.io.Text;
 
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
@@ -22,7 +23,7 @@ import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingT
  * @author Jonny Daenen
  * 
  */
-public class GFMapper1Iterator implements Iterable<Pair<String, String>>, Iterator<Pair<String, String>> {
+public class GFMapper1Iterator implements Iterable<Pair<Text, Text>>, Iterator<Pair<Text, Text>> {
 
 	Iterator<GFAtomicExpression> guards;
 	Iterator<GFAtomicExpression> guardeds;
@@ -39,7 +40,7 @@ public class GFMapper1Iterator implements Iterable<Pair<String, String>>, Iterat
 	 * 
 	 */
 	public GFMapper1Iterator(Set<GFAtomicExpression> guards, Set<GFAtomicExpression> guardeds,
-			Set<Pair<GFAtomicExpression, GFAtomicExpression>> gAndG, String value) {
+			Set<Pair<GFAtomicExpression, GFAtomicExpression>> gAndG, Text value) {
 		phase = 1;
 		next = null;
 		t = new Tuple(value.toString());
@@ -51,7 +52,7 @@ public class GFMapper1Iterator implements Iterable<Pair<String, String>>, Iterat
 	}
 
 	@Override
-	public Iterator<Pair<String, String>> iterator() {
+	public Iterator<Pair<Text, Text>> iterator() {
 		return this;
 	}
 
@@ -129,13 +130,13 @@ public class GFMapper1Iterator implements Iterable<Pair<String, String>>, Iterat
 	 * @see java.util.Iterator#next()
 	 */
 	@Override
-	public Pair<String, String> next() {
+	public Pair<Text, Text> next() {
 		calculateNext();
 		Pair<String, String> current = next;
 		next = null;
 //		if(current.fst.contains(",10,") || current.snd.contains(",10,"))
 //			LOG.warn(current.fst + " -  " + current.snd );
-		return current;
+		return new Pair<>(new Text(current.fst), new Text(current.snd));
 	}
 
 	/**

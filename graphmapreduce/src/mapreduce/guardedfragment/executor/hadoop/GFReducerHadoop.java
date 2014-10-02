@@ -86,7 +86,7 @@ public class GFReducerHadoop extends Reducer<Text, Text, Text, Text> {
 
 		// call method
 		try {
-			Iterable<Pair<Text, String>> result = reducer.reduce(key.toString(), values);
+			Iterable<Pair<Text, String>> result = reducer.reduce(key, values);
 
 			for (Pair<Text, String> pair : result) {
 				Text value = pair.fst;

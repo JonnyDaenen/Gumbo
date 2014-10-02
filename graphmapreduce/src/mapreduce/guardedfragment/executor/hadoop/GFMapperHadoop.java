@@ -91,15 +91,13 @@ public class GFMapperHadoop extends Mapper<LongWritable, Text, Text, Text> {
 	protected void map(LongWritable key, Text value, Context context)
 			throws IOException, InterruptedException {
 		
-		
-		Iterable<Pair<String, String>> result;
 		try {
-			result = mapper.map(value.toString());
+			Iterable<Pair<Text, Text>> result = mapper.map(value);
 			
-			for (Pair<String, String> pair : result) {
-				String k = pair.fst;
-				String val = pair.snd;
-				context.write(new Text(k), new Text(val));
+			for (Pair<Text, Text> pair : result) {
+				Text k = pair.fst;
+				Text val = pair.snd;
+				context.write(k,val);
 			}
 			
 			

@@ -40,12 +40,12 @@ public class GFReducer1Generic extends GFReducer implements Serializable {
 	 */
 	@Override
 	// / OPTIMIZE iterable string?
-	public Iterable<Pair<Text, String>> reduce(String key, Iterable<? extends Object> values)
+	public Iterable<Pair<Text, String>> reduce(Text key, Iterable<? extends Object> values)
 			throws GFOperationInitException {
 
 		HashSet<Pair<Text, String>> result = new HashSet<Pair<Text, String>>();
 
-		String stringKey = key;
+		String stringKey = key.toString();
 		Tuple keyTuple = new Tuple(stringKey);
 
 		// convert value set to tuple set

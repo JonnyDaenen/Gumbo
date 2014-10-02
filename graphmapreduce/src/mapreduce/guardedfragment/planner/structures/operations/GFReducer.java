@@ -26,7 +26,7 @@ public abstract class GFReducer extends ExpressionSetOperation {
 	 * 
 	 * OPTIMIZE give some kind of context to write to
 	 */
-	public abstract Iterable<Pair<Text, String>> reduce(String key, Iterable<? extends Object> values) throws GFOperationInitException;
+	public abstract Iterable<Pair<Text, String>> reduce(Text key, Iterable<? extends Object> values) throws GFOperationInitException;
 
 
 }

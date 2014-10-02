@@ -6,10 +6,13 @@ package mapreduce.guardedfragment.planner.compiler.mappers;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.io.Text;
 
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
@@ -22,17 +25,18 @@ import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingT
  * @author Jonny Daenen
  * 
  */
-public class GFMapper1AtomBasedIterator implements Iterable<Pair<String, String>>, Iterator<Pair<String, String>> {
+public class GFMapper1AtomBasedIterator implements Iterable<Pair<Text, Text>>, Iterator<Pair<Text, Text>> {
 
 	Iterator<GFAtomicExpression> guards;
-	Iterator<GFAtomicExpression> guards2;
 	Iterator<GFAtomicExpression> guardeds;
 	Iterator<Pair<GFAtomicExpression, GFAtomicExpression>> gAndG;
 	Tuple t;
+	Text txt;
 
-	Pair<String, String> next;
+	Pair<Text, Text> next;
 
-	int phase;
+	private boolean outputGuard;
+	Set<GFAtomicExpression> actualGuards;
 
 	private static final Log LOG = LogFactory.getLog(GFMapper1AtomBasedIterator.class);
 
@@ -40,20 +44,29 @@ public class GFMapper1AtomBasedIterator implements Iterable<Pair<String, String>
 	 * 
 	 */
 	public GFMapper1AtomBasedIterator(Set<GFAtomicExpression> guards, Set<GFAtomicExpression> guardeds,
-			Set<Pair<GFAtomicExpression, GFAtomicExpression>> gAndG, String value) {
-		phase = 1;
+			Set<Pair<GFAtomicExpression, GFAtomicExpression>> gAndG, Text value) {
 		next = null;
 		t = new Tuple(value.toString());
+		txt = value;
 
-		this.guards = guards.iterator();
-		this.guards2 = guards.iterator();
+		actualGuards = new HashSet<>();
+
+		for (GFAtomicExpression guard : guards) {
+			if (guard.matches(t))
+				actualGuards.add(guard);
+		}
+
+		if (actualGuards.size() != 0)
+			outputGuard = true;
+
+		this.guards = actualGuards.iterator();
 		this.guardeds = guardeds.iterator();
 		this.gAndG = gAndG.iterator();
 
 	}
 
 	@Override
-	public Iterator<Pair<String, String>> iterator() {
+	public Iterator<Pair<Text, Text>> iterator() {
 		return this;
 	}
 
@@ -78,29 +91,26 @@ public class GFMapper1AtomBasedIterator implements Iterable<Pair<String, String>
 		if (next != null)
 			return;
 
-		// check guards
-		while (guards.hasNext()) {
-			GFAtomicExpression guard = guards.next();
-			if (guard.matches(t)) {
-				next = new Pair<String, String>(t.toString(), t.toString());
-				return;
-			}
+		// guard output
+		if (outputGuard) {
+			next = new Pair<Text, Text>(txt, txt);
+			outputGuard = false;
+			return;
 		}
 
-		// check guards + atom
-		while (guards2.hasNext()) {
-			GFAtomicExpression guard = guards2.next();
-			if (guard.matches(t)) {
-				next = new Pair<String, String>(t.toString(), t.toString()+";"+guard.toString());
+		// check guards + atom (keep-alive)
+		while (guards.hasNext()) {
+			GFAtomicExpression guard = guards.next();
+			// guard match check has been done already
+				next = new Pair<Text, Text>(txt, new Text(t.toString() + ";" + guard.toString()));
 				return;
-			}
 		}
 
 		// check guardeds
 		while (guardeds.hasNext()) {
 			GFAtomicExpression guarded = guardeds.next();
 			if (guarded.matches(t)) {
-				next = new Pair<String, String>(t.toString(), t.toString());
+				next = new Pair<Text, Text>(txt, txt);
 				return;
 			}
 		}
@@ -114,14 +124,15 @@ public class GFMapper1AtomBasedIterator implements Iterable<Pair<String, String>
 			GFAtomicExpression guard = gpair.fst;
 			GFAtomicExpression guarded = gpair.snd;
 
-			if (guard.matches(t)) {
+			// precalculated
+			if (actualGuards.contains(guard)) {
 				GFAtomProjection gp = new GFAtomProjection(guard, guarded);
 				Tuple tprime;
 				try {
 
 					tprime = gp.project(t);
 					if (guarded.matches(tprime)) {
-						next = new Pair<String, String>(tprime.toString(), t.toString() + ";" + guarded);
+						next = new Pair<Text, Text>(new Text(tprime.toString()), new Text(t.toString() + ";" + guarded));
 						return;
 					}
 				} catch (NonMatchingTupleException e) {
@@ -140,9 +151,9 @@ public class GFMapper1AtomBasedIterator implements Iterable<Pair<String, String>
 	 * @see java.util.Iterator#next()
 	 */
 	@Override
-	public Pair<String, String> next() {
+	public Pair<Text, Text> next() {
 		calculateNext();
-		Pair<String, String> current = next;
+		Pair<Text, Text> current = next;
 		next = null;
 		// if(current.fst.contains(",10,") || current.snd.contains(",10,"))
 		// LOG.warn(current.fst + " -  " + current.snd );

@@ -11,6 +11,7 @@ import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitEx
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
+import org.apache.hadoop.io.Text;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
 
 import scala.Tuple2;
@@ -49,11 +50,11 @@ public class GFMapperSpark implements PairFlatMapFunction<String, String, String
 
 		HashSet<Tuple2<String, String>> result = new HashSet<Tuple2<String, String>>();
 
-		Iterable<Pair<String, String>> mappedResult = mapper.map(value.toString());
+		Iterable<Pair<Text, Text>> mappedResult = mapper.map(new Text(value));
 
-		for (Pair<String, String> pair : mappedResult) {
-			String k = pair.fst;
-			String val = pair.snd;
+		for (Pair<Text, Text> pair : mappedResult) {
+			String k = pair.fst.toString();
+			String val = pair.snd.toString();
 			result.add(new Tuple2<String, String>(k, val));
 		}
 
