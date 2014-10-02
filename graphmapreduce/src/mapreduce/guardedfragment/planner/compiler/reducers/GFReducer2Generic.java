@@ -82,7 +82,7 @@ public class GFReducer2Generic extends GFReducer implements Serializable {
 			// calculate projection to output relation
 			// this is now done in advance
 //			GFAtomProjection p = new GFAtomProjection(guard, output);
-			GFAtomProjection p = getProjection(formula);
+			GFAtomProjection p = getOutputProjection(formula);
 			// OPTIMIZE maybe do this in advance too?
 			String outfile = generateFileName(p.getOutputSchema());
 

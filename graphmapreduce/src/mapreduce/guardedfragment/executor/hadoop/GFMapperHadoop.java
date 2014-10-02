@@ -92,13 +92,7 @@ public class GFMapperHadoop extends Mapper<LongWritable, Text, Text, Text> {
 			throws IOException, InterruptedException {
 		
 		try {
-			Iterable<Pair<Text, Text>> result = mapper.map(value);
-			
-			for (Pair<Text, Text> pair : result) {
-				Text k = pair.fst;
-				Text val = pair.snd;
-				context.write(k,val);
-			}
+			mapper.map(value,context);
 			
 			
 		} catch (GFOperationInitException e) {

@@ -49,7 +49,6 @@ public class GFReducer1AtomBased extends GFReducer implements Serializable {
 		Set<Text> buffer = new HashSet<>();
 		
 		boolean keyFound = false;
-		
 		for (Object v : values) {
 			
 			// WARNING Text object will be reused by Hadoop!
@@ -61,7 +60,7 @@ public class GFReducer1AtomBased extends GFReducer implements Serializable {
 				// if the key has already been found, we can just output 
 				// TODO this is mainly for when we turn this thing into an iterator
 				if (keyFound) {
-					result.add(new Pair<>(t,FILENAME));
+					result.add(new Pair<>(new Text(t),FILENAME));
 				}
 				// else we collect the data
 				else {

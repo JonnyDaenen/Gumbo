@@ -140,11 +140,14 @@ public class GFAtomicExpression extends GFExpression {
 
 		// number of fields must be equal
 		if (size() != t.size()) {
+//			System.out.println("size: " + toString() + " " + t.toString());
 			return false;
 		}
 
 		// name must be equal
 		if (!relation.equals(t.getName())) {
+
+//			System.out.println("name: " + toString() + " " + t.toString());
 			return false;
 		}
 

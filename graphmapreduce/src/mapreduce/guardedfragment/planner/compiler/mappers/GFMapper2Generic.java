@@ -46,11 +46,13 @@ public class GFMapper2Generic extends GFMapper implements Serializable {
 				// key is the guard, value is the guarded tuple
 				//context.write(new Text(t[0]), new Text(t[1]));
 				addOutput(new Text(t[0]), new Text(t[1]), result);
+//				LOG.warn("M2: " + t[0] + " " + t[1]);
 			
 			// propagate keep alive
 			} else { 
 				//context.write(new Text(t[0]), new Text(new String()));
 				addOutput(new Text(t[0]), new Text(""), result);
+//				LOG.warn("M2: " + t[0] + " ");
 			}
 		}
 		

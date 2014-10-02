@@ -19,6 +19,8 @@ public abstract class GFExpression implements Serializable {
 	public abstract int getRank();
 
 	public abstract String generateString();
+	
+	
 
 	public abstract Set<GFExistentialExpression> getSubExistentialExpression(int k);
 
