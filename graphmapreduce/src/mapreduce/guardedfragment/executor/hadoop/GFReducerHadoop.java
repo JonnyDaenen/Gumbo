@@ -83,22 +83,7 @@ public class GFReducerHadoop extends Reducer<Text, Text, Text, Text> {
 	 */
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-
-		// call method
-		try {
-			Iterable<Pair<Text, String>> result = reducer.reduce(key, values);
-
-			for (Pair<Text, String> pair : result) {
-				Text value = pair.fst;
-				String filename = pair.snd;
-
-				// LOG.debug("writing " + value + " to " + filename);
-				mos.write((Text) null, value, filename);
-
-			}
-		} catch (GFOperationInitException e) {
-			throw new InterruptedException(e.getMessage());
-		}
+		reducer.reduce(key, values, mos);
 	}
 
 	@Override

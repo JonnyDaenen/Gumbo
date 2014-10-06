@@ -48,6 +48,11 @@ public class GFReducer2Generic extends GFReducer implements Serializable {
 		
 		HashSet<Pair<Text, String>> result = new HashSet<Pair<Text, String>>();
 
+		// DEBUG:
+//		if (!key.toString().contains(",60,")) {
+//			return result;
+//		}
+
 		
 		String s = key.toString();
 		Tuple keyTuple = new Tuple(s);
@@ -73,6 +78,7 @@ public class GFReducer2Generic extends GFReducer implements Serializable {
 				LOG.error("Non-basic GF expression found, skipping: " + formula);
 				continue;
 			}
+
 
 			// 3 crucial parts of the expression
 			GFAtomicExpression output = formula.getOutputRelation();
@@ -108,7 +114,8 @@ public class GFReducer2Generic extends GFReducer implements Serializable {
 
 				// evaluate boolean formula using the created context
 				try {
-					if (booleanChildExpression.evaluate(booleanContext)) {
+					boolean eval = booleanChildExpression.evaluate(booleanContext);
+					if (eval) {
 						// project the tuple and output it
 						String outputTuple = p.project(keyTuple).generateString();
 						// context.write(null, new Text(outputTuple));

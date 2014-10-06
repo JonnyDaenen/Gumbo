@@ -109,36 +109,6 @@ public class GFMapper1AtomBased extends GFMapper implements Serializable {
 			}
 		}
 
-		// check pairs
-		// OPTIMIZE group by guard
-		// for (Pair<GFAtomicExpression, GFAtomicExpression> gpair :
-		// getGGPairsAll()) {
-		//
-		// GFAtomicExpression guard = gpair.fst;
-		// GFAtomicExpression guarded = gpair.snd;
-		//
-		// // precalculated
-		// if (guard.matches(t)) {
-		//
-		// // OPTIMIZE precalculate projections per guard
-		// GFAtomProjection gp = new GFAtomProjection(guard, guarded);
-		// Tuple tprime;
-		// try {
-		//
-		// tprime = gp.project(t);
-		// if (guarded.matches(tprime)) {
-		// out1.set(tprime.toString());
-		// out2.set(t.toString() + ";" + guarded);
-		// context.write(out1, out2);
-		// }
-		// } catch (NonMatchingTupleException e) {
-		// // should not happen!
-		// LOG.error(e.getMessage());
-		// e.printStackTrace();
-		// }
-		// }
-		//
-		// }
 		return;
 
 	}
