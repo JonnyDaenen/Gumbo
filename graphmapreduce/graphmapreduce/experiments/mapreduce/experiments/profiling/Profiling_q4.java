@@ -27,22 +27,25 @@ import org.apache.hadoop.fs.Path;
  */
 public class Profiling_q4 {
 
-	public static void main(String[] args) throws DeserializeException, GFMRPlannerException, IllegalArgumentException,
-			InterruptedException {
+	public static void main(String[] args) throws DeserializeException, GFMRPlannerException, IllegalArgumentException, InterruptedException {
 
-		// ClassLoader cl = ClassLoader.getSystemClassLoader();
-		//
-		// URL[] urls = ((URLClassLoader)cl).getURLs();
-		//
-		// for(URL url: urls){
-		// System.out.println(url.getFile());
-		// }
-
+		
+//		ClassLoader cl = ClassLoader.getSystemClassLoader();
+//		 
+//        URL[] urls = ((URLClassLoader)cl).getURLs();
+// 
+//        for(URL url: urls){
+//        	System.out.println(url.getFile());
+//        }
+		
 		if (args.length == 0) {
 			System.out.println("Please provide a input pattern as argument");
 			System.exit(0);
 		}
-
+		
+		
+		
+		
 		// files & folders
 		String input = args[0]; // "./input/q4/1e04/*.rel";
 		String output = "./output/" + Profiling_q4.class.getSimpleName() + "/" + System.currentTimeMillis();
@@ -51,18 +54,13 @@ public class Profiling_q4 {
 		RelationSchema schemaR = new RelationSchema("R", 4);
 		RelationSchema schemaS = new RelationSchema("S2", 1);
 		RelationFileMapping files = new RelationFileMapping();
-		if (input.equals("cloudera")) {
-			files.addPath(schemaR, new Path("./data/q4/1e06/R_6e06x4e00_func-seqclone.rel"));
-			files.addPath(schemaS, new Path("./data/q4/1e06/S2_3e06x1e00_func-non_mod_2.rel"));
-		} else {
-//			files.setDefaultPath(new Path(input));
-			files.addPath(schemaR, new Path("./input/q4/1e04/R_6e04x4e00_func-seqclone.rel"));
-			files.addPath(schemaS, new Path("./input/q4/1e04/S2_3e04x1e00_func-non_mod_2.rel"));
-		}
+		files.addPath(schemaR, new Path("./input/q4/1e04/R_6e04x4e00_func-seqclone.rel"));
+		files.addPath(schemaS, new Path("./input/q4/1e04/S2_3e04x1e00_func-non_mod_2.rel"));
+		
 		// query
 
 		Set<String> queries = new HashSet<String>();
-		// queries.add("#Out(x2)&R(x2,x3,x4,x5)&!S2(x2)&!S3(x3)&!S4(x4)!S5(x5)");
+		//queries.add("#Out(x2)&R(x2,x3,x4,x5)&!S2(x2)&!S3(x3)&!S4(x4)!S5(x5)");
 		queries.add("#Out(x2)&R(x2,x3,x4,x5)&!S2(x2)S2(x2)");
 
 		// parse query
@@ -80,25 +78,26 @@ public class Profiling_q4 {
 		MRPlan plan = planner.createPlan(gfes, files, new Path(output), new Path(scratch));
 
 		// print plan in text
-		// System.out.println(plan);
+//		System.out.println(plan);
 
 		// print plan in dot
-		// System.out.println(plan.toDot());
+//		System.out.println(plan.toDot());
 
-		// Thread.sleep(15000);
+
+		Thread.sleep(15000);
 		// execute plan
 		long startTime = System.nanoTime();
-
+		
 		HadoopExecutor hExecutor = new HadoopExecutor();
 		hExecutor.execute(plan);
 		// SparkExecutor sExecutor = new SparkExecutor();
 		// sExecutor.execute(plan);
-
+		
 		long endTime = System.nanoTime();
 
-		long duration = (endTime - startTime) / 1000000;
+		long duration = (endTime - startTime)/1000000;
 		System.out.println(duration);
-
+		
 	}
 
 }
