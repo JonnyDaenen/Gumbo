@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import mapreduce.guardedfragment.planner.calculations.CalculationUnitDAG;
+import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 
 import org.apache.hadoop.fs.Path;
@@ -23,7 +24,6 @@ import org.apache.hadoop.fs.Path;
  */
 public class DirManager {
 
-	protected Path input;
 	protected Path output;
 	protected Path scratch;
 	protected CalculationUnitDAG dag;
@@ -37,16 +37,15 @@ public class DirManager {
 	protected Set<Path> tempdirs;
 	protected Set<Path> outdirs;
 
-	Map<RelationSchema, Path> filemapping;
+	RelationFileMapping filemapping;
 
 	/**
 	 * @param root
 	 *            folder location that serves as parent directory to empty
 	 *            folders
 	 */
-	public DirManager(CalculationUnitDAG dag, Path input, Path output, Path scratch) {
+	public DirManager(CalculationUnitDAG dag, RelationFileMapping infiles, Path output, Path scratch) {
 
-		this.input = input;
 		this.output = output;
 		this.scratch = scratch;
 		this.dag = dag;
@@ -54,7 +53,9 @@ public class DirManager {
 		this.intdir = scratch.suffix(Path.SEPARATOR + "intermediate");
 		this.tmpdir = scratch.suffix(Path.SEPARATOR + "tmp");
 
-		this.filemapping = new HashMap<RelationSchema, Path>();
+		this.filemapping = new RelationFileMapping();
+		this.filemapping.putAll(infiles,true);
+		
 		this.tempdirs = new HashSet<Path>();
 		this.outdirs = new HashSet<Path>();
 
@@ -83,6 +84,7 @@ public class DirManager {
 
 	/**
 	 * Constructs the set of paths where the relations can be found.
+	 * When no relations are found, the default path is returned if present.
 	 * 
 	 * 
 	 * @param relations
@@ -95,9 +97,15 @@ public class DirManager {
 		Set<Path> result = new HashSet<Path>();
 
 		for (RelationSchema rs : relations) {
-			if (filemapping.containsKey(rs))
-				result.add(filemapping.get(rs));
+			if (filemapping.containsSchema(rs))
+				result.addAll(filemapping.getPaths(rs));
 		}
+		
+		Path defaultInput = filemapping.getDefaultPath();
+		if (result.size() == 0 && defaultInput != null) {
+			result.add(defaultInput);
+		}
+		
 
 		return result;
 	}
@@ -116,19 +124,14 @@ public class DirManager {
 	 */
 	private void fillFileMap() {
 
-		// input relations
-		for (RelationSchema rs : dag.getInputRelations()) {
-			filemapping.put(rs, input);
-		}
-
 		// intermediate relations
 		for (RelationSchema rs : dag.getIntermediateRelations()) {
-			filemapping.put(rs, getIntermediateFolder(scratch, rs));
+			filemapping.addPath(rs, getIntermediateFolder(scratch, rs));
 		}
 
 		// output relations
 		for (RelationSchema rs : dag.getOutputRelations()) {
-			filemapping.put(rs, output);
+			filemapping.addPath(rs, output);
 		}
 
 	}
@@ -168,15 +171,15 @@ public class DirManager {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		for (RelationSchema rs : filemapping.keySet()) {
-			sb.append(rs + " -> " + filemapping.get(rs));
+		for (RelationSchema rs : filemapping.getSchemas()) {
+			sb.append(rs + " -> " + filemapping.getPaths(rs));
 			sb.append(System.lineSeparator());
 		}
 		return sb.toString();
 	}
 
 	public void updatePath(RelationSchema rs, Path p) {
-		filemapping.put(rs, p);
+		filemapping.addPath(rs, p);
 	}
 
 }

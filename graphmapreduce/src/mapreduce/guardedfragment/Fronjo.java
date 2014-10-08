@@ -7,6 +7,7 @@ import mapreduce.guardedfragment.executor.hadoop.HadoopExecutor;
 import mapreduce.guardedfragment.planner.GFMRPlanner;
 import mapreduce.guardedfragment.planner.partitioner.HeightPartitioner;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
+import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.DeserializeException;
@@ -58,7 +59,11 @@ public class Fronjo {
 			
 			// plan and execute query
 			GFMRPlanner planner = new GFMRPlanner(new HeightPartitioner());
-			MRPlan plan = planner.createPlan((GFExistentialExpression)gfe, new Path(input), new Path(output), new Path(scratch));
+			
+
+			RelationFileMapping rfm = new RelationFileMapping();
+			rfm.setDefaultPath(new Path(input));
+			MRPlan plan = planner.createPlan((GFExistentialExpression)gfe, rfm, new Path(output), new Path(scratch));
 			//plan.execute();
 			
 			HadoopExecutor executor = new HadoopExecutor();

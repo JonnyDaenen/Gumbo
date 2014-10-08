@@ -10,6 +10,7 @@ import mapreduce.guardedfragment.planner.partitioner.CalculationPartitioner;
 import mapreduce.guardedfragment.planner.partitioner.DepthPartitioner;
 import mapreduce.guardedfragment.planner.partitioner.PartitionedCalculationUnitDAG;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
+import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 
@@ -36,6 +37,10 @@ public class OldPlannerExample {
 		System.out.println("\nGFE\n---");
 		System.out.println(gfe);
 		
+		// input files
+		RelationFileMapping rfm = new RelationFileMapping();
+		rfm.setDefaultPath(indir);
+		
 		
 		// convert to calculations
 		GFtoCalculationUnitConverter converter = new GFtoCalculationUnitConverter();
@@ -53,7 +58,7 @@ public class OldPlannerExample {
 		
 		// compile
 		CalculationCompiler compiler = new CalculationCompiler();
-		MRPlan plan  = compiler.compile(partitionedUnits, indir, outdir, scratchdir);
+		MRPlan plan  = compiler.compile(partitionedUnits, rfm, outdir, scratchdir);
 		System.out.println("\nMR-plan\n-------");
 		System.out.println(plan);
 		

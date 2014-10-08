@@ -12,6 +12,7 @@ import mapreduce.guardedfragment.planner.compiler.CalculationCompiler;
 import mapreduce.guardedfragment.planner.partitioner.CalculationPartitioner;
 import mapreduce.guardedfragment.planner.partitioner.PartitionedCalculationUnitDAG;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
+import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 
 import org.apache.commons.logging.Log;
@@ -41,10 +42,10 @@ public class GFMRPlanner {
 		compiler = new CalculationCompiler();
 	}
 
-	public MRPlan createPlan(GFExistentialExpression expression, Path indir, Path outdir, Path scratchdir) throws GFMRPlannerException {
+	public MRPlan createPlan(GFExistentialExpression expression, RelationFileMapping infiles, Path outdir, Path scratchdir) throws GFMRPlannerException {
 		HashSet<GFExistentialExpression> expressions = new HashSet<GFExistentialExpression>();
 		expressions.add(expression);
-		return createPlan(expressions, indir, outdir, scratchdir);
+		return createPlan(expressions, infiles, outdir, scratchdir);
 	}
 
 	/**
@@ -59,7 +60,7 @@ public class GFMRPlanner {
 	 * 
 	 * @throws GFMRPlannerException 
 	 */
-	public MRPlan createPlan(Collection<GFExistentialExpression> expressions, Path indir, Path outdir, Path scratchdir) throws GFMRPlannerException {
+	public MRPlan createPlan(Collection<GFExistentialExpression> expressions, RelationFileMapping infiles, Path outdir, Path scratchdir) throws GFMRPlannerException {
 
 
 		// convert to calculations
@@ -76,7 +77,7 @@ public class GFMRPlanner {
 
 		// compile
 		LOG.info("Compiling to plan...");
-		MRPlan plan = compiler.compile(partitionedUnits, indir, outdir, scratchdir);
+		MRPlan plan = compiler.compile(partitionedUnits, infiles, outdir, scratchdir);
 		LOG.info("Compilation finished.");
 		LOG.debug(plan);
 		
