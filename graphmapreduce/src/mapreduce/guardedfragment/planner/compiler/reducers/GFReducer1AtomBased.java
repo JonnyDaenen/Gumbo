@@ -108,7 +108,7 @@ public class GFReducer1AtomBased extends GFReducer implements Serializable {
 			Text t = (Text) v;
 			
 			// is this a guard
-			if ( t.find(";") >= 0) {
+			if (find(t,';')) {
 				
 				// if the key has already been found, we can just output 
 				if (keyFound) {
@@ -137,6 +137,23 @@ public class GFReducer1AtomBased extends GFReducer implements Serializable {
 		}
 
 		
+		
+	}
+
+
+	/**
+	 * @param t
+	 * @param c
+	 */
+	private boolean find(Text t, char c) {
+		int length = t.getLength();
+		byte [] b = t.getBytes();
+		for(int i = 0; i < length; i++) { // FUTURE for unicode this doesn't work i guess..
+			if((char)b[i] == c) {
+				return true;
+			}
+		}
+		return false;
 		
 	}
 

@@ -133,6 +133,11 @@ public class HadoopExecutor {
 			// move output to output directory
 			LOG.info("Copying output data...");
 			assembleOutput(plan);
+			
+			for (ControlledJob job : jc.getSuccessfulJobList()) {
+				LOG.error("profile: " +  job.getJob().getProfileParams());
+				LOG.error("time: " +  (job.getJob().getFinishTime() - job.getJob().getStartTime()));
+			}
 
 		}
 
