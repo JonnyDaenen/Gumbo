@@ -12,6 +12,7 @@ import mapreduce.guardedfragment.planner.GFMRPlanner;
 import mapreduce.guardedfragment.planner.GFMRPlannerException;
 import mapreduce.guardedfragment.planner.partitioner.UnitPartitioner;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
+import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.DeserializeException;
@@ -37,6 +38,10 @@ public class Experiment_q4 {
 		String output = "./output/" + Experiment_q4.class.getSimpleName() + "/" + System.currentTimeMillis();
 		String scratch = "./scratch/" + Experiment_q4.class.getSimpleName() + "/" + System.currentTimeMillis();
 
+		RelationFileMapping rfm = new RelationFileMapping();
+		rfm.setDefaultPath(new Path(input));
+		
+		
 		// query
 
 		Set<String> queries = new HashSet<String>();
@@ -54,7 +59,8 @@ public class Experiment_q4 {
 		// plan
 		// GFMRPlanner planner = new GFMRPlanner(new HeightPartitioner());
 		GFMRPlanner planner = new GFMRPlanner(new UnitPartitioner());
-		MRPlan plan = planner.createPlan(gfes, new Path(input), new Path(output), new Path(scratch));
+		
+		MRPlan plan = planner.createPlan(gfes, rfm, new Path(output), new Path(scratch));
 
 		// print plan in text
 		System.out.println(plan);

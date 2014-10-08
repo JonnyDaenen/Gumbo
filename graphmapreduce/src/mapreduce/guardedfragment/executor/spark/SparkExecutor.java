@@ -12,6 +12,7 @@ import mapreduce.guardedfragment.executor.ExecutionException;
 import mapreduce.guardedfragment.executor.GFExecutor;
 import mapreduce.guardedfragment.planner.structures.MRJob;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
+import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -70,7 +71,7 @@ public class SparkExecutor implements GFExecutor {
 		LOG.debug("Converting jobs ");
 		for (MRJob job : plan.getJobsLevelwise()) {
 			LOG.debug("Converting job: " + job);
-			JavaRDD<String> rdd = convertToRDD(job, rdds, plan.getInputFolder());
+			JavaRDD<String> rdd = convertToRDD(job, rdds, plan.getInputPaths());
 			rdds.put(job, rdd);
 		}
 
@@ -94,12 +95,12 @@ public class SparkExecutor implements GFExecutor {
 	 *            the job to convert to an RDD
 	 * @param rdds
 	 *            a map linking each job to its RDD
-	 * @param inputPath
+	 * @param inPaths
 	 *            the file/folder where to get raw input
 	 * @return an RDD for the job
 	 * @throws ExecutionException
 	 */
-	private JavaRDD<String> convertToRDD(MRJob job, Map<MRJob, JavaRDD<String>> rdds, Path inputPath)
+	private JavaRDD<String> convertToRDD(MRJob job, Map<MRJob, JavaRDD<String>> rdds, RelationFileMapping inPaths)
 			throws ExecutionException {
 
 		// calculate input dataset
@@ -107,9 +108,9 @@ public class SparkExecutor implements GFExecutor {
 
 		// input file
 		for (Path p : job.getInputPaths()) {
-			if (inputPath.equals(p)) {
-				LOG.debug("Using input path: " + inputPath);
-				input = ctx.textFile(inputPath.toString());
+			if (inPaths.containsPath(p)) {
+				LOG.debug("Using input path: " + inPaths);
+				input = ctx.textFile(p.toString());
 			}
 		}
 		

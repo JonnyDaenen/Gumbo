@@ -16,6 +16,7 @@ import java.util.Set;
 import mapreduce.guardedfragment.executor.hadoop.HadoopExecutor;
 import mapreduce.guardedfragment.planner.partitioner.HeightPartitioner;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
+import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
@@ -123,6 +124,10 @@ public class Rank1Test {
 		File inputfile = new File(input.getAbsolutePath() + "/input.txt");
 		Files.write(inputfile.toPath(), data, StandardCharsets.US_ASCII, StandardOpenOption.CREATE_NEW);
 
+
+		RelationFileMapping rfm = new RelationFileMapping();
+		rfm.setDefaultPath(new Path(input.getAbsolutePath()));
+		
 		// initialize planner
 //		GFMRPlanner planner = new GFMRPlanner(input.getAbsolutePath(), output.getAbsolutePath()+"/test",
 //				scratch.getAbsolutePath());
@@ -132,7 +137,7 @@ public class Rank1Test {
 //		plan.execute();
 		
 		mapreduce.guardedfragment.planner.GFMRPlanner planner2 = new mapreduce.guardedfragment.planner.GFMRPlanner(new HeightPartitioner());
-		MRPlan plan2 = planner2.createPlan((GFExistentialExpression)gfe, new Path(input.getAbsolutePath()), new Path(output.getAbsolutePath()), new Path(scratch.getAbsolutePath()));
+		MRPlan plan2 = planner2.createPlan((GFExistentialExpression)gfe, rfm , new Path(output.getAbsolutePath()), new Path(scratch.getAbsolutePath()));
 //		plan2.execute();
 		
 		HadoopExecutor executor = new HadoopExecutor();

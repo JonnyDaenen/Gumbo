@@ -9,6 +9,7 @@ import java.util.HashSet;
 import mapreduce.guardedfragment.executor.hadoop.HadoopExecutor;
 import mapreduce.guardedfragment.planner.partitioner.HeightPartitioner;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
+import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.DeserializeException;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
@@ -29,13 +30,18 @@ public class OldPlannerExample2 {
 			Path indir = new Path("input/PlannerExample/");
 			Path outdir = new Path("output/PlannerExample/" + id);
 			Path scratchdir = new Path("scratch/PlannerExample/" + id);
+			
+			RelationFileMapping rfm = new RelationFileMapping();
+			rfm.setDefaultPath(indir);
 
 			// create expressions
 			Collection<GFExistentialExpression> expressions = loadExpressions();
 			
+			
+			
 			// create plan
 			GFMRPlanner planner = new GFMRPlanner(new HeightPartitioner());
-			MRPlan plan = planner.createPlan(expressions, indir, outdir, scratchdir);
+			MRPlan plan = planner.createPlan(expressions, rfm, outdir, scratchdir);
 			
 			// execute plan
 			HadoopExecutor executor = new HadoopExecutor();

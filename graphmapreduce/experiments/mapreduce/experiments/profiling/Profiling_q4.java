@@ -12,6 +12,8 @@ import mapreduce.guardedfragment.planner.GFMRPlanner;
 import mapreduce.guardedfragment.planner.GFMRPlannerException;
 import mapreduce.guardedfragment.planner.partitioner.UnitPartitioner;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
+import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
+import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.DeserializeException;
@@ -49,10 +51,17 @@ public class Profiling_q4 {
 		String output = "./output/" + Profiling_q4.class.getSimpleName() + "/" + System.currentTimeMillis();
 		String scratch = "./scratch/" + Profiling_q4.class.getSimpleName() + "/" + System.currentTimeMillis();
 
+		RelationSchema schemaR = new RelationSchema("R", 4);
+		RelationSchema schemaS = new RelationSchema("S2", 1);
+		RelationFileMapping files = new RelationFileMapping();
+		files.addPath(schemaR, new Path("./input/q4/1e04/R_6e04x4e00_func-seqclone.rel"));
+		files.addPath(schemaS, new Path("./input/q4/1e04/S2_3e04x1e00_func-non_mod_2.rel"));
+		
 		// query
 
 		Set<String> queries = new HashSet<String>();
-		queries.add("#Out(x2)&R(x2,x3,x4,x5)&!S2(x2)&!S3(x3)&!S4(x4)!S5(x5)");
+		//queries.add("#Out(x2)&R(x2,x3,x4,x5)&!S2(x2)&!S3(x3)&!S4(x4)!S5(x5)");
+		queries.add("#Out(x2)&R(x2,x3,x4,x5)&!S2(x2)S2(x2)");
 
 		// parse query
 		GFPrefixSerializer parser = new GFPrefixSerializer();
@@ -66,7 +75,7 @@ public class Profiling_q4 {
 		// plan
 		// GFMRPlanner planner = new GFMRPlanner(new HeightPartitioner());
 		GFMRPlanner planner = new GFMRPlanner(new UnitPartitioner());
-		MRPlan plan = planner.createPlan(gfes, new Path(input), new Path(output), new Path(scratch));
+		MRPlan plan = planner.createPlan(gfes, files, new Path(output), new Path(scratch));
 
 		// print plan in text
 //		System.out.println(plan);

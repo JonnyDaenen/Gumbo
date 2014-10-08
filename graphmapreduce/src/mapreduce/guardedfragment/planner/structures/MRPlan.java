@@ -42,7 +42,7 @@ public class MRPlan {
 
 	protected String name = "FronjoPlan"; // FUTURE change
 
-	protected Path inputFolder; // FUTURE I think this should be a set
+	protected RelationFileMapping inputPaths; // FUTURE I think this should be a set
 	protected Path outputFolder;
 	protected Path scratchFolder;
 
@@ -124,12 +124,12 @@ public class MRPlan {
 		return output;
 	}
 
-	public Path getInputFolder() {
-		return inputFolder;
+	public RelationFileMapping getInputPaths() {
+		return inputPaths;
 	}
 
-	public void setInputFolder(Path inputFolder) {
-		this.inputFolder = inputFolder;
+	public void setInputPaths(RelationFileMapping infiles) {
+		this.inputPaths = infiles;
 	}
 
 	public Path getOutputFolder() {
@@ -192,7 +192,7 @@ public class MRPlan {
 		output += "-------";
 		output += System.getProperty("line.separator");
 
-		output += "input: " + inputFolder;
+		output += "input: " + inputPaths;
 		output += System.getProperty("line.separator");
 		output += "output: " + outputFolder;
 		output += System.getProperty("line.separator");

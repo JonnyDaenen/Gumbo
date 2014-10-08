@@ -14,6 +14,7 @@ import mapreduce.guardedfragment.planner.calculations.CalculationUnitDAG;
 import mapreduce.guardedfragment.planner.partitioner.PartitionedCalculationUnitDAG;
 import mapreduce.guardedfragment.planner.structures.MRJob;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
+import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 
 import org.apache.hadoop.fs.Path;
@@ -35,7 +36,7 @@ public class CalculationCompiler {
 	 * 
 	 * @param partitionedDAG
 	 *            the partitioned DAG of calculation units
-	 * @param indir
+	 * @param infiles
 	 *            directory containing files with data
 	 * @param outdir
 	 *            an empty directory to output the resulting relations
@@ -48,7 +49,7 @@ public class CalculationCompiler {
 	 * 
 	 * @see mapreduce.guardedfragment.planner.compiler.CalculationCompiler#compile(java.util.List)
 	 */
-	public MRPlan compile(PartitionedCalculationUnitDAG partitionedDAG, Path indir, Path outdir, Path scratchdir)
+	public MRPlan compile(PartitionedCalculationUnitDAG partitionedDAG, RelationFileMapping infiles, Path outdir, Path scratchdir)
 			throws UnsupportedCalculationUnitException, CompilerException {
 
 		counter = 0;
@@ -56,7 +57,7 @@ public class CalculationCompiler {
 		// for each partition we create a set of MR-jobs
 
 		// map input and output relations to files
-		dm = new DirManager(partitionedDAG, indir, outdir, scratchdir);
+		dm = new DirManager(partitionedDAG, infiles, outdir, scratchdir);
 		
 		// TODO global serializer
 		// TODO change job name
@@ -86,7 +87,7 @@ public class CalculationCompiler {
 		MRPlan plan = new MRPlan();
 		plan.addAllJobs(jobs);
 
-		plan.setInputFolder(indir);
+		plan.setInputPaths(infiles);
 		plan.setOutputFolder(outdir);
 		plan.setScratchFolder(scratchdir);
 		plan.setDeleteTmpDirs(false);

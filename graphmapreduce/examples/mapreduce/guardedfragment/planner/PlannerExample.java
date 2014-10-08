@@ -10,6 +10,7 @@ import java.util.Set;
 import mapreduce.guardedfragment.executor.spark.SparkExecutor;
 import mapreduce.guardedfragment.planner.partitioner.UnitPartitioner;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
+import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
@@ -28,6 +29,10 @@ public class PlannerExample {
 		String input = "./input/q2/";
 		String output = "./output/"+PlannerExample.class.getSimpleName()+"/"+System.currentTimeMillis();
 		String scratch = "./scratch/"+PlannerExample.class.getSimpleName()+"/"+System.currentTimeMillis();
+		
+
+		RelationFileMapping rfm = new RelationFileMapping();
+		rfm.setDefaultPath(new Path(input));
 		
 		// query 
 		
@@ -48,7 +53,7 @@ public class PlannerExample {
 		// plan
 //		GFMRPlanner planner = new GFMRPlanner(new HeightPartitioner());
 		GFMRPlanner planner = new GFMRPlanner(new UnitPartitioner());
-		MRPlan plan = planner.createPlan( gfes, new Path(input), new Path(output), new Path(
+		MRPlan plan = planner.createPlan( gfes, rfm, new Path(output), new Path(
 				scratch));
 		
 		// print plan in text
@@ -61,7 +66,7 @@ public class PlannerExample {
 
 		// execute plan
 //		HadoopExecutor hExecutor = new HadoopExecutor();
-		SparkExecutor sExecutor = new SparkExecutor();
+//		SparkExecutor sExecutor = new SparkExecutor();
 //		sExecutor.execute(plan);
 		
 	}
