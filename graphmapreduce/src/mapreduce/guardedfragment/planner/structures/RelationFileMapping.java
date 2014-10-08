@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.hadoop.fs.Path;
-
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
+
+import org.apache.hadoop.fs.Path;
 
 /**
  * Maps a set of relations to a specific file/folder

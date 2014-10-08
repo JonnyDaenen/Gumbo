@@ -21,8 +21,6 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapred.FileInputFormat;
 import org.apache.hadoop.mapred.FileOutputFormat;
 import org.apache.hadoop.mapred.JobConf;
-import org.apache.hadoop.mapreduce.TaskReport;
-import org.apache.hadoop.mapreduce.TaskType;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
 
@@ -133,6 +131,11 @@ public class HadoopExecutor {
 			// move output to output directory
 			LOG.info("Copying output data...");
 			assembleOutput(plan);
+			
+			for (ControlledJob job : jc.getSuccessfulJobList()) {
+				LOG.error("profile: " +  job.getJob().getProfileParams());
+				LOG.error("time: " +  (job.getJob().getFinishTime() - job.getJob().getStartTime()));
+			}
 
 		}
 

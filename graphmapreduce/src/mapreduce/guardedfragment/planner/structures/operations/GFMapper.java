@@ -3,12 +3,13 @@
  */
 package mapreduce.guardedfragment.planner.structures.operations;
 
+import java.io.IOException;
 import java.util.Set;
+
+import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper.Context;
-
-import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
 /**
  * interface for a map function.
@@ -38,5 +39,24 @@ public abstract class GFMapper extends ExpressionSetOperation {
 
 	// OPTIMIZE maybe use a pipe for output as does Hadoop
 	public abstract Iterable<Pair<Text, Text>> map(Text value) throws GFOperationInitException;
+
+	/**
+	 * @param value
+	 * @param context
+	 * @return
+	 * @throws GFOperationInitException 
+	 * @throws InterruptedException 
+	 * @throws IOException 
+	 */
+	public void map(Text value, Context context) throws GFOperationInitException, IOException, InterruptedException {
+		Iterable<Pair<Text, Text>> result = map(value);
+		
+		for (Pair<Text, Text> pair : result) {
+			Text k = pair.fst;
+			Text val = pair.snd;
+			context.write(k,val);
+		}
+		
+	}
 
 }

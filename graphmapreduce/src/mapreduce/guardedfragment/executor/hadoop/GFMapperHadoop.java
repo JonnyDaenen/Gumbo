@@ -12,7 +12,6 @@ import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitEx
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
-import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -92,13 +91,7 @@ public class GFMapperHadoop extends Mapper<LongWritable, Text, Text, Text> {
 			throws IOException, InterruptedException {
 		
 		try {
-			Iterable<Pair<Text, Text>> result = mapper.map(value);
-			
-			for (Pair<Text, Text> pair : result) {
-				Text k = pair.fst;
-				Text val = pair.snd;
-				context.write(k,val);
-			}
+			mapper.map(value,context);
 			
 			
 		} catch (GFOperationInitException e) {

@@ -1,12 +1,13 @@
 package mapreduce.guardedfragment.planner.structures.data;
 
 import java.util.HashMap;
-import java.util.StringTokenizer;
+import java.util.LinkedList;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
-
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.hadoop.io.Text;
 
 /**
  * 
@@ -30,15 +31,16 @@ public class Tuple {
 	 * 
 	 * @param s
 	 *            String representation of the tuple, e.g. R(a,2,1)
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
 	public Tuple(String s) {
 
 		representation = s;
 
+//		initialize(s.getBytes());
+		// // old2
 		int fb = StringUtils.indexOf(s, '('); // s.indexOf('(');
 		int lb = StringUtils.lastIndexOf(s, ')'); // s.lastIndexOf(')');
-		
 
 		name = s.substring(0, fb);
 		String rest = s.substring(fb + 1, lb);
@@ -50,7 +52,6 @@ public class Tuple {
 
 		// StringTokenizer st = new StringTokenizer(rest, ",");
 
-		
 		int count = 0;
 		for (int i = 0; i < rest.length(); i++) {
 			if (rest.charAt(i) == ',')
@@ -58,17 +59,16 @@ public class Tuple {
 
 		}
 
-				
 		data = new String[count + 1];
 		int i = 0;
 		int start = 0;
 		int end = -1;
-		
+
 		while (i < count) {
 			start = end + 1;
-//			end = StringUtils.indexOf(rest, ',',start);
+			// end = StringUtils.indexOf(rest, ',',start);
 			end = rest.indexOf(',', start);
-//			data[i] = StringUtils.substring(rest, start,end);
+			// data[i] = StringUtils.substring(rest, start,end);
 			data[i] = rest.substring(start, end);
 			i++;
 		}
@@ -76,6 +76,8 @@ public class Tuple {
 		start = end + 1;
 		data[i] = rest.substring(start);
 
+		
+		//// old
 		//
 		// String[] t; // = s.split(new String("\\(|,|\\)"));
 		// t = p.split(s);
@@ -97,6 +99,18 @@ public class Tuple {
 		this.data = data;
 	}
 
+	/**
+	 * @param value
+	 */
+	public Tuple(Text value) {
+//		this(value.toString());
+
+		byte[] b = value.getBytes();
+
+		initialize(b);
+//		System.out.println(name + " " + data[0] + data[1]);
+	}
+
 	public String getData(String newname, HashMap<Integer, Integer> f) {
 		String s = new String();
 
@@ -107,6 +121,30 @@ public class Tuple {
 		}
 		return newname + "(" + s.substring(1) + ")";
 
+	}
+	
+	private void initialize(byte [] b) {
+		StringBuilder sb = new StringBuilder(b.length);
+		LinkedList<String> list = new LinkedList<>();
+		for (int i = 0; i < b.length; i++) {
+			char c = (char) b[i];
+			if (c == '(') {
+				this.name = sb.toString();
+				sb.setLength(0);
+			} else if (c == ',' ) {
+				list.add(sb.toString());
+				sb.setLength(0);
+			} else if (c == ')') { // do this separately
+				list.add(sb.toString());
+				sb.setLength(0);
+				break; // Text can contain extra garbage
+			} else {
+				sb.append(c);
+			}
+			
+			// System.out.print((char)b[i]);
+		}
+		data = list.toArray(new String [0]);
 	}
 
 	public String generateString() {
@@ -176,11 +214,11 @@ public class Tuple {
 		if (data.length != t.size()) {
 			return false;
 		}
-		
+
 		if (!name.equals(t.getName())) {
 			return false;
 		}
-		
+
 		for (int i = 0; i < data.length; i++) {
 			if (!data[i].equals(t.get(i))) {
 				return false;

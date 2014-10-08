@@ -106,6 +106,7 @@ public class Rank1Test {
 		Set<String> result = doTest(gfe, data,"O2");
 //		System.out.println(result);
 		
+		System.out.println(result);
 		if(result.size() != 1 || result.contains("O(1,2)") || result.contains("O(1,1)") || !result.contains("O(2,1)"))
 			fail("expected {O(2,1)}");
 	}

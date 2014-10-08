@@ -14,8 +14,8 @@ import mapreduce.guardedfragment.structure.conversion.GFtoBooleanConversionExcep
 import mapreduce.guardedfragment.structure.conversion.GFtoBooleanConvertor;
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
+import mapreduce.guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,6 +35,9 @@ public abstract class ExpressionSetOperation {
 	protected HashMap<GFExistentialExpression, GFBooleanMapping> booleanMapping;
 	protected HashMap<GFExistentialExpression, GFAtomProjection> projections;
 
+	protected HashMap<Pair<GFAtomicExpression, GFAtomicExpression>, GFAtomProjection> guardHasProjection;
+	protected HashMap<GFAtomicExpression, Set<GFAtomicExpression>> guardHasGuard;
+
 	protected Set<GFAtomicExpression> guardsAll;
 	protected Set<GFAtomicExpression> guardedsAll;
 	protected Set<Pair<GFAtomicExpression, GFAtomicExpression>> ggpairsAll;
@@ -47,6 +50,9 @@ public abstract class ExpressionSetOperation {
 		booleanChildExpressions = new HashMap<>();
 		booleanMapping = new HashMap<>();
 		projections = new HashMap<>();
+
+		guardHasProjection = new HashMap<>();
+		guardHasGuard = new HashMap<>();
 
 		guardsAll = new HashSet<>();
 		guardedsAll = new HashSet<>();
@@ -114,6 +120,54 @@ public abstract class ExpressionSetOperation {
 
 		}
 
+		// map between guards and guardeds
+		for (GFExistentialExpression e : expressionSet) {
+			GFAtomicExpression guard = e.getGuard();
+
+			Set<GFAtomicExpression> set;
+			if (guardHasGuard.containsKey(guard)) {
+				set = guardHasGuard.get(guard);
+			} else {
+				set = new HashSet<>();
+				guardHasGuard.put(guard, set);
+			}
+
+			for (GFAtomicExpression c : e.getGuardedRelations()) {
+				set.add(c);
+			}
+		}
+
+		// map between guards and projections
+		for (Pair<GFAtomicExpression, GFAtomicExpression> p : ggpairsAll) {
+
+			GFAtomicExpression guard = p.fst;
+			GFAtomicExpression guarded = p.snd;
+
+			GFAtomProjection r = new GFAtomProjection(guard, guarded);
+
+			guardHasProjection.put(p, r);
+
+		}
+
+	}
+
+	protected Set<GFAtomicExpression> getGuardeds(GFAtomicExpression guard) throws GFOperationInitException {
+		Set<GFAtomicExpression> r = guardHasGuard.get(guard);
+
+		if (r == null)
+			throw new GFOperationInitException("No guardeds found for: " + guard);
+
+		return r;
+	}
+
+	protected GFAtomProjection getProjections(GFAtomicExpression guard, GFAtomicExpression guarded) throws GFOperationInitException {
+		
+		GFAtomProjection r = guardHasProjection.get(new Pair<>(guard,guarded));
+
+		if (r == null)
+			throw new GFOperationInitException("No projections found for: " + guard + " " + guarded);
+
+		return r;
 	}
 
 	protected Collection<GFAtomicExpression> getGuardeds(GFExistentialExpression e) throws GFOperationInitException {
@@ -144,7 +198,7 @@ public abstract class ExpressionSetOperation {
 		return m;
 	}
 
-	protected GFAtomProjection getProjection(GFExistentialExpression e) throws GFOperationInitException {
+	protected GFAtomProjection getOutputProjection(GFExistentialExpression e) throws GFOperationInitException {
 		GFAtomProjection p = projections.get(e);
 
 		if (p == null)
@@ -152,23 +206,25 @@ public abstract class ExpressionSetOperation {
 
 		return p;
 	}
-	
+
 	/**
 	 * @return the set of all guarded relations
 	 */
 	public Set<GFAtomicExpression> getGuardedsAll() {
 		return guardedsAll;
 	}
-	
+
 	/**
 	 * @return the set of all guards
 	 */
 	public Set<GFAtomicExpression> getGuardsAll() {
 		return guardsAll;
 	}
-	
+
 	/**
-	 * Returns the set of all guard-guarded combinations, based on the GFExistentialExpressions
+	 * Returns the set of all guard-guarded combinations, based on the
+	 * GFExistentialExpressions
+	 * 
 	 * @return the set of all guard-guarded combinations
 	 */
 	public Set<Pair<GFAtomicExpression, GFAtomicExpression>> getGGPairsAll() {

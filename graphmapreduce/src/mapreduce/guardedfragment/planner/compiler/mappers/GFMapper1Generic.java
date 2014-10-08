@@ -6,7 +6,6 @@ package mapreduce.guardedfragment.planner.compiler.mappers;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import mapreduce.guardedfragment.planner.structures.data.Tuple;

@@ -7,12 +7,10 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
 import mapreduce.guardedfragment.planner.structures.operations.GFReducer;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
-import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -83,22 +81,7 @@ public class GFReducerHadoop extends Reducer<Text, Text, Text, Text> {
 	 */
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-
-		// call method
-		try {
-			Iterable<Pair<Text, String>> result = reducer.reduce(key, values);
-
-			for (Pair<Text, String> pair : result) {
-				Text value = pair.fst;
-				String filename = pair.snd;
-
-				// LOG.debug("writing " + value + " to " + filename);
-				mos.write((Text) null, value, filename);
-
-			}
-		} catch (GFOperationInitException e) {
-			throw new InterruptedException(e.getMessage());
-		}
+		reducer.reduce(key, values, mos);
 	}
 
 	@Override
