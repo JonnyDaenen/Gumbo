@@ -11,18 +11,21 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 public class ProjectionMapper extends
-		Mapper<LongWritable, Text, Text, Text> {
+		Mapper<Text, Text, Text, Text> {
 
 	private static final int MISSING = 9999;
 
-	public void map(LongWritable key, Text value, Context context)
+	public void map(Text key, Text value, Context context)
 			throws IOException, InterruptedException {
 
 
 		//System.err.println(key.get() + ":" + value.toString());
 		
+		System.out.println(key.toString() + ": " + value.toString());
+		
 		Tuple t = new Tuple(value.toString());
 		
+		context.write(new Text(t.getName()), new Text(t.toString()));
 
 	}
 }

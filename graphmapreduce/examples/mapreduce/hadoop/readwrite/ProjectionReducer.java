@@ -10,16 +10,19 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 public class ProjectionReducer extends
-		Reducer<Text, IntWritable, Text, IntWritable> {
+		Reducer<Text, Text, Text, Text> {
 
-	@Override
-	public void reduce(Text key, Iterable<IntWritable> values, Context context)
+
+	/**
+	 * @see mapreduce.hadoop.readwrite.ProjectionReducer#reduce(org.apache.hadoop.io.Text, java.lang.Iterable, org.apache.hadoop.mapreduce.Reducer.Context)
+	 */
+	public void reduce(Text key, Iterable<IntWritable> values, org.apache.hadoop.mapreduce.Reducer.Context context)
 			throws IOException, InterruptedException {
-
-		int maxValue = Integer.MIN_VALUE;
+		
+		int count = 0;
 		for (IntWritable value : values) {
-			maxValue = Math.max(maxValue, value.get());
+			count++;
 		}
-		context.write(key, new IntWritable(maxValue));
+		context.write(key, count);
 	}
 }

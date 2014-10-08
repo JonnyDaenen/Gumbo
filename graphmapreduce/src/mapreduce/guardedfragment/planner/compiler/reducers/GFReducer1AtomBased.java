@@ -91,25 +91,29 @@ public class GFReducer1AtomBased extends GFReducer implements Serializable {
 	@Override
 	public void reduce(Text key, Iterable<Text> values, MultipleOutputs<Text, Text> mos) throws IOException, InterruptedException {
 		
-		Set<String> buffer = new HashSet<>();
+		Set<Pair<String,String>> buffer = new HashSet<>();
+		Text out1 = new Text();
+		Text out2 = new Text();
 		
 		boolean keyFound = false;
 		for (Object v : values) {
 			
 			// WARNING Text object will be reused by Hadoop!
 			Text t = (Text) v;
-			
+			String [] split = split(t);
 			// is this a guard
-			if (find(t,';')) {
+			if (split != null) {
 				
 				// if the key has already been found, we can just output 
 				if (keyFound) {
-					mos.write((Text) null, t, FILENAME);
+					out1.set(split[0]);
+					out2.set(split[1]);
+					mos.write(out1, out2, FILENAME);
 				}
 				// else we collect the data
 				else {
 					// create new object because Text object will be reduce by Hadoop
-					buffer.add(t.toString());
+					buffer.add(new Pair<>(split[0],split[1]));
 				}
 				
 				
@@ -122,9 +126,10 @@ public class GFReducer1AtomBased extends GFReducer implements Serializable {
 		// output the remaining data
 		Text out = new Text();
 		if (keyFound) {
-			for (String p : buffer) {
-				out.set(p);
-				mos.write((Text) null,out,FILENAME);
+			for (Pair<String,String> p : buffer) {
+				out1.set(p.fst);
+				out2.set(p.snd);
+				mos.write(out1, out2, FILENAME);
 			}
 		}
 
@@ -137,15 +142,27 @@ public class GFReducer1AtomBased extends GFReducer implements Serializable {
 	 * @param t
 	 * @param c
 	 */
-	private boolean find(Text t, char c) {
+	private String[] split(Text t) {
 		int length = t.getLength();
+		StringBuilder sb = new StringBuilder(length);
+		String [] output = null;
+		
 		byte [] b = t.getBytes();
 		for(int i = 0; i < length; i++) { // FUTURE for unicode this doesn't work i guess..
-			if((char)b[i] == c) {
-				return true;
+			
+			// if we find the semicolon
+			if((char)b[i] == ';') {
+				output = new String[2];
+				output[0] = sb.toString();
+				sb.setLength(0);
+			} else {
+				sb.append((char)b[i]);
 			}
 		}
-		return false;
+		if (output != null)
+			output[1] = sb.toString();
+		
+		return output;
 		
 	}
 

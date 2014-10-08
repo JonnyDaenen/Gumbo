@@ -3,6 +3,9 @@
  */
 package mapreduce.hadoop.readwrite;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import mapreduce.maxtemp.MaxTemperatureDriver;
 
 import org.apache.hadoop.conf.Configured;
@@ -21,22 +24,22 @@ import org.apache.hadoop.util.ToolRunner;
 public class HadoopCustomReader extends Configured implements Tool{
 
 	public int run(String[] args) throws Exception {
-		if (args.length != 2) {
-			System.err.println("Usage: MaxTemperatureDriver <input path> <outputpath>");
-			System.exit(-1);
-		}
+	
 
 		//Job job = new Job(new Configuration());
 		Job job = Job.getInstance();
 		job.setJarByClass(MaxTemperatureDriver.class);
-		job.setJobName("Max Temperature");
+		job.setJobName("CustomReader");
 
-		FileInputFormat.addInputPath(job, new Path("input/q4/1e04/*.rel"));
-		String output = "./output/" + this.getClass().getSimpleName() + "/" + System.currentTimeMillis();
+		FileInputFormat.addInputPath(job, new Path("input/dummyrelations1/"));
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+		String output = "./output/" + this.getClass().getSimpleName() + "/" + timeStamp;
 		FileOutputFormat.setOutputPath(job, new Path(output));
 		
 //		job.setInputPath(new Path(args[0]));
 //	    job.setOutputPath(new Path(args[1]));
+		
+		job.setInputFormatClass(RelationInputFormat.class);
 
 		job.setMapperClass(ProjectionMapper.class);
 		job.setReducerClass(ProjectionReducer.class);

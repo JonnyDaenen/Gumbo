@@ -48,7 +48,7 @@ public class GFMapper1AtomBased extends GFMapper implements Serializable {
 	 *      org.apache.hadoop.mapreduce.Mapper.Context)
 	 */
 	@Override
-	public void map(Text value, Context context) throws IOException, InterruptedException, GFOperationInitException {
+	public void map(Text key, Text value, Context context) throws IOException, InterruptedException, GFOperationInitException {
 
 		Tuple t = new Tuple(value);
 		// System.out.println(t);

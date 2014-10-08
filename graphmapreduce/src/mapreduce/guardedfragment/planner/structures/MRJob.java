@@ -22,11 +22,21 @@ import org.apache.hadoop.fs.Path;
  */
 public class MRJob {
 	
+	/**
+	 * @author jonny
+	 *
+	 */
+	public enum MRJobType {
+		GF_ROUND1,
+		GF_ROUND2
+	}
+
 	// TODO improve
 	public static class IdGenerator {
 		  private static int id = 0;
 		  public static synchronized int generate() { return id++; }
 		}
+
 
 	String name;
 	long id; 
@@ -40,6 +50,8 @@ public class MRJob {
 	Class<? extends GFReducer> reduceFunction;
 
 	Set<GFExistentialExpression> expressions;
+
+	private MRJobType type;
 
 	/**
 	 * @param name
@@ -249,6 +261,19 @@ public class MRJob {
 		return outputJob;
 	}
 	
+	/**
+	 * Sets the type of the MR job. The types indicates the functionality of the job.
+	 */
+	public void setType(MRJobType type) {
+		this.type = type;
+	}
+
+	/**
+	 * @return the type indicating the functionality of the job
+	 */
+	public MRJobType getType() {
+		return type;
+	}
 
 	
 }

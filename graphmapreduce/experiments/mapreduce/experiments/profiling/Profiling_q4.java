@@ -3,6 +3,8 @@
  */
 package mapreduce.experiments.profiling;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -45,8 +47,9 @@ public class Profiling_q4 {
 
 		// files & folders
 		String input = args[0]; // "./input/q4/1e04/*.rel";
-		String output = "./output/" + Profiling_q4.class.getSimpleName() + "/" + System.currentTimeMillis();
-		String scratch = "./scratch/" + Profiling_q4.class.getSimpleName() + "/" + System.currentTimeMillis();
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+		String output = "./output/" + Profiling_q4.class.getSimpleName() + "/" + timeStamp;
+		String scratch = "./scratch/" + Profiling_q4.class.getSimpleName() + "/" + timeStamp;
 
 		RelationSchema schemaR = new RelationSchema("R", 4);
 		RelationSchema schemaS = new RelationSchema("S2", 1);
@@ -55,15 +58,15 @@ public class Profiling_q4 {
 			files.addPath(schemaR, new Path("./data/q4/1e06/R_6e06x4e00_func-seqclone.rel"));
 			files.addPath(schemaS, new Path("./data/q4/1e06/S2_3e06x1e00_func-non_mod_2.rel"));
 		} else {
-//			files.setDefaultPath(new Path(input));
+			files.setDefaultPath(new Path(input));
 			files.addPath(schemaR, new Path("./input/q4/1e04/R_6e04x4e00_func-seqclone.rel"));
 			files.addPath(schemaS, new Path("./input/q4/1e04/S2_3e04x1e00_func-non_mod_2.rel"));
 		}
 		// query
 
 		Set<String> queries = new HashSet<String>();
-		// queries.add("#Out(x2)&R(x2,x3,x4,x5)&!S2(x2)&!S3(x3)&!S4(x4)!S5(x5)");
-		queries.add("#Out(x2)&R(x2,x3,x4,x5)&!S2(x2)S2(x2)");
+		 queries.add("#Out(x2)&R(x2,x3,x4,x5)&!S2(x2)&!S3(x3)&!S4(x4)!S5(x5)");
+//		queries.add("#Out(x2)&R(x2,x3,x4,x5)&!S2(x2)S2(x2)");
 
 		// parse query
 		GFPrefixSerializer parser = new GFPrefixSerializer();

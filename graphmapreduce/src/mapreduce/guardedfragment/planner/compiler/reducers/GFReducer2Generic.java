@@ -52,6 +52,8 @@ public class GFReducer2Generic extends GFReducer implements Serializable {
 //		if (!key.toString().contains(",60,")) {
 //			return result;
 //		}
+		
+//		LOG.warn(key.toString());
 
 		
 		String s = key.toString();

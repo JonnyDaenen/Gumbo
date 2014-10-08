@@ -42,13 +42,14 @@ public abstract class GFMapper extends ExpressionSetOperation {
 
 	/**
 	 * @param value
+	 * @param value 
 	 * @param context
 	 * @return
 	 * @throws GFOperationInitException 
 	 * @throws InterruptedException 
 	 * @throws IOException 
 	 */
-	public void map(Text value, Context context) throws GFOperationInitException, IOException, InterruptedException {
+	public void map(Text key, Text value, Context context) throws GFOperationInitException, IOException, InterruptedException {
 		Iterable<Pair<Text, Text>> result = map(value);
 		
 		for (Pair<Text, Text> pair : result) {

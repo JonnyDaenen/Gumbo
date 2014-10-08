@@ -18,6 +18,7 @@ import mapreduce.guardedfragment.planner.compiler.reducers.GFReducer1AtomBased;
 import mapreduce.guardedfragment.planner.compiler.reducers.GFReducer2Generic;
 import mapreduce.guardedfragment.planner.compiler.reducers.GuardedProjectionReducer;
 import mapreduce.guardedfragment.planner.structures.MRJob;
+import mapreduce.guardedfragment.planner.structures.MRJob.MRJobType;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
@@ -160,6 +161,7 @@ public class BasicGFCompiler {
 			throws IOException {
 
 		MRJob job = new MRJob(name);
+		job.setType(MRJobType.GF_ROUND1);
 
 		job.addInputPaths(in);
 		job.setOutputPath(out);
@@ -185,6 +187,8 @@ public class BasicGFCompiler {
 
 		MRJob job = new MRJob(name);
 
+		job.setType(MRJobType.GF_ROUND2);
+		
 		job.addInputPaths(in);
 		job.setOutputPath(out);
 

@@ -3,16 +3,19 @@
  */
 package mapreduce.guardedfragment.planner.compiler.mappers;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 import mapreduce.guardedfragment.planner.structures.operations.GFMapper;
+import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper.Context;
 
 /**
  * @author Jonny Daenen
@@ -56,6 +59,15 @@ public class GFMapper2Generic extends GFMapper implements Serializable {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * @see mapreduce.guardedfragment.planner.structures.operations.GFMapper#map(org.apache.hadoop.io.Text, org.apache.hadoop.mapreduce.Mapper.Context)
+	 */
+	@Override
+	public void map(Text key, Text value, Context context) throws GFOperationInitException, IOException, InterruptedException {
+//		LOG.warn(key.toString() + " - "+  value.toString());
+		context.write(key, value);
 	}
 
 }

@@ -16,7 +16,6 @@ import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
@@ -31,7 +30,7 @@ import org.apache.hadoop.mapreduce.Mapper;
  * @author Jonny Daenen
  *
  */
-public class GFMapperHadoop extends Mapper<LongWritable, Text, Text, Text> {
+public class GFMapperHadoop extends Mapper<Text, Text, Text, Text> {
 	
 
 	private static final Log LOG = LogFactory.getLog(GFMapperHadoop.class);
@@ -87,11 +86,11 @@ public class GFMapperHadoop extends Mapper<LongWritable, Text, Text, Text> {
 	 * @see org.apache.hadoop.mapreduce.Mapper#map(java.lang.Object, java.lang.Object, org.apache.hadoop.mapreduce.Mapper.Context)
 	 */
 	@Override
-	protected void map(LongWritable key, Text value, Context context)
+	protected void map(Text key, Text value, Context context)
 			throws IOException, InterruptedException {
 		
 		try {
-			mapper.map(value,context);
+			mapper.map(key, value,context);
 			
 			
 		} catch (GFOperationInitException e) {
