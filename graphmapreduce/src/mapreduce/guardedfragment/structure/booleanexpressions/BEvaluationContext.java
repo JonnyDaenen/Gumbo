@@ -22,12 +22,18 @@ public class BEvaluationContext {
 	}
 	
 	
-	
+	/**
+	 * 
+	 * @param id the id of the variable to look up
+	 * @return the boolean value of the variable, or false if it's not present.
+	 * @throws VariableNotFoundException
+	 */
 	protected boolean lookupValue(int id) throws VariableNotFoundException {
 		
-		if(!valuemap.containsKey(id))
-			throw new VariableNotFoundException("Variable with id "+id+" was not found in the value map!");
-		
+		if(!valuemap.containsKey(id)) {
+			return false;
+//			throw new VariableNotFoundException("Variable with id "+id+" was not found in the value map!");
+		}
 		return valuemap.get(id);
 	}
 

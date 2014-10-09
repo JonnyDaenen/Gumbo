@@ -206,9 +206,9 @@ public class MRJob2HadoopConverter {
 			conf.set("formulaset", serializer.serializeSet(job.getGFExpressions()));
 
 			/* set mapper and reducer */
-			// TODO hadoopJob.setMapperClass(Mapper.class);
-			hadoopJob.setMapperClass(GFMapperHadoop.class);
-			conf.set("GFMapperClass", GFMapper2Generic.class.getCanonicalName());
+			hadoopJob.setMapperClass(Mapper.class);
+//			hadoopJob.setMapperClass(GFMapperHadoop.class);
+//			conf.set("GFMapperClass", GFMapper2Generic.class.getCanonicalName());
 
 			hadoopJob.setReducerClass(GFReducerHadoop.class);
 			conf.set("GFReducerClass", GFReducer2Generic.class.getCanonicalName());

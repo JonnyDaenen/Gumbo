@@ -2,7 +2,8 @@ package mapreduce.guardedfragment.structure.conversion;
 
 /**
  * Convert the GFExpression to a boolean expression. A mapping from atomic
- * values to boolean variables is created. Note that identical
+ * values to boolean variables is created and reused for all future conversions, unless it is cleared.
+ * Note that identical
  * relations are mapped to the same variable. E.g., B(x) & B(x) is mapped
  * onto v0 & v0. This is the case even when the GFAtomicExpressions are
  * different objects.
@@ -26,9 +27,23 @@ import mapreduce.guardedfragment.structure.gfexpressions.GFVisitorException;
 public class GFtoBooleanConvertor implements GFVisitor<BExpression> {
 
 	GFBooleanMapping mapping;
+	
+	/**
+	 * 
+	 */
+	public GFtoBooleanConvertor() {
+		clearMapping();
+	}
+	
+	/**
+	 * sets a new empty mapping to use. 
+	 */
+	public void clearMapping() {
+		mapping = new GFBooleanMapping();
+	}
 
 	public BExpression convert(GFExpression gfe) throws GFtoBooleanConversionException {
-		mapping = new GFBooleanMapping();
+		
 		return convertWithCurrentMapping(gfe);
 
 	}

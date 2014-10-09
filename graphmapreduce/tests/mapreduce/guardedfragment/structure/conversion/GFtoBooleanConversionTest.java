@@ -48,8 +48,9 @@ public class GFtoBooleanConversionTest {
 		BEvaluationContext bec = new BEvaluationContext();
 
 		try {
-			be.evaluate(bec);
-			fail("VariableNotFoundException expected");
+			boolean n = be.evaluate(bec);
+			assertFalse(n);
+//			fail("VariableNotFoundException expected");
 		} catch (VariableNotFoundException e) {
 		}
 
@@ -79,8 +80,9 @@ public class GFtoBooleanConversionTest {
 		
 		System.out.println(be);
 		try {
-			be.evaluate(bec);
-			fail("VariableNotFoundException expected");
+			boolean n = be.evaluate(bec);
+			assertFalse(n);
+//			fail("VariableNotFoundException expected");
 		} catch (VariableNotFoundException e) {
 		}
 		

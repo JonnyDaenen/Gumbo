@@ -34,7 +34,7 @@ public class ExpressionSetOperation {
 
 	protected HashMap<GFExistentialExpression, Collection<GFAtomicExpression>> guardeds;
 	protected HashMap<GFExistentialExpression, BExpression> booleanChildExpressions;
-	protected HashMap<GFExistentialExpression, GFBooleanMapping> booleanMapping;
+	protected GFBooleanMapping booleanMapping;
 	protected HashMap<GFExistentialExpression, GFAtomProjection> projections;
 
 	protected HashMap<Pair<GFAtomicExpression, GFAtomicExpression>, GFAtomProjection> guardHasProjection;
@@ -52,7 +52,6 @@ public class ExpressionSetOperation {
 	public ExpressionSetOperation() {
 		guardeds = new HashMap<>();
 		booleanChildExpressions = new HashMap<>();
-		booleanMapping = new HashMap<>();
 		projections = new HashMap<>();
 
 		guardHasProjection = new HashMap<>();
@@ -80,7 +79,6 @@ public class ExpressionSetOperation {
 
 		// precalculate boolean expression for each formula
 		booleanChildExpressions.clear();
-		booleanMapping.clear();
 
 		GFtoBooleanConvertor convertor = new GFtoBooleanConvertor();
 		for (GFExistentialExpression e : expressionSet) {
@@ -91,7 +89,6 @@ public class ExpressionSetOperation {
 				GFBooleanMapping mapGFtoB = convertor.getMapping();
 
 				booleanChildExpressions.put(e, booleanChildExpression);
-				booleanMapping.put(e, mapGFtoB);
 
 			} catch (GFtoBooleanConversionException e1) {
 
@@ -99,6 +96,7 @@ public class ExpressionSetOperation {
 				throw new GFOperationInitException(e1);
 			}
 		}
+		booleanMapping = convertor.getMapping();
 
 		// precalculate mappings
 		projections.clear();
@@ -193,13 +191,13 @@ public class ExpressionSetOperation {
 		return b;
 	}
 
-	protected GFBooleanMapping getBooleanMapping(GFExistentialExpression e) throws GFOperationInitException {
-		GFBooleanMapping m = booleanMapping.get(e);
-
-		if (m == null)
-			throw new GFOperationInitException("No boolean mapping found for: " + e);
-
-		return m;
+	/**
+	 * A common boolean mapping used for ALL formulas in this set.
+	 * @return a mapping between atoms and variables
+	 * @throws GFOperationInitException
+	 */
+	protected GFBooleanMapping getBooleanMapping() throws GFOperationInitException {
+		return booleanMapping;
 	}
 
 	public GFAtomProjection getOutputProjection(GFExistentialExpression e) throws GFOperationInitException {
