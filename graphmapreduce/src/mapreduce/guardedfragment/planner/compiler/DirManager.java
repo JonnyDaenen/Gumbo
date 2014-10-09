@@ -52,8 +52,8 @@ public class DirManager {
 		this.tmpdir = scratch.suffix(Path.SEPARATOR + "tmp");
 
 		this.filemapping = new RelationFileMapping();
-		this.filemapping.putAll(infiles,true);
-		
+		this.filemapping.putAll(infiles, true);
+
 		this.tempdirs = new HashSet<Path>();
 		this.outdirs = new HashSet<Path>();
 
@@ -64,7 +64,7 @@ public class DirManager {
 
 	public Path getNewTmpPath(String suffix) {
 
-		Path tmp = tmpdir.suffix(Path.SEPARATOR + TMP_PREFIX + (counter++) +"_" + suffix);
+		Path tmp = tmpdir.suffix(Path.SEPARATOR + TMP_PREFIX + (counter++) + "_" + suffix);
 		tempdirs.add(tmp);
 
 		return tmp;
@@ -73,7 +73,7 @@ public class DirManager {
 
 	public Path getNewOutPath(String suffix) {
 
-		Path out = tmpdir.suffix(Path.SEPARATOR + OUT_PREFIX + (counter++)+"_" + suffix);
+		Path out = tmpdir.suffix(Path.SEPARATOR + OUT_PREFIX + (counter++) + "_" + suffix);
 		outdirs.add(out);
 
 		return out;
@@ -81,8 +81,8 @@ public class DirManager {
 	}
 
 	/**
-	 * Constructs the set of paths where the relations can be found.
-	 * When no relations are found, the default path is returned if present.
+	 * Constructs the set of paths where the relations can be found. When no
+	 * relations are found, the default path is returned if present.
 	 * 
 	 * 
 	 * @param relations
@@ -93,22 +93,37 @@ public class DirManager {
 	 */
 	public Set<Path> lookup(Set<RelationSchema> relations) {
 		Set<Path> result = new HashSet<Path>();
-		
 
 		Path defaultInput = filemapping.getDefaultPath();
 
 		for (RelationSchema rs : relations) {
 			if (filemapping.containsSchema(rs))
 				result.addAll(filemapping.getPaths(rs));
-			
-			// if this 
-			else if(defaultInput != null) {
+
+			// if this
+			else if (defaultInput != null) {
 				result.add(defaultInput);
 			}
 		}
-		
 
 		return result;
+	}
+
+	public Set<Path> lookup(RelationSchema rs) {
+		Set<Path> result = new HashSet<Path>();
+
+		Path defaultInput = filemapping.getDefaultPath();
+
+		if (filemapping.containsSchema(rs))
+			result.addAll(filemapping.getPaths(rs));
+
+		// if this
+		else if (defaultInput != null) {
+			result.add(defaultInput);
+		}
+
+		return result;
+
 	}
 
 	/**
@@ -155,7 +170,7 @@ public class DirManager {
 	public Set<Path> getTempDirs() {
 		return Collections.unmodifiableSet(tempdirs);
 	}
-	
+
 	/**
 	 * 
 	 * @return a view on the set of generated output dirs
@@ -181,6 +196,13 @@ public class DirManager {
 
 	public void updatePath(RelationSchema rs, Path p) {
 		filemapping.addPath(rs, p);
+	}
+
+	/**
+	 * @return the default input path
+	 */
+	public Object getDefaultInputPath() {
+		return filemapping.getDefaultPath();
 	}
 
 }

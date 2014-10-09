@@ -73,11 +73,15 @@ public class GFMapper1AtomBased extends GFMapper implements Serializable {
 						GFAtomProjection p = getProjections(guard, guarded);
 						Tuple tprime = p.project(t);
 
+						// TODO why is this check necessary?
 						if (guarded.matches(tprime)) {
 							out1.set(tprime.toString());
 							out2.set(t.toString() + ";" + guarded);
 							context.write(out1, out2);
 //							LOG.warn(out1.toString() + " " + out2.toString());
+//							LOG.warn("YES!");
+						} else {
+//							LOG.warn("NO!");
 						}
 					} catch (NonMatchingTupleException e) {
 						// should not happen!

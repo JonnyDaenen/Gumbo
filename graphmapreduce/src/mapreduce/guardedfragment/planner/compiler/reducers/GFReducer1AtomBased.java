@@ -43,6 +43,7 @@ public class GFReducer1AtomBased extends GFReducer implements Serializable {
 		HashSet<Pair<Text, String>> result = new HashSet<Pair<Text, String>>();
 		Set<String> buffer = new HashSet<>();
 		
+		
 		boolean keyFound = false;
 		for (Object v : values) {
 			
@@ -95,11 +96,14 @@ public class GFReducer1AtomBased extends GFReducer implements Serializable {
 		Text out1 = new Text();
 		Text out2 = new Text();
 		
+//		LOG.warn(key + ": ");
+		
 		boolean keyFound = false;
 		for (Object v : values) {
 			
 			// WARNING Text object will be reused by Hadoop!
 			Text t = (Text) v;
+//			LOG.warn("\t" + t);
 			String [] split = split(t);
 			// is this a guard
 			if (split != null) {

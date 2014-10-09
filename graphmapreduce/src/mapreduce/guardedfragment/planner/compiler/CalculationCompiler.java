@@ -94,6 +94,8 @@ public class CalculationCompiler {
 		
 		plan.addTempDirs(dm.getTempDirs());
 		plan.addOutDirs(dm.getOutDirs());
+		
+		plan.setDirManager(dm);
 
 		return plan;
 	}

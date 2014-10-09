@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
+import mapreduce.guardedfragment.structure.gfexpressions.operations.ExpressionSetOperation;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper.Context;

@@ -64,9 +64,12 @@ public class Profiling_q4 {
 			files.addPath(schemaS4, new Path("./data/q4/1e06/S4_4e06x1e00_func-non_mod_4.rel"));
 			files.addPath(schemaS5, new Path("./data/q4/1e06/S5_5e06x1e00_func-non_mod_5.rel"));
 		} else {
-			files.setDefaultPath(new Path(input));
+//			files.setDefaultPath(new Path(input));
 			files.addPath(schemaR, new Path("./input/q4/1e04/R_6e04x4e00_func-seqclone.rel"));
 			files.addPath(schemaS2, new Path("./input/q4/1e04/S2_3e04x1e00_func-non_mod_2.rel"));
+			files.addPath(schemaS3, new Path("./input/q4/1e04/S3_4e04x1e00_func-non_mod_3.rel"));
+			files.addPath(schemaS4, new Path("./input/q4/1e04/S4_4e04x1e00_func-non_mod_4.rel"));
+			files.addPath(schemaS5, new Path("./input/q4/1e04/S5_5e04x1e00_func-non_mod_5.rel"));
 		}
 		// query
 
@@ -94,7 +97,7 @@ public class Profiling_q4 {
 		// print plan in dot
 		// System.out.println(plan.toDot());
 
-		// Thread.sleep(15000);
+//		 Thread.sleep(15000);
 		// execute plan
 		long startTime = System.nanoTime();
 

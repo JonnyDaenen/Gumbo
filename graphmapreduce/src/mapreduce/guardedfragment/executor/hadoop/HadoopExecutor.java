@@ -172,7 +172,7 @@ public class HadoopExecutor {
 
 		// convert and create 1-1 mapping
 		for (MRJob job : plan.getJobs()) {
-			ControlledJob cjob = jobConverter.convert(job);
+			ControlledJob cjob = jobConverter.convert(job, plan.getDirManager());
 			map.put(job, cjob);
 		}
 

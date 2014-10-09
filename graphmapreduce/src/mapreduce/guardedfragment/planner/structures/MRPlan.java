@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import mapreduce.guardedfragment.planner.compiler.DirManager;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 
 import org.apache.commons.logging.Log;
@@ -16,6 +17,8 @@ import org.apache.hadoop.mapred.FileInputFormat;
 import org.apache.hadoop.mapred.FileOutputFormat;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
+
+import tachyon.thrift.WorkerService.Processor.getDataFolder;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -51,6 +54,8 @@ public class MRPlan {
 	protected Set<Path> outdirs;
 
 	protected Set<RelationSchema> relations; // TODO add to description
+	
+	protected DirManager dirManager;
 
 	boolean deleteTmpDirs;
 
@@ -448,5 +453,19 @@ public class MRPlan {
 				return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * @param dirManager the dirManager to set
+	 */
+	public void setDirManager(DirManager dirManager) {
+		this.dirManager = dirManager;
+	}
+	
+	/**
+	 * @return the dirManager
+	 */
+	public DirManager getDirManager() {
+		return dirManager;
 	}
 }
