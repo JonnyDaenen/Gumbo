@@ -35,7 +35,7 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 	}
 
 
-	public void add(CalculationUnit c) {
+	public void addToTop(CalculationUnit c) {
 		calculations.add(c);
 
 		// TODO check for cyclic dependencies
@@ -90,7 +90,7 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 			}
 			
 			if (isRoot) {
-				roots.add(currentCalc);
+				roots.addToTop(currentCalc);
 			}
 		}
 
@@ -130,7 +130,7 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 
 		for (CalculationUnit c : calculations) {
 			if (c.getHeight() == height)
-				cp.add(c);
+				cp.addToTop(c);
 		}
 
 		return cp;
@@ -158,7 +158,7 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 				
 				// add all the children to the new level
 				for (CalculationUnit child : c.getDependencies()) {
-					newLevel.add(child);
+					newLevel.addToTop(child);
 					
 				}
 			}

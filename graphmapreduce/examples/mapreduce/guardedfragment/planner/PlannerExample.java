@@ -10,6 +10,7 @@ import java.util.Set;
 import mapreduce.guardedfragment.planner.partitioner.UnitPartitioner;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
 import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
+import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
@@ -32,6 +33,8 @@ public class PlannerExample {
 
 		RelationFileMapping rfm = new RelationFileMapping();
 		rfm.setDefaultPath(new Path(input));
+		rfm.addPath(new RelationSchema("R",2), new Path("./input/q2/text.txt"));
+		rfm.addPath(new RelationSchema("S3",2), new Path("./input/q2/S3.txt"));
 		
 		// query 
 		
@@ -39,6 +42,7 @@ public class PlannerExample {
 		queries.add("#O(x1,x2)&R(x1,x2)&!S1(x1)!S2(x2)");
 		queries.add("#P(x1,x2)&R(x1,x2)O(x2,x2)");
 		queries.add("#Q(x1,x2)&R(x1,x2)O(x1,x1)");
+//		queries.add("#M(x1,x2)&S3(x1,x2)Q(x1,x1)");
 
 		// parse query
 		GFPrefixSerializer parser = new GFPrefixSerializer();

@@ -82,15 +82,15 @@ public class PartitionerTest {
 
 		c5.setDependency(new RelationSchema("Dummy8", "x"), c8);
 
-		cp.add(c1);
-		cp.add(c2);
-		cp.add(c3);
-		cp.add(c4);
-		cp.add(c5);
-		cp.add(c6);
-		cp.add(c7);
-		cp.add(c8);
-		cp.add(c9);
+		cp.addToTop(c1);
+		cp.addToTop(c2);
+		cp.addToTop(c3);
+		cp.addToTop(c4);
+		cp.addToTop(c5);
+		cp.addToTop(c6);
+		cp.addToTop(c7);
+		cp.addToTop(c8);
+		cp.addToTop(c9);
 
 	}
 
@@ -110,7 +110,7 @@ public class PartitionerTest {
 
 		PartitionedCalculationUnitDAG partitioned = partitioner.partition(cp);
 		
-		List<CalculationUnitDAG> list = partitioned.getList();
+		List<CalculationUnitDAG> list = partitioned.getBottomUpList();
 
 		assertEquals(3, list.size());
 

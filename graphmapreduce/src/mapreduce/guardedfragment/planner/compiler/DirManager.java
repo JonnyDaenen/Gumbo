@@ -93,15 +93,18 @@ public class DirManager {
 	 */
 	public Set<Path> lookup(Set<RelationSchema> relations) {
 		Set<Path> result = new HashSet<Path>();
+		
+
+		Path defaultInput = filemapping.getDefaultPath();
 
 		for (RelationSchema rs : relations) {
 			if (filemapping.containsSchema(rs))
 				result.addAll(filemapping.getPaths(rs));
-		}
-		
-		Path defaultInput = filemapping.getDefaultPath();
-		if (result.size() == 0 && defaultInput != null) {
-			result.add(defaultInput);
+			
+			// if this 
+			else if(defaultInput != null) {
+				result.add(defaultInput);
+			}
 		}
 		
 

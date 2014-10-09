@@ -66,7 +66,7 @@ public class CalculationCompiler {
 
 		// convert all to MR-jobs and set INTRA-calculation dependencies
 		Map<CalculationUnit, Set<MRJob>> jobmap = new HashMap<CalculationUnit, Set<MRJob>>();
-		for (CalculationUnitDAG partition : partitionedDAG.getList()) {
+		for (CalculationUnitDAG partition : partitionedDAG.getBottomUpList()) {
 
 			Map<CalculationUnit, Set<MRJob>> unitjobs = compiler.compileBasicGFCalculationUnit(partition);
 			jobmap.putAll(unitjobs);

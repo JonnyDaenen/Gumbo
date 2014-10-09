@@ -27,7 +27,7 @@ public class UnitPartitioner implements CalculationPartitioner {
 			
 			CalculationUnitDAG calcSet = partition.getCalculationsByHeight(i);
 			for (CalculationUnit cu : calcSet) {
-				partitionedDAG.add(cu);
+				partitionedDAG.addToTop(cu);
 			}
 			
 		}

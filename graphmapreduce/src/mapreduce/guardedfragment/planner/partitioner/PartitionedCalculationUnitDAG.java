@@ -13,6 +13,7 @@ import mapreduce.guardedfragment.planner.calculations.CalculationUnitDAG;
 /**
  * Representation for a list of partitions of calculation units.
  * It provides several benefits compared to a raw list.
+ * The partitions are ordered in a bottom-up fashion.
  * 
  * @author Jonny Daenen
  *
@@ -30,7 +31,7 @@ public class PartitionedCalculationUnitDAG extends CalculationUnitDAG {
 	 * Adds a partition to the back of the list.
 	 * @param p the partition to add
 	 */
-	public void add(CalculationUnitDAG partition) {
+	public void addToTop(CalculationUnitDAG partition) {
 		
 		// add calculations to the set of all calculations
 		super.addAll(partition);
@@ -43,20 +44,20 @@ public class PartitionedCalculationUnitDAG extends CalculationUnitDAG {
 	
 	 /**
 	  * Adds the calculation unit as a separate partition to the back of the list.
-	 * @see mapreduce.guardedfragment.planner.calculations.CalculationUnitDAG#add(mapreduce.guardedfragment.planner.calculations.CalculationUnit)
+	 * @see mapreduce.guardedfragment.planner.calculations.CalculationUnitDAG#addToTop(mapreduce.guardedfragment.planner.calculations.CalculationUnit)
 	 */
 	@Override
-	public void add(CalculationUnit c) {
+	public void addToTop(CalculationUnit c) {
 		CalculationUnitDAG unitDAG = new CalculationUnitDAG();
-		unitDAG.add(c);
-		add(unitDAG);
+		unitDAG.addToTop(c);
+		addToTop(unitDAG);
 	}
 
 
 	/**
 	 * @return an unmodifiable list of partitions of CalculationsUnits
 	 */
-	public List<CalculationUnitDAG> getList() {
+	public List<CalculationUnitDAG> getBottomUpList() {
 		return Collections.unmodifiableList(partitions);
 	}
 	

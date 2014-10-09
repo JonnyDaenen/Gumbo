@@ -62,6 +62,7 @@ public class MRJob2HadoopConverter {
 
 			// set IO
 			for (Path inpath : job.getInputPaths()) {
+				System.out.println("Setting path" + inpath);
 				FileInputFormat.addInputPath(hadoopJob, inpath);
 			}
 			FileOutputFormat.setOutputPath(hadoopJob, job.getOutputPath());

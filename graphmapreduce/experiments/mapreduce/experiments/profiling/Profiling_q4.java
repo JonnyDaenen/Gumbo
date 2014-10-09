@@ -52,15 +52,21 @@ public class Profiling_q4 {
 		String scratch = "./scratch/" + Profiling_q4.class.getSimpleName() + "/" + timeStamp;
 
 		RelationSchema schemaR = new RelationSchema("R", 4);
-		RelationSchema schemaS = new RelationSchema("S2", 1);
+		RelationSchema schemaS2 = new RelationSchema("S2", 1);
+		RelationSchema schemaS3 = new RelationSchema("S3", 1);
+		RelationSchema schemaS4 = new RelationSchema("S4", 1);
+		RelationSchema schemaS5 = new RelationSchema("S5", 1);
 		RelationFileMapping files = new RelationFileMapping();
 		if (input.equals("cloudera")) {
 			files.addPath(schemaR, new Path("./data/q4/1e06/R_6e06x4e00_func-seqclone.rel"));
-			files.addPath(schemaS, new Path("./data/q4/1e06/S2_3e06x1e00_func-non_mod_2.rel"));
+			files.addPath(schemaS2, new Path("./data/q4/1e06/S2_3e06x1e00_func-non_mod_2.rel"));
+			files.addPath(schemaS3, new Path("./data/q4/1e06/S3_4e06x1e00_func-non_mod_3.rel"));
+			files.addPath(schemaS4, new Path("./data/q4/1e06/S4_4e06x1e00_func-non_mod_4.rel"));
+			files.addPath(schemaS5, new Path("./data/q4/1e06/S5_5e06x1e00_func-non_mod_5.rel"));
 		} else {
 			files.setDefaultPath(new Path(input));
 			files.addPath(schemaR, new Path("./input/q4/1e04/R_6e04x4e00_func-seqclone.rel"));
-			files.addPath(schemaS, new Path("./input/q4/1e04/S2_3e04x1e00_func-non_mod_2.rel"));
+			files.addPath(schemaS2, new Path("./input/q4/1e04/S2_3e04x1e00_func-non_mod_2.rel"));
 		}
 		// query
 

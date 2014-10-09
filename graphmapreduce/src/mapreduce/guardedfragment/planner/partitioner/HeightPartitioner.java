@@ -24,7 +24,7 @@ public class HeightPartitioner implements CalculationPartitioner {
 		for (int i = 1; i <= height; i++) {
 			
 			CalculationUnitDAG calcSet = partition.getCalculationsByHeight(i);
-			partitionedDAG.add(calcSet);
+			partitionedDAG.addToTop(calcSet);
 		}
 		
 		

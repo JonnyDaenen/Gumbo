@@ -26,7 +26,7 @@ public class DepthPartitioner implements CalculationPartitioner {
 			// OPTIMIZE this is rather inefficient as each time a DSF from top is done
 			CalculationUnitDAG calcSet = partition.getCalculationsByDepth(i);
 
-			partitionedDAG.add(calcSet);
+			partitionedDAG.addToTop(calcSet);
 		}
 		
 		

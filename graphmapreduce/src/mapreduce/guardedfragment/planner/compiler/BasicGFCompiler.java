@@ -65,6 +65,7 @@ public class BasicGFCompiler {
 										// no partitions!
 
 		// load paths
+		// TODO make sure this is really bottom up, as we assume the previous levels are already coupled to temp files
 		Set<Path> inputs = dirManager.lookup(partition.getInputRelations());
 
 		Path tmpDir = dirManager.getNewTmpPath(suffix);
