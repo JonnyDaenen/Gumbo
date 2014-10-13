@@ -55,6 +55,11 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 		// load context
 		super.setup(context);
 		Configuration conf = context.getConfiguration();
+		
+		String s = String.format("Reducer"+this.getClass().getSimpleName()+"-%05d-%d",
+		        context.getTaskAttemptID().getTaskID().getId(),
+		        context.getTaskAttemptID().getId());
+		LOG.info(s);
 
 		mos = new MultipleOutputs<>(context);
 		sb = new StringBuilder(100);
@@ -99,6 +104,8 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 
 		// LOG.warn(key + ": ");
 
+		
+		
 		boolean keyFound = false;
 
 		// WARNING Text object will be reused by Hadoop!

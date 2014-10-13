@@ -53,7 +53,7 @@ public class GFCombiner1 extends Reducer<Text,Text,Text,Text> {
 		super.setup(context);
 		Configuration conf = context.getConfiguration();
 		
-		String s = String.format("map-output-%05d-%d",
+		String s = String.format("Combiner-%05d-%d",
 		        context.getTaskAttemptID().getTaskID().getId(),
 		        context.getTaskAttemptID().getId());
 		LOG.info(s);

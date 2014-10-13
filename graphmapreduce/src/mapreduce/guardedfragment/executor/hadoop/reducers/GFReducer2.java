@@ -66,6 +66,11 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 
 		mos = new MultipleOutputs<>(context);
 		filenames = new HashMap<RelationSchema, String>();
+		
+		String s = String.format("Reducer"+this.getClass().getSimpleName()+"-%05d-%d",
+		        context.getTaskAttemptID().getTaskID().getId(),
+		        context.getTaskAttemptID().getId());
+		LOG.info(s);
 
 		GFPrefixSerializer serializer = new GFPrefixSerializer();
 

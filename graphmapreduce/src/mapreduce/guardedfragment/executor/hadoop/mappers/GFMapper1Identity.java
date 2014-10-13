@@ -50,6 +50,11 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 		Configuration conf = context.getConfiguration();
 
 
+		String s = String.format("Mapper"+this.getClass().getSimpleName()+"-%05d-%d",
+		        context.getTaskAttemptID().getTaskID().getId(),
+		        context.getTaskAttemptID().getId());
+		LOG.info(s);
+
 		GFPrefixSerializer serializer = new GFPrefixSerializer();
 
 		// load guard
