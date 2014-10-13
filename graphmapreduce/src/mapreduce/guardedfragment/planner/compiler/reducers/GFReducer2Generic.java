@@ -34,9 +34,10 @@ import org.apache.hadoop.io.Text;
 public class GFReducer2Generic extends GFReducer implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
 
 	private static final Log LOG = LogFactory.getLog(GFReducer2Generic.class);
+
+	boolean receiveIDs = true;
 
 	/**
 	 * @throws GFOperationInitException
@@ -64,10 +65,15 @@ public class GFReducer2Generic extends GFReducer implements Serializable {
 					continue;
 
 				// atoms that are present are "true"
-				Tuple tuple = new Tuple(t);
-				GFAtomicExpression dummy = new GFAtomicExpression(tuple.getName(), tuple.getAllData());
-				booleanContext.setValue(mapGFtoB.getVariable(dummy), true);
-
+				// id mode vs string mode
+				if (receiveIDs) {
+					GFAtomicExpression atom = getAtom(Integer.parseInt(t.toString())); // OPTIMIZE use LongWritable
+					booleanContext.setValue(mapGFtoB.getVariable(atom), true);
+				} else {
+					Tuple tuple = new Tuple(t);
+					GFAtomicExpression dummy = new GFAtomicExpression(tuple.getName(), tuple.getAllData());
+					booleanContext.setValue(mapGFtoB.getVariable(dummy), true);
+				}
 			}
 
 			/* evaluate all formulas */
@@ -88,7 +94,7 @@ public class GFReducer2Generic extends GFReducer implements Serializable {
 					// evaluate
 					boolean eval = booleanChildExpression.evaluate(booleanContext);
 					if (eval) {
-						
+
 						// project the tuple and output it
 						String outputTuple = p.project(keyTuple).generateString();
 						result.add(new Pair<Text, String>(new Text(outputTuple), outfile));

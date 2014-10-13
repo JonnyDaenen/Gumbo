@@ -30,7 +30,7 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
  * @author Jonny Daenen
  * 
  */
-public class GFReducer1 extends Reducer<Text,Text,Text,Text> {
+public class GFReducer1 extends Reducer<Text, Text, Text, Text> {
 
 	private static final long serialVersionUID = 1L;
 	private final static String FILENAME = "tmp_round1_red.txt";
@@ -42,6 +42,7 @@ public class GFReducer1 extends Reducer<Text,Text,Text,Text> {
 
 	private static final Log LOG = LogFactory.getLog(GFReducer1.class);
 
+	boolean outputIDs = true;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -53,9 +54,6 @@ public class GFReducer1 extends Reducer<Text,Text,Text,Text> {
 		Configuration conf = context.getConfiguration();
 
 		mos = new MultipleOutputs<>(context);
-		
-	
-
 
 		GFPrefixSerializer serializer = new GFPrefixSerializer();
 
@@ -72,7 +70,7 @@ public class GFReducer1 extends Reducer<Text,Text,Text,Text> {
 					formulaSet.add((GFExistentialExpression) exp);
 				}
 			}
-			
+
 			eso = new ExpressionSetOperations();
 			eso.setExpressionSet(formulaSet);
 
@@ -80,21 +78,18 @@ public class GFReducer1 extends Reducer<Text,Text,Text,Text> {
 			throw new InterruptedException("Reducer initialisation error: " + e.getMessage());
 		}
 	}
-	
+
 	@Override
 	protected void cleanup(Context context) throws IOException, InterruptedException {
 		mos.close();
 	}
-	
-	
-	
+
 	/**
-	 * @see org.apache.hadoop.mapreduce.Reducer#reduce(java.lang.Object, java.lang.Iterable, org.apache.hadoop.mapreduce.Reducer.Context)
+	 * @see org.apache.hadoop.mapreduce.Reducer#reduce(java.lang.Object,
+	 *      java.lang.Iterable, org.apache.hadoop.mapreduce.Reducer.Context)
 	 */
 	@Override
-	protected void reduce(Text key, Iterable<Text> values, Context context)
-			throws IOException, InterruptedException {
-		
+	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
 		Set<Pair<String, String>> buffer = new HashSet<>();
 
@@ -111,9 +106,16 @@ public class GFReducer1 extends Reducer<Text,Text,Text,Text> {
 
 				// is this a guard
 				if (split != null) {
-					int id = Integer.parseInt(split[1]);
-					String atom = eso.getAtom(id).toString();
-
+					
+					// send id or string representation
+					String atom;
+					if (outputIDs) {
+						atom = split[1];
+					} else {
+						int id = Integer.parseInt(split[1]);
+						atom = eso.getAtom(id).toString();
+					}
+					
 					// if the key has already been found, we can just output
 					if (keyFound) {
 						out1.set(split[0]);
