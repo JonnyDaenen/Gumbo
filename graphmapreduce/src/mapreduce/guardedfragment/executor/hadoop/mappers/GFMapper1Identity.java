@@ -16,7 +16,7 @@ import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
-import mapreduce.guardedfragment.structure.gfexpressions.operations.ExpressionSetOperation;
+import mapreduce.guardedfragment.structure.gfexpressions.operations.ExpressionSetOperations;
 import mapreduce.guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
 import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingTupleException;
 
@@ -38,7 +38,7 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 
 	private static final Log LOG = LogFactory.getLog(GFMapper1Identity.class);
 
-	ExpressionSetOperation eso;
+	ExpressionSetOperations eso;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -66,7 +66,7 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 				}
 			}
 			
-			eso = new ExpressionSetOperation();
+			eso = new ExpressionSetOperations();
 			eso.setExpressionSet(formulaSet);
 
 		} catch (Exception e) {

@@ -62,7 +62,10 @@ public class GFMapper1AtomBased extends GFMapper implements Serializable {
 		// check guards + atom (keep-alive)
 		for (GFAtomicExpression guard : getGuardsAll()) {
 			if (guard.matches(t)) {
-				out1.set(t.toString() + ";" + guard.toString());
+
+				int guardID = getAtomId(guard);
+				
+				out1.set(t.toString() + ";" + guardID);
 				context.write(value, out1);
 //				LOG.warn(value.toString() + " " + out1.toString());
 				outputGuard = true;
@@ -76,7 +79,8 @@ public class GFMapper1AtomBased extends GFMapper implements Serializable {
 						// TODO why is this check necessary?
 						if (guarded.matches(tprime)) {
 							out1.set(tprime.toString());
-							out2.set(t.toString() + ";" + guarded);
+							int guardedID = getAtomId(guarded);
+							out2.set(t.toString() + ";" + guardedID);
 							context.write(out1, out2);
 //							LOG.warn(out1.toString() + " " + out2.toString());
 //							LOG.warn("YES!");

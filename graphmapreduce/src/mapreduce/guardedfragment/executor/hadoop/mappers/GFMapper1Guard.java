@@ -16,7 +16,7 @@ import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
-import mapreduce.guardedfragment.structure.gfexpressions.operations.ExpressionSetOperation;
+import mapreduce.guardedfragment.structure.gfexpressions.operations.ExpressionSetOperations;
 import mapreduce.guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
 import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingTupleException;
 
@@ -63,8 +63,10 @@ public class GFMapper1Guard extends GFMapper1Identity {
 				// if the tuple satisfies the guard expression
 				if (guard.matches(t)) {
 					
+					int guardID = eso.getAtomId(guard);
+					
 					// output guard
-					out1.set(t.toString() + ";" + guard.toString());
+					out1.set(t.toString() + ";" + guardID);
 					context.write(value, out1);
 					// LOG.warn(value.toString() + " " + out1.toString());
 					outputGuard = true;
@@ -74,12 +76,15 @@ public class GFMapper1Guard extends GFMapper1Identity {
 
 						GFAtomProjection p = eso.getProjections(guard, guarded);
 						Tuple tprime = p.project(t);
+						
+
+						int guardedID = eso.getAtomId(guarded);
 
 						// if the guard projects to this guarded
 						// TODO isn't this always the case?
 //						if (guarded.matches(tprime)) {
 							out1.set(tprime.toString());
-							out2.set(t.toString() + ";" + guarded);
+							out2.set(t.toString() + ";" + guardedID);
 							context.write(out1, out2);
 //							LOG.warn("Guard: " + out1 + out2);
 //						}

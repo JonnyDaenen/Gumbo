@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
-import mapreduce.guardedfragment.structure.gfexpressions.operations.ExpressionSetOperation;
+import mapreduce.guardedfragment.structure.gfexpressions.operations.ExpressionSetOperations;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper.Context;
@@ -18,7 +18,7 @@ import org.apache.hadoop.mapreduce.Mapper.Context;
  * @author Jonny Daenen
  * 
  */
-public abstract class GFMapper extends ExpressionSetOperation {
+public abstract class GFMapper extends ExpressionSetOperations {
 
 	// TODO remove this
 	/**

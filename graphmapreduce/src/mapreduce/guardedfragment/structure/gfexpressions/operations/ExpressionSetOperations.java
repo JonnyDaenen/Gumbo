@@ -3,6 +3,7 @@
  */
 package mapreduce.guardedfragment.structure.gfexpressions.operations;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,9 +27,9 @@ import org.apache.hadoop.fs.Path;
  * @author Jonny Daenen
  * 
  */
-public class ExpressionSetOperation {
+public class ExpressionSetOperations {
 
-	private static final Log LOG = LogFactory.getLog(ExpressionSetOperation.class);
+	private static final Log LOG = LogFactory.getLog(ExpressionSetOperations.class);
 
 	protected Collection<GFExistentialExpression> expressionSet;
 
@@ -44,12 +45,14 @@ public class ExpressionSetOperation {
 	protected Set<GFAtomicExpression> guardedsAll;
 	protected Set<Pair<GFAtomicExpression, GFAtomicExpression>> ggpairsAll;
 
+	protected GFAtomicExpression[] atoms;
+
 	private DirManager dirManager;
 
 	/**
 	 * 
 	 */
-	public ExpressionSetOperation() {
+	public ExpressionSetOperations() {
 		guardeds = new HashMap<>();
 		booleanChildExpressions = new HashMap<>();
 		projections = new HashMap<>();
@@ -151,6 +154,17 @@ public class ExpressionSetOperation {
 
 		}
 
+		// order the atoms
+		HashSet<GFAtomicExpression> allAtoms = new HashSet<>(guardsAll);
+		allAtoms.addAll(guardedsAll);
+
+		atoms = allAtoms.toArray(new GFAtomicExpression[0]);
+		Arrays.sort(atoms);
+//		for (int i = 0; i < atoms.length; i++) {
+//			GFAtomicExpression atom = atoms[i];
+//			LOG.info("" + i + ": " + atom);
+//		}
+
 	}
 
 	public Set<GFAtomicExpression> getGuardeds(GFAtomicExpression guard) throws GFOperationInitException {
@@ -162,9 +176,10 @@ public class ExpressionSetOperation {
 		return r;
 	}
 
-	public GFAtomProjection getProjections(GFAtomicExpression guard, GFAtomicExpression guarded) throws GFOperationInitException {
-		
-		GFAtomProjection r = guardHasProjection.get(new Pair<>(guard,guarded));
+	public GFAtomProjection getProjections(GFAtomicExpression guard, GFAtomicExpression guarded)
+			throws GFOperationInitException {
+
+		GFAtomProjection r = guardHasProjection.get(new Pair<>(guard, guarded));
 
 		if (r == null)
 			throw new GFOperationInitException("No projections found for: " + guard + " " + guarded);
@@ -193,6 +208,7 @@ public class ExpressionSetOperation {
 
 	/**
 	 * A common boolean mapping used for ALL formulas in this set.
+	 * 
 	 * @return a mapping between atoms and variables
 	 * @throws GFOperationInitException
 	 */
@@ -242,7 +258,7 @@ public class ExpressionSetOperation {
 	 */
 	public void setDirManager(DirManager dirManager) {
 		this.dirManager = dirManager;
-		
+
 	}
 
 	/**
@@ -250,30 +266,62 @@ public class ExpressionSetOperation {
 	 */
 	public Set<Path> getGuardedPaths() {
 		HashSet<Path> result = new HashSet<Path>();
-		
-		for ( GFAtomicExpression guarded : getGuardedsAll() ) {
+
+		for (GFAtomicExpression guarded : getGuardedsAll()) {
 			Set<Path> paths = dirManager.lookup(guarded.getRelationSchema());
 			result.addAll(paths);
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * 
 	 * @return the input paths for the guard relations
 	 */
 	public Set<Path> getGuardPaths() {
 		HashSet<Path> result = new HashSet<Path>();
-		
-		for ( GFAtomicExpression guarded : getGuardsAll() ) {
+
+		for (GFAtomicExpression guarded : getGuardsAll()) {
 			Set<Path> paths = dirManager.lookup(guarded.getRelationSchema());
 			result.addAll(paths);
 		}
-		
+
 		return result;
 	}
-	
-	
+
+	/**
+	 * Fetches an atom with the given internal id. Id is only unique for THIS
+	 * set of expressions.
+	 * 
+	 * @param id
+	 *            the id of the atom
+	 * @return the atom with the given id
+	 */
+	public GFAtomicExpression getAtom(int id) throws GFOperationInitException {
+		if (0 <= id && id < atoms.length)
+			return atoms[id];
+		else
+			throw new GFOperationInitException("Atom with not found: id " + id);
+	}
+
+	/**
+	 * Fetches the internal id of a given atom. Id is only unique for THIS
+	 * set of expressions.
+	 * 
+	 * @param atom
+	 *            the atom to look up
+	 * @return the id of the given atom
+	 */
+	public int getAtomId(GFAtomicExpression atom) throws GFOperationInitException {
+
+		for (int i = 0; i < atoms.length; i++) {
+			if (atoms[i].equals(atom)) {
+				return i;
+			}
+		}
+		
+		throw new GFOperationInitException("Atom with not found: " + atom);
+	}
 
 }

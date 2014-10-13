@@ -6,7 +6,7 @@ package mapreduce.guardedfragment.planner.structures.operations;
 import java.io.IOException;
 
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
-import mapreduce.guardedfragment.structure.gfexpressions.operations.ExpressionSetOperation;
+import mapreduce.guardedfragment.structure.gfexpressions.operations.ExpressionSetOperations;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
@@ -15,7 +15,7 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
  * @author Jonny Daenen
  *
  */
-public abstract class GFReducer extends ExpressionSetOperation {
+public abstract class GFReducer extends ExpressionSetOperations {
 	
 
 	

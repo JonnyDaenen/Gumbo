@@ -11,7 +11,7 @@ import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 
-public class GFAtomicExpression extends GFExpression {
+public class GFAtomicExpression extends GFExpression implements Comparable{
 
 	private static final long serialVersionUID = 1L;
 
@@ -69,6 +69,7 @@ public class GFAtomicExpression extends GFExpression {
 
 	@Override
 	public String generateString() {
+		// OPTIMIZE cache?
 		return relation + "(" + generateVarString() + ")";
 	}
 
@@ -263,6 +264,27 @@ public class GFAtomicExpression extends GFExpression {
 	public GFExpression getParent(GFExpression e) {
 
 		return null;
+	}
+
+	/**
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(Object o) {
+		
+		if (o == null) 
+			throw new NullPointerException();
+		
+		if (! (o instanceof GFAtomicExpression))
+			throw new ClassCastException();
+		
+		GFAtomicExpression other = (GFAtomicExpression) o;
+		
+		String s1 = this.generateString();
+		String s2 = other.generateString();
+		
+		
+		return s1.compareTo(s2);
 	}
 
 }

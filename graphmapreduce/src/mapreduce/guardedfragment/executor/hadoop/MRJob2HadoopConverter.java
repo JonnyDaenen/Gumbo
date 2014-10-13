@@ -21,7 +21,7 @@ import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitEx
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
-import mapreduce.guardedfragment.structure.gfexpressions.operations.ExpressionSetOperation;
+import mapreduce.guardedfragment.structure.gfexpressions.operations.ExpressionSetOperations;
 import mapreduce.hadoop.readwrite.RelationInputFormat;
 
 import org.apache.commons.logging.Log;
@@ -122,7 +122,7 @@ public class MRJob2HadoopConverter {
 			
 			// 2 separate mappers:
 			
-			ExpressionSetOperation eso = new ExpressionSetOperation();
+			ExpressionSetOperations eso = new ExpressionSetOperations();
 			eso.setExpressionSet(job.getGFExpressions());
 			eso.setDirManager(dirManager);
 			
