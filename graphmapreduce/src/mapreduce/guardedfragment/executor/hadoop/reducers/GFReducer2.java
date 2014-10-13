@@ -104,7 +104,6 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 	protected void reduce(Text key, Iterable<IntWritable> values, Context context)
 			throws IOException, InterruptedException {
 		try {
-			HashSet<Pair<Text, String>> result = new HashSet<Pair<Text, String>>();
 
 			Tuple keyTuple = new Tuple(key);
 

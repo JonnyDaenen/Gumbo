@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
+import mapreduce.guardedfragment.executor.hadoop.combiners.GFCombiner1;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Guard;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Guarded;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Identity;
@@ -119,6 +120,8 @@ public class MRJob2HadoopConverter {
 //			conf.set("GFReducerClass", GFReducer1AtomBased.class.getCanonicalName());
 			
 			hadoopJob.setReducerClass(GFReducer1.class); 
+			
+			hadoopJob.setCombinerClass(GFCombiner1.class);
 
 			/* set IO */
 //			// code for 1 mapper

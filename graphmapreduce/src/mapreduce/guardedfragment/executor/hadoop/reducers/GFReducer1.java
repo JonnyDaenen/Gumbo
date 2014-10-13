@@ -36,10 +36,10 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 	private static final long serialVersionUID = 1L;
 	private final static String FILENAME = "tmp_round1_red.txt";
 
-	Text out1 = new Text();
-	IntWritable out2 = new IntWritable();
+	protected Text out1 = new Text();
+	protected IntWritable out2 = new IntWritable();
 	private ExpressionSetOperations eso;
-	private MultipleOutputs<Text, IntWritable> mos;
+	protected MultipleOutputs<Text, IntWritable> mos;
 
 	private static final Log LOG = LogFactory.getLog(GFReducer1.class);
 
@@ -146,7 +146,7 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 	 * When no ';' is present, the numeric value is -1. 
 	 * @param t
 	 */
-	private Pair<String, Integer> split(Text t) {
+	protected Pair<String, Integer> split(Text t) {
 		int length = t.getLength();
 		String output = null;
 		int num = -1;
