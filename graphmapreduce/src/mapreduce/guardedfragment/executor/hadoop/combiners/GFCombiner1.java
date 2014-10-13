@@ -21,24 +21,23 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Reducer.Context;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 /**
  * @author jonny
- *
+ * 
  */
-public class GFCombiner1 extends Reducer<Text,Text,Text,Text> {
-	
+public class GFCombiner1 extends Reducer<Text, Text, Text, Text> {
 
 	String FILENAME = "tmp_round1_comb.txt";
-	
+
 	private static final Log LOG = LogFactory.getLog(GFCombiner1.class);
-	
+
 	protected Text out1 = new Text();
 	protected Text out2 = new Text();
 	private ExpressionSetOperations eso;
 	protected MultipleOutputs<Text, Text> mos;
-
 
 	StringBuilder sb;
 
@@ -57,7 +56,8 @@ public class GFCombiner1 extends Reducer<Text,Text,Text,Text> {
 		        context.getTaskAttemptID().getTaskID().getId(),
 		        context.getTaskAttemptID().getId());
 		LOG.info(s);
-
+		LOG.info(FileOutputFormat.getUniqueFile(context, "Jonnyfile", "comb"));
+		
 		mos = new MultipleOutputs<Text, Text>(context);
 		sb = new StringBuilder(100);
 
@@ -99,7 +99,7 @@ public class GFCombiner1 extends Reducer<Text,Text,Text,Text> {
 
 		Set<Pair<String, Integer>> buffer = new HashSet<>();
 
-//		LOG.warn("Combining: " + key);
+		// LOG.warn("Combining: " + key);
 
 		boolean keyFound = false;
 
@@ -108,16 +108,15 @@ public class GFCombiner1 extends Reducer<Text,Text,Text,Text> {
 
 			// parse input
 			Pair<String, Integer> split = split(value);
-			
+
 			// is this not the key
 			// (key is only thing that can appear without atom)
 			if (split.snd != -1) {
 
-
 				// if the key has already been found, we can just output
 				if (keyFound) {
 					out1.set(split.fst);
-					out2.set(""+split.snd);
+					out2.set("" + split.snd);
 					mos.write(out1, out2, FILENAME);
 				}
 				// else we collect the data
@@ -136,7 +135,7 @@ public class GFCombiner1 extends Reducer<Text,Text,Text,Text> {
 		if (keyFound) {
 			for (Pair<String, Integer> p : buffer) {
 				out1.set(p.fst);
-				out2.set(""+p.snd);
+				out2.set("" + p.snd);
 				mos.write(out1, out2, FILENAME);
 			}
 		} else {
@@ -147,10 +146,11 @@ public class GFCombiner1 extends Reducer<Text,Text,Text,Text> {
 		}
 
 	}
-	
+
 	/**
 	 * Splits Stirng into 2 parts. String is supposed to be separated with ';'.
-	 * When no ';' is present, the numeric value is -1. 
+	 * When no ';' is present, the numeric value is -1.
+	 * 
 	 * @param t
 	 */
 	protected Pair<String, Integer> split(Text t) {
@@ -163,16 +163,16 @@ public class GFCombiner1 extends Reducer<Text,Text,Text,Text> {
 		byte[] b = t.getBytes();
 		for (int i = 0; i < length; i++) { // FUTURE for unicode this doesn't
 											// work I guess..
-			char c = (char)b[i];
+			char c = (char) b[i];
 			// if we find the semicolon
 			if (c == ';') {
 				numberPart = true;
 				num = 0;
-			// assemble number
-			} else if (numberPart && ( '0' <= c && c <= '9')){
+				// assemble number
+			} else if (numberPart && ('0' <= c && c <= '9')) {
 				num *= 10;
-				num +=  c - '0';
-				
+				num += c - '0';
+
 			} else {
 				sb.append((char) b[i]);
 			}
@@ -183,7 +183,5 @@ public class GFCombiner1 extends Reducer<Text,Text,Text,Text> {
 		return new Pair<>(output, num);
 
 	}
-
-
 
 }
