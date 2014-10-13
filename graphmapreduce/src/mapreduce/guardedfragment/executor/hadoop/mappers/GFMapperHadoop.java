@@ -1,7 +1,7 @@
 /**
  * Created: 21 Aug 2014
  */
-package mapreduce.guardedfragment.executor.hadoop;
+package mapreduce.guardedfragment.executor.hadoop.mappers;
 
 import java.io.IOException;
 import java.util.HashSet;
