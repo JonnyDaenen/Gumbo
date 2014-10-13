@@ -12,6 +12,7 @@ import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Guarded;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Identity;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapperHadoop;
 import mapreduce.guardedfragment.executor.hadoop.reducers.GFReducer1;
+import mapreduce.guardedfragment.executor.hadoop.reducers.GFReducer2;
 import mapreduce.guardedfragment.executor.hadoop.reducers.GFReducerHadoop;
 import mapreduce.guardedfragment.planner.compiler.DirManager;
 import mapreduce.guardedfragment.planner.compiler.mappers.GFMapper1AtomBased;
@@ -214,9 +215,10 @@ public class MRJob2HadoopConverter {
 //			hadoopJob.setMapperClass(GFMapperHadoop.class);
 //			conf.set("GFMapperClass", GFMapper2Generic.class.getCanonicalName());
 
-			hadoopJob.setReducerClass(GFReducerHadoop.class);
-			conf.set("GFReducerClass", GFReducer2Generic.class.getCanonicalName());
-
+//			hadoopJob.setReducerClass(GFReducerHadoop.class);
+//			conf.set("GFReducerClass", GFReducer2Generic.class.getCanonicalName());
+			hadoopJob.setReducerClass(GFReducer2.class);
+			
 			/* set IO */
 			for (Path inpath : job.getInputPaths()) {
 				System.out.println("Setting path" + inpath);

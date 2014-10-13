@@ -212,7 +212,7 @@ public class ExpressionSetOperations {
 	 * @return a mapping between atoms and variables
 	 * @throws GFOperationInitException
 	 */
-	protected GFBooleanMapping getBooleanMapping() throws GFOperationInitException {
+	public GFBooleanMapping getBooleanMapping() throws GFOperationInitException {
 		return booleanMapping;
 	}
 
