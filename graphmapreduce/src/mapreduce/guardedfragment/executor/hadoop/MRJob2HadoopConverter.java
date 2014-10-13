@@ -11,6 +11,7 @@ import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Guard;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Guarded;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Identity;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapperHadoop;
+import mapreduce.guardedfragment.executor.hadoop.readers.GuardInputFormat;
 import mapreduce.guardedfragment.executor.hadoop.reducers.GFReducer1;
 import mapreduce.guardedfragment.executor.hadoop.reducers.GFReducer2;
 import mapreduce.guardedfragment.executor.hadoop.reducers.GFReducerHadoop;
@@ -32,6 +33,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -173,7 +175,7 @@ public class MRJob2HadoopConverter {
 			// set reducer output
 			// hadoopJob.setOutputKeyClass(NullWritable.class);
 			hadoopJob.setOutputKeyClass(Text.class);
-			hadoopJob.setOutputValueClass(Text.class);
+			hadoopJob.setOutputValueClass(IntWritable.class);
 			
 
 			// TODO check
@@ -226,17 +228,18 @@ public class MRJob2HadoopConverter {
 			}
 			FileOutputFormat.setOutputPath(hadoopJob, job.getOutputPath());
 
+
 			// set intermediate/mapper output
 			hadoopJob.setMapOutputKeyClass(Text.class);
-			hadoopJob.setMapOutputValueClass(Text.class);
+			hadoopJob.setMapOutputValueClass(IntWritable.class);
 
 			// set reducer output
-			// hadoopJob.setOutputKeyClass(NullWritable.class);
-			hadoopJob.setOutputKeyClass(Text.class);
+			hadoopJob.setOutputKeyClass(NullWritable.class);
+//			hadoopJob.setOutputKeyClass(Text.class);
 			hadoopJob.setOutputValueClass(Text.class);
 
 			// TODO check
-			hadoopJob.setInputFormatClass(RelationInputFormat.class);
+			hadoopJob.setInputFormatClass(GuardInputFormat.class);
 
 			return new ControlledJob(hadoopJob, null);
 		} catch (IOException e) {

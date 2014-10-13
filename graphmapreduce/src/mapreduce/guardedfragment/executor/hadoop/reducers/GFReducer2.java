@@ -29,6 +29,8 @@ import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingT
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Mapper.Context;
@@ -40,7 +42,7 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
  * @author Jonny Daenen
  * 
  */
-public class GFReducer2 extends Reducer<Text, Text, Text, Text> {
+public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 
 	Text out1 = new Text();
 	Text out2 = new Text();
@@ -99,7 +101,7 @@ public class GFReducer2 extends Reducer<Text, Text, Text, Text> {
 	 *      java.lang.Iterable, org.apache.hadoop.mapreduce.Reducer.Context)
 	 */
 	@Override
-	protected void reduce(Text key, Iterable<Text> values, Context context)
+	protected void reduce(Text key, Iterable<IntWritable> values, Context context)
 			throws IOException, InterruptedException {
 		try {
 			HashSet<Pair<Text, String>> result = new HashSet<Pair<Text, String>>();
@@ -110,21 +112,22 @@ public class GFReducer2 extends Reducer<Text, Text, Text, Text> {
 			GFBooleanMapping mapGFtoB = eso.getBooleanMapping();
 			BEvaluationContext booleanContext = new BEvaluationContext();
 
-			for (Object v : values) {
-				Text t = (Text) v;
+			for (IntWritable v : values) {
+				
+				int id = v.get();
+				
 
 				// skip empty values (only used for propagation)
-				if (t.getLength() == 0)
-					continue;
+//				if (t.getLength() == 0)
+//					continue;
 
 				// atoms that are present are "true"
 				// id mode vs string mode
 				if (receiveIDs) {
-					GFAtomicExpression atom = eso.getAtom(Integer.parseInt(t.toString())); // OPTIMIZE
-																						// use
-																						// LongWritable
+					GFAtomicExpression atom = eso.getAtom(id); 
 					booleanContext.setValue(mapGFtoB.getVariable(atom), true);
 				} else {
+					Text t = null; // CLEAN
 					Tuple tuple = new Tuple(t);
 					GFAtomicExpression dummy = new GFAtomicExpression(tuple.getName(), tuple.getAllData());
 					booleanContext.setValue(mapGFtoB.getVariable(dummy), true);

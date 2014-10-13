@@ -19,6 +19,7 @@ import mapreduce.guardedfragment.structure.gfexpressions.operations.ExpressionSe
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Mapper.Context;
@@ -30,17 +31,19 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
  * @author Jonny Daenen
  * 
  */
-public class GFReducer1 extends Reducer<Text, Text, Text, Text> {
+public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 
 	private static final long serialVersionUID = 1L;
 	private final static String FILENAME = "tmp_round1_red.txt";
 
 	Text out1 = new Text();
-	Text out2 = new Text();
+	IntWritable out2 = new IntWritable();
 	private ExpressionSetOperations eso;
-	private MultipleOutputs<Text, Text> mos;
+	private MultipleOutputs<Text, IntWritable> mos;
 
 	private static final Log LOG = LogFactory.getLog(GFReducer1.class);
+
+	StringBuilder sb;
 
 	boolean outputIDs = true;
 
@@ -54,6 +57,7 @@ public class GFReducer1 extends Reducer<Text, Text, Text, Text> {
 		Configuration conf = context.getConfiguration();
 
 		mos = new MultipleOutputs<>(context);
+		sb = new StringBuilder(100);
 
 		GFPrefixSerializer serializer = new GFPrefixSerializer();
 
@@ -91,94 +95,85 @@ public class GFReducer1 extends Reducer<Text, Text, Text, Text> {
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
-		Set<Pair<String, String>> buffer = new HashSet<>();
+		Set<Pair<String, Integer>> buffer = new HashSet<>();
 
-		try {
-			// LOG.warn(key + ": ");
+		// LOG.warn(key + ": ");
 
-			boolean keyFound = false;
-			for (Object v : values) {
+		boolean keyFound = false;
 
-				// WARNING Text object will be reused by Hadoop!
-				Text t = (Text) v;
-				// LOG.warn("\t" + t);
-				String[] split = split(t);
+		// WARNING Text object will be reused by Hadoop!
+		for (Text t : values) {
 
-				// is this a guard
-				if (split != null) {
-					
-					// send id or string representation
-					String atom;
-					if (outputIDs) {
-						atom = split[1];
-					} else {
-						int id = Integer.parseInt(split[1]);
-						atom = eso.getAtom(id).toString();
-					}
-					
-					// if the key has already been found, we can just output
-					if (keyFound) {
-						out1.set(split[0]);
-						out2.set(atom);
-						mos.write(out1, out2, FILENAME);
-					}
-					// else we collect the data
-					else {
-						// create new object because Text object will be reduce
-						// by Hadoop
-						buffer.add(new Pair<>(split[0], atom));
-					}
+			// parse input
+			Pair<String, Integer> split = split(t);
+			
+			// is this not the key
+			// (key is only thing that can appear without atom)
+			if (split.snd != -1) {
 
-					// if this is the key, we mark it
-				} else if (!keyFound) {
-					keyFound = true;
-				}
-			}
 
-			// output the remaining data
-			if (keyFound) {
-				for (Pair<String, String> p : buffer) {
-					out1.set(p.fst);
-					out2.set(p.snd);
+				// if the key has already been found, we can just output
+				if (keyFound) {
+					out1.set(split.fst);
+					out2.set(split.snd);
+//					System.out.println("Writing: " + out1.toString() + " " + out2.toString() + "" + split.snd);
 					mos.write(out1, out2, FILENAME);
 				}
-			}
+				// else we collect the data
+				else {
+					buffer.add(split);
+				}
 
-		} catch (GFOperationInitException e) {
-			// should not happen
-			LOG.error(e.getMessage());
-			throw new InterruptedException(e.getMessage());
+				// if this is the key, we mark it
+			} else if (!keyFound) {
+				keyFound = true;
+			}
+		}
+
+		// output the remaining data
+		if (keyFound) {
+			for (Pair<String, Integer> p : buffer) {
+				out1.set(p.fst);
+				out2.set(p.snd);
+				mos.write(out1, out2, FILENAME);
+			}
 		}
 
 	}
 
 	/**
+	 * Splits Stirng into 2 parts. String is supposed to be separated with ';'.
+	 * When no ';' is present, the numeric value is -1. 
 	 * @param t
-	 * @param c
 	 */
-	private String[] split(Text t) {
+	private Pair<String, Integer> split(Text t) {
 		int length = t.getLength();
-		StringBuilder sb = new StringBuilder(length);
-		String[] output = null;
+		String output = null;
+		int num = -1;
+		sb.setLength(0);
+		boolean numberPart = false;
 
 		byte[] b = t.getBytes();
 		for (int i = 0; i < length; i++) { // FUTURE for unicode this doesn't
-											// work i guess..
-
+											// work I guess..
+			char c = (char)b[i];
 			// if we find the semicolon
-			if ((char) b[i] == ';') {
-				output = new String[2];
-				output[0] = sb.toString();
-				sb.setLength(0);
-
+			if (c == ';') {
+				numberPart = true;
+				num = 0;
+			// assemble number
+			} else if (numberPart && ( '0' <= c && c <= '9')){
+				num *= 10;
+				num +=  c - '0';
+				
 			} else {
 				sb.append((char) b[i]);
 			}
 		}
-		if (output != null)
-			output[1] = sb.toString();
 
-		return output;
+		output = sb.toString();
+
+		return new Pair<>(output, num);
 
 	}
 
