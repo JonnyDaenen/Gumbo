@@ -121,7 +121,7 @@ public class MRJob2HadoopConverter {
 			
 			hadoopJob.setReducerClass(GFReducer1.class); 
 			
-			hadoopJob.setCombinerClass(GFCombiner1.class);
+//			hadoopJob.setCombinerClass(GFCombiner1.class);
 
 			/* set IO */
 //			// code for 1 mapper
