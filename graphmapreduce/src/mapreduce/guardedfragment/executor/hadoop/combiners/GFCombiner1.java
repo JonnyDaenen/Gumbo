@@ -4,6 +4,8 @@
 package mapreduce.guardedfragment.executor.hadoop.combiners;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,6 +59,10 @@ public class GFCombiner1 extends Reducer<Text, Text, Text, Text> {
 		        context.getTaskAttemptID().getId());
 		LOG.info(s);
 		LOG.info(FileOutputFormat.getUniqueFile(context, "Jonnyfile", "comb"));
+		
+
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+		FILENAME = "tmp_round1_comb"+timeStamp+".txt";
 		
 		mos = new MultipleOutputs<Text, Text>(context);
 		sb = new StringBuilder(100);
