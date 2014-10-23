@@ -4,6 +4,7 @@
 package mapreduce.guardedfragment;
 
 import mapreduce.guardedfragment.executor.hadoop.HadoopExecutor;
+import mapreduce.guardedfragment.executor.spark.SparkExecutor;
 import mapreduce.guardedfragment.planner.GFMRPlanner;
 import mapreduce.guardedfragment.planner.partitioner.HeightPartitioner;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
@@ -68,6 +69,9 @@ public class Fronjo {
 			
 			HadoopExecutor executor = new HadoopExecutor();
 			executor.execute(plan);
+			
+//			SparkExecutor executor = new SparkExecutor();
+//			executor.execute(plan);
 			
 		} catch (DeserializeException e) {
 			e.printStackTrace();
