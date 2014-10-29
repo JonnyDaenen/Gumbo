@@ -5,6 +5,7 @@ package mapreduce.guardedfragment.structure.gfexpressions.io;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 import mapreduce.guardedfragment.structure.gfexpressions.GFAndExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
@@ -22,6 +23,197 @@ public class GFInfixSerializer {
 	public String serializeGuard(GFAtomicExpression e) {
 		return e.generateString();
 	}
+	
+	
+    private String InfixToPrefix(String s) throws DeserializeException {
+    	Stack<String> mystack = new Stack<String>();
+    	int index = 0;
+    	int maxIndex = s.length()-1;
+    	
+    	String x;
+    	String y;
+    	
+    	while (index <= maxIndex && Character.isWhitespace(s.charAt(index))) {
+    		index++;
+    	}
+    	
+    	if (index > maxIndex) {
+    		throw new DeserializeException("Expecting some formula");
+    	}
+
+    	   	
+    	while (index <= maxIndex) {
+    		
+    		if (! (s.charAt(index) == '(' || 
+    				s.charAt(index) == ')' ||
+    				s.charAt(index) == '+' ||
+    				s.charAt(index) == '|' ||
+    				s.charAt(index) == '!' ||
+    				Character.isLetter(s.charAt(index)) )) {
+    			throw new DeserializeException("Error in index-"+index);
+    		}
+    		
+    		if (s.charAt(index) == '(') {
+    			
+    			if(mystack.empty()) {
+    				mystack.push(new String("("));
+    			} else {
+        			if (isTerm(mystack.peek()) || isCloseBracket(mystack.peek())) {
+        				throw new DeserializeException("Error in index-"+index);
+        			}       			
+        			mystack.push(new String("("));		
+    			}
+    		}
+    		
+      		if (s.charAt(index) == ')') {
+      			if (mystack.size() <= 1) {
+      				throw new DeserializeException("Error in index-"+index);
+      			}
+      			x = mystack.pop();
+      			y = mystack.pop();
+      			
+      			if (! isOpenBracket(y) || ! isTerm(x)) {
+      				throw new DeserializeException("Error in index-"+index);
+      			}
+      			
+      			mystack.push(x);
+      			
+      			mystack = cleanup(mystack);	
+       		}
+    		
+    		if (s.charAt(index) == '+') {
+    			if (mystack.empty()) {
+    				throw new DeserializeException("Error in index-"+index); 				
+    			}
+    			if (! isTerm(mystack.peek())) {
+    				throw new DeserializeException("Error in index-"+index); 				
+    			}
+    			mystack.push(new String("+"));
+ 
+    		}
+    		
+       		if (s.charAt(index) == '|') {
+    			if (mystack.empty()) {
+    				throw new DeserializeException("Error in index-"+index);  				
+    			}
+    			if (! isTerm(mystack.peek())) {
+    				throw new DeserializeException("Error in index-"+index); 				
+    			}
+    			mystack.push(new String("|"));
+    		}
+       		
+       		
+       		if (s.charAt(index) == '!') {
+    			if (mystack.empty()) {
+    				mystack.push(new String("!"));  				
+    			} else {
+        			if (isTerm(mystack.peek())) {
+        				throw new DeserializeException("Error in index-"+index); 				
+        			}
+        			mystack.push(new String("!"));
+      			}      			
+    		}
+       		
+       		if (Character.isLetter(s.charAt(index))) {
+       			int k = index;
+       			index++;
+       			while (index <= maxIndex &&  Character.isLetterOrDigit(s.charAt(index))) {
+       				index++;
+       			}
+       			
+       			if (index > maxIndex) {
+       				throw new DeserializeException("Error in reading atomic formula in index-"
+       									+index+": Expecting (");
+       			}
+       			
+       			if (s.charAt(index) != '(') {
+       				throw new DeserializeException("Error in reading atomic formula in index-"
+								+index+": Expecting (");
+       				
+       			}
+       			index++;
+       			
+       			//String nameRel = s.substring(k,index);
+       			
+       			while (index <= maxIndex &&  s.charAt(index) != ')') {
+       				index++;
+       			}
+       			if (index > maxIndex) {
+       				throw new DeserializeException("Error in reading atomic formula in index-"
+								+index+": Expecting )");
+       			}      			
+       			mystack.push(s.substring(k,index+1));
+       			mystack = cleanup(mystack);
+       		} // End of if for the case Character.isLetter(s.charAt(index))
+       		
+       		index++;
+       	   	while (index <= maxIndex && Character.isWhitespace(s.charAt(index))) {
+        		index++;
+        	} 		
+    	}
+    	if (mystack.size() == 1) {
+    		return mystack.pop();
+    	}
+    	throw new DeserializeException("Something wrong"); 	
+    }
+
+    
+
+    
+    private boolean isTerm(String s) {
+    	return ! (isOperator(s) || isOpenBracket(s) || isCloseBracket(s) || isNegation(s));
+    }
+    
+    private boolean isOperator(String s) {
+    	return (s.length() == 1 && ( s.charAt(0) == '+' || s.charAt(0) == '|'));
+    }
+    
+    private boolean isOpenBracket(String s) {
+    	return (s.length() == 1 && s.charAt(0) == '(' );
+    }
+    
+    private boolean isCloseBracket(String s) {
+    	return (s.length() == 1 && s.charAt(0) == ')' );
+    }
+    
+    private boolean isNegation(String s) {
+    	return (s.length() == 1 && s.charAt(0) == '!' );
+    }
+    
+    private Stack<String> cleanup(Stack<String> st) {
+    	
+    	if (st.size() <= 1) {
+    		return st;
+    	}
+    	String x,y,z;
+    	
+        x = st.pop();
+        y = st.pop();
+        	
+        if (isTerm(x) && isNegation(y)) {
+        	st.push(y+x);    		
+        	return cleanup(st);
+        }
+        
+        if (isTerm(x) && isOperator(y)) {
+        	z = st.pop();
+        	st.push(y+z+x);
+        	return cleanup(st);
+        }
+        
+        if (isCloseBracket(x) && isTerm(y)) {
+        	z = st.pop();
+        	st.push(y);
+        	return cleanup(st);
+        }
+    	
+        st.push(y);
+        st.push(x);
+    	
+    	return st;
+    	
+    }
+	
 
 	public GFAtomicExpression deserializeGuard(String s) throws DeserializeException {
 		// form R(x,y,z)
