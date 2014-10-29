@@ -3,6 +3,7 @@
  */
 package mapreduce.guardedfragment.structure.gfexpressions.io;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
@@ -24,6 +25,38 @@ public class GFInfixSerializer {
 		return e.generateString();
 	}
 	
+	public Set<GFExpression> GetGFExpression(String s) throws DeserializeException {
+		
+		GFPrefixSerializer prefixParser = new GFPrefixSerializer();
+		
+		String [] sArray = s.split(";");
+		HashSet<String> sSet = new HashSet<String>(Arrays.asList(sArray));
+		
+		String [] dummyArray;
+		
+		String dummyString=new String();
+		
+		for (String ss : sSet) {
+		    dummyArray = ss.split("=");
+		    
+		    System.out.println("This is ss: "+ss);
+		    
+		    if (dummyArray.length != 2) {
+		    	throw new DeserializeException("Expect exactly one = on query "+ss);		    	
+		    }
+		    System.out.println(dummyArray[0]);
+		    System.out.println(dummyArray[1]);
+		    
+		    dummyString = dummyString+"#"+dummyArray[0].trim()+InfixToPrefix(dummyArray[1])+";";	
+		    System.out.println("This is dummy[0]: "+dummyArray[0].trim()+"!");
+		    System.out.println("This is dummy string in the for-loop: "+dummyString);
+		}
+		
+		
+		GFPrefixSerializer dp = new GFPrefixSerializer();
+		Set<GFExpression> sp = dp.deserializeSet("{"+dummyString+"}");
+		return sp;
+	}
 	
     private String InfixToPrefix(String s) throws DeserializeException {
     	Stack<String> mystack = new Stack<String>();
@@ -46,7 +79,7 @@ public class GFInfixSerializer {
     		
     		if (! (s.charAt(index) == '(' || 
     				s.charAt(index) == ')' ||
-    				s.charAt(index) == '+' ||
+    				s.charAt(index) == '&' ||
     				s.charAt(index) == '|' ||
     				s.charAt(index) == '!' ||
     				Character.isLetter(s.charAt(index)) )) {
@@ -81,14 +114,14 @@ public class GFInfixSerializer {
       			mystack = cleanup(mystack);	
        		}
     		
-    		if (s.charAt(index) == '+') {
+    		if (s.charAt(index) == '&') {
     			if (mystack.empty()) {
     				throw new DeserializeException("Error in index-"+index); 				
     			}
     			if (! isTerm(mystack.peek())) {
     				throw new DeserializeException("Error in index-"+index); 				
     			}
-    			mystack.push(new String("+"));
+    			mystack.push(new String("&"));
  
     		}
     		
@@ -161,11 +194,12 @@ public class GFInfixSerializer {
 
     
     private boolean isTerm(String s) {
-    	return ! (isOperator(s) || isOpenBracket(s) || isCloseBracket(s) || isNegation(s));
+    	return s.length() > 1;
+    	//return ! (isOperator(s) || isOpenBracket(s) || isCloseBracket(s) || isNegation(s));
     }
     
     private boolean isOperator(String s) {
-    	return (s.length() == 1 && ( s.charAt(0) == '+' || s.charAt(0) == '|'));
+    	return (s.length() == 1 && ( s.charAt(0) == '&' || s.charAt(0) == '|'));
     }
     
     private boolean isOpenBracket(String s) {
