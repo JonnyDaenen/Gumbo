@@ -130,7 +130,7 @@ public class GumboWithGUI extends JFrame {
 	        	GFInfixSerializer parser = new GFInfixSerializer();
 	        	
 	        	try {
-	        		inputQuery = parser.GetGFExpression(editorIQ.getText());
+	        		inputQuery = parser.GetGFExpression(editorIQ.getText().trim());
 	        	} catch (Exception exc) {
 	        		
 	        		/*StringWriter errors = new StringWriter();
