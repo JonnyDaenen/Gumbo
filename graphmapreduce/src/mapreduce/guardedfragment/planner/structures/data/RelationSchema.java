@@ -1,12 +1,54 @@
 package mapreduce.guardedfragment.planner.structures.data;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class RelationSchema {
 
 	static final String COLPREFIX = "x";
 
 	String name;
 	String[] fields;
+	
+	public RelationSchema(String s) throws RelationSchemaException {
+		int fb = StringUtils.indexOf(s, '('); // s.indexOf('(');
+		int lb = StringUtils.lastIndexOf(s, ')'); // s.lastIndexOf(')');
+		
+		if (s.substring(fb, lb).contains("(") || s.substring(fb, lb).contains(")")
+				|| lb != s.length()-1) {
+			
+			throw new RelationSchemaException("Wrong name for a relation schema: "+ s);
+			
+		}
 
+		name = s.substring(0, fb);
+		String rest = s.substring(fb + 1, lb);
+
+		int count = 0;
+		for (int i = 0; i < rest.length(); i++) {
+			if (rest.charAt(i) == ',')
+				count++;
+
+		}
+
+		fields = new String[count + 1];
+		int i = 0;
+		int start = 0;
+		int end = -1;
+
+		while (i < count) {
+			start = end + 1;
+			// end = StringUtils.indexOf(rest, ',',start);
+			end = rest.indexOf(',', start);
+			// data[i] = StringUtils.substring(rest, start,end);
+			fields[i] = rest.substring(start, end);
+			i++;
+		}
+		// final piece
+		start = end + 1;
+		fields[i] = rest.substring(start);
+	}
+	
+	
 	public RelationSchema(String name, String... fields) {
 		this.name = name;
 		this.fields = fields;

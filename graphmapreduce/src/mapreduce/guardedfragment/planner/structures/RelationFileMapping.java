@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
+import mapreduce.guardedfragment.planner.structures.data.RelationSchemaException;
 
 import org.apache.hadoop.fs.Path;
 
@@ -24,6 +25,31 @@ public class RelationFileMapping {
 	public RelationFileMapping() {
 		mapping = new HashMap<>();
 	}
+	
+	/*
+	 * In the constructor RelationFileMapping,
+	 * the string sIn is a string of the form: 
+	 * RelSchema1 - Input File1 ; RelSchema2 - Input File2 ; .... 
+	 */
+	public RelationFileMapping(String sIn) throws RelationSchemaException, RelationFileMappingException {
+		mapping = new HashMap<>();
+		 
+		String[] listIn = sIn.split(";");
+		
+		String[] dummy;
+		
+		for (int i =0; i< listIn.length; i++) {
+			dummy = listIn[i].split("-");
+			
+			if (dummy.length != 2) {
+				throw new RelationFileMappingException("Expecting exactly one - in input file name");
+			}
+			
+			addPath(new RelationSchema(dummy[0].trim()), new Path(dummy[1]));
+		}
+		
+	}
+	
 	
 	public void addPath(RelationSchema s, Path p) {
 		Set<Path> paths;

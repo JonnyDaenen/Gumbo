@@ -23,6 +23,8 @@ import mapreduce.guardedfragment.planner.GFMRPlanner;
 import mapreduce.guardedfragment.planner.partitioner.HeightPartitioner;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
 import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
+import mapreduce.guardedfragment.planner.structures.RelationFileMappingException;
+import mapreduce.guardedfragment.planner.structures.data.RelationSchemaException;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.DeserializeException;
@@ -44,6 +46,10 @@ public class GumboWithGUI extends JFrame {
 	// GUI variables
 	private static JEditorPane editorIQ;
 	private static JEditorPane editorIO;
+	
+	private static JEditorPane editorIn;
+	private static JEditorPane editorOut;
+	
 	private static JTextArea textConsole;
 	
 	private static JButton buttonQC;
@@ -63,15 +69,23 @@ public class GumboWithGUI extends JFrame {
 		
 		editorIQ = new JEditorPane();
 		editorIQ.setEditable(true);
-		editorIQ.setFont(new Font("Courier New",1,19));
+		editorIQ.setFont(new Font("Courier New",0,19));
 		
 		editorIO = new JEditorPane();
 		editorIO.setEditable(true);
-		editorIO.setFont(new Font("Courier New",1,19));
+		editorIO.setFont(new Font("Courier New",0,19));
+		
+		editorIn = new JEditorPane();
+		editorIn.setEditable(true);
+		editorIn.setFont(new Font("Courier New",0,19));
+		
+		editorOut = new JEditorPane();
+		editorOut.setEditable(true);
+		editorOut.setFont(new Font("Courier New",0,19));
 		
 		textConsole = new JTextArea();
 		textConsole.setEditable(false);
-		textConsole.setFont(new Font("Courier New",1,19));
+		textConsole.setFont(new Font("Courier New",1,12));
 		
 		buttonQC = new JButton("Query Compiler");		
 		buttonSche = new JButton("Jobs constructor");
@@ -79,7 +93,7 @@ public class GumboWithGUI extends JFrame {
 		buttonFS = new JButton("GUMBO-Spark");
 		cbLevel = new JCheckBox("with schedule");
 		
-		GumboMainWindow mainwindow = new GumboMainWindow(editorIQ, editorIO, textConsole,buttonQC,
+		GumboMainWindow mainwindow = new GumboMainWindow(editorIQ, editorIn, editorOut, textConsole,buttonQC,
 				buttonSche,buttonFH,buttonFS,cbLevel);
 			
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -103,18 +117,14 @@ public class GumboWithGUI extends JFrame {
 	        	
 	        	try {
 	        		inputQuery = parser.GetGFExpression(editorIQ.getText());
-	        	} catch (DeserializeException exc) {
+	        	} catch (Exception exc) {
 	        		
 	        		StringWriter errors = new StringWriter();
 	        		exc.printStackTrace(new PrintWriter(errors));
 	        		textConsole.append(errors.toString());
 	        		
 	    			//exc.printStackTrace();
-	    		} catch (Exception exc) {
-	    			exc.printStackTrace();
-	    		}
-				
-				//GFExpression gfe = parser.deserialize(query);
+	    		} 
 
 	        	textConsole.append("The following queries compiled:\n");
 	        	
@@ -123,17 +133,19 @@ public class GumboWithGUI extends JFrame {
 	        		
 	        	}
 	        	
+	        	textConsole.append("Parsing the input and output files...\n");
 	        	
+	        	RelationFileMapping rfm;
+	        	try {
+					rfm = new RelationFileMapping(editorIn.getText());
+				} catch (RelationSchemaException | RelationFileMappingException e1) {
+					StringWriter errors = new StringWriter();
+	        		e1.printStackTrace(new PrintWriter(errors));
+	        		textConsole.append(errors.toString());
+				}
+				
 	        	
-	        	/*for (GFExpression gfe : inputQuery) {
-	        		textConsole.append(gfe.toString());
-	        	}*/
-	        	//textConsole.append(editorIQ.getText());
-	        	//textConsole.append("\n");
-	        	//textConsole.append("Checking the input and output files...\n");
-	        	//textConsole.append("Input and output files checked!");
-	        	//textConsole.append(editorIO.getText());
-	       		//textConsole.append("\n");
+
 	       	}
 	    });
 		
