@@ -38,6 +38,11 @@ public class GFInfixSerializer {
 		
 		for (String ss : sSet) {
 		    dummyArray = ss.split(":");
+		    System.out.println("length of dummyArray" + dummyArray.length);
+		    
+		    for(int i =0 ; i < dummyArray.length; i++) {
+		    	System.out.println(dummyArray[i]);
+		    }
 		    		    
 		    if (dummyArray.length != 2) {
 		    	throw new DeserializeException("Expect exactly one : on query "+ss);		    	

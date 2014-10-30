@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.io.IOException;
+
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
@@ -15,7 +17,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
+
+import com.twitter.chill.Base64.OutputStream;
 
 
 
@@ -38,6 +43,23 @@ class GumboMainWindow extends JFrame {
         setVisible(true);
       
 	}
+	
+	
+	public GumboMainWindow(JEditorPane editorIQ, JEditorPane editorI, JEditorPane editorO, JTextAreaOutputStream textConsole, JButton buttonQC, 
+			JButton buttonSche, JButton buttonFH, JButton buttonFS, JCheckBox cbLevel) {
+		super("GUMBO");
+				
+		TextWindow textWin = new TextWindow(new WindowOne(editorIQ),new WindowTwo(editorI, editorO,textConsole));	
+				
+		WindowThree buttonWin = new WindowThree(buttonQC,buttonSche,buttonFH,buttonFS,cbLevel);
+		
+		setLayout(new FlowLayout());
+		add(textWin);
+		add(buttonWin);
+        setVisible(true);
+      
+	}
+	
 }
 
 
@@ -127,6 +149,53 @@ class WindowTwo extends JPanel {
 		
         setVisible(true);			
 	}
+	
+	
+	public WindowTwo(JEditorPane eI, JEditorPane eO, JTextAreaOutputStream tC) {
+		super();
+		setLayout(new GridLayout(1,2,6,3));	
+		
+		JScrollPane editorInScroll = new JScrollPane(eI);
+		editorInScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		editorInScroll.setPreferredSize(new Dimension(300, 190));
+		editorInScroll.setMinimumSize(new Dimension(10, 10));
+		editorInScroll.setBorder(BorderFactory.createTitledBorder(null, "INPUT FILES", 
+				TitledBorder.CENTER, TitledBorder.TOP, new Font("Courier new",1,14),Color.blue));
+		
+		JScrollPane editorOutScroll = new JScrollPane(eO);
+		editorOutScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		editorOutScroll.setPreferredSize(new Dimension(300, 190));
+		editorOutScroll.setMinimumSize(new Dimension(10, 10));
+		editorOutScroll.setBorder(BorderFactory.createTitledBorder(null, "OUTPUT FILES", 
+				TitledBorder.CENTER, TitledBorder.TOP, new Font("Courier new",1,14),Color.blue));
+		
+		WindowTwoPrime wtp = new WindowTwoPrime(editorInScroll,editorOutScroll);
+		
+		add(wtp);
+					
+/*
+		JScrollPane editorIOScroll = new JScrollPane(eIO);
+		editorIOScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		editorIOScroll.setPreferredSize(new Dimension(620, 250));
+		editorIOScroll.setMinimumSize(new Dimension(10, 10));
+		editorIOScroll.setBorder(BorderFactory.createTitledBorder(null, "INPUT & OUTPUT FILES", 
+				TitledBorder.CENTER, TitledBorder.TOP, new Font("Courier new",1,14),Color.blue));
+		
+		add(editorIOScroll);
+		*/
+				
+		JScrollPane textConsoleScroll = new JScrollPane(tC.giveDest());
+		textConsoleScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		textConsoleScroll.setPreferredSize(new Dimension(620, 400));
+		textConsoleScroll.setMinimumSize(new Dimension(10, 10));
+		textConsoleScroll.setBorder(BorderFactory.createTitledBorder(null, "CONSOLE", 
+				TitledBorder.CENTER, TitledBorder.TOP, new Font("Courier new",1,14),Color.blue));
+		
+		add(textConsoleScroll);
+		
+        setVisible(true);			
+	}
+	
 }
 
 
@@ -167,5 +236,45 @@ class WindowThree extends JPanel {
 					
 	}
 		
+}
+
+
+class JTextAreaOutputStream extends OutputStream
+{
+    private JTextArea destination;
+
+    public JTextAreaOutputStream (JTextArea destination)
+    {   super(null);
+        if (destination == null)
+            throw new IllegalArgumentException ("Destination is null");
+
+        this.destination = destination;
+    }
+    
+    public JTextArea giveDest() {
+    	return destination;
+    }
+
+    @Override
+    public void write(byte[] buffer, int offset, int length) throws IOException
+    {
+        final String text = new String (buffer, offset, length);
+        SwingUtilities.invokeLater(new Runnable ()
+            {
+                @Override
+                public void run() 
+                {
+                    destination.append (text);
+                }
+            });
+    }
+
+    @Override
+    public void write(int b) throws IOException
+    {
+        write (new byte [] {(byte)b}, 0, 1);
+    }
+
+ 
 }
 

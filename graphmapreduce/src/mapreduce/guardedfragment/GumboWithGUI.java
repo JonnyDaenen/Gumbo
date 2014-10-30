@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -52,6 +53,8 @@ public class GumboWithGUI extends JFrame {
 	
 	private static JTextArea textConsole;
 	
+	private static JTextAreaOutputStream outPipe;
+	
 	private static JButton buttonQC;
 	private static JButton buttonSche;
 	private static JButton buttonFH;
@@ -82,9 +85,14 @@ public class GumboWithGUI extends JFrame {
 		editorOut.setEditable(true);
 		editorOut.setFont(new Font("Courier New",0,19));
 		
+		
 		textConsole = new JTextArea();
 		textConsole.setEditable(false);
 		textConsole.setFont(new Font("Courier New",1,12));
+		
+		
+		outPipe = new JTextAreaOutputStream(textConsole);
+		
 		
 		buttonQC = new JButton("Query Compiler");		
 		buttonSche = new JButton("Jobs constructor");
@@ -92,7 +100,10 @@ public class GumboWithGUI extends JFrame {
 		buttonFS = new JButton("GUMBO-Spark");
 		cbLevel = new JCheckBox("with schedule");
 		
-		GumboMainWindow mainwindow = new GumboMainWindow(editorIQ, editorIn, editorOut, textConsole,buttonQC,
+		//GumboMainWindow mainwindow = new GumboMainWindow(editorIQ, editorIn, editorOut, textConsole,buttonQC,
+		//		buttonSche,buttonFH,buttonFS,cbLevel);
+		
+		GumboMainWindow mainwindow = new GumboMainWindow(editorIQ, editorIn, editorOut, outPipe,buttonQC,
 				buttonSche,buttonFH,buttonFS,cbLevel);
 			
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -107,10 +118,14 @@ public class GumboWithGUI extends JFrame {
 		mainwindow.setSize(newwidth, newheight);
 		mainwindow.setVisible(true);
 		
+		System.setOut (new PrintStream (outPipe));
+		
 	    buttonQC.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        	textConsole.setText("");
 	        	textConsole.append("Compiling the input queries...\n");
+	        	
+	        	System.out.println("Testing, testing !!!!");
 	        	
 	        	GFInfixSerializer parser = new GFInfixSerializer();
 	        	
@@ -118,11 +133,12 @@ public class GumboWithGUI extends JFrame {
 	        		inputQuery = parser.GetGFExpression(editorIQ.getText());
 	        	} catch (Exception exc) {
 	        		
-	        		StringWriter errors = new StringWriter();
+	        		/*StringWriter errors = new StringWriter();
 	        		exc.printStackTrace(new PrintWriter(errors));
 	        		textConsole.append(errors.toString());
+	        		*/
 	        		
-	    			//exc.printStackTrace();
+	    			exc.printStackTrace();
 	    		} 
 
 	        	textConsole.append("The following queries compiled:\n");
@@ -132,18 +148,28 @@ public class GumboWithGUI extends JFrame {
 	        		
 	        	}
 	        	
+	        	
+	        	
 	        	textConsole.append("Parsing the input and output files...\n");
 	        	
-	        	RelationFileMapping rfm;
+	        	RelationFileMapping rfmInPath;
 	        	try {
-					rfm = new RelationFileMapping(editorIn.getText());
+					rfmInPath = new RelationFileMapping(editorIn.getText());
 				} catch (RelationSchemaException | RelationFileMappingException e1) {
-					StringWriter errors = new StringWriter();
-	        		e1.printStackTrace(new PrintWriter(errors));
-	        		textConsole.append(errors.toString());
+					
+	        		e1.printStackTrace();
 				}
 				
+	        	RelationFileMapping rfmOutPath;
+	        	try {
+					rfmOutPath = new RelationFileMapping(editorOut.getText());
+				} catch (RelationSchemaException | RelationFileMappingException e1) {
+					
+	        		e1.printStackTrace();
+				}
 	        	
+	        	// In the future should be:
+	        	// plan = new MRPlan(inputQuery,rfmInPath, rfmOutPath);
 
 	       	}
 	    });

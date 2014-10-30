@@ -13,7 +13,7 @@ public class RelationSchema {
 		int fb = StringUtils.indexOf(s, '('); // s.indexOf('(');
 		int lb = StringUtils.lastIndexOf(s, ')'); // s.lastIndexOf(')');
 		
-		if (s.substring(fb, lb).contains("(") || s.substring(fb, lb).contains(")")
+		if (s.substring(fb+1, lb).contains("(") || s.substring(fb+1, lb).contains(")")
 				|| lb != s.length()-1) {
 			
 			throw new RelationSchemaException("Wrong name for a relation schema: "+ s);
