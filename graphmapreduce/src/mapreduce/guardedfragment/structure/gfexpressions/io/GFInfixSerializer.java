@@ -37,19 +37,13 @@ public class GFInfixSerializer {
 		String dummyString=new String();
 		
 		for (String ss : sSet) {
-		    dummyArray = ss.split("=");
-		    
-		    System.out.println("This is ss: "+ss);
-		    
+		    dummyArray = ss.split(":");
+		    		    
 		    if (dummyArray.length != 2) {
-		    	throw new DeserializeException("Expect exactly one = on query "+ss);		    	
+		    	throw new DeserializeException("Expect exactly one : on query "+ss);		    	
 		    }
-		    System.out.println(dummyArray[0]);
-		    System.out.println(dummyArray[1]);
-		    
-		    dummyString = dummyString+"#"+dummyArray[0].trim()+InfixToPrefix(dummyArray[1])+";";	
-		    System.out.println("This is dummy[0]: "+dummyArray[0].trim()+"!");
-		    System.out.println("This is dummy string in the for-loop: "+dummyString);
+		       
+		    dummyString = dummyString+":"+dummyArray[0].trim()+InfixToPrefix(dummyArray[1])+";";	
 		}
 		
 		

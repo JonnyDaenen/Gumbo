@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -102,7 +104,12 @@ public class GumboWithGUI extends JFrame {
 	        	try {
 	        		inputQuery = parser.GetGFExpression(editorIQ.getText());
 	        	} catch (DeserializeException exc) {
-	    			exc.printStackTrace();
+	        		
+	        		StringWriter errors = new StringWriter();
+	        		exc.printStackTrace(new PrintWriter(errors));
+	        		textConsole.append(errors.toString());
+	        		
+	    			//exc.printStackTrace();
 	    		} catch (Exception exc) {
 	    			exc.printStackTrace();
 	    		}

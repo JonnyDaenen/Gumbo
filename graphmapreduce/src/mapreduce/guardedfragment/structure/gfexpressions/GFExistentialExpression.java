@@ -96,7 +96,7 @@ public class GFExistentialExpression extends GFExpression {
 	
 	@Override
 	public String generateString() {
-		return "(" + output.generateString() + " # " + guard.generateString() + " & " + child.generateString() + ")";
+		return "(" + output.generateString() + " : " + guard.generateString() + " & " + child.generateString() + ")";
 	}
 	
 

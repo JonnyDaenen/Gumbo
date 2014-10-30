@@ -159,7 +159,7 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 
 			break;
 
-		case "#":
+		case ":":
 			result = processExistential(s, startpos);
 			break;
 			
@@ -313,7 +313,7 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 		String o = serialize(e.getOutput());
 		String g = serialize(e.getGuard());
 		String c = serialize(e.getChild());
-		return "#" + o + "&" + g + c;
+		return ":" + o + "&" + g + c;
 	}
 
 
