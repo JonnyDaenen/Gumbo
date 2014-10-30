@@ -137,7 +137,7 @@ public class GumboWithGUI extends JFrame {
 	        		exc.printStackTrace(new PrintWriter(errors));
 	        		textConsole.append(errors.toString());
 	        		*/
-	        		
+	        		System.out.println(exc);
 	    			exc.printStackTrace();
 	    		} 
 
@@ -164,7 +164,7 @@ public class GumboWithGUI extends JFrame {
 	        	try {
 					rfmOutPath = new RelationFileMapping(editorOut.getText());
 				} catch (RelationSchemaException | RelationFileMappingException e1) {
-					
+					System.out.println(e1);
 	        		e1.printStackTrace();
 				}
 	        	
