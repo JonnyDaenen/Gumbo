@@ -219,19 +219,22 @@ public class GFInfixSerializer {
         y = st.pop();
         	
         if (isTerm(x) && isNegation(y)) {
-        	st.push(y+x);    		
+        	st.push(y+x);  
+        	//return st;
         	return cleanup(st);
         }
         
         if (isTerm(x) && isOperator(y)) {
         	z = st.pop();
         	st.push(y+z+x);
+        	//return st;
         	return cleanup(st);
         }
         
         if (isCloseBracket(x) && isTerm(y)) {
         	z = st.pop();
         	st.push(y);
+        	//return st;
         	return cleanup(st);
         }
     	
