@@ -45,7 +45,7 @@ public class GumboWithGUI extends JFrame {
 	
 	// GUI variables
 	private static JEditorPane editorIQ;
-	private static JEditorPane editorIO;
+	//private static JEditorPane editorIO;
 	
 	private static JEditorPane editorIn;
 	private static JEditorPane editorOut;
@@ -62,6 +62,9 @@ public class GumboWithGUI extends JFrame {
 	// Gumbo's variable
 	
 	private static Set<GFExpression> inputQuery;
+	MRPlan plan;
+	HadoopExecutor hadoopExec;
+	SparkExecutor SparkExec;
 	
 
 
@@ -70,10 +73,6 @@ public class GumboWithGUI extends JFrame {
 		editorIQ = new JEditorPane();
 		editorIQ.setEditable(true);
 		editorIQ.setFont(new Font("Courier New",0,19));
-		
-		editorIO = new JEditorPane();
-		editorIO.setEditable(true);
-		editorIO.setFont(new Font("Courier New",0,19));
 		
 		editorIn = new JEditorPane();
 		editorIn.setEditable(true);
