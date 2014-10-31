@@ -154,7 +154,7 @@ public class GumboWithGUI extends JFrame {
 	        	
 	        	RelationFileMapping rfmInPath;
 	        	try {
-					rfmInPath = new RelationFileMapping(editorIn.getText());
+					rfmInPath = new RelationFileMapping(editorIn.getText().trim());
 				} catch (RelationSchemaException | RelationFileMappingException e1) {
 					
 	        		e1.printStackTrace();
@@ -162,7 +162,7 @@ public class GumboWithGUI extends JFrame {
 				
 	        	RelationFileMapping rfmOutPath;
 	        	try {
-					rfmOutPath = new RelationFileMapping(editorOut.getText());
+					rfmOutPath = new RelationFileMapping(editorOut.getText().trim());
 				} catch (RelationSchemaException | RelationFileMappingException e1) {
 					System.out.println(e1);
 	        		e1.printStackTrace();
