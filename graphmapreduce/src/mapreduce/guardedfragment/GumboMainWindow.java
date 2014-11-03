@@ -29,9 +29,17 @@ class GumboMainWindow extends JFrame {
 		
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
 	public GumboMainWindow(JEditorPane editorIQ, JEditorPane editorI, JEditorPane editorO, JTextArea textConsole, JButton buttonQC, 
 			JButton buttonSche, JButton buttonFH, JButton buttonFS, JCheckBox cbLevel) {
 		super("GUMBO");
+		
+		
 				
 		TextWindow textWin = new TextWindow(new WindowOne(editorIQ),new WindowTwo(editorI, editorO,textConsole));	
 				
@@ -53,6 +61,8 @@ class GumboMainWindow extends JFrame {
 				
 		WindowThree buttonWin = new WindowThree(buttonQC,buttonSche,buttonFH,buttonFS,cbLevel);
 		
+	
+		
 		setLayout(new FlowLayout());
 		add(textWin);
 		add(buttonWin);
@@ -68,6 +78,11 @@ class TextWindow extends JSplitPane {
 	//private WindowOne fw;
 	//private WindowTwo sw;
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public TextWindow(WindowOne fw, WindowTwo sw) {
 		super(JSplitPane.VERTICAL_SPLIT,fw,sw);
 
@@ -83,6 +98,11 @@ class WindowOne extends JPanel {
 	
 	//private JEditorPane editorIQ;
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public WindowOne(JEditorPane eIQ) {
 		super();
 		setLayout(new GridLayout(1,1,10,5));		
@@ -90,7 +110,8 @@ class WindowOne extends JPanel {
 
 		JScrollPane editorIQScroll = new JScrollPane(eIQ);
 		editorIQScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		editorIQScroll.setPreferredSize(new Dimension(1240, 210));
+		editorIQScroll.setPreferredSize(new Dimension(1000, 200));
+		//editorIQScroll.setPreferredSize(new Dimension(1240, 210));
 		editorIQScroll.setMinimumSize(new Dimension(10, 10));
 		
 		
@@ -105,6 +126,12 @@ class WindowOne extends JPanel {
 class WindowTwo extends JPanel {
 	
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
 	public WindowTwo(JEditorPane eI, JEditorPane eO, JTextArea tC) {
 		super();
 		setLayout(new GridLayout(1,2,6,3));	
@@ -112,6 +139,7 @@ class WindowTwo extends JPanel {
 		JScrollPane editorInScroll = new JScrollPane(eI);
 		editorInScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		editorInScroll.setPreferredSize(new Dimension(300, 190));
+		//editorInScroll.setPreferredSize(new Dimension(300, 190));
 		editorInScroll.setMinimumSize(new Dimension(10, 10));
 		editorInScroll.setBorder(BorderFactory.createTitledBorder(null, "INPUT FILES", 
 				TitledBorder.CENTER, TitledBorder.TOP, new Font("Courier new",1,14),Color.blue));
@@ -186,7 +214,7 @@ class WindowTwo extends JPanel {
 				
 		JScrollPane textConsoleScroll = new JScrollPane(tC.giveDest());
 		textConsoleScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		textConsoleScroll.setPreferredSize(new Dimension(620, 400));
+		textConsoleScroll.setPreferredSize(new Dimension(300, 400));
 		textConsoleScroll.setMinimumSize(new Dimension(10, 10));
 		textConsoleScroll.setBorder(BorderFactory.createTitledBorder(null, "CONSOLE", 
 				TitledBorder.CENTER, TitledBorder.TOP, new Font("Courier new",1,14),Color.blue));
@@ -202,6 +230,11 @@ class WindowTwo extends JPanel {
 class WindowTwoPrime extends JSplitPane {
 	
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public WindowTwoPrime(JScrollPane eI, JScrollPane eO) {
 			
 		super(JSplitPane.VERTICAL_SPLIT,eI,eO);
@@ -219,6 +252,11 @@ class WindowTwoPrime extends JSplitPane {
 class WindowThree extends JPanel {
 	
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public WindowThree(JButton bQC, JButton bS, JButton bFH, JButton bFS, JCheckBox cbL) {
 		super();
 		setLayout(new GridLayout(2,4,20,-3));
