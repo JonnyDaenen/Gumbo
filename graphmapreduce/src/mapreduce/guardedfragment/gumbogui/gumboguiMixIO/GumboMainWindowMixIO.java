@@ -36,11 +36,13 @@ public class GumboMainWindowMixIO extends JFrame {
 		ButtonWindowMixIO buttonWin = new ButtonWindowMixIO(buttonQC,buttonSche,buttonFH,buttonFS,cbLevel);
 		
 		setLayout(new FlowLayout());
+		pack();
 		add(textWin);
 		add(new DirInWindowMixIO(ip,browseIn));
 		add(new DirOutWindowMixIO(op,browseOut));
 		add(buttonWin);
         setVisible(true);
+        setResizable(false);
       
 	}
 
