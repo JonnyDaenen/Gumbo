@@ -37,7 +37,7 @@ import org.apache.hadoop.fs.Path;
 
 
 
-public class GumboWithGUI extends JFrame {
+public class GumboWithGUI1 extends JFrame {
 	
 	/* Eclipse tells me that this program does not have serialVersionUID
 	 * So I ask Eclipse to generate one.
@@ -103,7 +103,7 @@ public class GumboWithGUI extends JFrame {
 		//GumboMainWindow mainwindow = new GumboMainWindow(editorIQ, editorIn, editorOut, textConsole,buttonQC,
 		//		buttonSche,buttonFH,buttonFS,cbLevel);
 		
-		GumboMainWindow mainwindow = new GumboMainWindow(editorIQ, editorIn, editorOut, outPipe,buttonQC,
+		GumboMainWindow1 mainwindow = new GumboMainWindow1(editorIQ, editorIn, editorOut, outPipe,buttonQC,
 				buttonSche,buttonFH,buttonFS,cbLevel);
 			
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

@@ -25,7 +25,7 @@ import com.twitter.chill.Base64.OutputStream;
 
 
 
-class GumboMainWindow extends JFrame {
+public class GumboMainWindow1 extends JFrame {
 		
 
 	
@@ -35,7 +35,7 @@ class GumboMainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 
-	public GumboMainWindow(JEditorPane editorIQ, JEditorPane editorI, JEditorPane editorO, JTextArea textConsole, JButton buttonQC, 
+	public GumboMainWindow1(JEditorPane editorIQ, JEditorPane editorI, JEditorPane editorO, JTextArea textConsole, JButton buttonQC, 
 			JButton buttonSche, JButton buttonFH, JButton buttonFS, JCheckBox cbLevel) {
 		super("GUMBO");
 		
@@ -53,7 +53,7 @@ class GumboMainWindow extends JFrame {
 	}
 	
 	
-	public GumboMainWindow(JEditorPane editorIQ, JEditorPane editorI, JEditorPane editorO, JTextAreaOutputStream textConsole, JButton buttonQC, 
+	public GumboMainWindow1(JEditorPane editorIQ, JEditorPane editorI, JEditorPane editorO, JTextAreaOutputStream textConsole, JButton buttonQC, 
 			JButton buttonSche, JButton buttonFH, JButton buttonFS, JCheckBox cbLevel) {
 		super("GUMBO");
 				
