@@ -1,4 +1,4 @@
-package mapreduce.guardedfragment;
+package mapreduce.guardedfragment.gumbogui;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -6,10 +6,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JButton;
@@ -18,26 +14,19 @@ import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
+
+import mapreduce.guardedfragment.gumbogui.JTextAreaOutputStream;
+import mapreduce.guardedfragment.gumbogui.gumboguiSeparateIO.GumboMainWindowSeparateIO;
 import mapreduce.guardedfragment.executor.hadoop.HadoopExecutor;
 import mapreduce.guardedfragment.executor.spark.SparkExecutor;
-import mapreduce.guardedfragment.planner.GFMRPlanner;
-import mapreduce.guardedfragment.planner.partitioner.HeightPartitioner;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
 import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 import mapreduce.guardedfragment.planner.structures.RelationFileMappingException;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchemaException;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.io.DeserializeException;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFInfixSerializer;
-import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 
-import org.apache.hadoop.fs.Path;
-
-
-
-
-public class GumboWithGUI1 extends JFrame {
+public class GumboSeparateIO extends JFrame {
 	
 	/* Eclipse tells me that this program does not have serialVersionUID
 	 * So I ask Eclipse to generate one.
@@ -103,7 +92,7 @@ public class GumboWithGUI1 extends JFrame {
 		//GumboMainWindow mainwindow = new GumboMainWindow(editorIQ, editorIn, editorOut, textConsole,buttonQC,
 		//		buttonSche,buttonFH,buttonFS,cbLevel);
 		
-		GumboMainWindow1 mainwindow = new GumboMainWindow1(editorIQ, editorIn, editorOut, outPipe,buttonQC,
+		GumboMainWindowSeparateIO mainwindow = new GumboMainWindowSeparateIO(editorIQ, editorIn, editorOut, outPipe,buttonQC,
 				buttonSche,buttonFH,buttonFS,cbLevel);
 			
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

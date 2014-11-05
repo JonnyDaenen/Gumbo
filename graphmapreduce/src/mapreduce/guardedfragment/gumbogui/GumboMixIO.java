@@ -1,4 +1,4 @@
-package mapreduce.guardedfragment;
+package mapreduce.guardedfragment.gumbogui;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -16,8 +16,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
+
 import mapreduce.guardedfragment.executor.hadoop.HadoopExecutor;
 import mapreduce.guardedfragment.executor.spark.SparkExecutor;
+import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.GumboMainWindowMixIO;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
 import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 import mapreduce.guardedfragment.planner.structures.RelationFileMappingException;
@@ -25,14 +27,17 @@ import mapreduce.guardedfragment.planner.structures.data.RelationSchemaException
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFInfixSerializer;
 
-public class GumboWithGUI0 {
+public class GumboMixIO {
 	
 	
 	private static JEditorPane editorIQ;
 	private static JTextArea textConsole;
 	
-	private static TextField inPath;
-	private static TextField outPath;
+	private static TextField inPathText;
+	private static TextField outPathText;
+	
+	private static JButton browseInPathButton;
+	private static JButton browseOutPathButton;
 	
 	private static JButton buttonQC;
 	private static JButton buttonSche;
@@ -55,21 +60,25 @@ public class GumboWithGUI0 {
 		
 		editorIQ = new JEditorPane();
 		editorIQ.setEditable(true);
-		editorIQ.setFont(new Font("Courier New",0,16));
+		editorIQ.setFont(new Font("Courier New",1,13));
 		
 		textConsole = new JTextArea();
 		textConsole.setEditable(false);
-		textConsole.setFont(new Font("Courier New",1,12));
+		textConsole.setFont(new Font("Courier New",1,13));
 		
-		JFileChooser inPathChooser = new JFileChooser();
-		inPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		
 
 		JFileChooser outPathChooser = new JFileChooser();
 		outPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		
-		inPath = new TextField(94);
-		outPath = new TextField(94);
+		inPathText = new TextField(87);
+		outPathText = new TextField(87);
+		
+		inPathText.setEditable(false);
+		outPathText.setEditable(false);
 
+		browseInPathButton = new JButton("Browse");
+		browseOutPathButton = new JButton("Browse");
 		
 		buttonQC = new JButton("Query Compiler");		
 		buttonSche = new JButton("Jobs constructor");
@@ -77,11 +86,10 @@ public class GumboWithGUI0 {
 		buttonFS = new JButton("GUMBO-Spark");
 		cbLevel = new JCheckBox("with schedule");
 		
-		//GumboMainWindow mainwindow = new GumboMainWindow(editorIQ, editorIn, editorOut, textConsole,buttonQC,
-		//		buttonSche,buttonFH,buttonFS,cbLevel);
 		
-		GumboMainWindow0 mainwindow = new GumboMainWindow0(editorIQ, textConsole,buttonQC,
-				buttonSche,buttonFH,buttonFS,cbLevel, inPath, outPath);
+		GumboMainWindowMixIO mainwindow = new GumboMainWindowMixIO(editorIQ, textConsole,buttonQC,
+				buttonSche,buttonFH,buttonFS,cbLevel, inPathText, outPathText,
+				browseInPathButton, browseOutPathButton);
 			
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -104,7 +112,33 @@ public class GumboWithGUI0 {
 
 	       	}
 	    });
+	    
+	    browseInPathButton.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		
+		    	JFileChooser pathChooser = new JFileChooser();
+				pathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				
+				if (pathChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+					inPathText.setText(pathChooser.getSelectedFile().getAbsolutePath());
+		        }			
+	    	}
+	    });
 		
+	    browseOutPathButton.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		
+		    	JFileChooser pathChooser = new JFileChooser();
+				pathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				
+				if (pathChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+					
+					outPathText.setText(pathChooser.getSelectedFile().getAbsolutePath());
+		        }
+	    		
+	    	}
+	    });
+	
 		
 		
 	}
