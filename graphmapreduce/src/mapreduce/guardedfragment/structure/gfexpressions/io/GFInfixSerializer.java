@@ -48,7 +48,7 @@ public class GFInfixSerializer {
 		    	throw new DeserializeException("Expect exactly one : on query "+ss);		    	
 		    }
 		       
-		    dummyString = dummyString+":"+dummyArray[0].trim()+InfixToPrefix(dummyArray[1])+";";	
+		    dummyString = dummyString+"#"+dummyArray[0].trim()+InfixToPrefix(dummyArray[1])+";";	
 		}
 		
 		
