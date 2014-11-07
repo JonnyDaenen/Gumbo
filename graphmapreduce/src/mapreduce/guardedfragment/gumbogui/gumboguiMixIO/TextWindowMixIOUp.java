@@ -22,7 +22,7 @@ class TextWindowMixIOUp extends JPanel {
 		
 		JScrollPane editorIQScroll = new JScrollPane(eIQ);
 		editorIQScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		editorIQScroll.setPreferredSize(new Dimension(1000, 260));
+		editorIQScroll.setPreferredSize(new Dimension(1000, 270));
 		//editorIQScroll.setPreferredSize(new Dimension(1240, 210));
 		editorIQScroll.setMinimumSize(new Dimension(10, 10));
 		
