@@ -5,6 +5,7 @@ import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
 import java.awt.TextField;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -32,6 +33,9 @@ public class GumboMainWindowMixIO extends JPanel {
 			TextField ip, TextField op, JButton browseIn, JButton browseOut) {
 		
 		super();
+		setBorder(BorderFactory.createCompoundBorder(
+			    BorderFactory.createEmptyBorder(10, 10, 10, 10), // outer border
+			    BorderFactory.createEmptyBorder(0,0,0,0)));
 		
 		
 				

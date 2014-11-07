@@ -95,12 +95,13 @@ public class GumboMixIO {
 
         int height = screenSize.height;
         int width = screenSize.width;
-        screenSize.setSize(width*(0.9), height*(0.9));
+        screenSize.setSize(width*(0.96), height*(0.94));
         int newheight = screenSize.height;
         int newwidth = screenSize.width;
 		
 		mainwindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainwindow.setSize(newwidth, newheight);
+		mainwindow.setLocation((height-newheight)/2, (width-newwidth)/2);
 		mainwindow.setVisible(true);
 		
 		
