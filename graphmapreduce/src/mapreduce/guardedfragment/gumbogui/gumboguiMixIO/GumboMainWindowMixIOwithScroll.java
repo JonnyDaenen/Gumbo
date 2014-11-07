@@ -24,9 +24,6 @@ public class GumboMainWindowMixIOwithScroll extends JFrame {
 		
 		JScrollPane mainWin = new JScrollPane(mainwindow);
 		
-		//mainWin.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		//mainWin.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		
 		add(mainWin);
 		
 	}
