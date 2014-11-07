@@ -16,10 +16,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
-
 import mapreduce.guardedfragment.executor.hadoop.HadoopExecutor;
 import mapreduce.guardedfragment.executor.spark.SparkExecutor;
 import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.GumboMainWindowMixIO;
+import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.GumboMainWindowMixIOwithScroll;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
 import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 import mapreduce.guardedfragment.planner.structures.RelationFileMappingException;
@@ -80,14 +80,14 @@ public class GumboMixIO {
 		browseInPathButton = new JButton("Browse");
 		browseOutPathButton = new JButton("Browse");
 		
-		buttonQC = new JButton("Query Compiler");		
+		buttonQC = new JButton("Query Compiler");
 		buttonSche = new JButton("Jobs constructor");
 		buttonFH = new JButton("GUMBO-Hadoop");
 		buttonFS = new JButton("GUMBO-Spark");
 		cbLevel = new JCheckBox("with schedule");
 		
 		
-		GumboMainWindowMixIO mainwindow = new GumboMainWindowMixIO(editorIQ, textConsole,buttonQC,
+		GumboMainWindowMixIOwithScroll mainwindow = new GumboMainWindowMixIOwithScroll(editorIQ, textConsole,buttonQC,
 				buttonSche,buttonFH,buttonFS,cbLevel, inPathText, outPathText,
 				browseInPathButton, browseOutPathButton);
 			
