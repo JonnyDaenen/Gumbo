@@ -12,6 +12,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
 import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.ButtonWindowMixIO;
@@ -36,8 +37,6 @@ public class GumboMainWindowMixIO extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(
 			    BorderFactory.createEmptyBorder(10, 10, 10, 10), // outer border
 			    BorderFactory.createEmptyBorder(0,0,0,0)));
-		
-		
 				
 		TextWindowMixIO textWin = new TextWindowMixIO(new TextWindowMixIOUp(editorIQ), 
 				new TextWindowMixIOBot(textConsole));	
@@ -53,7 +52,7 @@ public class GumboMainWindowMixIO extends JPanel {
 		JPanel p1 = new JPanel();
 		p1.setLayout(new BorderLayout());
 		p1.add(new DirInWindowMixIO(ip,browseIn),BorderLayout.NORTH);
-			
+	
 		JPanel p2 = new JPanel();
 		p2.setLayout(new BorderLayout());
 		p2.add(new DirOutWindowMixIO(op,browseOut),BorderLayout.NORTH);
@@ -65,7 +64,7 @@ public class GumboMainWindowMixIO extends JPanel {
 		p2.add(p3,BorderLayout.CENTER);
 		p1.add(p2,BorderLayout.CENTER);
 		add(p1,BorderLayout.CENTER);
-
+		
         setVisible(true);
       
 	}
