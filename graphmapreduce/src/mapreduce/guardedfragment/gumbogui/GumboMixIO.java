@@ -50,9 +50,9 @@ public class GumboMixIO {
 	// Gumbo's variable
 	
 	private static Set<GFExpression> inputQuery;
-	MRPlan plan;
-	HadoopExecutor hadoopExec;
-	SparkExecutor SparkExec;
+	private static MRPlan plan;
+	private static HadoopExecutor hadoopExec;
+	private static SparkExecutor SparkExec;
 	
 
 
@@ -110,7 +110,6 @@ public class GumboMixIO {
 	        	textConsole.setText("");
 	        	textConsole.append("Compiling the input queries...\n");
 	        	
-
 	       	}
 	    });
 	    
