@@ -22,11 +22,11 @@ class ButtonWindowMixIO extends JPanel {
 		//setPreferredSize(new Dimension(1200, 30));
 		
 		add(bQC);
-		add(bS);
+		//add(bS);
 		add(bFH);
 		add(bFS);	
 		add(new JLabel(""));
-		add(cbL);		
+		//add(cbL);		
 		add(new JLabel(""));
 		add(new JLabel(""));
 					

@@ -87,7 +87,8 @@ public class GumboMixIO {
 		cbLevel = new JCheckBox("with schedule");
 		
 		
-		GumboMainWindowMixIOwithScroll mainwindow = new GumboMainWindowMixIOwithScroll(editorIQ, textConsole,buttonQC,
+		GumboMainWindowMixIOwithScroll mainwindow = new GumboMainWindowMixIOwithScroll(
+				editorIQ, textConsole,buttonQC,
 				buttonSche,buttonFH,buttonFS,cbLevel, inPathText, outPathText,
 				browseInPathButton, browseOutPathButton);
 			
@@ -131,11 +132,9 @@ public class GumboMixIO {
 		    	JFileChooser pathChooser = new JFileChooser();
 				pathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				
-				if (pathChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					
+				if (pathChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {					
 					outPathText.setText(pathChooser.getSelectedFile().getAbsolutePath());
-		        }
-	    		
+		        }    		
 	    	}
 	    });
 	

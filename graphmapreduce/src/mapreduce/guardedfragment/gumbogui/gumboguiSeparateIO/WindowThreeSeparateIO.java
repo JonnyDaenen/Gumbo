@@ -16,16 +16,16 @@ public class WindowThreeSeparateIO extends JPanel {
 
 	public WindowThreeSeparateIO(JButton bQC, JButton bS, JButton bFH, JButton bFS, JCheckBox cbL) {
 		super();
-		setLayout(new GridLayout(2,4,20,-3));
+		setLayout(new GridLayout(2,3,20,-3));
 		
 		//setPreferredSize(new Dimension(1200, 30));
 		
 		add(bQC);
-		add(bS);
+		//add(bS);
 		add(bFH);
 		add(bFS);	
 		add(new JLabel(""));
-		add(cbL);		
+		//add(cbL);		
 		add(new JLabel(""));
 		add(new JLabel(""));
 					
