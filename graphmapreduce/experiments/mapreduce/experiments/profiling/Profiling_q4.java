@@ -63,6 +63,12 @@ public class Profiling_q4 {
 			files.addPath(schemaS3, new Path("./data/q4/1e06/S3_4e06x1e00_func-non_mod_3.rel"));
 			files.addPath(schemaS4, new Path("./data/q4/1e06/S4_4e06x1e00_func-non_mod_4.rel"));
 			files.addPath(schemaS5, new Path("./data/q4/1e06/S5_5e06x1e00_func-non_mod_5.rel"));
+		} else if (input.equals("thinking")) {
+			files.addPath(schemaR, new Path("data/R_6e7"));
+			files.addPath(schemaS2, new Path("data/S2_3e7"));
+			files.addPath(schemaS3, new Path("data/S3_2e7"));
+			files.addPath(schemaS4, new Path("data/S4_15e6"));
+			files.addPath(schemaS5, new Path("data/S5_12e6"));
 		} else {
 //			files.setDefaultPath(new Path(input));
 			files.addPath(schemaR, new Path("./input/q4/1e04/R_6e04x4e00_func-seqclone.rel"));
@@ -92,7 +98,7 @@ public class Profiling_q4 {
 		MRPlan plan = planner.createPlan(gfes, files, new Path(output), new Path(scratch));
 
 		// print plan in text
-		// System.out.println(plan);
+		System.out.println(plan);
 
 		// print plan in dot
 		// System.out.println(plan.toDot());

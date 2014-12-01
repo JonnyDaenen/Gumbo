@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import mapreduce.guardedfragment.planner.structures.MRJob;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
@@ -21,6 +23,9 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapred.FileInputFormat;
 import org.apache.hadoop.mapred.FileOutputFormat;
 import org.apache.hadoop.mapred.JobConf;
+import org.apache.hadoop.mapreduce.Counter;
+import org.apache.hadoop.mapreduce.CounterGroup;
+import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
 
@@ -113,9 +118,9 @@ public class HadoopExecutor {
 			printStatus(jc);
 			printProgress(jc);
 			Thread.sleep(REFRESH_WAIT);
-
-
 		}
+
+		printCounters(jc);
 
 		// 5. clean up in case of failure
 
@@ -131,7 +136,7 @@ public class HadoopExecutor {
 			// move output to output directory
 			LOG.info("Copying output data...");
 			assembleOutput(plan);
-			
+
 			for (ControlledJob job : jc.getSuccessfulJobList()) {
 				LOG.error("profile: " +  job.getJob().getProfileParams());
 				LOG.error("time: " +  (job.getJob().getFinishTime() - job.getJob().getStartTime()));
@@ -143,17 +148,79 @@ public class HadoopExecutor {
 	}
 
 	/**
+	 * source: http://www.slideshare.net/martyhall/hadoop-tutorial-mapreduce-part-5-mapreduce-features 
+	 */
+	private void printCounters(JobControl jc) throws IOException {
+
+		//		if (jc.getSuccessfulJobList().size() == 0)
+		//			return;
+
+		// initialize overall counters
+		Counters overallCounters = new Counters();
+
+		for (ControlledJob job : jc.getSuccessfulJobList()) {
+			System.out.println();
+			System.out.println("Counters for job: " + job.getJobName());
+			Counters counters = job.getJob().getCounters();
+
+
+			for (String groupName : counters.getGroupNames()) {
+				CounterGroup group = counters.getGroup(groupName);
+				System.out.println(group.getDisplayName());
+
+				// aggregate counters
+				CounterGroup overallGroup = overallCounters.getGroup(group.getName());
+//				CounterGroup overallGroup = overallCounters.addGroup(group.getName(), group.getDisplayName());
+
+
+				for (Counter counter : group.getUnderlyingGroup()) {
+					System.out.println("\t" + counter.getDisplayName() + "=" + counter.getValue() );
+
+					// aggregate counters
+					Counter overallCounter = overallGroup.findCounter(counter.getName(), true);
+//					Counter overallCounter = overallGroup.addCounter(counter.getName(), counter.getDisplayName(), 0);
+					overallCounter.increment(counter.getValue());
+
+				}
+
+			}
+
+		}
+
+
+		Counters counters = overallCounters;
+
+
+		System.out.println();
+		System.out.println("Overall Counters");
+		Set<String> names = new HashSet<String>();
+		for (String name : counters.getGroupNames()) {
+			names.add(name);
+		}
+		for (String groupName : names) {
+			CounterGroup group = counters.getGroup(groupName);
+			System.out.println(group.getDisplayName());
+
+			for (Counter counter : group.getUnderlyingGroup()) {
+				System.out.println("\t" + counter.getDisplayName() + "=" + counter.getValue() );
+			}
+		}
+
+
+	}
+
+	/**
 	 * @param jc
 	 */
 	private void printProgress(JobControl jc) {
-//		try {
-//			for (ControlledJob job : jc.getRunningJobList()) {
-//				LOG.debug(job.getJob().mapProgress());
-//			}
-//		} catch (IOException  e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		//		try {
+		//			for (ControlledJob job : jc.getRunningJobList()) {
+		//				LOG.debug(job.getJob().mapProgress());
+		//			}
+		//		} catch (IOException  e) {
+		//			// TODO Auto-generated catch block
+		//			e.printStackTrace();
+		//		}
 
 	}
 
