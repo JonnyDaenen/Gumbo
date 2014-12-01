@@ -165,6 +165,10 @@ public class HadoopExecutor {
 
 
 			for (String groupName : counters.getGroupNames()) {
+				
+				if (!groupName.contains("org.apache.hadoop.mapreduce"))
+					continue;
+				
 				CounterGroup group = counters.getGroup(groupName);
 				System.out.println(group.getDisplayName());
 
@@ -193,7 +197,6 @@ public class HadoopExecutor {
 
 		System.out.println();
 		System.out.println("Overall Counters");
-		Set<String> names = new HashSet<String>();
 		for (String groupName : counters.getGroupNames()) {
 
 			if (!groupName.contains("org.apache.hadoop.mapreduce"))
