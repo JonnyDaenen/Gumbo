@@ -151,7 +151,6 @@ public class RelationFileMapping {
 	public Set<Path> getPathsWithFormat(InputFormat f) {
 		Set<Path> result = new HashSet<>();
 		for (RelationSchema rs : mapping.keySet()) {
-			LOG.error(rs + " " + getFormat(rs));
 			if (getFormat(rs) == f)
 				result.addAll(mapping.get(rs));
 		}
