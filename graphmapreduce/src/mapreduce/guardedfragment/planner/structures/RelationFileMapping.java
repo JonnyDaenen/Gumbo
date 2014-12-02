@@ -3,13 +3,26 @@
  */
 package mapreduce.guardedfragment.planner.structures;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1GuardRel;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchemaException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
 /**
@@ -20,38 +33,100 @@ import org.apache.hadoop.fs.Path;
 public class RelationFileMapping {
 	
 
+	private static final Log LOG = LogFactory.getLog(RelationFileMapping.class);
+
+
+
+	public static void main(String[] args) throws IOException, RelationSchemaException, RelationFileMappingException {
+
+		RelationFileMapping rm = new RelationFileMapping();
+		rm.addPath(new RelationSchema("R",2), new Path("data/jonny1"));
+		rm.addPath(new RelationSchema("R",2), new Path("data/jonny2"));
+		rm.addPath(new RelationSchema("R",3), new Path("data/jonny2"));
+		rm.addPath(new RelationSchema("S",3), new Path("data/jonny3"));
+		rm.setFormat(new RelationSchema("S",3), InputFormat.CSV);
+
+		Path cp = new Path("data/jonny1");
+
+
+		System.out.println(rm);
+
+
+		RelationFileMapping rm2 = new RelationFileMapping(rm.toString(),null);
+
+		System.out.println(rm2);
+	}
+
+
+
 	HashMap<RelationSchema, Set<Path>> mapping;
 	HashMap<RelationSchema, InputFormat> format;
 	private Path defaultPath;
-	
+
 	public RelationFileMapping() {
 		mapping = new HashMap<>();
+		format = new HashMap<>();
 	}
-	
-	/*
-	 * In the constructor RelationFileMapping,
-	 * the string sIn is a string of the form: 
-	 * RelSchema1 - Input File1 ; RelSchema2 - Input File2 ; .... 
+
+	/**
+	 * Loads a serial representaion of a mapping.
+	 * The input is of the following form:
+	 * RelSchema1 - InputPath1, InputPath2, ... - format1; RelSchema2 - Input File2 - format2; ....
+	 *  
+	 * @param sIn a string-representation of the mapping
+	 * @param fs 
 	 */
 	public RelationFileMapping(String sIn) throws RelationSchemaException, RelationFileMappingException {
-		mapping = new HashMap<>();
-		 
-		String[] listIn = sIn.split(";");
-		
-		String[] dummy;
-		
-		for (int i = 0; i< listIn.length; i++) {
-			dummy = listIn[i].split("-");
-			
-			if (dummy.length != 2) {
-				throw new RelationFileMappingException("Expecting exactly one - in input file name");
-			}
-			
-			addPath(new RelationSchema(dummy[0].trim()), new Path(dummy[1]));
-		}
-		
+		this(sIn,null);
+
 	}
-	
+
+	/**
+	 * Loads a serial representaion of a mapping. Paths are made qualified if a filesystem is provided.
+	 * The input is of the following form:
+	 * RelSchema1;InputPath1,InputPath2, ...;format1|RelSchema2 - Input File2 - format2; ....
+	 *  
+	 * @param sIn a string-representation of the mapping
+	 * @param fs a filesystem
+	 */
+	public RelationFileMapping(String sIn, FileSystem fs) throws RelationSchemaException, RelationFileMappingException {
+		this();
+
+		// split schema's
+		String[] listIn = sIn.split("'");
+//		LOG.error(Arrays.deepToString(listIn));
+
+		for (int i = 0; i< listIn.length; i++) {
+			String[] dummy = listIn[i].split(";");
+//			LOG.error(Arrays.deepToString(dummy));
+
+			if (dummy.length <= 2) {
+				throw new RelationFileMappingException("Expecting exactly one input file and optionally a format");
+			}
+			// schema
+			RelationSchema rs = new RelationSchema(dummy[0].trim());
+
+			// paths
+			String [] paths = dummy[1].split(",");
+			for (String path : paths) {
+				Path newPath = new Path(path.trim());
+				// make qualified and absolute
+				if (fs != null)
+					newPath = fs.makeQualified(newPath);
+				addPath(rs, newPath);
+			}
+
+			// format if present
+			InputFormat format = InputFormat.REL;
+			if (dummy.length >= 3 && dummy[2].trim().toLowerCase().equals("csv")) {
+				format = InputFormat.CSV;
+			}
+			setFormat(rs, format);
+
+		}
+
+	}
+
 	/**
 	 * Sets the format of input files for the given relation schema.
 	 * @param s the relation schema
@@ -60,7 +135,7 @@ public class RelationFileMapping {
 	public void setFormat(RelationSchema s, InputFormat f) {
 		format.put(s, f);
 	}
-	
+
 	/**
 	 * Fetches the format of the input files for the given relationschema.
 	 * @param s the relationschema
@@ -72,6 +147,18 @@ public class RelationFileMapping {
 		return InputFormat.REL;
 	}
 	
+
+	public Set<Path> getPathsWithFormat(InputFormat f) {
+		Set<Path> result = new HashSet<>();
+		for (RelationSchema rs : mapping.keySet()) {
+			LOG.error(rs + " " + getFormat(rs));
+			if (getFormat(rs) == f)
+				result.addAll(mapping.get(rs));
+		}
+		return result;
+	}
+	
+
 	/**
 	 * Adds a path to the set of input paths of the relation schema.
 	 * This can be a file or directory.
@@ -99,12 +186,13 @@ public class RelationFileMapping {
 			for (Path path : set) {
 				addPath(rs,path);
 			}
+			format.putAll(infiles.format);
 		}
-		
+
 		if (copyDefault) {
 			defaultPath = infiles.defaultPath;
 		}
-		
+
 	}
 
 
@@ -127,7 +215,7 @@ public class RelationFileMapping {
 	public Set<Path> getPaths(RelationSchema rs) {
 		if (!containsSchema(rs))
 			return new HashSet<>();
-		return mapping.get(rs);
+			return mapping.get(rs);
 	}
 
 
@@ -158,9 +246,9 @@ public class RelationFileMapping {
 	 */
 	public void setDefaultPath(Path defaultPath) {
 		this.defaultPath = defaultPath;
-		
+
 	}
-	
+
 	/**
 	 * Fetches the default path to be used when no other input is available.
 	 * @return the default path
@@ -169,6 +257,52 @@ public class RelationFileMapping {
 		return defaultPath;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		String s = "";
 
-	
+		for (RelationSchema rs : mapping.keySet()) {
+			s += "'" + rs.toString() + ";";
+
+			Set<Path> paths = mapping.get(rs);
+			for (Path path : paths) {
+				s += path.toString() + ",";
+			}
+			s = s.substring(0, s.length()-1);
+			s +=  ";";
+
+			switch (getFormat(rs)) {
+			case CSV:
+				s += "csv";
+				break;
+			default:
+				s += "rel";
+				break;
+			}
+		}
+
+		return s.length() > 0 ? s.substring(1) : "";
+	}
+
+	/**
+	 * Finds a schema that has a given path as input source.
+	 * TODO return set of schemas
+	 * OPTIMIZE make reverse mapping
+	 * @param filePath a path
+	 * @return a relationschema of the path
+	 */
+	public RelationSchema findSchema(Path filePath) {
+		for (RelationSchema rs : mapping.keySet()){
+			Set<Path> paths = mapping.get(rs);
+			if(paths.contains(filePath))
+				return rs;
+		}
+		return null;
+	}
+
+
+
 }

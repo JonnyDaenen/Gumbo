@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mapreduce.guardedfragment.planner.calculations.CalculationUnitDAG;
+import mapreduce.guardedfragment.planner.structures.InputFormat;
 import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 
@@ -204,5 +205,17 @@ public class DirManager {
 	public Object getDefaultInputPath() {
 		return filemapping.getDefaultPath();
 	}
+	
+	
+	/**
+	 * Returns a mapping between the used relations and paths.
+	 * @return a mapping between relations and paths
+	 */
+	public RelationFileMapping getFileMapping(){
+		return filemapping;
+	}
+
+	
+	
 
 }

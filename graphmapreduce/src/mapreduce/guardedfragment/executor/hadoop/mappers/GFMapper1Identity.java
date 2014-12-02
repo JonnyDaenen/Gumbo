@@ -46,8 +46,6 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 	private static final Log LOG = LogFactory.getLog(GFMapper1Identity.class);
 
 	ExpressionSetOperations eso;
-	InputFormat f;
-	RelationSchema rs;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -87,21 +85,7 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}
 		
-		// format
-		String format = conf.get("inputformat");
 		
-		if (format == "csv") {
-			String relationName = conf.get("relationname");
-			int arity = Integer.parseInt(conf.get("relationarity"));
-			
-			f = InputFormat.CSV;
-			rs = new RelationSchema(relationName, arity);
-			
-		} else {
-			f = InputFormat.REL;
-			rs = null;
-		
-		}
 		
 	}
 

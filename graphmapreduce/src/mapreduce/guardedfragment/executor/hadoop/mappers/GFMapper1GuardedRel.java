@@ -5,6 +5,8 @@ package mapreduce.guardedfragment.executor.hadoop.mappers;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
 import mapreduce.guardedfragment.planner.structures.operations.GFMapper;
@@ -16,20 +18,24 @@ import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingT
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Mapper.Context;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 /**
- * Also outputs the atoms when a guard is projected onto them.
+ * Also outputs the atoms when a guarded atom is projected onto them.
+ * Accepts tuples from multiple relations, in rel-format.
  * 
  * @author Jonny Daenen
  * 
  */
 
-public class GFMapper1GuardedAll extends GFMapper1Identity {
+public class GFMapper1GuardedRel extends GFMapper1Identity {
 
-	private static final Log LOG = LogFactory.getLog(GFMapper1GuardedAll.class);
+	private static final Log LOG = LogFactory.getLog(GFMapper1GuardedRel.class);
 
 	/**
 	 * @throws InterruptedException
@@ -39,6 +45,10 @@ public class GFMapper1GuardedAll extends GFMapper1Identity {
 	 */
 	@Override
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+		
+	
+	
+		
 
 		Tuple t = new Tuple(value);
 		// System.out.println(t);

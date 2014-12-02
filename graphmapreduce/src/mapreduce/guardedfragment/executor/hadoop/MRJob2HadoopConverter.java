@@ -8,8 +8,10 @@ import java.util.Collection;
 import java.util.Set;
 
 import mapreduce.guardedfragment.executor.hadoop.combiners.GFCombiner1;
-import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Guard;
-import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1GuardedAll;
+import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1GuardCsv;
+import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1GuardRel;
+import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1GuardedCsv;
+import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1GuardedRel;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Identity;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapperHadoop;
 import mapreduce.guardedfragment.executor.hadoop.readers.GuardInputFormat;
@@ -21,6 +23,7 @@ import mapreduce.guardedfragment.planner.compiler.mappers.GFMapper1AtomBased;
 import mapreduce.guardedfragment.planner.compiler.mappers.GFMapper2Generic;
 import mapreduce.guardedfragment.planner.compiler.reducers.GFReducer1AtomBased;
 import mapreduce.guardedfragment.planner.compiler.reducers.GFReducer2Generic;
+import mapreduce.guardedfragment.planner.structures.InputFormat;
 import mapreduce.guardedfragment.planner.structures.MRJob;
 import mapreduce.guardedfragment.planner.structures.MRJob.MRJobType;
 import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
@@ -59,7 +62,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 public class MRJob2HadoopConverter {
 
 	private GFPrefixSerializer serializer;
-	
+
 
 	private static final Log LOG = LogFactory.getLog(MRJob2HadoopConverter.class);
 
@@ -80,13 +83,13 @@ public class MRJob2HadoopConverter {
 	public ControlledJob convert(MRJob job, DirManager dirManager) {
 
 		switch (job.getType()) {
-		
+
 		case GF_ROUND1:
 			return createRound1Job(job,dirManager);
-			
+
 		case GF_ROUND2:
 			return createRound2Job(job,dirManager);
-			
+
 		default:
 			// CLEAN exception
 			return null;
@@ -110,50 +113,63 @@ public class MRJob2HadoopConverter {
 			/* set guard and guarded set */
 			Configuration conf = hadoopJob.getConfiguration();
 			conf.set("formulaset", serializer.serializeSet(job.getGFExpressions()));
+			conf.set("relationfilemapping", dirManager.getFileMapping().toString());
 
 			/* set mapper and reducer */
-//			hadoopJob.setMapperClass(GFMapperHadoop.class);
-//			conf.set("GFMapperClass", GFMapper1AtomBased.class.getCanonicalName());
+			//			hadoopJob.setMapperClass(GFMapperHadoop.class);
+			//			conf.set("GFMapperClass", GFMapper1AtomBased.class.getCanonicalName());
 
-//
-//			hadoopJob.setReducerClass(GFReducerHadoop.class); 
-//			conf.set("GFReducerClass", GFReducer1AtomBased.class.getCanonicalName());
-			
+			//
+			//			hadoopJob.setReducerClass(GFReducerHadoop.class); 
+			//			conf.set("GFReducerClass", GFReducer1AtomBased.class.getCanonicalName());
+
 			hadoopJob.setReducerClass(GFReducer1.class); 
-			
-//			hadoopJob.setCombinerClass(GFCombiner1.class);
+
+			//			hadoopJob.setCombinerClass(GFCombiner1.class);
 
 			/* set IO */
-//			// code for 1 mapper
-//			for (Path inpath : job.getInputPaths()) {
-//				System.out.println("Setting path" + inpath);
-//				FileInputFormat.addInputPath(hadoopJob, inpath);
-//			}
-			
+			//			// code for 1 mapper
+			//			for (Path inpath : job.getInputPaths()) {
+			//				System.out.println("Setting path" + inpath);
+			//				FileInputFormat.addInputPath(hadoopJob, inpath);
+			//			}
+
 			// 2 separate mappers:
-			
+
 			ExpressionSetOperations eso = new ExpressionSetOperations();
 			eso.setExpressionSet(job.getGFExpressions());
 			eso.setDirManager(dirManager);
+
+
+
+			for ( Path guardedPath : eso.getGuardedRelPaths()) {
+				LOG.info("Setting M1 guarded path to " + guardedPath + " using mapper " + GFMapper1GuardedRel.class.getName());
+				MultipleInputs.addInputPath(hadoopJob, guardedPath, 
+						TextInputFormat.class, GFMapper1GuardedRel.class);
+			}
+			
+			for ( Path guardedPath : eso.getGuardedCsvPaths()) {
+				LOG.info("Setting M1 guarded path to " + guardedPath + " using mapper " + GFMapper1GuardedCsv.class.getName());
+				MultipleInputs.addInputPath(hadoopJob, guardedPath, 
+						TextInputFormat.class, GFMapper1GuardedCsv.class);
+			}
+
+			// WARNING: equal guarded paths are overwritten!
+			for ( Path guardPath : eso.getGuardRelPaths()) {
+				LOG.info("Setting M1 guard path to " + guardPath + " using mapper " + GFMapper1GuardRel.class.getName());
+				MultipleInputs.addInputPath(hadoopJob, guardPath, 
+						TextInputFormat.class, GFMapper1GuardRel.class);
+			}
+			
+			for ( Path guardPath : eso.getGuardCsvPaths()) {
+				LOG.info("Setting M1 guard path to " + guardPath + " using mapper " + GFMapper1GuardCsv.class.getName());
+				MultipleInputs.addInputPath(hadoopJob, guardPath, 
+						TextInputFormat.class, GFMapper1GuardCsv.class);
+			}
+
 			
 			Set<Path> gPaths = eso.getGuardPaths();
-			Set<Path> ggPaths = eso.getGuardedPaths();
-			
-			for ( Path guardedPath : ggPaths) {
-				MultipleInputs.addInputPath(hadoopJob, guardedPath, 
-                    TextInputFormat.class, 
-                    GFMapper1GuardedAll.class);
-				LOG.info("Setting M1 guarded path to " + guardedPath);
-			}
-			
-			// warning: equal guarded paths are overwritten!
-			for ( Path guardPath : gPaths) {
-				LOG.info("Setting M1 guard path to " + guardPath);
-				MultipleInputs.addInputPath(hadoopJob, guardPath, 
-                    TextInputFormat.class, 
-                    GFMapper1Guard.class);
-			}
-			
+
 			// Deprecated!
 			// do not use default paths
 			// default input path means is send to old mapper
@@ -162,12 +178,12 @@ public class MRJob2HadoopConverter {
 					LOG.info("Default input path detected (->redirecting): " + path);
 					MultipleInputs.addInputPath(hadoopJob, path, 
 							RelationInputFormat.class, 
-		                    GFMapperHadoop.class);
+							GFMapperHadoop.class);
 					conf.set("GFMapperClass", GFMapper1AtomBased.class.getCanonicalName());
 					break;
 				}
 			}
-			
+
 
 			FileOutputFormat.setOutputPath(hadoopJob, job.getOutputPath());
 
@@ -179,10 +195,10 @@ public class MRJob2HadoopConverter {
 			// hadoopJob.setOutputKeyClass(NullWritable.class);
 			hadoopJob.setOutputKeyClass(Text.class);
 			hadoopJob.setOutputValueClass(IntWritable.class);
-			
+
 
 			// TODO check
-//			hadoopJob.setInputFormatClass(RelationInputFormat.class);
+			//			hadoopJob.setInputFormatClass(RelationInputFormat.class);
 
 			return new ControlledJob(hadoopJob, null);
 		} catch (IOException e) {
@@ -192,7 +208,7 @@ public class MRJob2HadoopConverter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
@@ -217,13 +233,13 @@ public class MRJob2HadoopConverter {
 
 			/* set mapper and reducer */
 			hadoopJob.setMapperClass(Mapper.class);
-//			hadoopJob.setMapperClass(GFMapperHadoop.class);
-//			conf.set("GFMapperClass", GFMapper2Generic.class.getCanonicalName());
+			//			hadoopJob.setMapperClass(GFMapperHadoop.class);
+			//			conf.set("GFMapperClass", GFMapper2Generic.class.getCanonicalName());
 
-//			hadoopJob.setReducerClass(GFReducerHadoop.class);
-//			conf.set("GFReducerClass", GFReducer2Generic.class.getCanonicalName());
+			//			hadoopJob.setReducerClass(GFReducerHadoop.class);
+			//			conf.set("GFReducerClass", GFReducer2Generic.class.getCanonicalName());
 			hadoopJob.setReducerClass(GFReducer2.class);
-			
+
 			/* set IO */
 			for (Path inpath : job.getInputPaths()) {
 				System.out.println("Setting path" + inpath);
@@ -238,7 +254,7 @@ public class MRJob2HadoopConverter {
 
 			// set reducer output
 			hadoopJob.setOutputKeyClass(NullWritable.class);
-//			hadoopJob.setOutputKeyClass(Text.class);
+			//			hadoopJob.setOutputKeyClass(Text.class);
 			hadoopJob.setOutputValueClass(Text.class);
 
 			// TODO check

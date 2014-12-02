@@ -39,9 +39,9 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
  * @author Jonny Daenen
  * 
  */
-public class GFMapper1Guard extends GFMapper1Identity {
+public class GFMapper1GuardRel extends GFMapper1Identity {
 
-	private static final Log LOG = LogFactory.getLog(GFMapper1Guard.class);
+	private static final Log LOG = LogFactory.getLog(GFMapper1GuardRel.class);
 
 	Text out1 = new Text();
 	Text out2 = new Text();

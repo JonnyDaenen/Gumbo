@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mapreduce.guardedfragment.planner.compiler.DirManager;
+import mapreduce.guardedfragment.planner.structures.InputFormat;
 import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
 import mapreduce.guardedfragment.structure.booleanexpressions.BExpression;
 import mapreduce.guardedfragment.structure.conversion.GFBooleanMapping;
@@ -324,4 +325,39 @@ public class ExpressionSetOperations {
 		throw new GFOperationInitException("Atom with not found: " + atom);
 	}
 
+	/**
+	 * @return the guarded paths that are in rel format
+	 */
+	public Set<Path> getGuardedRelPaths() {
+		Set<Path> paths = dirManager.getFileMapping().getPathsWithFormat(InputFormat.REL);
+		paths.retainAll(getGuardedPaths());
+		return paths;
+	}
+	
+	/**
+	 * @return the guarded paths that are in csv format
+	 */
+	public Set<Path> getGuardedCsvPaths() {
+		Set<Path> paths = dirManager.getFileMapping().getPathsWithFormat(InputFormat.CSV);
+		paths.retainAll(getGuardedPaths());
+		return paths;
+	}
+
+	/**
+	 * @return the guarded paths that are in rel format
+	 */
+	public Set<Path> getGuardRelPaths() {
+		Set<Path> paths = dirManager.getFileMapping().getPathsWithFormat(InputFormat.REL);
+		paths.retainAll(getGuardPaths());
+		return paths;
+	}
+	
+	/**
+	 * @return the guarded paths that are in csv format
+	 */
+	public Set<Path> getGuardCsvPaths() {
+		Set<Path> paths = dirManager.getFileMapping().getPathsWithFormat(InputFormat.CSV);
+		paths.retainAll(getGuardPaths());
+		return paths;
+	}
 }
