@@ -61,6 +61,8 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 			LOG.error("Mapper1: " + value);
 			print = true;
 		}
+		// trim is necessary to remove extra whitespace
+		value.set(value.toString().trim());
 		
 		try {
 			

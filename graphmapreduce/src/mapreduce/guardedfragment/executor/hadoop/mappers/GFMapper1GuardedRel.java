@@ -53,7 +53,9 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 			print = true;
 		}
 
-		Tuple t = new Tuple(value);
+		// trim is necessary to remove extra whitespace
+		value.set(value.toString().trim());
+		Tuple t = new Tuple(value.toString());
 		// System.out.println(t);
 
 		// guarded existance output

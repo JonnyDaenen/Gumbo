@@ -99,7 +99,8 @@ public class GFMapper1GuardedCsv extends GFMapper1Identity {
 			RelationSchema rs = rm.findSchema(filePath);
 			
 			
-			String t = rs.getName() + "(" + value.toString() + ")";
+			// trim is necessary to remove extra whitespace
+			String t = rs.getName() + "(" + value.toString().trim() + ")";
 			Text tuple = new Text(t);
 			
 			context.write(tuple, tuple);

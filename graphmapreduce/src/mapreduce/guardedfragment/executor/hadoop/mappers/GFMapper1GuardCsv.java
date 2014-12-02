@@ -104,7 +104,8 @@ public class GFMapper1GuardCsv extends GFMapper1Identity {
 			
 			RelationSchema rs = rm.findSchema(filePath);
 			
-			
+			// trim is necessary to remove extra whitespace
+			value.set(value.toString().trim());
 			String t1 = rs.getName() + "(" + value.toString() + ")";
 
 			Tuple t = new Tuple(t1);
