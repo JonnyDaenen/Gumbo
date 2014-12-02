@@ -9,7 +9,7 @@ import java.util.Set;
 
 import mapreduce.guardedfragment.executor.hadoop.combiners.GFCombiner1;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Guard;
-import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Guarded;
+import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1GuardedAll;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Identity;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapperHadoop;
 import mapreduce.guardedfragment.executor.hadoop.readers.GuardInputFormat;
@@ -142,7 +142,7 @@ public class MRJob2HadoopConverter {
 			for ( Path guardedPath : ggPaths) {
 				MultipleInputs.addInputPath(hadoopJob, guardedPath, 
                     TextInputFormat.class, 
-                    GFMapper1Guarded.class);
+                    GFMapper1GuardedAll.class);
 				LOG.info("Setting M1 guarded path to " + guardedPath);
 			}
 			
@@ -242,6 +242,7 @@ public class MRJob2HadoopConverter {
 			hadoopJob.setOutputValueClass(Text.class);
 
 			// TODO check
+			// we use a custom input class to allow the mapper to output key-value pairs again
 			hadoopJob.setInputFormatClass(GuardInputFormat.class);
 
 			return new ControlledJob(hadoopJob, null);

@@ -18,8 +18,10 @@ import org.apache.hadoop.fs.Path;
  *
  */
 public class RelationFileMapping {
+	
 
 	HashMap<RelationSchema, Set<Path>> mapping;
+	HashMap<RelationSchema, InputFormat> format;
 	private Path defaultPath;
 	
 	public RelationFileMapping() {
@@ -38,7 +40,7 @@ public class RelationFileMapping {
 		
 		String[] dummy;
 		
-		for (int i =0; i< listIn.length; i++) {
+		for (int i = 0; i< listIn.length; i++) {
 			dummy = listIn[i].split("-");
 			
 			if (dummy.length != 2) {
@@ -50,7 +52,32 @@ public class RelationFileMapping {
 		
 	}
 	
+	/**
+	 * Sets the format of input files for the given relation schema.
+	 * @param s the relation schema
+	 * @param f the format
+	 */
+	public void setFormat(RelationSchema s, InputFormat f) {
+		format.put(s, f);
+	}
 	
+	/**
+	 * Fetches the format of the input files for the given relationschema.
+	 * @param s the relationschema
+	 * @return the file format of the input files
+	 */
+	public InputFormat getFormat(RelationSchema s) {
+		if (format.containsKey(s))
+			return format.get(s);
+		return InputFormat.REL;
+	}
+	
+	/**
+	 * Adds a path to the set of input paths of the relation schema.
+	 * This can be a file or directory.
+	 * @param s the relationschema
+	 * @param p an input path for the relation schema
+	 */
 	public void addPath(RelationSchema s, Path p) {
 		Set<Path> paths;
 		if(mapping.containsKey(s)) {
@@ -84,8 +111,9 @@ public class RelationFileMapping {
 
 
 	/**
-	 * @param rs
-	 * @return
+	 * Checks if there is a file mapping present for a schema.
+	 * @param rs a relation schema
+	 * @return true iff there is a set of paths present
 	 */
 	public boolean containsSchema(RelationSchema rs) {
 		return mapping.containsKey(rs);
@@ -103,13 +131,18 @@ public class RelationFileMapping {
 	}
 
 
+	/**
+	 * Fetches all the relation schemas in the mapping.
+	 * @return all the relation schemas in the mapping
+	 */
 	public Iterable<RelationSchema> getSchemas() {
 		return mapping.keySet();
 	}
 
 	/**
-	 * @param p
-	 * @return
+	 * Checks if a given path is coupled to a relation schema
+	 * @param p a path
+	 * @return true iff there is a relation schema with this path
 	 */
 	public boolean containsPath(Path p) {
 		for (Set<Path> paths : mapping.values()) {
@@ -120,8 +153,8 @@ public class RelationFileMapping {
 	}
 
 	/**
-	 * Sets the path to be used when no other input is available
-	 * @param defaultPath
+	 * Sets the path to be used when no other input is available.
+	 * @param defaultPath a path
 	 */
 	public void setDefaultPath(Path defaultPath) {
 		this.defaultPath = defaultPath;
@@ -129,7 +162,8 @@ public class RelationFileMapping {
 	}
 	
 	/**
-	 * @return the defaultPath
+	 * Fetches the default path to be used when no other input is available.
+	 * @return the default path
 	 */
 	public Path getDefaultPath() {
 		return defaultPath;

@@ -5,6 +5,8 @@ package mapreduce.guardedfragment.executor.hadoop.mappers;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,10 +25,13 @@ import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingT
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Mapper.Context;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 /**
  * Also outputs the atoms when a guard is projected onto them.
@@ -50,7 +55,14 @@ public class GFMapper1Guard extends GFMapper1Identity {
 	@Override
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
+
+		
+		
+		
 		try {
+			
+			
+			
 			Tuple t = new Tuple(value);
 			// System.out.println(t);
 
@@ -104,7 +116,10 @@ public class GFMapper1Guard extends GFMapper1Identity {
 			LOG.error(e.getMessage());
 			e.printStackTrace();
 			throw new InterruptedException(e.getMessage());
-		}
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
 
 	}
 

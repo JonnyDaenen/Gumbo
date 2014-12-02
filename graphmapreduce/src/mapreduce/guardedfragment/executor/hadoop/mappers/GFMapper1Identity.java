@@ -5,9 +5,13 @@ package mapreduce.guardedfragment.executor.hadoop.mappers;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+import mapreduce.guardedfragment.planner.structures.InputFormat;
+import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
+import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
 import mapreduce.guardedfragment.planner.structures.operations.GFMapper;
 import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
@@ -23,10 +27,13 @@ import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingT
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Mapper.Context;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 /**
  * Also outputs the atoms when a guard is projected onto them.
@@ -39,6 +46,8 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 	private static final Log LOG = LogFactory.getLog(GFMapper1Identity.class);
 
 	ExpressionSetOperations eso;
+	InputFormat f;
+	RelationSchema rs;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -77,6 +86,23 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 		} catch (Exception e) {
 			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}
+		
+		// format
+		String format = conf.get("inputformat");
+		
+		if (format == "csv") {
+			String relationName = conf.get("relationname");
+			int arity = Integer.parseInt(conf.get("relationarity"));
+			
+			f = InputFormat.CSV;
+			rs = new RelationSchema(relationName, arity);
+			
+		} else {
+			f = InputFormat.REL;
+			rs = null;
+		
+		}
+		
 	}
 
 	/**
@@ -87,6 +113,15 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 	 */
 	@Override
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+		
+//		InputSplit is = context.getInputSplit();
+//		Method method = is.getClass().getMethod("getInputSplit");
+//		method.setAccessible(true);
+//		FileSplit fileSplit = (FileSplit) method.invoke(is);
+//		Path filePath = fileSplit.getPath();
+//		
+//		LOG.error("File Name Processing "+filePath);
+//		
 		context.write(new Text(key.toString()), value);
 	}
 

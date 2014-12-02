@@ -27,9 +27,9 @@ import org.apache.hadoop.mapreduce.Mapper.Context;
  * 
  */
 
-public class GFMapper1Guarded extends GFMapper1Identity {
+public class GFMapper1GuardedAll extends GFMapper1Identity {
 
-	private static final Log LOG = LogFactory.getLog(GFMapper1Guarded.class);
+	private static final Log LOG = LogFactory.getLog(GFMapper1GuardedAll.class);
 
 	/**
 	 * @throws InterruptedException
