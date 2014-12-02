@@ -59,11 +59,11 @@ public class GFMapper1GuardedCsv extends GFMapper1Identity {
 		
 		// get relation name
 		String relmapping = conf.get("relationfilemapping");
-		LOG.error(relmapping);
+//		LOG.error(relmapping);
 		try {
 			FileSystem fs = FileSystem.get(conf);
 			rm = new RelationFileMapping(relmapping,fs);
-			LOG.error(rm.toString());
+//			LOG.trace(rm.toString());
 
 		} catch (RelationSchemaException e) {
 			// TODO Auto-generated catch block

@@ -45,21 +45,27 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 	 */
 	@Override
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-		
-	
-	
-		
+
+
+		boolean print = false;
+		if (value.toString().contains("(59)")) {
+			LOG.error("Mapper1: " + value);
+			print = true;
+		}
 
 		Tuple t = new Tuple(value);
 		// System.out.println(t);
-		
+
 		// guarded existance output
 		for (GFAtomicExpression guarded : eso.getGuardedsAll()) {
-			
+
 			// if no guarded expression matches this tuple, it will not be output
 			if (guarded.matches(t)) {
 				context.write(value, value);
-//				 LOG.warn("Guard: " + value.toString() + " " + value.toString());
+				if (print) {
+					LOG.error("Mapper1 output: " + value + " " + value);
+				}
+				//				 LOG.warn("Guard: " + value.toString() + " " + value.toString());
 				break;
 			}
 		}

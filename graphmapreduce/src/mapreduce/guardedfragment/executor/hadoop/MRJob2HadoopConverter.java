@@ -168,11 +168,12 @@ public class MRJob2HadoopConverter {
 			}
 
 			
-			Set<Path> gPaths = eso.getGuardPaths();
+			
 
 			// Deprecated!
 			// do not use default paths
 			// default input path means is send to old mapper
+			Set<Path> gPaths = eso.getGuardPaths();
 			for (Path path : gPaths) {
 				if(path.equals(dirManager.getDefaultInputPath())) {
 					LOG.info("Default input path detected (->redirecting): " + path);

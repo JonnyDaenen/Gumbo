@@ -103,6 +103,10 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 		Set<Pair<String, Integer>> buffer = new HashSet<>();
 
 		// LOG.warn(key + ": ");
+		
+		boolean print = false;
+		if (key.toString().contains("(59)") || key.toString().contains(",59,"))
+			print = true;
 
 		
 		
@@ -110,6 +114,9 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 
 		// WARNING Text object will be reused by Hadoop!
 		for (Text t : values) {
+			
+			if (print)
+				LOG.error("Red1: " + key + " " + t);
 
 			// parse input
 			Pair<String, Integer> split = split(t);
@@ -125,6 +132,8 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 					out2.set(split.snd);
 //					System.out.println("Writing: " + out1.toString() + " " + out2.toString() + "" + split.snd);
 					mos.write(out1, out2, FILENAME);
+					if (print)
+						LOG.error("Red1 Out: " + out1 + " " + out2);
 				}
 				// else we collect the data
 				else {

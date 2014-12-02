@@ -70,7 +70,7 @@ public class Profiling_q4 {
 			files.addPath(schemaS3, new Path("dataG/S3_2e7"));
 			files.addPath(schemaS4, new Path("dataG/S4_15e6"));
 			files.addPath(schemaS5, new Path("dataG/S5_12e6"));
-		} else {
+		} else if (input.equals("csv")) {
 //			files.setDefaultPath(new Path(input));
 			files.addPath(schemaR, new Path("./input/q4/1e04/R_6e04x4e00_func-seqclone.csv"));
 			files.setFormat(schemaR,InputFormat.CSV);
@@ -82,6 +82,13 @@ public class Profiling_q4 {
 			files.setFormat(schemaS4,InputFormat.CSV);
 			files.addPath(schemaS5, new Path("./input/q4/1e04/S5_5e04x1e00_func-non_mod_5.csv"));
 			files.setFormat(schemaS5,InputFormat.CSV);
+		} else {
+//			files.setDefaultPath(new Path(input));
+			files.addPath(schemaR, new Path("./input/q4/1e04/R_6e04x4e00_func-seqclone.rel"));
+			files.addPath(schemaS2, new Path("./input/q4/1e04/S2_3e04x1e00_func-non_mod_2.rel"));
+			files.addPath(schemaS3, new Path("./input/q4/1e04/S3_4e04x1e00_func-non_mod_3.rel"));
+			files.addPath(schemaS4, new Path("./input/q4/1e04/S4_4e04x1e00_func-non_mod_4.rel"));
+			files.addPath(schemaS5, new Path("./input/q4/1e04/S5_5e04x1e00_func-non_mod_5.rel"));
 		}
 		// query
 

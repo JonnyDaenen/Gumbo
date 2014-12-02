@@ -56,8 +56,11 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
 
-		
-		
+		boolean print = false;
+		if (value.toString().contains(",59)")) {
+			LOG.error("Mapper1: " + value);
+			print = true;
+		}
 		
 		try {
 			
@@ -98,6 +101,9 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 							out1.set(tprime.toString());
 							out2.set(t.toString() + ";" + guardedID);
 							context.write(out1, out2);
+							if (print) {
+								LOG.error("Mapper1 output: " + out1 + " " + out2);
+							}
 //							LOG.warn("Guard: " + out1 + out2);
 //						}
 
