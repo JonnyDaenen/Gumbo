@@ -84,7 +84,7 @@ public class GFtoCalculationUnitConverter {
 
 		CalculationUnitDAG partition = new CalculationUnitDAG();
 		for (CalculationUnit c : basics.values()) {
-			partition.addToTop(c);
+			partition.add(c);
 		}
 		
 		return partition;

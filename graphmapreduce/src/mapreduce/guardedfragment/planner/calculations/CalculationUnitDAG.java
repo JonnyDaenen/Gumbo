@@ -28,28 +28,28 @@ import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 
 	Set<CalculationUnit> calculations;
-	
-	
+
+
 	public CalculationUnitDAG() {
 		calculations = new HashSet<CalculationUnit>();
 	}
 
 
-	public void addToTop(CalculationUnit c) {
+	public void add(CalculationUnit c) {
 		calculations.add(c);
 
 		// TODO check for cyclic dependencies
-		
+
 	}
 
-	
+
 	public void addAll(CalculationUnitDAG calcSet) {
 		for (CalculationUnit cu : calcSet) {
 			calculations.add(cu);
 			// TODO check for cyclic dependencies
 		}
 	}
-	
+
 
 	/**
 	 * Calculates the set of independent calculations.
@@ -76,7 +76,7 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 
 
 		CalculationUnitDAG roots = new CalculationUnitDAG();
-		
+
 		// add to root set if applicable
 		for (CalculationUnit currentCalc : calculations) {
 
@@ -88,9 +88,9 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 					break;
 				}
 			}
-			
+
 			if (isRoot) {
-				roots.addToTop(currentCalc);
+				roots.add(currentCalc);
 			}
 		}
 
@@ -130,12 +130,12 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 
 		for (CalculationUnit c : calculations) {
 			if (c.getHeight() == height)
-				cp.addToTop(c);
+				cp.add(c);
 		}
 
 		return cp;
 	}
-	
+
 	/**
 	 * Calculates the set of calculation units on a specified depth
 	 * (depth of root calculation units = 1).
@@ -144,30 +144,30 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 	 * @return partition with all calculations of the specified depth
 	 */
 	public CalculationUnitDAG getCalculationsByDepth(int depth) {
-		
+
 		// calculate roots (depth = 1)
 		CalculationUnitDAG currentLevel = getRoots();
-		
+
 		// breadth first expansion
 		for (int level = 2; level <= depth; level++) {
 
 			CalculationUnitDAG newLevel = new CalculationUnitDAG();
-			
+
 			// for each current cu
 			for (CalculationUnit c : currentLevel) {
-				
+
 				// add all the children to the new level
 				for (CalculationUnit child : c.getDependencies()) {
-					newLevel.addToTop(child);
-					
+					newLevel.add(child);
+
 				}
 			}
-			
+
 			// level complete -> shift
 			currentLevel = newLevel;
-			
+
 		}
-		
+
 		// return last calculated level
 		return currentLevel;
 	}
@@ -265,5 +265,35 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 		temp.removeAll(getInputRelations());
 		temp.removeAll(getOutputRelations());
 		return temp;
+	}
+
+
+	/**
+	 * @return the set of calculations
+	 */
+	public Set<CalculationUnit> getCalculations() {
+		Set<CalculationUnit> out = new HashSet<CalculationUnit>();
+		out.addAll(calculations);
+		return out;
+
+	}
+
+
+	/**
+	 * @param c
+	 * @return
+	 */
+	public int getDepth(CalculationUnit c) {
+		// roots have depth 1
+		int maxDepth = 1;
+		for (CalculationUnit p : getCalculations()) {
+
+			// is parent?
+			if (p.getDependencies().contains(c)) {
+				maxDepth = Math.max(maxDepth, getDepth(p) + 1);
+			}
+		}
+		return maxDepth;
+
 	}
 }

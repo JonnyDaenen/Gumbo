@@ -95,8 +95,8 @@ public class Profiling_q4 {
 		// query
 
 		Set<String> queries = new HashSet<String>();
-		 queries.add("#Out(x2)&R(x2,x3,x4,x5)&!S2(x2)&!S3(x3)&!S4(x4)!S5(x5)");
-//		queries.add("#Out(x2)&R(x2,x3,x4,x5)&!S2(x2)S2(x2)");
+		queries.add("#Out(x2)&R(x2,x3,x4,x5)&!S2(x2)&!S3(x3)&!S4(x4)!S5(x5)");
+//		queries.add("#Out2(x2)&R(x2,x3,x4,x5)&!S2(x2)S2(x2)");
 
 		// parse query
 		GFPrefixSerializer parser = new GFPrefixSerializer();

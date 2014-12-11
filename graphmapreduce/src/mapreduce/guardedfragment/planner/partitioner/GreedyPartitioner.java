@@ -6,29 +6,28 @@ package mapreduce.guardedfragment.planner.partitioner;
 import mapreduce.guardedfragment.planner.calculations.CalculationUnitDAG;
 
 /**
- * Partitions the CalculationUnits based on their depth in the DAG.
+ * Partitions the CalculationUnits based on their height in the DAG.
  * @author Jonny Daenen
  *
  */
-public class DepthPartitioner implements CalculationPartitioner {
+public class GreedyPartitioner implements CalculationPartitioner {
 
 	/**
 	 * @see mapreduce.guardedfragment.planner.partitioner.CalculationPartitioner#partition(mapreduce.guardedfragment.planner.calculations.CalculationPartition)
 	 */
 	@Override
 	public PartitionedCalculationUnitDAG partition(CalculationUnitDAG partition) {
-
+		
 		int height = partition.getHeight();
 		PartitionedCalculationUnitDAG partitionedDAG = new PartitionedCalculationUnitDAG();
 		
-		for (int i = height; i > 0; i--) {
-			
-			// OPTIMIZE this is rather inefficient as each time a DSF from top is done
-			CalculationUnitDAG calcSet = partition.getCalculationsByDepth(i);
-
-			partitionedDAG.addNewLevel(calcSet);
-		}
-		
+		// TODO implement
+//		for (int i = 1; i <= height; i++) {
+//			
+//			CalculationUnitDAG calcSet = partition.getCalculationsByHeight(i);
+//			partitionedDAG.addToTop(calcSet);
+//		}
+//		
 		
 		return partitionedDAG;
 	}

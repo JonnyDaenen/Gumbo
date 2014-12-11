@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import mapreduce.guardedfragment.planner.partitioner.OptimalPartitioner;
 import mapreduce.guardedfragment.planner.partitioner.UnitPartitioner;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
 import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
@@ -55,7 +56,8 @@ public class PlannerExample {
 		
 		// plan
 //		GFMRPlanner planner = new GFMRPlanner(new HeightPartitioner());
-		GFMRPlanner planner = new GFMRPlanner(new UnitPartitioner());
+//		GFMRPlanner planner = new GFMRPlanner(new UnitPartitioner());
+		GFMRPlanner planner = new GFMRPlanner(new OptimalPartitioner());
 		MRPlan plan = planner.createPlan( gfes, rfm, new Path(output), new Path(
 				scratch));
 		
