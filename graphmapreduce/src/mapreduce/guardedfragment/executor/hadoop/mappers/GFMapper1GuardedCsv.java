@@ -41,29 +41,29 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
  * 
  */
 
-public class GFMapper1GuardedCsv extends GFMapper1Identity {
+public class GFMapper1GuardedCsv extends GFMapper1GuardedRel {
 
 	private static final Log LOG = LogFactory.getLog(GFMapper1GuardedCsv.class);
 	RelationFileMapping rm;
-	
+
 	/**
 	 * @see mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Identity#setup(org.apache.hadoop.mapreduce.Mapper.Context)
 	 */
 	@Override
 	protected void setup(org.apache.hadoop.mapreduce.Mapper.Context context) throws IOException, InterruptedException {
 
-		
+
 		super.setup(context);
-		
+
 		Configuration conf = context.getConfiguration();
-		
+
 		// get relation name
 		String relmapping = conf.get("relationfilemapping");
-//		LOG.error(relmapping);
+		//		LOG.error(relmapping);
 		try {
 			FileSystem fs = FileSystem.get(conf);
 			rm = new RelationFileMapping(relmapping,fs);
-//			LOG.trace(rm.toString());
+			//			LOG.trace(rm.toString());
 
 		} catch (RelationSchemaException e) {
 			// TODO Auto-generated catch block
@@ -84,34 +84,32 @@ public class GFMapper1GuardedCsv extends GFMapper1Identity {
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
 		// find out relation name
+		// TODO optimize
 		try {
-			// TODO optimize
-			
 			InputSplit is = context.getInputSplit();
-			Method method;
-			method = is.getClass().getMethod("getInputSplit");
+			Method method = is.getClass().getMethod("getInputSplit");
+
 			method.setAccessible(true);
 			FileSplit fileSplit = (FileSplit) method.invoke(is);
 			Path filePath = fileSplit.getPath();
-			
-//			LOG.error("File Name: "+filePath);
-			
-			RelationSchema rs = rm.findSchema(filePath);
-			
-			
-			// trim is necessary to remove extra whitespace
-			String t = rs.getName() + "(" + value.toString().trim() + ")";
-			Text tuple = new Text(t);
-			
-			context.write(tuple, tuple);
-			// System.out.println(t);
 
-			
+			//				LOG.error("File Name: "+filePath);
+
+			RelationSchema rs = rm.findSchema(filePath);
+
+			// trim is necessary to remove extra whitespace
+			String t1 = value.toString().trim();
+			t1 = rs.getName() + "(" + t1 + ")";
+			value.set(t1);
+
+			super.map(key, value, context);
+
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
-		
+		}
+
+
 
 	}
 

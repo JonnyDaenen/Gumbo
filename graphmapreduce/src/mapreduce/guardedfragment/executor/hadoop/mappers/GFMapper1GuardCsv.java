@@ -39,12 +39,13 @@ import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 /**
- * Also outputs the atoms when a guard is projected onto them.
+ * Outputs the atoms when a guard is projected onto them.
+ * The input is in csv format, the output is in relational format.
  * 
  * @author Jonny Daenen
  * 
  */
-public class GFMapper1GuardCsv extends GFMapper1Identity {
+public class GFMapper1GuardCsv extends GFMapper1GuardRel {
 
 	private static final Log LOG = LogFactory.getLog(GFMapper1GuardCsv.class);
 
@@ -90,12 +91,12 @@ public class GFMapper1GuardCsv extends GFMapper1Identity {
 
 
 		// find out relation name
-		try {
 			// TODO optimize
 			
+		try {
 			InputSplit is = context.getInputSplit();
-			Method method;
-			method = is.getClass().getMethod("getInputSplit");
+			Method method = is.getClass().getMethod("getInputSplit");
+			
 			method.setAccessible(true);
 			FileSplit fileSplit = (FileSplit) method.invoke(is);
 			Path filePath = fileSplit.getPath();
@@ -105,69 +106,16 @@ public class GFMapper1GuardCsv extends GFMapper1Identity {
 			RelationSchema rs = rm.findSchema(filePath);
 			
 			// trim is necessary to remove extra whitespace
-			value.set(value.toString().trim());
-			String t1 = rs.getName() + "(" + value.toString() + ")";
-
-			Tuple t = new Tuple(t1);
-			// System.out.println(t);
-
-
-			boolean outputGuard = false;
-
-			// check guards + atom (keep-alive)
-			for (GFAtomicExpression guard : eso.getGuardsAll()) {
-				
-				// if the tuple satisfies the guard expression
-				if (guard.matches(t)) {
-					
-					int guardID = eso.getAtomId(guard);
-					
-					// output guard
-					out1.set(t.toString() + ";" + guardID);
-					context.write(value, out1);
-					// LOG.warn(value.toString() + " " + out1.toString());
-					outputGuard = true;
-
-					// projections to atoms
-					for (GFAtomicExpression guarded : eso.getGuardeds(guard)) {
-
-						GFAtomProjection p = eso.getProjections(guard, guarded);
-						Tuple tprime = p.project(t);
-						
-
-						int guardedID = eso.getAtomId(guarded);
-
-						// if the guard projects to this guarded
-						// TODO isn't this always the case?
-//						if (guarded.matches(tprime)) {
-							out1.set(tprime.toString());
-							out2.set(t.toString() + ";" + guardedID);
-							context.write(out1, out2);
-//							LOG.warn("Guard: " + out1 + out2);
-//						}
-
-					}
-				}
+			String t1 = value.toString().trim();
+			t1 = rs.getName() + "(" + t1 + ")";
+			value.set(t1);
+			
+			super.map(key, value, context);
+			
+			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-
-			// only output keep-alive if it matched a guard
-			if (outputGuard) {
-				context.write(value, value);
-//				 LOG.warn("Guard: " + value.toString() + " " + value.toString());
-			}
-
-		} catch (NonMatchingTupleException | GFOperationInitException e) {
-			// should not happen!
-			LOG.error(e.getMessage());
-			e.printStackTrace();
-			throw new InterruptedException(e.getMessage());
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}  catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 	}
 
