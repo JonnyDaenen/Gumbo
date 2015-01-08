@@ -14,6 +14,7 @@ import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFNotExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFOrExpression;
+import mapreduce.guardedfragment.structure.gfexpressions.GFXorExpression;
 
 /**
  * @author Jonny Daenen
@@ -81,6 +82,7 @@ public class GFInfixSerializer {
     				s.charAt(index) == '&' ||
     				s.charAt(index) == '|' ||
     				s.charAt(index) == '!' ||
+    				s.charAt(index) == '+' ||
     				Character.isLetter(s.charAt(index)) )) {
     			throw new DeserializeException("Error in index-"+index);
     		}
@@ -121,6 +123,17 @@ public class GFInfixSerializer {
     				throw new DeserializeException("Error in index-"+index); 				
     			}
     			mystack.push(new String("&"));
+ 
+    		}
+    		
+    		if (s.charAt(index) == '+') {
+    			if (mystack.empty()) {
+    				throw new DeserializeException("Error in index-"+index); 				
+    			}
+    			if (! isTerm(mystack.peek())) {
+    				throw new DeserializeException("Error in index-"+index); 				
+    			}
+    			mystack.push(new String("+"));
  
     		}
     		
@@ -198,7 +211,7 @@ public class GFInfixSerializer {
     }
     
     private boolean isOperator(String s) {
-    	return (s.length() == 1 && ( s.charAt(0) == '&' || s.charAt(0) == '|'));
+    	return (s.length() == 1 && ( s.charAt(0) == '+' || s.charAt(0) == '&' || s.charAt(0) == '|'));
     }
     
     private boolean isOpenBracket(String s) {
@@ -401,6 +414,8 @@ public class GFInfixSerializer {
 			return new GFAndExpression(gfe1, gfe2);
 		case "|":
 			return new GFOrExpression(gfe1, gfe2);
+		case "+":
+			return new GFXorExpression(gfe1, gfe2);
 		case "!":  // TODO: There maybe something wrong here
 			return new GFNotExpression(gfe2);
 
@@ -531,6 +546,8 @@ public class GFInfixSerializer {
 			return serializeGFBoolean((GFOrExpression)booleanformula);
 		if(booleanformula instanceof GFNotExpression)
 			return serializeGFBoolean((GFNotExpression)booleanformula);
+		if(booleanformula instanceof GFXorExpression)
+			return serializeGFBoolean((GFXorExpression)booleanformula);
 		
 		throw new SerializeException("Unsupported type");
 	}

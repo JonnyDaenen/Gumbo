@@ -15,6 +15,7 @@ import mapreduce.guardedfragment.structure.gfexpressions.GFNotExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFOrExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFVisitor;
 import mapreduce.guardedfragment.structure.gfexpressions.GFVisitorException;
+import mapreduce.guardedfragment.structure.gfexpressions.GFXorExpression;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -141,6 +142,16 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 			result = new Pair<GFExpression, Integer>(and, pass2.snd);
 
 			break;
+			
+		case "+":
+			pass1 = deserialize(s, startpos + 1);
+			pass2 = deserialize(s, pass1.snd);
+
+			GFExpression xor = new GFXorExpression(pass1.fst, pass2.fst);
+			result = new Pair<GFExpression, Integer>(xor, pass2.snd);
+
+			break;
+
 
 		case "|":
 			pass1 = deserialize(s, startpos + 1);

@@ -6,6 +6,7 @@ import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFNotExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFOrExpression;
+import mapreduce.guardedfragment.structure.gfexpressions.GFXorExpression;
 
 /**
  * 
@@ -51,6 +52,15 @@ public class MyGFParser {
 			GFExpression g2 = deserialize();
 			return new GFAndExpression(g1,g2);
 		}
+		
+		// xor
+		if(formula.charAt(start) == '+') {
+			start = start+1;
+			GFExpression g1 = deserialize();
+			GFExpression g2 = deserialize();
+			return new GFXorExpression(g1,g2);
+		}
+		
 		if(formula.charAt(start) == '=') {
 			start = start+1;
 			GFAtomicExpression gout = deserializeGFAtom();
