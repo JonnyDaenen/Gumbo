@@ -78,7 +78,7 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 		try {
 			HashSet<GFExistentialExpression> formulaSet = new HashSet<GFExistentialExpression>();
 			String formulaString = conf.get("formulaset");
-			Set<GFExpression> deserSet = serializer.deserializeSet(formulaString);
+			Set<GFExistentialExpression> deserSet = serializer.deserializeSet(formulaString);
 
 			// check whether the type is existential
 			// FUTURE allow other types?

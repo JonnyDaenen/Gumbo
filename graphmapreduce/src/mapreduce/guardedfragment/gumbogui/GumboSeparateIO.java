@@ -14,7 +14,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
-
 import mapreduce.guardedfragment.gumbogui.JTextAreaOutputStream;
 import mapreduce.guardedfragment.gumbogui.gumboguiSeparateIO.GumboMainWindowSeparateIO;
 import mapreduce.guardedfragment.executor.hadoop.HadoopExecutor;
@@ -23,6 +22,7 @@ import mapreduce.guardedfragment.planner.structures.MRPlan;
 import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 import mapreduce.guardedfragment.planner.structures.RelationFileMappingException;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchemaException;
+import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFInfixSerializer;
 
@@ -53,7 +53,7 @@ public class GumboSeparateIO extends JFrame {
 	
 	// Gumbo's variable
 	
-	private static Set<GFExpression> inputQuery;
+	private static Set<GFExistentialExpression> inputQuery;
 	MRPlan plan;
 	HadoopExecutor hadoopExec;
 	SparkExecutor SparkExec;

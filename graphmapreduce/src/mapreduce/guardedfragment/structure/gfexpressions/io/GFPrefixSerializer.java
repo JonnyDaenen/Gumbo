@@ -91,14 +91,14 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 		return resultSet;
 	}
 
-	public Set<GFExpression> deserializeSet(String set) throws DeserializeException {
+	public Set<GFExistentialExpression> deserializeSet(String set) throws DeserializeException {
 
 		Set<String> strings = setSerializer.deserialize(set);
-		HashSet<GFExpression> eSet = new HashSet<GFExpression>(strings.size());
+		HashSet<GFExistentialExpression> eSet = new HashSet<GFExistentialExpression>(strings.size());
 
 		// serialize each expression
 		for (String s : strings) {
-			eSet.add(deserialize(s));
+			eSet.add((GFExistentialExpression) deserialize(s));
 		}
 
 		// flatten

@@ -62,11 +62,11 @@ public class GuardedMapper extends Mapper<LongWritable, Text, Text, Text> {
 		try {
 			formulaSet = new HashSet<GFExistentialExpression>();
 			String formulaString = conf.get("formulaset");
-			Set<GFExpression> deserSet = serializer.deserializeSet(formulaString);
+			Set<GFExistentialExpression> deserSet = serializer.deserializeSet(formulaString);
 
 			// check whether the type is existential
 			// FUTURE allow other types?
-			for (GFExpression exp : deserSet) {
+			for (GFExistentialExpression exp : deserSet) {
 				if (exp instanceof GFExistentialExpression) {
 					formulaSet.add((GFExistentialExpression) exp);
 				}

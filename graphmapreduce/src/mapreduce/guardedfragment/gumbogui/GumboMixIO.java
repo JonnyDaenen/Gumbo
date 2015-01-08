@@ -7,6 +7,9 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintStream;
+import java.security.Timestamp;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Set;
 
 import javax.swing.JButton;
@@ -16,14 +19,20 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
+import org.apache.hadoop.fs.Path;
+
 import mapreduce.guardedfragment.executor.hadoop.HadoopExecutor;
 import mapreduce.guardedfragment.executor.spark.SparkExecutor;
 import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.GumboMainWindowMixIO;
 import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.GumboMainWindowMixIOwithScroll;
+import mapreduce.guardedfragment.planner.GFMRPlanner;
+import mapreduce.guardedfragment.planner.GFMRPlannerException;
+import mapreduce.guardedfragment.planner.partitioner.HeightPartitioner;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
 import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 import mapreduce.guardedfragment.planner.structures.RelationFileMappingException;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchemaException;
+import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFInfixSerializer;
 
@@ -46,10 +55,11 @@ public class GumboMixIO {
 	
 	private static JCheckBox cbLevel;
 	
-	
+	private static JTextAreaOutputStream outPipe;
+		
 	// Gumbo's variable
 	
-	private static Set<GFExpression> inputQuery;
+	private static Set<GFExistentialExpression> inputQuery;
 	private static MRPlan plan;
 	private static HadoopExecutor hadoopExec;
 	private static SparkExecutor SparkExec;
@@ -105,11 +115,37 @@ public class GumboMixIO {
 		mainwindow.setLocation((height-newheight)/2, (width-newwidth)/2);
 		mainwindow.setVisible(true);
 		
-		
+		outPipe = new JTextAreaOutputStream(textConsole);
+		System.setOut (new PrintStream (outPipe));
+			
 	    buttonQC.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        	textConsole.setText("");
 	        	textConsole.append("Compiling the input queries...\n");
+	        	
+	        	GFInfixSerializer parser = new GFInfixSerializer();
+	        	
+	        	try {
+	        		inputQuery = parser.GetGFExpression(editorIQ.getText().trim());
+	        	} catch (Exception exc) {
+	        		
+	        		/*StringWriter errors = new StringWriter();
+	        		exc.printStackTrace(new PrintWriter(errors));
+	        		textConsole.append(errors.toString());
+	        		*/
+	        		System.out.println(exc);
+	    			exc.printStackTrace();
+	    		} 
+
+	        	textConsole.append("The following queries compiled:\n");
+	        	
+	        	for (GFExpression gf : inputQuery) {
+	        		textConsole.append(gf.toString()+"\n");
+	        		
+	        	}
+	        	
+
+
 	        	
 	       	}
 	    });
@@ -139,6 +175,53 @@ public class GumboMixIO {
 	    });
 	
 		
+	    
+	    buttonFH.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		
+	    		textConsole.setText("");
+	        	textConsole.append("Running Gumbo-Hadoop...\n");
+	    		
+	        	GFMRPlanner planner = new GFMRPlanner(new HeightPartitioner());
+	        	
+	        	textConsole.append("Parsing the input and output files...\n");
+	        	
+	        	
+	        	RelationFileMapping rfm = new RelationFileMapping();
+				rfm.setDefaultPath(new Path(inPathText.getText()));
+				MRPlan plan;
+				String xtime = "" + System.currentTimeMillis() / 1000;
+				try {
+					plan = planner.createPlan(
+							(Set<GFExistentialExpression>)inputQuery, rfm, 
+							new Path(outPathText.getText()), 
+							new Path("/Users/ntynvt/tempGumbo/"+xtime));
+					
+					HadoopExecutor executor = new HadoopExecutor();
+					executor.execute(plan);
+				
+				} catch (GFMRPlannerException e1) {
+					// TODO Auto-generated catch block
+					System.out.println(e1);
+					e1.printStackTrace();
+				} catch (IllegalArgumentException e1) {
+					// TODO Auto-generated catch block
+					System.out.println(e1);
+					e1.printStackTrace();
+				}
+				//plan.execute();
+				
+				
+				
+//				SparkExecutor executor = new SparkExecutor();
+//				executor.execute(plan);
+	        	
+	        	// In the future should be:
+	        	// plan = new MRPlan(inputQuery,rfmInPath, rfmOutPath);   		
+	    	}
+	    });
+	    
+	    
 		
 	}
 
