@@ -126,7 +126,13 @@ public class GumboMixIO {
 	        	GFInfixSerializer parser = new GFInfixSerializer();
 	        	
 	        	try {
-	        		inputQuery = parser.GetGFExpression(editorIQ.getText().trim());
+	        		// filter existential expressions
+	        		Set<GFExpression> exps = parser.GetGFExpression(editorIQ.getText().trim());
+	        		
+	        		for (GFExpression exp : exps) {
+	        			if (exp instanceof GFExistentialExpression)
+	        				inputQuery.add((GFExistentialExpression) exp);
+	        		}
 	        	} catch (Exception exc) {
 	        		
 	        		/*StringWriter errors = new StringWriter();

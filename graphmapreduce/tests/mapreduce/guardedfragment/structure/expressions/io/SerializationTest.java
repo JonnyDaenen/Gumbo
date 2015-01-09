@@ -157,7 +157,7 @@ public class SerializationTest {
 		strings.add(rank2);
 		
 		String ser = prefixSerializer.serializeSet(strings);
-		Set<GFExistentialExpression> strings2 = prefixSerializer.deserializeSet(ser);
+		Set<GFExpression> strings2 = prefixSerializer.deserializeSet(ser);
 		
 		for (GFExpression e : strings) {
 			boolean found = false;

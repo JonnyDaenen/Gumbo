@@ -26,7 +26,7 @@ public class GFInfixSerializer {
 		return e.generateString();
 	}
 	
-	public Set<GFExistentialExpression> GetGFExpression(String s) throws DeserializeException {
+	public Set<GFExpression> GetGFExpression(String s) throws DeserializeException {
 		
 		GFPrefixSerializer prefixParser = new GFPrefixSerializer();
 		
@@ -54,7 +54,7 @@ public class GFInfixSerializer {
 		
 		
 		GFPrefixSerializer dp = new GFPrefixSerializer();
-		Set<GFExistentialExpression> sp = dp.deserializeSet("{"+dummyString+"}");
+		Set<GFExpression> sp = dp.deserializeSet("{"+dummyString+"}");
 		return sp;
 	}
 	

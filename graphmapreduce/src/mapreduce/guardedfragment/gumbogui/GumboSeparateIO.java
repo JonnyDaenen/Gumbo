@@ -53,7 +53,7 @@ public class GumboSeparateIO extends JFrame {
 	
 	// Gumbo's variable
 	
-	private static Set<GFExistentialExpression> inputQuery;
+	private static Set<GFExpression> inputQuery;
 	MRPlan plan;
 	HadoopExecutor hadoopExec;
 	SparkExecutor SparkExec;
