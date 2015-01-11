@@ -27,13 +27,22 @@ import org.apache.commons.logging.LogFactory;
  * @author Tony Tan
  * @author Jonny Daenen
  * 
+ * NOTE: An object of this class is a "translator" 
+ * between a GF query in String in prefix notation (or a number of GF queries) and 
+ * an object of GFExpression (or a set of GFExpression objects).
+ * 
+ * The method serializer is to convert GFExpression objects into its string form;
+ * while deserializer is the other way round. 
+ * 
+ * A GF query is written in the form:
+ * OutputName(x1,...,xk) : & GuardRelation(x1,...xk,y1,...,ym) Boolean combination of guarded relations
+ * 
  */
 public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpression> {
 
 
 	private static final Log LOG = LogFactory.getLog(GFPrefixSerializer.class);
-	
-	
+		
 	StringSetSerializer setSerializer;
 
 	public GFPrefixSerializer() {
@@ -134,7 +143,7 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 		Pair<GFExpression, Integer> pass1, pass2;
 
 		switch (operator) {
-		case "&":
+		case "&": // The And operator
 			pass1 = deserialize(s, startpos + 1);
 			pass2 = deserialize(s, pass1.snd);
 
@@ -143,7 +152,7 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 
 			break;
 			
-		case "+":
+		case "+": // The Xor operator
 			pass1 = deserialize(s, startpos + 1);
 			pass2 = deserialize(s, pass1.snd);
 
@@ -153,7 +162,7 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 			break;
 
 
-		case "|":
+		case "|": // The Or operator
 			pass1 = deserialize(s, startpos + 1);
 			pass2 = deserialize(s, pass1.snd);
 
@@ -162,7 +171,7 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 
 			break;
 
-		case "!":
+		case "!": // The Negation operator
 			pass1 = deserialize(s, startpos + 1);
 
 			GFExpression not = new GFNotExpression(pass1.fst);
@@ -170,7 +179,7 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 
 			break;
 
-		case "#":
+		case "#": // The symbol that separates the OutputName and the GFExpression itself.
 			result = processExistential(s, startpos);
 			break;
 			
