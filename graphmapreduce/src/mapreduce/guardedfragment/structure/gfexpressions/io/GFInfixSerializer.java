@@ -19,6 +19,16 @@ import mapreduce.guardedfragment.structure.gfexpressions.GFXorExpression;
 /**
  * @author Jonny Daenen
  * 
+ *  NOTE: An object of this class is a "translator" 
+ * between a GF query in String in infix notation (or a number of GF queries) and 
+ * an object of GFExpression (or a set of GFExpression objects).
+ * 
+ * The method serializer is to convert GFExpression objects into its string form;
+ * while deserializer is the other way round. 
+ * 
+ * A GF query is written in the form:
+ * OutputName(x1,...,xk) : GuardRelation(x1,...xk,y1,...,ym) & Boolean combination of guarded relations
+ * 
  */
 public class GFInfixSerializer {
 
@@ -46,7 +56,7 @@ public class GFInfixSerializer {
 		    }
 		    		    
 		    if (dummyArray.length != 2) {
-		    	throw new DeserializeException("Expect exactly one : on query "+ss);		    	
+		    	throw new DeserializeException("Expect exactly one : on defining the query "+ss);		    	
 		    }
 		       
 		    dummyString = dummyString+"#"+dummyArray[0].trim()+InfixToPrefix(dummyArray[1])+";";	
