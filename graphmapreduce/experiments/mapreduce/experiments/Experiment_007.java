@@ -58,7 +58,9 @@ public class Experiment_007 {
 		RelationFileMapping files = new RelationFileMapping();
 		if (input.equals("thinking")) {
 			files.addPath(schemaR, new Path("data/R"));
+			files.setFormat(schemaR,InputFormat.CSV);
 			files.addPath(schemaS, new Path("data/S"));
+			files.setFormat(schemaS,InputFormat.CSV);
 		} else if (!input.equals("rel")) {
 			//	files.setDefaultPath(new Path(input));
 			System.out.println("Using csv files.");
