@@ -216,9 +216,11 @@ public class HadoopExecutor {
 
 	private void printJobDAG(JobControl jc) {
 
+		System.out.println();
 		for (ControlledJob job : jc.getSuccessfulJobList()) {
 			printJob(job);
 		}
+		System.out.println();
 
 	}
 
@@ -236,11 +238,7 @@ public class HadoopExecutor {
 				depstring = " ->" + depstring;
 			}
 		}
-		System.out.println();
-		System.out.println();
 		System.out.println(job.getMapredJobId() + " " + depstring);
-		System.out.println();
-		System.out.println();
 
 	}
 
