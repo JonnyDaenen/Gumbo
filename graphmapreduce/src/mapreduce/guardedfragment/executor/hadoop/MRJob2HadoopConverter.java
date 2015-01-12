@@ -124,6 +124,7 @@ public class MRJob2HadoopConverter {
 			//			conf.set("GFReducerClass", GFReducer1AtomBased.class.getCanonicalName());
 
 			hadoopJob.setReducerClass(GFReducer1.class); 
+			hadoopJob.setNumReduceTasks(6);
 
 			//			hadoopJob.setCombinerClass(GFCombiner1.class);
 
