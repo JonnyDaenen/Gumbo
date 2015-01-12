@@ -121,6 +121,7 @@ public class HadoopExecutor {
 		}
 
 		printCounters(jc);
+		printJobDAG(jc);
 
 		// 5. clean up in case of failure
 
@@ -165,16 +166,16 @@ public class HadoopExecutor {
 
 
 			for (String groupName : counters.getGroupNames()) {
-				
+
 				if (!groupName.contains("org.apache.hadoop.mapreduce"))
 					continue;
-				
+
 				CounterGroup group = counters.getGroup(groupName);
 				System.out.println(group.getDisplayName());
 
 				// aggregate counters
 				CounterGroup overallGroup = overallCounters.getGroup(group.getName());
-//				CounterGroup overallGroup = overallCounters.addGroup(group.getName(), group.getDisplayName());
+				//				CounterGroup overallGroup = overallCounters.addGroup(group.getName(), group.getDisplayName());
 
 
 				for (Counter counter : group.getUnderlyingGroup()) {
@@ -182,7 +183,7 @@ public class HadoopExecutor {
 
 					// aggregate counters
 					Counter overallCounter = overallGroup.findCounter(counter.getName(), true);
-//					Counter overallCounter = overallGroup.addCounter(counter.getName(), counter.getDisplayName(), 0);
+					//					Counter overallCounter = overallGroup.addCounter(counter.getName(), counter.getDisplayName(), 0);
 					overallCounter.increment(counter.getValue());
 
 				}
@@ -201,7 +202,7 @@ public class HadoopExecutor {
 
 			if (!groupName.contains("org.apache.hadoop.mapreduce"))
 				continue;
-			
+
 			CounterGroup group = counters.getGroup(groupName);
 			System.out.println(group.getDisplayName());
 
@@ -210,6 +211,36 @@ public class HadoopExecutor {
 			}
 		}
 
+
+	}
+
+	private void printJobDAG(JobControl jc) {
+
+		for (ControlledJob job : jc.getSuccessfulJobList()) {
+			printJob(job);
+		}
+
+	}
+
+	/**
+	 * @param job
+	 */
+	private void printJob(ControlledJob job) {
+		String depstring = "";
+		if (job.getDependentJobs() != null) { 
+			for (ControlledJob dep : job.getDependentJobs()) {
+				depstring += ", " + dep.getMapredJobId();
+			}
+			if (!depstring.isEmpty()) {
+				depstring = depstring.substring(1);
+				depstring = " ->" + depstring;
+			}
+		}
+		System.out.println();
+		System.out.println();
+		System.out.println(job.getMapredJobId() + " " + depstring);
+		System.out.println();
+		System.out.println();
 
 	}
 
