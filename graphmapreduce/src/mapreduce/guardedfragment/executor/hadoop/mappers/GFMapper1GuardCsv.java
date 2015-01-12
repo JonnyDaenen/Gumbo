@@ -107,6 +107,7 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRel {
 			
 			// trim is necessary to remove extra whitespace
 			String t1 = value.toString().trim();
+			
 			t1 = rs.getName() + "(" + t1 + ")";
 			value.set(t1);
 			
