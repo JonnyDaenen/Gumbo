@@ -83,6 +83,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 					int guardID = eso.getAtomId(guard);
 					
 					// output guard
+					// TODO do we need this?
 					out1.set(t.toString() + ";" + guardID);
 					context.write(value, out1);
 					// LOG.warn(value.toString() + " " + out1.toString());

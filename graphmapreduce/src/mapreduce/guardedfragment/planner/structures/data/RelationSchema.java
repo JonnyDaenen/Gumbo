@@ -122,5 +122,7 @@ public class RelationSchema {
 	public String getShortDescription() {
 		return getName() + getNumFields();
 	}
+	
+
 
 }

@@ -22,6 +22,8 @@ import mapreduce.guardedfragment.planner.structures.data.RelationSchemaException
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.ContentSummary;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
@@ -31,7 +33,7 @@ import org.apache.hadoop.fs.Path;
  *
  */
 public class RelationFileMapping {
-	
+
 
 	private static final Log LOG = LogFactory.getLog(RelationFileMapping.class);
 
@@ -40,8 +42,8 @@ public class RelationFileMapping {
 	public static void main(String[] args) throws IOException, RelationSchemaException, RelationFileMappingException {
 
 		RelationFileMapping rm = new RelationFileMapping();
-		rm.addPath(new RelationSchema("R",2), new Path("data/jonny1"));
-		rm.addPath(new RelationSchema("R",2), new Path("data/jonny2"));
+		rm.addPath(new RelationSchema("R",2), new Path("input/dummyrelations1/part1.txt"));
+		rm.addPath(new RelationSchema("R",2), new Path("input/dummyrelations2"));
 		rm.addPath(new RelationSchema("R",3), new Path("data/jonny2"));
 		rm.addPath(new RelationSchema("S",3), new Path("data/jonny3"));
 		rm.setFormat(new RelationSchema("S",3), InputFormat.CSV);
@@ -94,11 +96,11 @@ public class RelationFileMapping {
 
 		// split schema's
 		String[] listIn = sIn.split("'");
-//		LOG.error(Arrays.deepToString(listIn));
+		//		LOG.error(Arrays.deepToString(listIn));
 
 		for (int i = 0; i< listIn.length; i++) {
 			String[] dummy = listIn[i].split(";");
-//			LOG.error(Arrays.deepToString(dummy));
+			//			LOG.error(Arrays.deepToString(dummy));
 
 			if (dummy.length <= 2) {
 				throw new RelationFileMappingException("Expecting exactly one input file and optionally a format");
@@ -146,7 +148,7 @@ public class RelationFileMapping {
 			return format.get(s);
 		return InputFormat.REL;
 	}
-	
+
 
 	public Set<Path> getPathsWithFormat(InputFormat f) {
 		Set<Path> result = new HashSet<>();
@@ -156,7 +158,7 @@ public class RelationFileMapping {
 		}
 		return result;
 	}
-	
+
 
 	/**
 	 * Adds a path to the set of input paths of the relation schema.
@@ -173,6 +175,7 @@ public class RelationFileMapping {
 			mapping.put(s, paths);
 		}
 		paths.add(p);
+
 	}
 
 	/**
@@ -281,6 +284,7 @@ public class RelationFileMapping {
 				s += "rel";
 				break;
 			}
+			s += ";";
 		}
 
 		return s.length() > 0 ? s.substring(1) : "";
@@ -304,15 +308,55 @@ public class RelationFileMapping {
 		for (RelationSchema rs : mapping.keySet()){
 			Set<Path> paths = mapping.get(rs);
 			for ( Path path : paths) {
-//				LOG.debug("Looking for relation name:" + filePath + " " + path); 
+				//				LOG.debug("Looking for relation name:" + filePath + " " + path); 
 				if(filePath.toString().contains(path.toString()))
 					return rs;
 			}	
 		}
 
-//		LOG.debug("Looking for relation name: nothing found"); 
+		//		LOG.debug("Looking for relation name: nothing found"); 
 		// TODO throw error
 		return null;
+	}
+
+
+	/**
+	 * Calculates the number of bytes that are input to this 
+	 * @return
+	 */
+	public static long getInputSize(Path path) {
+
+		long length = 0;
+
+		try {
+			
+			Configuration config = new Configuration();
+			FileSystem hdfs = path.getFileSystem(config);
+			ContentSummary cSummary = hdfs.getContentSummary(path);
+			length = cSummary.getLength();
+			
+		} catch (IOException e) {
+			LOG.error("Cannot determine input size of " + path, e);
+		}
+		return length;
+	}
+
+	
+	public long getRelationSize(RelationSchema s) {
+		Set<Path> paths;
+		long l = 0;
+		if(mapping.containsKey(s)) {
+			paths = mapping.get(s);
+		} else {
+			return 0;
+		}
+		
+		// update path estimate
+		for (Path p : paths) {
+			l += getInputSize(p);
+		}
+		return l;
+		
 	}
 
 
