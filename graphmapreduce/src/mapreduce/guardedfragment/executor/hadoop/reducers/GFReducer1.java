@@ -105,7 +105,7 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 		// LOG.warn(key + ": ");
 		
 		boolean print = false;
-		if (key.toString().contains("(59)") || key.toString().contains(",59,"))
+		if (key.toString().contains("(1000)") || key.toString().contains(",1000,"))
 			print = true;
 
 		

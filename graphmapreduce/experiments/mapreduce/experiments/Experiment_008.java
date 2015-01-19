@@ -53,7 +53,7 @@ public class Experiment_008 {
 		String output = "./output/" + Experiment_008.class.getSimpleName() + "/" + timeStamp;
 		String scratch = "./scratch/" + Experiment_008.class.getSimpleName() + "/" + timeStamp;
 
-		RelationSchema schemaR = new RelationSchema("R", 5);
+		RelationSchema schemaR = new RelationSchema("R", 10);
 		RelationSchema schemaS = new RelationSchema("S", 1);
 		RelationFileMapping files = new RelationFileMapping();
 		if (input.equals("thinking")) {
@@ -64,9 +64,9 @@ public class Experiment_008 {
 		} else if (!input.equals("rel")) {
 			//	files.setDefaultPath(new Path(input));
 			System.out.println("Using csv files.");
-			files.addPath(schemaR, new Path("./input/experiments/EXP_007/R"));
+			files.addPath(schemaR, new Path("./input/experiments/EXP_008/R"));
 			files.setFormat(schemaR,InputFormat.CSV);
-			files.addPath(schemaS, new Path("./input/experiments/EXP_007/S"));
+			files.addPath(schemaS, new Path("./input/experiments/EXP_008/S"));
 			files.setFormat(schemaS,InputFormat.CSV);
 		} else {
 			//	files.setDefaultPath(new Path(input));
@@ -77,7 +77,7 @@ public class Experiment_008 {
 		// query
 
 		Set<String> queries = new HashSet<String>();
-		queries.add("#Out(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10)&R(x1,x2,x3,x4,x5)&!S(x1)&!S(x2)&!S(x3)&!S(x4)&!S(x5)&!S(x6)&!S(x7)&!S(x8)&!S(x9)!S(x10)");
+		queries.add("#Out(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10)&R(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10)&!S(x1)&!S(x2)&!S(x3)&!S(x4)&!S(x5)&!S(x6)&!S(x7)&!S(x8)&!S(x9)!S(x10)");
 		//queries.add("#Out2(x2)&R(x2,x3,x4,x5)&!S2(x2)S2(x2)");
 
 		// parse query

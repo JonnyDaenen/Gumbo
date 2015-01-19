@@ -94,6 +94,8 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRel {
 			// TODO optimize
 			
 		try {
+
+			
 			InputSplit is = context.getInputSplit();
 			Method method = is.getClass().getMethod("getInputSplit");
 			

@@ -48,7 +48,7 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 
 
 		boolean print = false;
-		if (value.toString().contains("(59)")) {
+		if (value.toString().contains("1000")) {
 			LOG.error("Mapper1: " + value);
 			print = true;
 		}
