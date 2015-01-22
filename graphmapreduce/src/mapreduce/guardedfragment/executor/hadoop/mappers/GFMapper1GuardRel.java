@@ -86,6 +86,8 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 					// TODO do we need this?
 					out1.set(t.toString() + ";" + guardID);
 					context.write(value, out1);
+					context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST).increment(1);
+					context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_BYTES).increment(out1.getLength() + value.getLength());
 					// LOG.warn(value.toString() + " " + out1.toString());
 					outputGuard = true;
 
@@ -104,6 +106,8 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 							out1.set(tprime.toString());
 							out2.set(t.toString() + ";" + guardedID);
 							context.write(out1, out2);
+							context.getCounter(GumboMap1Counter.REQUEST).increment(1);
+							context.getCounter(GumboMap1Counter.REQUEST_BYTES).increment(out1.getLength() + out2.getLength());
 							if (print) {
 								LOG.error("Mapper1 output: " + out1 + " " + out2);
 							}
@@ -117,6 +121,8 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 			// only output keep-alive if it matched a guard
 			if (outputGuard) {
 				context.write(value, value);
+				context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE).increment(1);
+				context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()*2);
 //				 LOG.warn("Guard: " + value.toString() + " " + value.toString());
 			}
 

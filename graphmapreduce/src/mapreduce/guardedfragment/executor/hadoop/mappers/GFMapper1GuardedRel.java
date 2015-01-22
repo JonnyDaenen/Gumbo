@@ -64,6 +64,8 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 			// if no guarded expression matches this tuple, it will not be output
 			if (guarded.matches(t)) {
 				context.write(value, value);
+				context.getCounter(GumboMap1Counter.PROOF_OF_EXISTENCE).increment(1);
+				context.getCounter(GumboMap1Counter.PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()*2);
 				if (print) {
 					LOG.error("Mapper1 output: " + value + " " + value);
 				}

@@ -167,11 +167,12 @@ public class HadoopExecutor {
 
 			for (String groupName : counters.getGroupNames()) {
 
-				if (!groupName.contains("org.apache.hadoop.mapreduce"))
+				if (!groupName.contains("."))
 					continue;
 
 				CounterGroup group = counters.getGroup(groupName);
 				System.out.println(group.getDisplayName());
+				System.out.println(groupName);
 
 				// aggregate counters
 				CounterGroup overallGroup = overallCounters.getGroup(group.getName());

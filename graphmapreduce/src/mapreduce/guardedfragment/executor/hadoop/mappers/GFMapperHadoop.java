@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import mapreduce.guardedfragment.executor.hadoop.ExecutorSettings;
 import mapreduce.guardedfragment.planner.structures.operations.GFMapper;
 import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
@@ -37,6 +38,7 @@ public class GFMapperHadoop extends Mapper<Text, Text, Text, Text> {
 	
 	Set<GFExistentialExpression> formulaSet;
 	GFMapper mapper;
+	ExecutorSettings settings;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -80,6 +82,8 @@ public class GFMapperHadoop extends Mapper<Text, Text, Text, Text> {
 			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}
 
+		
+		// TODO load settings
 	}
 	
 	/**

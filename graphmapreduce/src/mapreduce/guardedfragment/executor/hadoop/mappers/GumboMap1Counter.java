@@ -1,0 +1,22 @@
+/**
+ * Created: 22 Jan 2015
+ */
+package mapreduce.guardedfragment.executor.hadoop.mappers;
+
+import scala.tools.nsc.interpreter.IMain.Request;
+
+/**
+ * @author Jonny Daenen
+ *
+ */
+public enum GumboMap1Counter {
+	REQUEST,
+	PROOF_OF_EXISTENCE,
+	KEEP_ALIVE_REQUEST,
+	KEEP_ALIVE_PROOF_OF_EXISTENCE,
+
+	REQUEST_BYTES,
+	PROOF_OF_EXISTENCE_BYTES,
+	KEEP_ALIVE_REQUEST_BYTES,
+	KEEP_ALIVE_PROOF_OF_EXISTENCE_BYTES
+}
