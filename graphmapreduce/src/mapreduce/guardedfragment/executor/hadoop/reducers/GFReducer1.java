@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import mapreduce.guardedfragment.executor.hadoop.ExecutorSettings;
 import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
 import mapreduce.guardedfragment.planner.structures.operations.GFReducer;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
@@ -46,6 +47,7 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 	StringBuilder sb;
 
 	boolean outputIDs = true;
+	ExecutorSettings settings;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -86,6 +88,9 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 		} catch (Exception e) {
 			throw new InterruptedException("Reducer initialisation error: " + e.getMessage());
 		}
+		
+		// TODO load settings
+		settings = new ExecutorSettings();
 	}
 
 	@Override
@@ -105,8 +110,8 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 		// LOG.warn(key + ": ");
 		
 		boolean print = false;
-		if (key.toString().contains("(1000)") || key.toString().contains(",1000,"))
-			print = true;
+//		if (key.toString().contains("(1000)") || key.toString().contains(",1000,"))
+//			print = true;
 
 		
 		
@@ -114,15 +119,16 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 
 		// WARNING Text object will be reused by Hadoop!
 		for (Text t : values) {
-			
-			if (print)
-				LOG.error("Red1: " + key + " " + t);
+		
+//			if (print)
+//				LOG.error("Red1: " + key + " " + t);
 
 			// parse input
 			Pair<String, Integer> split = split(t);
 			
 			// is this not the key
 			// (key is only thing that can appear without atom)
+			// it does not matter whether its sent as S(1) or with a constant symbol such as '#'
 			if (split.snd != -1) {
 
 
@@ -132,8 +138,8 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 					out2.set(split.snd);
 //					System.out.println("Writing: " + out1.toString() + " " + out2.toString() + "" + split.snd);
 					mos.write(out1, out2, FILENAME);
-					if (print)
-						LOG.error("Red1 Out: " + out1 + " " + out2);
+//					if (print)
+//						LOG.error("Red1 Out: " + out1 + " " + out2);
 				}
 				// else we collect the data
 				else {

@@ -29,6 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputSplit;
@@ -42,12 +43,13 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
  * @author Jonny Daenen
  * 
  */
-public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
+public class GFMapper2Identity extends Mapper<LongWritable, Text, Text, IntWritable> {
 
-	private static final Log LOG = LogFactory.getLog(GFMapper1Identity.class);
+	private static final Log LOG = LogFactory.getLog(GFMapper2Identity.class);
 
 	ExpressionSetOperations eso;
 	ExecutorSettings settings;
+	IntWritable out = new IntWritable();
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -110,7 +112,9 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 //		
 //		LOG.error("File Name Processing "+filePath);
 //		
-		context.write(new Text(key.toString()), value);
+		// dummy code
+		out.set(Integer.parseInt(value.toString()));
+		context.write(new Text(key.toString()), out);
 	}
 
 }

@@ -38,7 +38,6 @@ public class GFMapperHadoop extends Mapper<Text, Text, Text, Text> {
 	
 	Set<GFExistentialExpression> formulaSet;
 	GFMapper mapper;
-	ExecutorSettings settings;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -83,7 +82,6 @@ public class GFMapperHadoop extends Mapper<Text, Text, Text, Text> {
 		}
 
 		
-		// TODO load settings
 	}
 	
 	/**

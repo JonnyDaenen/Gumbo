@@ -5,6 +5,7 @@ package mapreduce.guardedfragment.executor.hadoop;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import mapreduce.guardedfragment.executor.hadoop.combiners.GFCombiner1;
@@ -13,6 +14,8 @@ import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1GuardRel;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1GuardedCsv;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1GuardedRel;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Identity;
+import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper2GuardCsv;
+import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper2GuardRel;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapperHadoop;
 import mapreduce.guardedfragment.executor.hadoop.readers.GuardInputFormat;
 import mapreduce.guardedfragment.executor.hadoop.reducers.GFReducer1;
@@ -64,6 +67,9 @@ public class MRJob2HadoopConverter {
 	private GFPrefixSerializer serializer;
 
 
+	private ExecutorSettings settings;
+
+
 	private static final Log LOG = LogFactory.getLog(MRJob2HadoopConverter.class);
 
 	/**
@@ -71,6 +77,7 @@ public class MRJob2HadoopConverter {
 	 */
 	public MRJob2HadoopConverter() {
 		serializer = new GFPrefixSerializer();
+		settings = new ExecutorSettings(); // TODO add as parameter
 	}
 
 	/**
@@ -149,7 +156,7 @@ public class MRJob2HadoopConverter {
 				MultipleInputs.addInputPath(hadoopJob, guardedPath, 
 						TextInputFormat.class, GFMapper1GuardedRel.class);
 			}
-			
+
 			for ( Path guardedPath : eso.getGuardedCsvPaths()) {
 				LOG.info("Setting M1 guarded path to " + guardedPath + " using mapper " + GFMapper1GuardedCsv.class.getName());
 				MultipleInputs.addInputPath(hadoopJob, guardedPath, 
@@ -162,15 +169,15 @@ public class MRJob2HadoopConverter {
 				MultipleInputs.addInputPath(hadoopJob, guardPath, 
 						TextInputFormat.class, GFMapper1GuardRel.class);
 			}
-			
+
 			for ( Path guardPath : eso.getGuardCsvPaths()) {
 				LOG.info("Setting M1 guard path to " + guardPath + " using mapper " + GFMapper1GuardCsv.class.getName());
 				MultipleInputs.addInputPath(hadoopJob, guardPath, 
 						TextInputFormat.class, GFMapper1GuardCsv.class);
 			}
 
-			
-			
+
+
 
 			// Deprecated!
 			// do not use default paths
@@ -233,9 +240,49 @@ public class MRJob2HadoopConverter {
 			// set guard and guarded set
 			Configuration conf = hadoopJob.getConfiguration();
 			conf.set("formulaset", serializer.serializeSet(job.getGFExpressions()));
+			conf.set("relationfilemapping", dirManager.getFileMapping().toString());
+
 
 			/* set mapper and reducer */
-			hadoopJob.setMapperClass(Mapper.class);
+			if (settings.getBooleanProperty(ExecutorSettings.guardKeepaliveOptimizationOn)) {
+				// add special non-identity mapper to process the guard input again
+				
+				ExpressionSetOperations eso = new ExpressionSetOperations();
+				eso.setExpressionSet(job.getGFExpressions());
+				eso.setDirManager(dirManager);
+				
+				// direct them to the special mapper (rel)
+				for (Path guardPath : eso.getGuardRelPaths()) {
+					LOG.info("Adding M2 guard path " + guardPath + " using mapper " + GFMapper2GuardRel.class.getName());
+					MultipleInputs.addInputPath(hadoopJob, guardPath, 
+							TextInputFormat.class, GFMapper2GuardRel.class);
+				}
+				
+				// direct them to the special mapper (csv)
+				for (Path guardPath : eso.getGuardCsvPaths()) {
+					LOG.info("Adding M2 guard path " + guardPath + " using mapper " + GFMapper2GuardCsv.class.getName());
+					MultipleInputs.addInputPath(hadoopJob, guardPath, 
+							TextInputFormat.class, GFMapper2GuardCsv.class);
+				}
+				
+				// other files just need to be read and pushed to the reducer
+				for (Path inpath : job.getInputPaths()) {
+					LOG.info("Adding M2 normal path " + inpath + " using identity mapper ");
+					MultipleInputs.addInputPath(hadoopJob, inpath, 
+							GuardInputFormat.class, Mapper.class);
+				}
+			} else {
+				hadoopJob.setMapperClass(Mapper.class);
+
+				for (Path inpath : job.getInputPaths()) {
+					LOG.info("Adding M2 path " + inpath + " using identity mapper ");
+					FileInputFormat.addInputPath(hadoopJob, inpath);
+				}
+				
+				// TODO check
+				// we use a custom input class to allow the mapper to output key-value pairs again
+				hadoopJob.setInputFormatClass(GuardInputFormat.class);
+			}
 			//			hadoopJob.setMapperClass(GFMapperHadoop.class);
 			//			conf.set("GFMapperClass", GFMapper2Generic.class.getCanonicalName());
 
@@ -243,29 +290,26 @@ public class MRJob2HadoopConverter {
 			//			conf.set("GFReducerClass", GFReducer2Generic.class.getCanonicalName());
 			hadoopJob.setReducerClass(GFReducer2.class);
 
-			/* set IO */
-			for (Path inpath : job.getInputPaths()) {
-				System.out.println("Setting path" + inpath);
-				FileInputFormat.addInputPath(hadoopJob, inpath);
-			}
+			/* set output */
 			FileOutputFormat.setOutputPath(hadoopJob, job.getOutputPath());
 
 
 			// set intermediate/mapper output
 			hadoopJob.setMapOutputKeyClass(Text.class);
-			hadoopJob.setMapOutputValueClass(IntWritable.class);
+			hadoopJob.setMapOutputValueClass(IntWritable.class); // OPTIMIZE make it a list? for combiner
 
 			// set reducer output
 			hadoopJob.setOutputKeyClass(NullWritable.class);
 			//			hadoopJob.setOutputKeyClass(Text.class);
 			hadoopJob.setOutputValueClass(Text.class);
 
-			// TODO check
-			// we use a custom input class to allow the mapper to output key-value pairs again
-			hadoopJob.setInputFormatClass(GuardInputFormat.class);
+			
 
 			return new ControlledJob(hadoopJob, null);
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (GFOperationInitException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

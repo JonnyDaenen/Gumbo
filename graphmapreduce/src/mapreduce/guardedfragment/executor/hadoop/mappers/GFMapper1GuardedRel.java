@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import mapreduce.guardedfragment.executor.hadoop.ExecutorSettings;
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
 import mapreduce.guardedfragment.planner.structures.operations.GFMapper;
 import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
@@ -36,6 +37,17 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 public class GFMapper1GuardedRel extends GFMapper1Identity {
 
 	private static final Log LOG = LogFactory.getLog(GFMapper1GuardedRel.class);
+	Text proofSymbol;
+	
+	/**
+	 * @see mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Identity#setup(org.apache.hadoop.mapreduce.Mapper.Context)
+	 */
+	@Override
+	protected void setup(org.apache.hadoop.mapreduce.Mapper.Context context) throws IOException, InterruptedException {
+		super.setup(context);
+		proofSymbol = new Text(settings.getProperty(settings.PROOF_SYMBOL));
+		
+	}
 
 	/**
 	 * @throws InterruptedException
@@ -48,10 +60,10 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 
 
 		boolean print = false;
-		if (value.toString().contains("1000")) {
-			LOG.error("Mapper1: " + value);
-			print = true;
-		}
+//		if (value.toString().contains("1000")) {
+//			LOG.error("Mapper1: " + value);
+//			print = true;
+//		}
 
 		// trim is necessary to remove extra whitespace
 		value.set(value.toString().trim());
@@ -63,12 +75,20 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 
 			// if no guarded expression matches this tuple, it will not be output
 			if (guarded.matches(t)) {
-				context.write(value, value);
-				context.getCounter(GumboMap1Counter.PROOF_OF_EXISTENCE).increment(1);
-				context.getCounter(GumboMap1Counter.PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()*2);
-				if (print) {
-					LOG.error("Mapper1 output: " + value + " " + value);
+				// reduce data size by using a constant symbol
+				if (settings.getBooleanProperty(ExecutorSettings.guardedIdOptimizationOn)) {
+					context.write(value, proofSymbol);
+					context.getCounter(GumboMap1Counter.PROOF_OF_EXISTENCE).increment(1);
+					context.getCounter(GumboMap1Counter.PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()+1);
+				} else {
+					context.write(value, value);
+					context.getCounter(GumboMap1Counter.PROOF_OF_EXISTENCE).increment(1);
+					context.getCounter(GumboMap1Counter.PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()*2);
 				}
+				
+//				if (print) {
+//					LOG.error("Mapper1 output: " + value + " " + value);
+//				}
 				//				 LOG.warn("Guard: " + value.toString() + " " + value.toString());
 				break;
 			}

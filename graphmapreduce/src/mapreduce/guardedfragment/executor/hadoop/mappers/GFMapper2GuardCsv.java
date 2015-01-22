@@ -5,14 +5,15 @@ package mapreduce.guardedfragment.executor.hadoop.mappers;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
-import mapreduce.guardedfragment.executor.hadoop.ExecutorSettings;
-import mapreduce.guardedfragment.planner.structures.InputFormat;
 import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
+import mapreduce.guardedfragment.planner.structures.RelationFileMappingException;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
+import mapreduce.guardedfragment.planner.structures.data.RelationSchemaException;
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
 import mapreduce.guardedfragment.planner.structures.operations.GFMapper;
 import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
@@ -28,6 +29,7 @@ import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingT
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -42,56 +44,35 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
  * @author Jonny Daenen
  * 
  */
-public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
+public class GFMapper2GuardCsv extends GFMapper2GuardRel {
 
-	private static final Log LOG = LogFactory.getLog(GFMapper1Identity.class);
-
-	ExpressionSetOperations eso;
-	ExecutorSettings settings;
-
-	/**
-	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
-	 */
+	private static final Log LOG = LogFactory.getLog(GFMapper2GuardCsv.class);
+	private RelationFileMapping rm;
 	@Override
-	protected void setup(Context context) throws IOException, InterruptedException {
-		// load context
+	protected void setup(org.apache.hadoop.mapreduce.Mapper.Context context) throws IOException, InterruptedException {
+
+		
 		super.setup(context);
+		
 		Configuration conf = context.getConfiguration();
-
-
-		String s = String.format("Mapper"+this.getClass().getSimpleName()+"-%05d-%d",
-		        context.getTaskAttemptID().getTaskID().getId(),
-		        context.getTaskAttemptID().getId());
-		LOG.info(s);
-
-		GFPrefixSerializer serializer = new GFPrefixSerializer();
-
-		// load guard
+		
+		// get relation name
+		String relmapping = conf.get("relationfilemapping");
+//		LOG.error(relmapping);
 		try {
-			HashSet<GFExistentialExpression> formulaSet = new HashSet<GFExistentialExpression>();
-			String formulaString = conf.get("formulaset");
-			Set<GFExpression> deserSet = serializer.deserializeSet(formulaString);
+			FileSystem fs = FileSystem.get(conf);
+			rm = new RelationFileMapping(relmapping,fs);
+//			LOG.trace(rm.toString());
 
-			// check whether the type is existential
-			// FUTURE allow other types?
-			for (GFExpression exp : deserSet) {
-				if (exp instanceof GFExistentialExpression) {
-					formulaSet.add((GFExistentialExpression) exp);
-				}
-			}
-			
-			eso = new ExpressionSetOperations();
-			eso.setExpressionSet(formulaSet);
-
-		} catch (Exception e) {
-			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
+		} catch (RelationSchemaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RelationFileMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		// TODO load settings
-		settings = new ExecutorSettings();
-		
-		
 	}
+
 
 	/**
 	 * @throws InterruptedException
@@ -101,16 +82,39 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 	 */
 	@Override
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-		
-//		InputSplit is = context.getInputSplit();
-//		Method method = is.getClass().getMethod("getInputSplit");
-//		method.setAccessible(true);
-//		FileSplit fileSplit = (FileSplit) method.invoke(is);
-//		Path filePath = fileSplit.getPath();
-//		
-//		LOG.error("File Name Processing "+filePath);
-//		
-		context.write(new Text(key.toString()), value);
+
+
+		// find out relation name
+			// TODO optimize
+			
+		try {
+
+			
+			InputSplit is = context.getInputSplit();
+			Method method = is.getClass().getMethod("getInputSplit");
+			
+			method.setAccessible(true);
+			FileSplit fileSplit = (FileSplit) method.invoke(is);
+			Path filePath = fileSplit.getPath();
+			
+			LOG.error("File Name: "+filePath);
+			
+			RelationSchema rs = rm.findSchema(filePath);
+			
+			// trim is necessary to remove extra whitespace
+			String t1 = value.toString().trim();
+			
+			t1 = rs.getName() + "(" + t1 + ")";
+			value.set(t1);
+			
+			super.map(key, value, context);
+			
+			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 	}
+
 
 }

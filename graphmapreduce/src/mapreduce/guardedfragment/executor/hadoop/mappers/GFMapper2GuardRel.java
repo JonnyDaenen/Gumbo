@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputSplit;
@@ -39,11 +40,11 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
  * @author Jonny Daenen
  * 
  */
-public class GFMapper1GuardRel extends GFMapper1Identity {
+public class GFMapper2GuardRel extends GFMapper2Identity {
 
-	private static final Log LOG = LogFactory.getLog(GFMapper1GuardRel.class);
+	private static final Log LOG = LogFactory.getLog(GFMapper2GuardRel.class);
 
-	Text out1 = new Text();
+	IntWritable out1 = new IntWritable();
 	Text out2 = new Text();
 
 	/**
@@ -56,15 +57,10 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
 
-		boolean print = false;
-		if (value.toString().contains(",1000,")) {
-			LOG.error("Mapper1: " + value);
-			print = true;
-		}
-		// trim is necessary to remove extra whitespace
 		value.set(value.toString().trim());
 
 		try {
+			
 
 
 
@@ -72,7 +68,6 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 			// System.out.println(t);
 
 
-			boolean outputGuard = false;
 
 			// check guards + atom (keep-alive)
 			for (GFAtomicExpression guard : eso.getGuardsAll()) {
@@ -83,51 +78,18 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 					int guardID = eso.getAtomId(guard);
 
 					// output guard
-					if (!settings.getBooleanProperty(settings.guardKeepaliveOptimizationOn)) {
-						out1.set(t.toString() + ";" + guardID);
-						context.write(value, out1);
-						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST).increment(1);
-						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_BYTES).increment(out1.getLength() + value.getLength());
-					}
-					// LOG.warn(value.toString() + " " + out1.toString());
-					outputGuard = true;
-
-					// projections to atoms
-					for (GFAtomicExpression guarded : eso.getGuardeds(guard)) {
-
-						GFAtomProjection p = eso.getProjections(guard, guarded);
-						Tuple tprime = p.project(t);
+					out1.set(guardID);
+					context.write(value, out1);
+					context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_R2).increment(1);
+					context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_R2_BYTES).increment(Integer.SIZE/8 + value.getLength());
 
 
-						int guardedID = eso.getAtomId(guarded);
 
-						// if the guard projects to this guarded
-						// TODO isn't this always the case?
-						//						if (guarded.matches(tprime)) {
-						out1.set(tprime.toString());
-						out2.set(t.toString() + ";" + guardedID);
-						context.write(out1, out2);
-						context.getCounter(GumboMap1Counter.REQUEST).increment(1);
-						context.getCounter(GumboMap1Counter.REQUEST_BYTES).increment(out1.getLength() + out2.getLength());
-						if (print) {
-							LOG.error("Mapper1 output: " + out1 + " " + out2);
-						}
-						//							LOG.warn("Guard: " + out1 + out2);
-						//						}
 
-					}
 				}
 			}
 
-			// only output keep-alive if it matched a guard
-			if (!settings.getBooleanProperty(settings.guardKeepaliveOptimizationOn) && outputGuard) {
-				context.write(value, value);
-				context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE).increment(1);
-				context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()*2);
-				//				 LOG.warn("Guard: " + value.toString() + " " + value.toString());
-			}
-
-		} catch (NonMatchingTupleException | GFOperationInitException e) {
+		} catch (GFOperationInitException e) {
 			// should not happen!
 			LOG.error(e.getMessage());
 			e.printStackTrace();
