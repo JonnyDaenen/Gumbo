@@ -359,6 +359,18 @@ public class RelationFileMapping {
 		
 	}
 
+	/**
+	 * @return
+	 */
+	public Set<Path> getAllPaths() {
+		HashSet<Path> result = new HashSet<>();
+		for (Set<Path> paths : mapping.values()) {
+			result.addAll(paths);
+		}
+		return result;
+	}
+
+
 
 
 }

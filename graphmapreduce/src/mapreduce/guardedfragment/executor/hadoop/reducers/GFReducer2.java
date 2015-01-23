@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import mapreduce.guardedfragment.executor.hadoop.ExecutorSettings;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
 import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
@@ -44,16 +45,26 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
  */
 public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 
+
+	public class GuardTupleNotFoundException extends Exception {
+		private static final long serialVersionUID = 1L;
+
+		public GuardTupleNotFoundException(String msg) {
+			super(msg);
+		}
+	}
+
 	Text out1 = new Text();
 	Text out2 = new Text();
 	private ExpressionSetOperations eso;
 	private MultipleOutputs<Text, Text> mos;
-	
+
 	private HashMap<RelationSchema, String> filenames;
 
 	private static final Log LOG = LogFactory.getLog(GFReducer2.class);
 
 	boolean receiveIDs = true;
+	private ExecutorSettings settings;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -66,10 +77,10 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 
 		mos = new MultipleOutputs<>(context);
 		filenames = new HashMap<RelationSchema, String>();
-		
+
 		String s = String.format("Reducer"+this.getClass().getSimpleName()+"-%05d-%d",
-		        context.getTaskAttemptID().getTaskID().getId(),
-		        context.getTaskAttemptID().getId());
+				context.getTaskAttemptID().getTaskID().getId(),
+				context.getTaskAttemptID().getId());
 		LOG.info(s);
 
 		GFPrefixSerializer serializer = new GFPrefixSerializer();
@@ -94,6 +105,9 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 		} catch (Exception e) {
 			throw new InterruptedException("Reducer initialisation error: " + e.getMessage());
 		}
+
+		// TODO load
+		settings = new ExecutorSettings();
 	}
 
 	@Override
@@ -110,20 +124,30 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 			throws IOException, InterruptedException {
 		try {
 
-			Tuple keyTuple = new Tuple(key);
+			Tuple keyTuple = null;
+
+			if (!settings.getBooleanProperty(ExecutorSettings.guardTuplePointerOptimizationOn)) {
+				keyTuple = new Tuple(key);
+			}
 
 			/* create boolean value mapping */
 			GFBooleanMapping mapGFtoB = eso.getBooleanMapping();
 			BEvaluationContext booleanContext = new BEvaluationContext();
 
 			for (IntWritable v : values) {
-				
+
+				// if tuple pointer optimization is on
+				// we need to find the actual tuple between the values.
+				if (settings.getBooleanProperty(ExecutorSettings.guardTuplePointerOptimizationOn)) {
+					// TODO implement...
+				}
+
 				int id = v.get();
-				
+
 
 				// skip empty values (only used for propagation)
-//				if (t.getLength() == 0)
-//					continue;
+				//				if (t.getLength() == 0)
+				//					continue;
 
 				// atoms that are present are "true"
 				// id mode vs string mode
@@ -136,6 +160,11 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 					GFAtomicExpression dummy = new GFAtomicExpression(tuple.getName(), tuple.getAllData());
 					booleanContext.setValue(mapGFtoB.getVariable(dummy), true);
 				}
+			}
+
+			// if key tuple is not present yet, throw exception
+			if (keyTuple == null) {
+				throw new GuardTupleNotFoundException("THere was no guard tuple found for key "+ key.toString());
 			}
 
 			/* evaluate all formulas */
@@ -151,11 +180,11 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 					// evaluate
 					boolean eval = booleanChildExpression.evaluate(booleanContext);
 					if (eval) {
-						
+
 						// determine output
 						GFAtomProjection p = eso.getOutputProjection(formula);
 						String outfile = generateFileName(p.getOutputSchema());
-						
+
 						// project the tuple and output it
 						String outputTuple = p.project(keyTuple).generateString();
 						out1.set(outputTuple);
@@ -165,27 +194,27 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 
 			}
 
-		} catch (VariableNotFoundException | NonMatchingTupleException | GFOperationInitException e) {
+		} catch (VariableNotFoundException | NonMatchingTupleException | GFOperationInitException | GuardTupleNotFoundException e) {
 			// should not happen
 			LOG.error("Unexpected exception: " + e.getMessage());
 			e.printStackTrace();
 			throw new InterruptedException(e.getMessage());
 		} 
 	}
-	
+
 	public String generateFileName(RelationSchema relationSchema) {
-		
+
 		// cached?
 		if (filenames.containsKey(relationSchema)) {
 			return filenames.get(relationSchema);
-			
+
 		} else {
 			String rel = relationSchema.getShortDescription();
 			String name = generateFolder(relationSchema) + "/" + rel;
 			filenames.put(relationSchema,name);
 			return name;
 		}
-		
+
 	}
 
 	public String generateFolder(RelationSchema relationSchema) {

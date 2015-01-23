@@ -10,6 +10,8 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+import mapreduce.guardedfragment.executor.hadoop.ExecutorSettings;
+import mapreduce.guardedfragment.executor.hadoop.mappers.TupleIDCreator.TupleIDError;
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
 import mapreduce.guardedfragment.planner.structures.operations.GFMapper;
 import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
@@ -21,6 +23,7 @@ import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
 import mapreduce.guardedfragment.structure.gfexpressions.operations.ExpressionSetOperations;
 import mapreduce.guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
 import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingTupleException;
+import mapreduce.utils.LongBase64Converter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,10 +44,23 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
  */
 public class GFMapper1GuardRel extends GFMapper1Identity {
 
+
+
 	private static final Log LOG = LogFactory.getLog(GFMapper1GuardRel.class);
 
 	Text out1 = new Text();
 	Text out2 = new Text();
+	TupleIDCreator pathids; // OPTIMIZE extract this and perform outside of mapper
+
+
+	/**
+	 * @see mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Identity#setup(org.apache.hadoop.mapreduce.Mapper.Context)
+	 */
+	@Override
+	protected void setup(org.apache.hadoop.mapreduce.Mapper.Context context) throws IOException, InterruptedException {
+		super.setup(context);
+		pathids = new TupleIDCreator(rm);
+	}
 
 	/**
 	 * @throws InterruptedException
@@ -69,6 +85,11 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 
 
 			Tuple t = new Tuple(value);
+
+			// replace value with pointer when optimization is on
+			if (settings.getBooleanProperty(settings.guardTuplePointerOptimizationOn)) {
+				value.set(pathids.getTupleID(context, key.get())); // key indicates offset in TextInputFormat
+			}
 			// System.out.println(t);
 
 
@@ -84,7 +105,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 
 					// output guard
 					if (!settings.getBooleanProperty(settings.guardKeepaliveOptimizationOn)) {
-						out1.set(t.toString() + ";" + guardID);
+						out1.set(value.toString() + ";" + guardID);
 						context.write(value, out1);
 						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST).increment(1);
 						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_BYTES).increment(out1.getLength() + value.getLength());
@@ -104,8 +125,12 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 						// if the guard projects to this guarded
 						// TODO isn't this always the case?
 						//						if (guarded.matches(tprime)) {
+						// key: the value we are looking for 
 						out1.set(tprime.toString());
-						out2.set(t.toString() + ";" + guardedID);
+
+						// value: request message with response code and atom
+						out2.set(value + ";" + guardedID);
+
 						context.write(out1, out2);
 						context.getCounter(GumboMap1Counter.REQUEST).increment(1);
 						context.getCounter(GumboMap1Counter.REQUEST_BYTES).increment(out1.getLength() + out2.getLength());
@@ -122,23 +147,22 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 			}
 
 			// only output keep-alive if it matched a guard
-			if (!settings.getBooleanProperty(settings.guardKeepaliveOptimizationOn) && outputGuard) {
+			if (!settings.getBooleanProperty(ExecutorSettings.guardKeepaliveOptimizationOn) && outputGuard) {
 				context.write(value, value);
 				context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE).increment(1);
 				context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()*2);
 				//				 LOG.warn("Guard: " + value.toString() + " " + value.toString());
 			}
 
-		} catch (NonMatchingTupleException | GFOperationInitException e) {
-			// should not happen!
+		} catch (SecurityException | TupleIDError | NonMatchingTupleException | GFOperationInitException e) {
 			LOG.error(e.getMessage());
 			e.printStackTrace();
 			throw new InterruptedException(e.getMessage());
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}  
+		} 
 
 	}
+
+	
+
 
 }

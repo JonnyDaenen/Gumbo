@@ -12,7 +12,9 @@ import java.util.Set;
 import mapreduce.guardedfragment.executor.hadoop.ExecutorSettings;
 import mapreduce.guardedfragment.planner.structures.InputFormat;
 import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
+import mapreduce.guardedfragment.planner.structures.RelationFileMappingException;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
+import mapreduce.guardedfragment.planner.structures.data.RelationSchemaException;
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
 import mapreduce.guardedfragment.planner.structures.operations.GFMapper;
 import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
@@ -28,6 +30,7 @@ import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingT
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -48,6 +51,8 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 
 	ExpressionSetOperations eso;
 	ExecutorSettings settings;
+
+	RelationFileMapping rm;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -85,6 +90,23 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 
 		} catch (Exception e) {
 			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
+		}
+		
+
+		// get relation name
+		String relmapping = conf.get("relationfilemapping");
+		//		LOG.error(relmapping);
+		try {
+			FileSystem fs = FileSystem.get(conf);
+			rm = new RelationFileMapping(relmapping,fs);
+			//			LOG.trace(rm.toString());
+
+		} catch (RelationSchemaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RelationFileMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		// TODO load settings

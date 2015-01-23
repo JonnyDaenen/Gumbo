@@ -12,7 +12,9 @@ import java.util.Set;
 import mapreduce.guardedfragment.executor.hadoop.ExecutorSettings;
 import mapreduce.guardedfragment.planner.structures.InputFormat;
 import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
+import mapreduce.guardedfragment.planner.structures.RelationFileMappingException;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
+import mapreduce.guardedfragment.planner.structures.data.RelationSchemaException;
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
 import mapreduce.guardedfragment.planner.structures.operations.GFMapper;
 import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
@@ -28,6 +30,7 @@ import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingT
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -51,6 +54,8 @@ public class GFMapper2Identity extends Mapper<LongWritable, Text, Text, IntWrita
 	ExecutorSettings settings;
 	IntWritable out = new IntWritable();
 
+	RelationFileMapping rm;
+
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
 	 */
@@ -62,8 +67,8 @@ public class GFMapper2Identity extends Mapper<LongWritable, Text, Text, IntWrita
 
 
 		String s = String.format("Mapper"+this.getClass().getSimpleName()+"-%05d-%d",
-		        context.getTaskAttemptID().getTaskID().getId(),
-		        context.getTaskAttemptID().getId());
+				context.getTaskAttemptID().getTaskID().getId(),
+				context.getTaskAttemptID().getId());
 		LOG.info(s);
 
 		GFPrefixSerializer serializer = new GFPrefixSerializer();
@@ -81,18 +86,34 @@ public class GFMapper2Identity extends Mapper<LongWritable, Text, Text, IntWrita
 					formulaSet.add((GFExistentialExpression) exp);
 				}
 			}
-			
+
 			eso = new ExpressionSetOperations();
 			eso.setExpressionSet(formulaSet);
 
 		} catch (Exception e) {
 			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}
-		
+
+		// get relation name
+		String relmapping = conf.get("relationfilemapping");
+		//		LOG.error(relmapping);
+		try {
+			FileSystem fs = FileSystem.get(conf);
+			rm = new RelationFileMapping(relmapping,fs);
+			//			LOG.trace(rm.toString());
+
+		} catch (RelationSchemaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RelationFileMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		// TODO load settings
 		settings = new ExecutorSettings();
-		
-		
+
+
 	}
 
 	/**
@@ -103,15 +124,15 @@ public class GFMapper2Identity extends Mapper<LongWritable, Text, Text, IntWrita
 	 */
 	@Override
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-		
-//		InputSplit is = context.getInputSplit();
-//		Method method = is.getClass().getMethod("getInputSplit");
-//		method.setAccessible(true);
-//		FileSplit fileSplit = (FileSplit) method.invoke(is);
-//		Path filePath = fileSplit.getPath();
-//		
-//		LOG.error("File Name Processing "+filePath);
-//		
+
+		//		InputSplit is = context.getInputSplit();
+		//		Method method = is.getClass().getMethod("getInputSplit");
+		//		method.setAccessible(true);
+		//		FileSplit fileSplit = (FileSplit) method.invoke(is);
+		//		Path filePath = fileSplit.getPath();
+		//		
+		//		LOG.error("File Name Processing "+filePath);
+		//		
 		// dummy code
 		out.set(Integer.parseInt(value.toString()));
 		context.write(new Text(key.toString()), out);

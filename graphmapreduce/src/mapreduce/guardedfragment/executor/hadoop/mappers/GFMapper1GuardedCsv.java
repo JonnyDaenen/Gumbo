@@ -44,35 +44,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 public class GFMapper1GuardedCsv extends GFMapper1GuardedRel {
 
 	private static final Log LOG = LogFactory.getLog(GFMapper1GuardedCsv.class);
-	RelationFileMapping rm;
 
-	/**
-	 * @see mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Identity#setup(org.apache.hadoop.mapreduce.Mapper.Context)
-	 */
-	@Override
-	protected void setup(org.apache.hadoop.mapreduce.Mapper.Context context) throws IOException, InterruptedException {
-
-
-		super.setup(context);
-
-		Configuration conf = context.getConfiguration();
-
-		// get relation name
-		String relmapping = conf.get("relationfilemapping");
-		//		LOG.error(relmapping);
-		try {
-			FileSystem fs = FileSystem.get(conf);
-			rm = new RelationFileMapping(relmapping,fs);
-			//			LOG.trace(rm.toString());
-
-		} catch (RelationSchemaException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RelationFileMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * @throws InterruptedException

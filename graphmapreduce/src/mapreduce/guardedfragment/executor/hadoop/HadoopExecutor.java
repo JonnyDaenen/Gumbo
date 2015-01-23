@@ -338,14 +338,14 @@ public class HadoopExecutor {
 			fs = FileSystem.get(new Configuration());
 
 			for (Path p : plan.getTmpDirs()) {
-				// FIXME is this ok, it seems identical to the code above??
+				// FIXME is this ok, it seems identical to the code above?? maybe use getScratchFolder?
 				System.out.println("Checking: " + p);
 				if (fs.exists(p)) {
 					fs.delete(p, true); // delete recursive
 				}
 			}
 		} catch (IOException e) {
-			System.err.println("WARNING: problem deleting temporary folders!");
+			LOG.error("WARNING: problem deleting temporary folders!");
 			e.printStackTrace();
 		}
 
