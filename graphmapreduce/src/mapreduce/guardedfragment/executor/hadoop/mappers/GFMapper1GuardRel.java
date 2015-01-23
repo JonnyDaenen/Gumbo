@@ -109,6 +109,8 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 						context.write(out1, out2);
 						context.getCounter(GumboMap1Counter.REQUEST).increment(1);
 						context.getCounter(GumboMap1Counter.REQUEST_BYTES).increment(out1.getLength() + out2.getLength());
+						context.getCounter(GumboMap1Counter.REQUEST_KEY_BYTES).increment(out1.getLength());
+						context.getCounter(GumboMap1Counter.REQUEST_VALUE_BYTES).increment(out2.getLength());
 						if (print) {
 							LOG.error("Mapper1 output: " + out1 + " " + out2);
 						}
