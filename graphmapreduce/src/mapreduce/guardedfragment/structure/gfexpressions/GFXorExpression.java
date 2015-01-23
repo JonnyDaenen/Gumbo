@@ -109,7 +109,7 @@ public class GFXorExpression extends GFExpression{
 	 */
 	@Override
 	public boolean isInDNF() {
-		return child1.isInDNF() && child2.isInDNF();
+		return false; // TODO ok?
 	}
 
 

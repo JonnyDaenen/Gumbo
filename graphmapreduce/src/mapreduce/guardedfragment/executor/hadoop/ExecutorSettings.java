@@ -33,9 +33,9 @@ public class ExecutorSettings {
 	 * 
 	 */
 	private void loadDefaults() {
-		propertiesMap.put(guardedIdOptimizationOn, "true");
+		propertiesMap.put(guardedIdOptimizationOn, "false");
 		propertiesMap.put(guardIdOptimizationOn, "true");
-		propertiesMap.put(guardKeepaliveOptimizationOn, "true");
+		propertiesMap.put(guardKeepaliveOptimizationOn, "false");
 		propertiesMap.put(PROOF_SYMBOL, "#");
 		
 	}
