@@ -128,12 +128,14 @@
 			<version>1.0.2</version>
 		</dependency>
 		
-		
-		<dependency> <!-- Hive dependency  -->
+		<!-- Hive dependency  -->
+		<!--  
+		<dependency> 
 			<groupId>org.apache.hive</groupId> 
 			<artifactId>hive-service</artifactId> 
 			<version>0.14.0</version>
 		</dependency>
+		-->
 		
 	</dependencies>
 	<properties>
