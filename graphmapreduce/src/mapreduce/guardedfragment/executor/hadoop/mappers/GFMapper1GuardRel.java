@@ -95,13 +95,11 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 			boolean outputGuard = false;
 			boolean guardIsGuarded = false;
 			
-			LOG.error("tuple:" + t);
 
 			// check guards + atom (keep-alive)
 			for (GFAtomicExpression guard : eso.getGuardsAll()) {
 
 				// if the tuple satisfies the guard expression
-				LOG.error("guard:" + guard);
 				if (guard.matches(t)) {
 
 					int guardID = eso.getAtomId(guard);
@@ -120,8 +118,6 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 					for (GFAtomicExpression guarded : eso.getGuardeds(guard)) {
 
 						// TODO if guarded is same relation, output proof of existence afterwards
-						LOG.error("Guard schema" + guard.getRelationSchema());
-						LOG.error("Guarded schema" + guarded.getRelationSchema());
 						if (guarded.getRelationSchema().equals(guard.getRelationSchema())) {
 							guardIsGuarded = true;
 						}
@@ -166,7 +162,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 			
 			// output a proof of existence if the guard is also guarded
 			if (guardIsGuarded) {
-				LOG.error("guard output POE");
+//				LOG.error("guard output POE");
 				out1.set(t.toString());
 				out2.set(settings.getProperty(ExecutorSettings.PROOF_SYMBOL));
 				context.write(out1, out2);
