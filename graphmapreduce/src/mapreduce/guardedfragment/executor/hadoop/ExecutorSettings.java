@@ -18,6 +18,7 @@ public class ExecutorSettings {
 	public static final String guardIdOptimizationOn = "guardIdOptimizationOn";
 	public static final String guardKeepaliveOptimizationOn = "guardKeepaliveOn";
 	public static final String guardTuplePointerOptimizationOn = "guardTuplePointerOptimizationOn";
+	public static final String guardAsGuardedReReadOptimizationOn = "guardAsGuardedReReadOptimizationOn";
 	
 	Map<String,String> propertiesMap;
 	
@@ -34,10 +35,11 @@ public class ExecutorSettings {
 	 * 
 	 */
 	private void loadDefaults() {
-		propertiesMap.put(guardedIdOptimizationOn, "true");
+		propertiesMap.put(guardedIdOptimizationOn, "true");  // TODO make toggle
 		propertiesMap.put(guardIdOptimizationOn, "true");
 		propertiesMap.put(guardKeepaliveOptimizationOn, "true");
 		propertiesMap.put(guardTuplePointerOptimizationOn, "true");
+		propertiesMap.put(guardAsGuardedReReadOptimizationOn, "true"); // TODO make toggle
 		propertiesMap.put(PROOF_SYMBOL, "#");
 		
 	}

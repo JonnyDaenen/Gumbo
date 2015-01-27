@@ -71,7 +71,6 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 	@Override
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
-
 		boolean print = false;
 		if (value.toString().contains(",1000,")) {
 			LOG.error("Mapper1: " + value);
@@ -87,24 +86,28 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 			Tuple t = new Tuple(value);
 
 			// replace value with pointer when optimization is on
-			if (settings.getBooleanProperty(settings.guardTuplePointerOptimizationOn)) {
+			if (settings.getBooleanProperty(ExecutorSettings.guardTuplePointerOptimizationOn)) {
 				value.set(pathids.getTupleID(context, key.get())); // key indicates offset in TextInputFormat
 			}
 			// System.out.println(t);
 
 
 			boolean outputGuard = false;
+			boolean guardIsGuarded = false;
+			
+			LOG.error("tuple:" + t);
 
 			// check guards + atom (keep-alive)
 			for (GFAtomicExpression guard : eso.getGuardsAll()) {
 
 				// if the tuple satisfies the guard expression
+				LOG.error("guard:" + guard);
 				if (guard.matches(t)) {
 
 					int guardID = eso.getAtomId(guard);
 
 					// output guard
-					if (!settings.getBooleanProperty(settings.guardKeepaliveOptimizationOn)) {
+					if (!settings.getBooleanProperty(ExecutorSettings.guardKeepaliveOptimizationOn)) {
 						out1.set(value.toString() + ";" + guardID);
 						context.write(value, out1);
 						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST).increment(1);
@@ -116,6 +119,13 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 					// projections to atoms
 					for (GFAtomicExpression guarded : eso.getGuardeds(guard)) {
 
+						// TODO if guarded is same relation, output proof of existence afterwards
+						LOG.error("Guard schema" + guard.getRelationSchema());
+						LOG.error("Guarded schema" + guarded.getRelationSchema());
+						if (guarded.getRelationSchema().equals(guard.getRelationSchema())) {
+							guardIsGuarded = true;
+						}
+						
 						GFAtomProjection p = eso.getProjections(guard, guarded);
 						Tuple tprime = p.project(t);
 
@@ -153,6 +163,16 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 				context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()*2);
 				//				 LOG.warn("Guard: " + value.toString() + " " + value.toString());
 			}
+			
+			// output a proof of existence if the guard is also guarded
+			if (guardIsGuarded) {
+				LOG.error("guard output POE");
+				out1.set(t.toString());
+				out2.set(settings.getProperty(ExecutorSettings.PROOF_SYMBOL));
+				context.write(out1, out2);
+			}
+			
+			
 
 		} catch (SecurityException | TupleIDError | NonMatchingTupleException | GFOperationInitException e) {
 			LOG.error(e.getMessage());

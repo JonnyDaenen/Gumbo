@@ -154,7 +154,7 @@ public class MRJob2HadoopConverter {
 			eso.setDirManager(dirManager);
 
 
-
+			// TODO are the guard paths filtered??
 			for ( Path guardedPath : eso.getGuardedRelPaths()) {
 				LOG.info("Setting M1 guarded path to " + guardedPath + " using mapper " + GFMapper1GuardedRel.class.getName());
 				MultipleInputs.addInputPath(hadoopJob, guardedPath, 
@@ -183,7 +183,7 @@ public class MRJob2HadoopConverter {
 
 
 
-			// Deprecated!
+			// TODO Deprecated!
 			// do not use default paths
 			// default input path means is send to old mapper
 			Set<Path> gPaths = eso.getGuardPaths();
