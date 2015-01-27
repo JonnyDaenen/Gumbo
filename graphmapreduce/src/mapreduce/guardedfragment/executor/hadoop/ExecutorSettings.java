@@ -34,10 +34,10 @@ public class ExecutorSettings {
 	 * 
 	 */
 	private void loadDefaults() {
-		propertiesMap.put(guardedIdOptimizationOn, "false");
+		propertiesMap.put(guardedIdOptimizationOn, "true");
 		propertiesMap.put(guardIdOptimizationOn, "true");
-		propertiesMap.put(guardKeepaliveOptimizationOn, "false");
-		propertiesMap.put(guardTuplePointerOptimizationOn, "false");
+		propertiesMap.put(guardKeepaliveOptimizationOn, "true");
+		propertiesMap.put(guardTuplePointerOptimizationOn, "true");
 		propertiesMap.put(PROOF_SYMBOL, "#");
 		
 	}

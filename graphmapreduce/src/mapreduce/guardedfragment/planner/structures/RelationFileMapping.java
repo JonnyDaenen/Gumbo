@@ -35,6 +35,17 @@ import org.apache.hadoop.fs.Path;
 public class RelationFileMapping {
 
 
+	/**
+	 * @author Jonny Daenen
+	 *
+	 */
+	public class PathNotFoundError extends Exception {
+		public PathNotFoundError(String msg) {
+			super(msg);
+		}
+
+	}
+
 	private static final Log LOG = LogFactory.getLog(RelationFileMapping.class);
 
 
@@ -319,6 +330,33 @@ public class RelationFileMapping {
 		return null;
 	}
 
+	/**
+	 * Finds a path form all the ones that are listed that matches best.
+	 * @param p the path to look for
+	 * @return the path p itself, a partially matching path.
+	 * @throws PathNotFoundError 
+	 * 
+	 */
+	public Path findBestPathMatch(Path p) throws PathNotFoundError{
+		// find exact match
+		for (RelationSchema rs : mapping.keySet()){
+			Set<Path> paths = mapping.get(rs);
+			if(paths.contains(p))
+				return p;
+		}
+		// find partial match
+		for (RelationSchema rs : mapping.keySet()){
+			Set<Path> paths = mapping.get(rs);
+			for ( Path path : paths) {
+				//				LOG.debug("Looking for relation name:" + filePath + " " + path); 
+				if(p.toString().contains(path.toString()))
+					return path;
+			}	
+		}
+		
+		throw new PathNotFoundError("Could not find a matching path for "+ p);
+	}
+
 
 	/**
 	 * Calculates the number of bytes that are input to this 
@@ -329,19 +367,19 @@ public class RelationFileMapping {
 		long length = 0;
 
 		try {
-			
+
 			Configuration config = new Configuration();
 			FileSystem hdfs = path.getFileSystem(config);
 			ContentSummary cSummary = hdfs.getContentSummary(path);
 			length = cSummary.getLength();
-			
+
 		} catch (IOException e) {
 			LOG.error("Cannot determine input size of " + path, e);
 		}
 		return length;
 	}
 
-	
+
 	public long getRelationSize(RelationSchema s) {
 		Set<Path> paths;
 		long l = 0;
@@ -350,13 +388,13 @@ public class RelationFileMapping {
 		} else {
 			return 0;
 		}
-		
+
 		// update path estimate
 		for (Path p : paths) {
 			l += getInputSize(p);
 		}
 		return l;
-		
+
 	}
 
 	/**

@@ -16,10 +16,14 @@ import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1GuardedRel;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1Identity;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper2GuardCsv;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper2GuardRel;
+import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper2GuardTextCsv;
+import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper2GuardTextRel;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapperHadoop;
 import mapreduce.guardedfragment.executor.hadoop.readers.GuardInputFormat;
+import mapreduce.guardedfragment.executor.hadoop.readers.GuardTextInputFormat;
 import mapreduce.guardedfragment.executor.hadoop.reducers.GFReducer1;
 import mapreduce.guardedfragment.executor.hadoop.reducers.GFReducer2;
+import mapreduce.guardedfragment.executor.hadoop.reducers.GFReducer2Text;
 import mapreduce.guardedfragment.executor.hadoop.reducers.GFReducerHadoop;
 import mapreduce.guardedfragment.planner.compiler.DirManager;
 import mapreduce.guardedfragment.planner.compiler.mappers.GFMapper1AtomBased;
@@ -242,6 +246,7 @@ public class MRJob2HadoopConverter {
 			conf.set("formulaset", serializer.serializeSet(job.getGFExpressions()));
 			conf.set("relationfilemapping", dirManager.getFileMapping().toString());
 
+			
 
 			/* set mapper and reducer */
 			if (settings.getBooleanProperty(ExecutorSettings.guardKeepaliveOptimizationOn)) {
@@ -255,21 +260,21 @@ public class MRJob2HadoopConverter {
 				for (Path guardPath : eso.getGuardRelPaths()) {
 					LOG.info("Adding M2 guard path " + guardPath + " using mapper " + GFMapper2GuardRel.class.getName());
 					MultipleInputs.addInputPath(hadoopJob, guardPath, 
-							TextInputFormat.class, GFMapper2GuardRel.class);
+							TextInputFormat.class, getRound2GuardMapperClass("rel"));
 				}
 				
 				// direct them to the special mapper (csv)
 				for (Path guardPath : eso.getGuardCsvPaths()) {
 					LOG.info("Adding M2 guard path " + guardPath + " using mapper " + GFMapper2GuardCsv.class.getName());
 					MultipleInputs.addInputPath(hadoopJob, guardPath, 
-							TextInputFormat.class, GFMapper2GuardCsv.class);
+							TextInputFormat.class, getRound2GuardMapperClass("csv"));
 				}
 				
 				// other files just need to be read and pushed to the reducer
 				for (Path inpath : job.getInputPaths()) {
 					LOG.info("Adding M2 normal path " + inpath + " using identity mapper ");
 					MultipleInputs.addInputPath(hadoopJob, inpath, 
-							GuardInputFormat.class, Mapper.class);
+							getRound2MapInputFormat(), Mapper.class);
 				}
 			} else {
 				hadoopJob.setMapperClass(Mapper.class);
@@ -281,14 +286,18 @@ public class MRJob2HadoopConverter {
 				
 				// TODO check
 				// we use a custom input class to allow the mapper to output key-value pairs again
-				hadoopJob.setInputFormatClass(GuardInputFormat.class);
+				hadoopJob.setInputFormatClass(getRound2MapInputFormat());
 			}
 			//			hadoopJob.setMapperClass(GFMapperHadoop.class);
 			//			conf.set("GFMapperClass", GFMapper2Generic.class.getCanonicalName());
 
 			//			hadoopJob.setReducerClass(GFReducerHadoop.class);
 			//			conf.set("GFReducerClass", GFReducer2Generic.class.getCanonicalName());
-			hadoopJob.setReducerClass(GFReducer2.class);
+			if (settings.getBooleanProperty(settings.guardTuplePointerOptimizationOn)) {
+				hadoopJob.setReducerClass(GFReducer2Text.class);
+			} else {
+				hadoopJob.setReducerClass(GFReducer2.class);
+			}
 
 			/* set output */
 			FileOutputFormat.setOutputPath(hadoopJob, job.getOutputPath());
@@ -296,7 +305,12 @@ public class MRJob2HadoopConverter {
 
 			// set intermediate/mapper output
 			hadoopJob.setMapOutputKeyClass(Text.class);
-			hadoopJob.setMapOutputValueClass(IntWritable.class); // OPTIMIZE make it a list? for combiner
+			if (settings.getBooleanProperty(settings.guardTuplePointerOptimizationOn)) {
+				hadoopJob.setMapOutputValueClass(Text.class); // OPTIMIZE make it a combined class
+			} else {
+				hadoopJob.setMapOutputValueClass(IntWritable.class); // OPTIMIZE make it a list? for combiner
+			}
+			
 
 			// set reducer output
 			hadoopJob.setOutputKeyClass(NullWritable.class);
@@ -316,6 +330,38 @@ public class MRJob2HadoopConverter {
 
 		return null;
 
+	}
+
+	/**
+	 * @param string
+	 * @return
+	 */
+	private Class<? extends Mapper> getRound2GuardMapperClass(String string) {
+		
+		if (string.equals("csv") ) {
+				if (settings.getBooleanProperty(settings.guardTuplePointerOptimizationOn)) {
+					return GFMapper2GuardTextCsv.class;
+				} else {
+					return GFMapper2GuardCsv.class;
+				}
+		} else {
+			if (settings.getBooleanProperty(settings.guardTuplePointerOptimizationOn)) {
+				return GFMapper2GuardTextRel.class;
+			} else {
+				return GFMapper2GuardRel.class;
+			}
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	private Class<? extends org.apache.hadoop.mapreduce.InputFormat> getRound2MapInputFormat() {
+		Class<? extends org.apache.hadoop.mapreduce.InputFormat> atomInputFormat = GuardInputFormat.class;
+		if (settings.getBooleanProperty(settings.guardTuplePointerOptimizationOn)) {
+			atomInputFormat = GuardTextInputFormat.class;
+		}
+		return atomInputFormat;
 	}
 
 }

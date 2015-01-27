@@ -6,6 +6,7 @@ package mapreduce.guardedfragment.executor.hadoop.mappers;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,6 +48,7 @@ public class TupleIDCreator {
 	 * 
 	 */
 	private void createIds() {
+		mapping = new HashMap<Path, Integer>();
 		Set<Path> paths = rm.getAllPaths();
 		List<Path> list = new ArrayList<Path>(paths);
 		Collections.sort(list);
@@ -61,6 +63,7 @@ public class TupleIDCreator {
 	 * @return
 	 */
 	public long getPathID(Path filePath) {
+//		System.out.println(mapping + " " + filePath); 
 		return mapping.get(filePath);
 	}
 
@@ -84,13 +87,15 @@ public class TupleIDCreator {
 			method.setAccessible(true);
 			FileSplit fileSplit = (FileSplit) method.invoke(is);
 			Path filePath = fileSplit.getPath();
+			
+			Path match = rm.findBestPathMatch(filePath);
 
-			long pathID = this.getPathID(filePath);
-
+			long pathID = getPathID(match);
+			
 			byte [] offsetEnc = longConverter.long2byte(offset);
-			byte [] pathIdEnc = longConverter.long2byte(pathID);
+//			byte [] pathIdEnc = longConverter.long2byte(pathID);
 
-			return "" + offsetEnc + "-" + pathIdEnc;
+			return "" + new String(offsetEnc) + "-" + pathID;
 		} catch (Exception e) {
 			throw new TupleIDError("Unable to determine tuple id. ", e);
 		}
