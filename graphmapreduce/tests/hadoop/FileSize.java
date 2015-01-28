@@ -16,6 +16,8 @@ import org.apache.hadoop.fs.Path;
  *
  */
 public class FileSize {
+	
+	
 
 
 	public static void main(String[] args) {
