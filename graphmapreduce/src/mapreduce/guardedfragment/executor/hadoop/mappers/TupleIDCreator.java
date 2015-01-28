@@ -78,11 +78,11 @@ public class TupleIDCreator {
 	public String getTupleID(org.apache.hadoop.mapreduce.Mapper.Context context, long offset) throws TupleIDError  {
 		
 		try {
+			
+			// OPTIMIZE I think this takes some time...
 			InputSplit is = context.getInputSplit();
 			Method method;
-
 			method = is.getClass().getMethod("getInputSplit");
-
 
 			method.setAccessible(true);
 			FileSplit fileSplit = (FileSplit) method.invoke(is);
@@ -91,6 +91,9 @@ public class TupleIDCreator {
 			Path match = rm.findBestPathMatch(filePath);
 
 			long pathID = getPathID(match);
+			
+//			OPTIMIZE try this:
+//			String filename= ((FileSplit)context.getInputSplit()).getPath().getName();
 			
 			byte [] offsetEnc = longConverter.long2byte(offset);
 //			byte [] pathIdEnc = longConverter.long2byte(pathID);
