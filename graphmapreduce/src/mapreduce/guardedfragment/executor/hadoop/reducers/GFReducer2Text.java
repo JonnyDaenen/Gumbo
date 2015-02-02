@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mapreduce.guardedfragment.executor.hadoop.ExecutorSettings;
+import mapreduce.guardedfragment.executor.hadoop.mappers.GumboMap1Counter;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
 import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
@@ -199,6 +200,8 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 						String outputTuple = p.project(keyTuple).generateString();
 						out1.set(outputTuple);
 						mos.write((Text)null, out1, outfile);
+						context.getCounter(GumboRed2Counter.RED2_OUT_BYTES).increment(out1.getLength());
+						context.getCounter(GumboRed2Counter.RED2_OUT_RECORDS).increment(1);
 					}
 				}
 

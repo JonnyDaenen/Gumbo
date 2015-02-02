@@ -138,6 +138,8 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 					out2.set(split.snd);
 //					System.out.println("Writing: " + out1.toString() + " " + out2.toString() + "" + split.snd);
 					mos.write(out1, out2, FILENAME);
+					context.getCounter(GumboRed1Counter.RED1_OUT_BYTES).increment(out1.getLength() + Integer.SIZE/8);
+					context.getCounter(GumboRed1Counter.RED1_OUT_RECORDS).increment(1);
 //					if (print)
 //						LOG.error("Red1 Out: " + out1 + " " + out2);
 				}
@@ -158,6 +160,7 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 				out1.set(p.fst);
 				out2.set(p.snd);
 				mos.write(out1, out2, FILENAME);
+				context.getCounter(GumboRed1Counter.RED1_OUT_BYTES).increment(out1.getLength() + Integer.SIZE/8);
 			}
 		}
 
