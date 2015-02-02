@@ -19,11 +19,13 @@ import java.util.Set;
 import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1GuardRel;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchemaException;
+import mapreduce.utils.TupleEstimator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.ContentSummary;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
@@ -353,7 +355,7 @@ public class RelationFileMapping {
 					return path;
 			}	
 		}
-		
+
 		throw new PathNotFoundError("Could not find a matching path for "+ p);
 	}
 
@@ -406,6 +408,48 @@ public class RelationFileMapping {
 			result.addAll(paths);
 		}
 		return result;
+	}
+
+	/**
+	 * Applies an estimator to all paths of a given relationschema
+	 * @param guard
+	 * @param tupleEstimator
+	 * 
+	 * @return an estimate for the number of tuples.
+	 */
+	public long visitAllPaths(RelationSchema rs, TupleEstimator tupleEstimator) {
+		long numTuples = 0;
+		Configuration conf = new Configuration();
+		FileSystem fs;
+		try {
+			fs = FileSystem.get(conf);
+			for (Path p : getPaths(rs)) { 
+				// TODO find out if this corresponds to hadoop path resolving?
+				// maybe there is a better way...
+				FileStatus[] files = fs.globStatus(p); 
+				for(FileStatus file: files) {
+					LOG.error("processing path: " + file.getPath());
+					if (!file.isDirectory()) {
+						LOG.error("counting path: " + file.getPath());
+						numTuples += tupleEstimator.estimateNumTuples(file.getPath());
+					} else {
+						FileStatus[] files2 = fs.listStatus(file.getPath());
+						for(FileStatus file2: files2) {
+							if (!file2.isDirectory()) {
+								LOG.error("counting subpath: " + file2.getPath());
+								numTuples += tupleEstimator.estimateNumTuples(file2.getPath());
+							}
+
+						}
+					}
+				}
+			}
+		} catch (IOException e) {
+			// TODO do something useful...
+			e.printStackTrace();
+		}
+		return numTuples;
+
 	}
 
 

@@ -45,9 +45,9 @@ public class ExecutorSettings {
 	 */
 	private void loadDefaults() {
 		propertiesMap.put(guardedIdOptimizationOn, "true");  // TODO make toggle
-		propertiesMap.put(guardIdOptimizationOn, "true");
-		propertiesMap.put(guardKeepaliveOptimizationOn, "true");
-		propertiesMap.put(guardTuplePointerOptimizationOn, "true");
+		propertiesMap.put(guardIdOptimizationOn, "false");
+		propertiesMap.put(guardKeepaliveOptimizationOn, "false");
+		propertiesMap.put(guardTuplePointerOptimizationOn, "false");
 		propertiesMap.put(guardAsGuardedReReadOptimizationOn, "true"); // TODO make toggle
 		propertiesMap.put(PROOF_SYMBOL, "#");
 
