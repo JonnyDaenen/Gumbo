@@ -3,20 +3,11 @@
  */
 package mapreduce.guardedfragment.planner.structures;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1GuardRel;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 import mapreduce.guardedfragment.planner.structures.data.RelationSchemaException;
 import mapreduce.utils.TupleEstimator;

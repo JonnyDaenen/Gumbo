@@ -2,7 +2,6 @@ package mapreduce.guardedfragment.gumbogui.gumboguiMixIO;
 
 import java.awt.TextField;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;

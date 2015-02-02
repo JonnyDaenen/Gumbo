@@ -1,26 +1,14 @@
 package mapreduce.guardedfragment.gumbogui.gumboguiMixIO;
 
 import java.awt.BorderLayout;
-import java.awt.ComponentOrientation;
-import java.awt.FlowLayout;
 import java.awt.TextField;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-
-import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.ButtonWindowMixIO;
-import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.DirInWindowMixIO;
-import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.DirOutWindowMixIO;
-import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.TextWindowMixIO;
-import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.TextWindowMixIOBot;
-import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.TextWindowMixIOUp;
 
 public class GumboMainWindowMixIO extends JPanel {
 	

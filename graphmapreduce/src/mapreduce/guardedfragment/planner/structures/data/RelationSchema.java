@@ -1,7 +1,5 @@
 package mapreduce.guardedfragment.planner.structures.data;
 
-import java.io.Serializable;
-
 import org.apache.commons.lang3.StringUtils;
 
 public class RelationSchema {

@@ -4,9 +4,7 @@
 package mapreduce.guardedfragment.planner.compiler.reducers;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
@@ -16,7 +14,6 @@ import mapreduce.guardedfragment.structure.booleanexpressions.BEvaluationContext
 import mapreduce.guardedfragment.structure.booleanexpressions.BExpression;
 import mapreduce.guardedfragment.structure.booleanexpressions.VariableNotFoundException;
 import mapreduce.guardedfragment.structure.conversion.GFBooleanMapping;
-import mapreduce.guardedfragment.structure.conversion.GFtoBooleanConvertor;
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;

@@ -18,8 +18,6 @@ import org.apache.hadoop.mapred.FileOutputFormat;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 
-import tachyon.thrift.WorkerService.Processor.getDataFolder;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 

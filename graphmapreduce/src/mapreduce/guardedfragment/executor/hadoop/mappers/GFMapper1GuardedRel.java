@@ -4,27 +4,15 @@
 package mapreduce.guardedfragment.executor.hadoop.mappers;
 
 import java.io.IOException;
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import mapreduce.guardedfragment.executor.hadoop.ExecutorSettings;
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
-import mapreduce.guardedfragment.planner.structures.operations.GFMapper;
-import mapreduce.guardedfragment.planner.structures.operations.GFOperationInitException;
 import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.io.Pair;
-import mapreduce.guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
-import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingTupleException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.InputSplit;
-import org.apache.hadoop.mapreduce.Mapper.Context;
-import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 /**
  * Also outputs the atoms when a guarded atom is projected onto them.

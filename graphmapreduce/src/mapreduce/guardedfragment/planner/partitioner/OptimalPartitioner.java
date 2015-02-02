@@ -3,9 +3,9 @@
  */
 package mapreduce.guardedfragment.planner.partitioner;
 
-import cern.colt.Arrays;
 import mapreduce.guardedfragment.planner.calculations.CalculationUnit;
 import mapreduce.guardedfragment.planner.calculations.CalculationUnitDAG;
+import cern.colt.Arrays;
 
 /**
  * Partitions the CalculationUnits based on their height in the DAG.

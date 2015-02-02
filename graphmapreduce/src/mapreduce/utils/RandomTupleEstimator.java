@@ -3,10 +3,7 @@
  */
 package mapreduce.utils;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import hadoop.FileSize;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

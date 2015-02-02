@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import mapreduce.guardedfragment.planner.structures.data.Tuple;
 
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 

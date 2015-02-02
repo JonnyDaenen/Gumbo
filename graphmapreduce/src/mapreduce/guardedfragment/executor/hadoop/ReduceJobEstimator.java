@@ -7,9 +7,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import mapreduce.guardedfragment.planner.compiler.DirManager;
 import mapreduce.guardedfragment.planner.structures.InputFormat;
 import mapreduce.guardedfragment.planner.structures.MRJob;
@@ -20,9 +17,11 @@ import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression
 import mapreduce.utils.RandomTupleEstimator;
 import mapreduce.utils.TupleEstimator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Estimates the number of reducers needed. 
- * TODO move to a specific mapper?
  * features:
  * - newline correction
  * - csv correction
@@ -73,6 +72,7 @@ public class ReduceJobEstimator {
 			bytesize += estimateSize(e, rfm);
 		}
 		// TODO compensate for multi-query
+		// this can be done by ... 
 
 
 		LOG.info("Output estimate " + bytesize);

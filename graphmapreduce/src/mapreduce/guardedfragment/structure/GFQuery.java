@@ -5,10 +5,10 @@ package mapreduce.guardedfragment.structure;
 
 import java.util.Collection;
 
-import org.apache.hadoop.fs.Path;
-
 import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
+
+import org.apache.hadoop.fs.Path;
 
 /**
  * Representation of a Guarded Fragment Query.

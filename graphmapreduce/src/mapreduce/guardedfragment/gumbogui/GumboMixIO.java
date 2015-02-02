@@ -7,9 +7,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintStream;
-import java.security.Timestamp;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.Set;
 
 import javax.swing.JButton;
@@ -19,22 +16,19 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
-import org.apache.hadoop.fs.Path;
-
 import mapreduce.guardedfragment.executor.hadoop.HadoopExecutor;
 import mapreduce.guardedfragment.executor.spark.SparkExecutor;
-import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.GumboMainWindowMixIO;
 import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.GumboMainWindowMixIOwithScroll;
 import mapreduce.guardedfragment.planner.GFMRPlanner;
 import mapreduce.guardedfragment.planner.GFMRPlannerException;
 import mapreduce.guardedfragment.planner.partitioner.HeightPartitioner;
 import mapreduce.guardedfragment.planner.structures.MRPlan;
 import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
-import mapreduce.guardedfragment.planner.structures.RelationFileMappingException;
-import mapreduce.guardedfragment.planner.structures.data.RelationSchemaException;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
 import mapreduce.guardedfragment.structure.gfexpressions.io.GFInfixSerializer;
+
+import org.apache.hadoop.fs.Path;
 
 public class GumboMixIO {
 	

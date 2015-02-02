@@ -3,7 +3,6 @@
  */
 package mapreduce.guardedfragment.executor.hadoop.mappers;
 
-import scala.tools.nsc.interpreter.IMain.Request;
 
 /**
  * @author Jonny Daenen

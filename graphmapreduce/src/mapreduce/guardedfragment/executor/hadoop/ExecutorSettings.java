@@ -6,8 +6,6 @@ package mapreduce.guardedfragment.executor.hadoop;
 import java.util.HashMap;
 import java.util.Map;
 
-import mapreduce.guardedfragment.executor.hadoop.mappers.GFMapper1GuardRel;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -45,9 +43,9 @@ public class ExecutorSettings {
 	 */
 	private void loadDefaults() {
 		propertiesMap.put(guardedIdOptimizationOn, "true");  // TODO make toggle
-		propertiesMap.put(guardIdOptimizationOn, "false");
-		propertiesMap.put(guardKeepaliveOptimizationOn, "false");
-		propertiesMap.put(guardTuplePointerOptimizationOn, "false");
+		propertiesMap.put(guardIdOptimizationOn, "true");
+		propertiesMap.put(guardKeepaliveOptimizationOn, "true");
+		propertiesMap.put(guardTuplePointerOptimizationOn, "true");
 		propertiesMap.put(guardAsGuardedReReadOptimizationOn, "true"); // TODO make toggle
 		propertiesMap.put(PROOF_SYMBOL, "#");
 

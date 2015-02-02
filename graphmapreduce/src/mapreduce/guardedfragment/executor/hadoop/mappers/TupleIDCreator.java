@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
+import mapreduce.utils.LongBase64Converter;
+
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
-
-import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
-import mapreduce.utils.LongBase64Converter;
 
 /**
  * Responsible for keeping an id for each path used.

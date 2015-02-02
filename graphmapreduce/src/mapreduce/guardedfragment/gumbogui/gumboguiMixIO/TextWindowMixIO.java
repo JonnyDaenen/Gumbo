@@ -2,9 +2,6 @@ package mapreduce.guardedfragment.gumbogui.gumboguiMixIO;
 
 import javax.swing.JSplitPane;
 
-import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.TextWindowMixIOBot;
-import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.TextWindowMixIOUp;
-
 class TextWindowMixIO extends JSplitPane {
 	
 
