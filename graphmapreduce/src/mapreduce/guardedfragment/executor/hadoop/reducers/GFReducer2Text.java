@@ -138,6 +138,9 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 					// if this is a tuple instead of an id
 					if ( isTuple(val) ) {
 						
+						if (keyTuple != null)
+							context.getCounter(GumboRed2Counter.RED2_COLLISIONS_FOUND).increment(1);
+						
 						// extract the tuple
 						keyTuple = getTuple(val);
 						
@@ -168,8 +171,11 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 
 			// if key tuple is not present yet, throw exception
 			if (keyTuple == null) {
+				context.getCounter(GumboRed2Counter.RED2_TUPLE_EXCEPTIONS).increment(1);
 				throw new GuardTupleNotFoundException("There was no guard tuple found for key "+ key.toString());
 			}
+			
+			context.getCounter(GumboRed2Counter.RED2_TUPLES_FOUND).increment(1);
 
 			/* evaluate all formulas */
 			for (GFExistentialExpression formula : eso.getExpressionSet()) {
@@ -195,6 +201,10 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 						mos.write((Text)null, out1, outfile);
 						context.getCounter(GumboRed2Counter.RED2_OUT_BYTES).increment(out1.getLength());
 						context.getCounter(GumboRed2Counter.RED2_OUT_RECORDS).increment(1);
+					} else {
+
+						context.getCounter(GumboRed2Counter.RED2_EVAL_FALSE).increment(1);
+						System.out.println("bad!: " + keyTuple);
 					}
 				}
 
