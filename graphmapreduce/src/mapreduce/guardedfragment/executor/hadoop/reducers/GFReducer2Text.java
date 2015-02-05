@@ -138,9 +138,10 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 					// if this is a tuple instead of an id
 					if ( isTuple(val) ) {
 						
-						if (keyTuple != null)
+						if (keyTuple != null) {
 							context.getCounter(GumboRed2Counter.RED2_COLLISIONS_FOUND).increment(1);
-						
+							System.out.println("Collision: " + keyTuple + " " + val.toString());
+						}
 						// extract the tuple
 						keyTuple = getTuple(val);
 						
