@@ -1,12 +1,12 @@
 package mapreduce.guardedfragment.structure;
 
-import java.util.Set;
+import gumbo.compiler.structures.data.KeyValuePair;
+import gumbo.guardedfragment.gfexpressions.GFAndExpression;
+import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
+import gumbo.guardedfragment.gfexpressions.GFNotExpression;
+import gumbo.guardedfragment.gfexpressions.GFOrExpression;
 
-import mapreduce.guardedfragment.planner.structures.data.KeyValuePair;
-import mapreduce.guardedfragment.structure.gfexpressions.GFAndExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFNotExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFOrExpression;
+import java.util.Set;
 
 public class GuardedFragmentExample {
 

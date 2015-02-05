@@ -3,20 +3,20 @@
  */
 package mapreduce.experiments;
 
+import gumbo.compiler.GFMRPlanner;
+import gumbo.compiler.GFMRPlannerException;
+import gumbo.compiler.partitioner.UnitPartitioner;
+import gumbo.compiler.structures.MRPlan;
+import gumbo.compiler.structures.RelationFileMapping;
+import gumbo.executor.hadoop.HadoopExecutor;
+import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
+import gumbo.guardedfragment.gfexpressions.GFExpression;
+import gumbo.guardedfragment.gfexpressions.io.DeserializeException;
+import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import mapreduce.guardedfragment.executor.hadoop.HadoopExecutor;
-import mapreduce.guardedfragment.planner.GFMRPlanner;
-import mapreduce.guardedfragment.planner.GFMRPlannerException;
-import mapreduce.guardedfragment.planner.partitioner.UnitPartitioner;
-import mapreduce.guardedfragment.planner.structures.MRPlan;
-import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.io.DeserializeException;
-import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 
 import org.apache.hadoop.fs.Path;
 

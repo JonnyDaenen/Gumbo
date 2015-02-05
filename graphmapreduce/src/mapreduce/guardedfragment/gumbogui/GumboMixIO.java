@@ -1,5 +1,16 @@
 package mapreduce.guardedfragment.gumbogui;
 
+import gumbo.compiler.GFMRPlanner;
+import gumbo.compiler.GFMRPlannerException;
+import gumbo.compiler.partitioner.HeightPartitioner;
+import gumbo.compiler.structures.MRPlan;
+import gumbo.compiler.structures.RelationFileMapping;
+import gumbo.executor.hadoop.HadoopExecutor;
+import gumbo.executor.spark.SparkExecutor;
+import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
+import gumbo.guardedfragment.gfexpressions.GFExpression;
+import gumbo.guardedfragment.gfexpressions.io.GFInfixSerializer;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.TextField;
@@ -16,17 +27,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
-import mapreduce.guardedfragment.executor.hadoop.HadoopExecutor;
-import mapreduce.guardedfragment.executor.spark.SparkExecutor;
 import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.GumboMainWindowMixIOwithScroll;
-import mapreduce.guardedfragment.planner.GFMRPlanner;
-import mapreduce.guardedfragment.planner.GFMRPlannerException;
-import mapreduce.guardedfragment.planner.partitioner.HeightPartitioner;
-import mapreduce.guardedfragment.planner.structures.MRPlan;
-import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.io.GFInfixSerializer;
 
 import org.apache.hadoop.fs.Path;
 

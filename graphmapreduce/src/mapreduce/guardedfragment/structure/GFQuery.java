@@ -3,10 +3,10 @@
  */
 package mapreduce.guardedfragment.structure;
 
-import java.util.Collection;
+import gumbo.compiler.structures.RelationFileMapping;
+import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 
-import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
+import java.util.Collection;
 
 import org.apache.hadoop.fs.Path;
 

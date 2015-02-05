@@ -5,25 +5,25 @@ package spark;
  * Computing the query R(x,y) & S(y)
  */
 
+import gumbo.compiler.structures.data.Tuple;
+import gumbo.guardedfragment.booleanexpressions.BEvaluationContext;
+import gumbo.guardedfragment.booleanexpressions.BExpression;
+import gumbo.guardedfragment.booleanexpressions.VariableNotFoundException;
+import gumbo.guardedfragment.conversion.GFBooleanMapping;
+import gumbo.guardedfragment.conversion.GFtoBooleanConversionException;
+import gumbo.guardedfragment.conversion.GFtoBooleanConvertor;
+import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
+import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
+import gumbo.guardedfragment.gfexpressions.GFExpression;
+import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
+import gumbo.guardedfragment.gfexpressions.operations.GFAtomProjection;
+import gumbo.guardedfragment.gfexpressions.operations.NonMatchingTupleException;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-import mapreduce.guardedfragment.planner.structures.data.Tuple;
-import mapreduce.guardedfragment.structure.booleanexpressions.BEvaluationContext;
-import mapreduce.guardedfragment.structure.booleanexpressions.BExpression;
-import mapreduce.guardedfragment.structure.booleanexpressions.VariableNotFoundException;
-import mapreduce.guardedfragment.structure.conversion.GFBooleanMapping;
-import mapreduce.guardedfragment.structure.conversion.GFtoBooleanConversionException;
-import mapreduce.guardedfragment.structure.conversion.GFtoBooleanConvertor;
-import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
-import mapreduce.guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
-import mapreduce.guardedfragment.structure.gfexpressions.operations.NonMatchingTupleException;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;

@@ -3,13 +3,13 @@
  */
 package mapreduce.guardedfragment.structure;
 
-import mapreduce.guardedfragment.structure.conversion.DNFConversionException;
-import mapreduce.guardedfragment.structure.conversion.DNFConverter;
-import mapreduce.guardedfragment.structure.gfexpressions.GFAndExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFNotExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFOrExpression;
+import gumbo.guardedfragment.conversion.DNFConversionException;
+import gumbo.guardedfragment.conversion.DNFConverter;
+import gumbo.guardedfragment.gfexpressions.GFAndExpression;
+import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
+import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
+import gumbo.guardedfragment.gfexpressions.GFNotExpression;
+import gumbo.guardedfragment.gfexpressions.GFOrExpression;
 
 /**
  * @author Jonny Daenen

@@ -5,14 +5,15 @@ package mapreduce.guardedfragment.planner.partitioner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import gumbo.compiler.calculations.BasicGFCalculationUnit;
+import gumbo.compiler.calculations.CalculationUnitDAG;
+import gumbo.compiler.partitioner.HeightPartitioner;
+import gumbo.compiler.partitioner.PartitionedCalculationUnitDAG;
+import gumbo.compiler.structures.data.RelationSchema;
+import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
+import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 
 import java.util.List;
-
-import mapreduce.guardedfragment.planner.calculations.BasicGFCalculationUnit;
-import mapreduce.guardedfragment.planner.calculations.CalculationUnitDAG;
-import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
-import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
 
 import org.junit.After;
 import org.junit.Before;

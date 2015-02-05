@@ -3,9 +3,9 @@
  */
 package mapreduce.experiments.profiling;
 
-import mapreduce.guardedfragment.planner.structures.data.Tuple;
-import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.operations.GFAtomProjection;
+import gumbo.compiler.structures.data.Tuple;
+import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
+import gumbo.guardedfragment.gfexpressions.operations.GFAtomProjection;
 
 /**
  * Testing optimisations:

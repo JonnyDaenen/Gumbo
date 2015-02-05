@@ -4,6 +4,14 @@
 package mapreduce.guardedfragment;
 
 import static org.junit.Assert.fail;
+import gumbo.compiler.partitioner.HeightPartitioner;
+import gumbo.compiler.structures.MRPlan;
+import gumbo.compiler.structures.RelationFileMapping;
+import gumbo.compiler.structures.data.RelationSchema;
+import gumbo.executor.hadoop.HadoopExecutor;
+import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
+import gumbo.guardedfragment.gfexpressions.GFExpression;
+import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -12,15 +20,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import mapreduce.guardedfragment.executor.hadoop.HadoopExecutor;
-import mapreduce.guardedfragment.planner.partitioner.HeightPartitioner;
-import mapreduce.guardedfragment.planner.structures.MRPlan;
-import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
-import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
 
 import org.apache.hadoop.fs.Path;
 import org.junit.After;
@@ -147,7 +146,7 @@ public class Rank1Test {
 		//		MRPlan plan = planner.convert(gfe.getSubExistentialExpression(1));
 		//		plan.execute();
 
-		mapreduce.guardedfragment.planner.GFMRPlanner planner2 = new mapreduce.guardedfragment.planner.GFMRPlanner(new HeightPartitioner());
+		gumbo.compiler.GFMRPlanner planner2 = new gumbo.compiler.GFMRPlanner(new HeightPartitioner());
 		MRPlan plan2 = planner2.createPlan((GFExistentialExpression)gfe, rfm , new Path(output.getAbsolutePath()), new Path(scratch.getAbsolutePath()));
 		//		plan2.execute();
 

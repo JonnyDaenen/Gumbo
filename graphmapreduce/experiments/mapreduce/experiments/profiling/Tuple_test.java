@@ -3,7 +3,7 @@
  */
 package mapreduce.experiments.profiling;
 
-import mapreduce.guardedfragment.planner.structures.data.Tuple;
+import gumbo.compiler.structures.data.Tuple;
 
 /**
  * Testing optimisations:

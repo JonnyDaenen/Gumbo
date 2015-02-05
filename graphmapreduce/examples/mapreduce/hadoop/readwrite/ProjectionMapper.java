@@ -2,9 +2,9 @@ package mapreduce.hadoop.readwrite;
 
 // cc MaxTemperatureMapper Mapper for maximum temperature example
 // vv MaxTemperatureMapper
-import java.io.IOException;
+import gumbo.compiler.structures.data.Tuple;
 
-import mapreduce.guardedfragment.planner.structures.data.Tuple;
+import java.io.IOException;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;

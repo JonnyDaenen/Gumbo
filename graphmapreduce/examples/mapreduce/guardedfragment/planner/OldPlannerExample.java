@@ -3,16 +3,16 @@
  */
 package mapreduce.guardedfragment.planner;
 
-import mapreduce.guardedfragment.planner.calculations.CalculationUnitDAG;
-import mapreduce.guardedfragment.planner.calculations.GFtoCalculationUnitConverter;
-import mapreduce.guardedfragment.planner.compiler.CalculationCompiler;
-import mapreduce.guardedfragment.planner.partitioner.CalculationPartitioner;
-import mapreduce.guardedfragment.planner.partitioner.DepthPartitioner;
-import mapreduce.guardedfragment.planner.partitioner.PartitionedCalculationUnitDAG;
-import mapreduce.guardedfragment.planner.structures.MRPlan;
-import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
+import gumbo.compiler.calculations.CalculationUnitDAG;
+import gumbo.compiler.calculations.GFtoCalculationUnitConverter;
+import gumbo.compiler.partitioner.CalculationPartitioner;
+import gumbo.compiler.partitioner.DepthPartitioner;
+import gumbo.compiler.partitioner.PartitionedCalculationUnitDAG;
+import gumbo.compiler.resolver.CalculationCompiler;
+import gumbo.compiler.structures.MRPlan;
+import gumbo.compiler.structures.RelationFileMapping;
+import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
+import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
 
 import org.apache.hadoop.fs.Path;
 
