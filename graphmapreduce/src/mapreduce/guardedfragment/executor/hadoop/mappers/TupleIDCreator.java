@@ -14,7 +14,10 @@ import java.util.Set;
 import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
 import mapreduce.utils.LongBase64Converter;
 
+import org.apache.commons.io.input.TaggedInputStream;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.server.namenode.FSNamesystem;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
@@ -88,6 +91,9 @@ public class TupleIDCreator {
 			FileSplit fileSplit = (FileSplit) method.invoke(is);
 			Path filePath = fileSplit.getPath();
 			
+			FileStatus fs = filePath.getFileSystem(null).getFileStatus(filePath);
+			
+			
 			Path match = rm.findBestPathMatch(filePath);
 
 			long pathID = getPathID(match);
@@ -97,7 +103,7 @@ public class TupleIDCreator {
 			
 			byte [] offsetEnc = longConverter.long2byte(offset);
 //			byte [] pathIdEnc = longConverter.long2byte(pathID);
-			System.out.println(" file: " +match + " fileid:" + pathID +  "Offset: " + offset + " id: " + new String(offsetEnc) + "-" + pathID);
+			System.out.println(" filename: " + filePath + " match:" +match + " fileid:" + pathID +  "Offset: " + offset + " id: " + new String(offsetEnc) + "-" + pathID);
 
 			return "" + new String(offsetEnc) + "-" + pathID;
 		} catch (Exception e) {
