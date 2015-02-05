@@ -104,13 +104,14 @@ public class BasicGFCompiler {
 
 			// update output path for this schema
 			RelationSchema schema = bcu.getOutputSchema();
+			// CLEAN
+			// other
+			// object
+			// to
+			// do
+			// this
 			dirManager.updatePath(schema,
-					output.suffix(Path.SEPARATOR + GuardedProjectionReducer.generateFolder(schema))); // CLEAN
-																										// other
-																										// object
-																										// to
-																										// do
-																										// this
+					output.suffix(Path.SEPARATOR + GuardedProjectionReducer.generateFolder(schema))); 
 
 		}
 
