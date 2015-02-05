@@ -91,7 +91,7 @@ public class TupleIDCreator {
 			FileSplit fileSplit = (FileSplit) method.invoke(is);
 			Path filePath = fileSplit.getPath();
 			
-			FileStatus fs = filePath.getFileSystem(null).getFileStatus(filePath);
+//			FileStatus fs = filePath.getFileSystem(null).getFileStatus(filePath);
 			
 			
 			Path match = rm.findBestPathMatch(filePath);
