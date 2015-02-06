@@ -4,9 +4,9 @@
 package mapreduce.guardedfragment.planner;
 
 import gumbo.compiler.GFMRPlanner;
+import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.OptimalPartitioner;
 import gumbo.compiler.structures.MRPlan;
-import gumbo.compiler.structures.RelationFileMapping;
 import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 import gumbo.guardedfragment.gfexpressions.GFExpression;

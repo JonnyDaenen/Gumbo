@@ -3,8 +3,8 @@
  */
 package gumbo.executor.hadoop.mappers;
 
-import gumbo.compiler.structures.RelationFileMapping;
-import gumbo.compiler.structures.RelationFileMappingException;
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.compiler.filemapper.RelationFileMappingException;
 import gumbo.compiler.structures.data.RelationSchemaException;
 import gumbo.executor.hadoop.ExecutorSettings;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;

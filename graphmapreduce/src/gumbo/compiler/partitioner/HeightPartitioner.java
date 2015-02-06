@@ -3,7 +3,8 @@
  */
 package gumbo.compiler.partitioner;
 
-import gumbo.compiler.calculations.CalculationUnitDAG;
+import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.compiler.resolver.DirManager;
 
 /**
  * Partitions the CalculationUnits based on their height in the DAG.
@@ -16,14 +17,14 @@ public class HeightPartitioner implements CalculationPartitioner {
 	 * @see gumbo.compiler.partitioner.CalculationPartitioner#partition(mapreduce.guardedfragment.planner.calculations.CalculationPartition)
 	 */
 	@Override
-	public PartitionedCalculationUnitDAG partition(CalculationUnitDAG partition) {
+	public PartitionedCalculationUnitGroup partition(CalculationUnitGroup partition, DirManager dm) {
 		
 		int height = partition.getHeight();
-		PartitionedCalculationUnitDAG partitionedDAG = new PartitionedCalculationUnitDAG();
+		PartitionedCalculationUnitGroup partitionedDAG = new PartitionedCalculationUnitGroup();
 		
 		for (int i = 1; i <= height; i++) {
 			
-			CalculationUnitDAG calcSet = partition.getCalculationsByHeight(i);
+			CalculationUnitGroup calcSet = partition.getCalculationsByHeight(i);
 			partitionedDAG.addNewLevel(calcSet);
 		}
 		

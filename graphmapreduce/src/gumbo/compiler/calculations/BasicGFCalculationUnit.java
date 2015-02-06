@@ -9,6 +9,7 @@ import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 import java.util.Set;
 
 /**
+ * Represents 1-level GF expressions.
  * @author Jonny Daenen
  *
  */

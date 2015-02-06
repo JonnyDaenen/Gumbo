@@ -1,7 +1,7 @@
 /**
  * Created: 28 Apr 2014
  */
-package gumbo.guardedfragment.gfexpressions.operations;
+package gumbo.compiler.decomposer;
 
 import gumbo.guardedfragment.gfexpressions.GFAndExpression;
 import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
@@ -13,6 +13,7 @@ import gumbo.guardedfragment.gfexpressions.GFVisitor;
 import gumbo.guardedfragment.gfexpressions.GFVisitorException;
 import gumbo.guardedfragment.gfexpressions.io.Pair;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,6 +39,7 @@ public class GFDecomposer implements GFVisitor<Pair<GFExpression,Set<GFExistenti
 	public Set<GFExistentialExpression> decompose(GFExpression e) throws GFDecomposerException {
 		
 		// TODO reject non-existentials
+		// TODO #code return GFBasicExpression
 		
 		Pair<GFExpression, Set<GFExistentialExpression>> result = null;
 		try {
@@ -158,6 +160,20 @@ public class GFDecomposer implements GFVisitor<Pair<GFExpression,Set<GFExistenti
 	
 		
 		return new Pair<GFExpression, Set<GFExistentialExpression>>(newOutput, subexps);
+	}
+
+	/**
+	 * @see GFDecomposer#decompose(GFExpression)
+	 * @param expressions a set of GFExpressions to decompose into basic GF expressions
+	 * @throws GFDecomposerException 
+	 */
+	public Set<GFExistentialExpression> decomposeAll(Collection<GFExistentialExpression> expressions) throws GFDecomposerException {
+		HashSet<GFExistentialExpression> result = new HashSet<GFExistentialExpression>();
+		for (GFExistentialExpression e : expressions) {
+			result.addAll(decompose(e));
+		}
+		return result;
+		
 	}
 
 }

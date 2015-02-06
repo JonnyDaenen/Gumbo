@@ -3,8 +3,8 @@
  */
 package gumbo.guardedfragment.gfexpressions.operations;
 
+import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.resolver.DirManager;
-import gumbo.compiler.structures.InputFormat;
 import gumbo.compiler.structures.operations.GFOperationInitException;
 import gumbo.guardedfragment.booleanexpressions.BExpression;
 import gumbo.guardedfragment.conversion.GFBooleanMapping;

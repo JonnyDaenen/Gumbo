@@ -6,9 +6,9 @@ package mapreduce.guardedfragment.planner.partitioner;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
-import gumbo.compiler.calculations.CalculationUnitDAG;
+import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.HeightPartitioner;
-import gumbo.compiler.partitioner.PartitionedCalculationUnitDAG;
+import gumbo.compiler.partitioner.PartitionedCalculationUnitGroup;
 import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
@@ -25,7 +25,7 @@ import org.junit.Test;
  */
 public class PartitionerTest {
 
-	CalculationUnitDAG cp;
+	CalculationUnitGroup cp;
 
 	/**
 	 * Dependency setup
@@ -54,7 +54,7 @@ public class PartitionerTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		cp = new CalculationUnitDAG();
+		cp = new CalculationUnitGroup();
 
 		GFAtomicExpression guard = new GFAtomicExpression("G", "x");
 		GFAtomicExpression output = new GFAtomicExpression("O", "x");
@@ -110,9 +110,9 @@ public class PartitionerTest {
 	public void heightPartitioner() {
 		HeightPartitioner partitioner = new HeightPartitioner();
 
-		PartitionedCalculationUnitDAG partitioned = partitioner.partition(cp);
+		PartitionedCalculationUnitGroup partitioned = partitioner.partition(cp);
 		
-		List<CalculationUnitDAG> list = partitioned.getBottomUpList();
+		List<CalculationUnitGroup> list = partitioned.getBottomUpList();
 
 		assertEquals(3, list.size());
 

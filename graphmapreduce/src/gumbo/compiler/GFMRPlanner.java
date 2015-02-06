@@ -3,13 +3,13 @@
  */
 package gumbo.compiler;
 
-import gumbo.compiler.calculations.CalculationUnitDAG;
-import gumbo.compiler.calculations.GFtoCalculationUnitConverter;
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.compiler.linker.CULinker;
+import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.CalculationPartitioner;
-import gumbo.compiler.partitioner.PartitionedCalculationUnitDAG;
+import gumbo.compiler.partitioner.PartitionedCalculationUnitGroup;
 import gumbo.compiler.resolver.CalculationCompiler;
 import gumbo.compiler.structures.MRPlan;
-import gumbo.compiler.structures.RelationFileMapping;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 
 import java.util.Collection;
@@ -28,7 +28,7 @@ public class GFMRPlanner {
 
 	private static final Log LOG = LogFactory.getLog(GFMRPlanner.class); 
 
-	private GFtoCalculationUnitConverter converter;
+	private CULinker converter;
 	private CalculationPartitioner partitioner;
 	private CalculationCompiler compiler;
 
@@ -38,11 +38,11 @@ public class GFMRPlanner {
 	public GFMRPlanner(CalculationPartitioner partitioner) {
 		this.partitioner = partitioner;
 		
-		converter = new GFtoCalculationUnitConverter();
+		converter = new CULinker();
 		compiler = new CalculationCompiler();
 	}
 
-	public MRPlan createPlan(GFExistentialExpression expression, RelationFileMapping infiles, Path outdir, Path scratchdir) throws GFMRPlannerException {
+	public MRPlan createPlan(GFExistentialExpression expression, RelationFileMapping infiles, Path outdir, Path scratchdir) throws GFCompilerException {
 		HashSet<GFExistentialExpression> expressions = new HashSet<GFExistentialExpression>();
 		expressions.add(expression);
 		return createPlan(expressions, infiles, outdir, scratchdir);
@@ -58,20 +58,20 @@ public class GFMRPlanner {
 	 * 
 	 * @return A MR-plan for calculation the GFE's
 	 * 
-	 * @throws GFMRPlannerException 
+	 * @throws GFCompilerException 
 	 */
-	public MRPlan createPlan(Collection<GFExistentialExpression> expressions, RelationFileMapping infiles, Path outdir, Path scratchdir) throws GFMRPlannerException {
+	public MRPlan createPlan(Collection<GFExistentialExpression> expressions, RelationFileMapping infiles, Path outdir, Path scratchdir) throws GFCompilerException {
 
 
 		// convert to calculations
 		LOG.info("Converting GFE's to calculation units...");
-		CalculationUnitDAG calcUnits = converter.createCalculationUnits(expressions);
+		CalculationUnitGroup calcUnits = converter.createDAG(expressions);
 		LOG.info("Number of calculation units: " + calcUnits.size());
 		LOG.debug(calcUnits);
 
 		// partition
 		LOG.info("Partitioning calculation units (using a "+partitioner.getClass().getSimpleName()+")...");
-		PartitionedCalculationUnitDAG partitionedUnits = partitioner.partition(calcUnits);
+		PartitionedCalculationUnitGroup partitionedUnits = partitioner.partition(calcUnits);
 		LOG.info("Number of partitions: " + partitionedUnits.getNumPartitions());
 		LOG.debug(partitionedUnits);
 

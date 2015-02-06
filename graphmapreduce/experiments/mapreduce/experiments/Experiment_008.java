@@ -4,11 +4,11 @@
 package mapreduce.experiments;
 
 import gumbo.compiler.GFMRPlanner;
-import gumbo.compiler.GFMRPlannerException;
+import gumbo.compiler.GFCompilerException;
+import gumbo.compiler.filemapper.InputFormat;
+import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.UnitPartitioner;
-import gumbo.compiler.structures.InputFormat;
 import gumbo.compiler.structures.MRPlan;
-import gumbo.compiler.structures.RelationFileMapping;
 import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.executor.hadoop.HadoopExecutor;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
@@ -30,7 +30,7 @@ import org.apache.hadoop.fs.Path;
  */
 public class Experiment_008 {
 
-	public static void main(String[] args) throws DeserializeException, GFMRPlannerException, IllegalArgumentException,
+	public static void main(String[] args) throws DeserializeException, GFCompilerException, IllegalArgumentException,
 	InterruptedException {
 
 		// ClassLoader cl = ClassLoader.getSystemClassLoader();

@@ -11,8 +11,10 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A CalculationUnit is an operation that cannot be split up into parts anymore.
- *  It will be translated directly into a (set of) MR-jobs. An example is a {@link BasicGFCalculationUnit}.
+ * A CalculationUnit represents an operation that cannot be split up into smaller parts.
+ * A list of dependendencies is kept to easily construct a dependency graph.
+ * It can be translated directly into a (set of) (MR-)jobs in a framework. 
+ * An example is a {@link BasicGFCalculationUnit}.
  *  
  * 
  * @author Jonny Daenen
@@ -40,6 +42,8 @@ public abstract class CalculationUnit {
 	/**
 	 * @return the number of MR-rounds this calculation takes.
 	 */
+	@Deprecated
+	public
 	abstract int getNumRounds();
 	
 	/**
@@ -64,6 +68,7 @@ public abstract class CalculationUnit {
 
 	
 	/**
+	 * TODO #core change to set
 	 * @return the output schema
 	 */
 	abstract public RelationSchema getOutputSchema();

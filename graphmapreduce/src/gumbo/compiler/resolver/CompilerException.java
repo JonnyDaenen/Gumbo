@@ -1,13 +1,13 @@
 package gumbo.compiler.resolver;
 
-import gumbo.compiler.GFMRPlannerException;
+import gumbo.compiler.GFCompilerException;
 
 /**
  * 
  * @author Jonny Daenen
  *
  */
-public class CompilerException extends GFMRPlannerException {
+public class CompilerException extends GFCompilerException {
 
 	/**
 	 * 

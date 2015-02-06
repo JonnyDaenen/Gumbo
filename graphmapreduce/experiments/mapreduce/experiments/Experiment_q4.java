@@ -4,10 +4,10 @@
 package mapreduce.experiments;
 
 import gumbo.compiler.GFMRPlanner;
-import gumbo.compiler.GFMRPlannerException;
+import gumbo.compiler.GFCompilerException;
+import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.UnitPartitioner;
 import gumbo.compiler.structures.MRPlan;
-import gumbo.compiler.structures.RelationFileMapping;
 import gumbo.executor.hadoop.HadoopExecutor;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 import gumbo.guardedfragment.gfexpressions.GFExpression;
@@ -26,7 +26,7 @@ import org.apache.hadoop.fs.Path;
  */
 public class Experiment_q4 {
 
-	public static void main(String[] args) throws DeserializeException, GFMRPlannerException, IllegalArgumentException {
+	public static void main(String[] args) throws DeserializeException, GFCompilerException, IllegalArgumentException {
 
 		if (args.length == 0) {
 			System.out.println("Please provide a input pattern as argument");

@@ -4,9 +4,9 @@
 package gumbo;
 
 import gumbo.compiler.GFMRPlanner;
+import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.HeightPartitioner;
 import gumbo.compiler.structures.MRPlan;
-import gumbo.compiler.structures.RelationFileMapping;
 import gumbo.executor.hadoop.HadoopExecutor;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 import gumbo.guardedfragment.gfexpressions.GFExpression;

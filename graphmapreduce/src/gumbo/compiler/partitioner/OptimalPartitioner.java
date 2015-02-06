@@ -4,7 +4,8 @@
 package gumbo.compiler.partitioner;
 
 import gumbo.compiler.calculations.CalculationUnit;
-import gumbo.compiler.calculations.CalculationUnitDAG;
+import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.compiler.resolver.DirManager;
 import cern.colt.Arrays;
 
 /**
@@ -18,7 +19,7 @@ public class OptimalPartitioner implements CalculationPartitioner {
 	 * @see gumbo.compiler.partitioner.CalculationPartitioner#partition(mapreduce.guardedfragment.planner.calculations.CalculationPartition)
 	 */
 	@Override
-	public PartitionedCalculationUnitDAG partition(CalculationUnitDAG set) {
+	public PartitionedCalculationUnitGroup partition(CalculationUnitGroup set, DirManager dm) {
 
 		// TODO check implementation
 
@@ -30,10 +31,10 @@ public class OptimalPartitioner implements CalculationPartitioner {
 	}
 
 
-	protected PartitionedCalculationUnitDAG getBest(CalculationUnit [] calculations, int [] levelassignment, PartitionedCalculationUnitDAG currentBest) {
+	protected PartitionedCalculationUnitGroup getBest(CalculationUnit [] calculations, int [] levelassignment, PartitionedCalculationUnitGroup currentBest) {
 
 		// construct partition
-		PartitionedCalculationUnitDAG candidate = new PartitionedCalculationUnitDAG(calculations, levelassignment);
+		PartitionedCalculationUnitGroup candidate = new PartitionedCalculationUnitGroup(calculations, levelassignment);
 
 		// check if the dependencies are ok 
 		// and all levels are occupied
@@ -62,7 +63,7 @@ public class OptimalPartitioner implements CalculationPartitioner {
 	 * @param candidate a partition
 	 * @return the score of a partition
 	 */
-	private double calculateScore(PartitionedCalculationUnitDAG candidate) {
+	private double calculateScore(PartitionedCalculationUnitGroup candidate) {
 
 		int totalSpread = 0;
 		for (CalculationUnit c : candidate.getCalculations()) {
@@ -75,7 +76,7 @@ public class OptimalPartitioner implements CalculationPartitioner {
 	}
 
 
-	protected PartitionedCalculationUnitDAG findBestLevelAssignment(CalculationUnitDAG set, CalculationUnit [] calculations, int [] levelassignment, int nextItem, int minLevel, int maxLevel, PartitionedCalculationUnitDAG currentBest) {
+	protected PartitionedCalculationUnitGroup findBestLevelAssignment(CalculationUnitGroup set, CalculationUnit [] calculations, int [] levelassignment, int nextItem, int minLevel, int maxLevel, PartitionedCalculationUnitGroup currentBest) {
 
 		if(nextItem == levelassignment.length) {
 			System.out.println(Arrays.toString(levelassignment));

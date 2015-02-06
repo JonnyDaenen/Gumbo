@@ -3,10 +3,10 @@
  */
 package gumbo.executor.hadoop;
 
+import gumbo.compiler.filemapper.InputFormat;
+import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.resolver.DirManager;
-import gumbo.compiler.structures.InputFormat;
 import gumbo.compiler.structures.MRJob;
-import gumbo.compiler.structures.RelationFileMapping;
 import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;

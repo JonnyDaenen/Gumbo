@@ -4,7 +4,7 @@
 package gumbo.compiler.partitioner;
 
 import gumbo.compiler.calculations.CalculationUnit;
-import gumbo.compiler.calculations.CalculationUnitDAG;
+import gumbo.compiler.linker.CalculationUnitGroup;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -12,20 +12,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Representation for a list of partitions of calculation units.
- * It provides several benefits compared to a raw list.
+ * Provides level information to {@link CalculationUnit}s in a {@link CalculationUnitGroup},
+ * creating a notion of partitions.
  * The partitions are ordered in a bottom-up fashion.
+ * 
+ * TODO #core maybe add dag as a field?
  * 
  * @author Jonny Daenen
  *
  */
-public class PartitionedCalculationUnitDAG extends CalculationUnitDAG {
+public class PartitionedCalculationUnitGroup extends CalculationUnitGroup {
 
 	Map<CalculationUnit,Integer> levelAssignmment;
 	int currentLevel = -1;
 
 
-	public PartitionedCalculationUnitDAG() {
+	public PartitionedCalculationUnitGroup() {
 		levelAssignmment = new HashMap<>();
 	}
 
@@ -33,7 +35,7 @@ public class PartitionedCalculationUnitDAG extends CalculationUnitDAG {
 	 * Adds a partition as a new level.
 	 * @param partition a set of CalculationUnits
 	 */
-	public void addNewLevel(CalculationUnitDAG partition) {
+	public void addNewLevel(CalculationUnitGroup partition) {
 
 		// add calculations to the set of all calculations
 		super.addAll(partition);
@@ -53,7 +55,7 @@ public class PartitionedCalculationUnitDAG extends CalculationUnitDAG {
 	 * @param units the CalculationUnits to add
 	 * @param levels the levels corresponding to the CalculationUnits
 	 */
-	public PartitionedCalculationUnitDAG(CalculationUnit [] units, int [] levels) {
+	public PartitionedCalculationUnitGroup(CalculationUnit [] units, int [] levels) {
 		this();
 
 		for (int i = 0; i < units.length; i++) {
@@ -65,11 +67,11 @@ public class PartitionedCalculationUnitDAG extends CalculationUnitDAG {
 
 	/**
 	 * Adds the calculation unit as a separate partition to the back of the list.
-	 * @see gumbo.compiler.calculations.CalculationUnitDAG#addnewLevel(gumbo.compiler.calculations.CalculationUnit)
+	 * @see gumbo.compiler.linker.CalculationUnitGroup#addnewLevel(gumbo.compiler.calculations.CalculationUnit)
 	 */
 	@Override
 	public void add(CalculationUnit c) {
-		CalculationUnitDAG unitDAG = new CalculationUnitDAG();
+		CalculationUnitGroup unitDAG = new CalculationUnitGroup();
 		unitDAG.add(c);
 		addNewLevel(unitDAG);
 	}
@@ -78,11 +80,11 @@ public class PartitionedCalculationUnitDAG extends CalculationUnitDAG {
 	/**
 	 * @return a list of partitions of CalculationsUnits, ordered by their level (small to large)
 	 */
-	public List<CalculationUnitDAG> getBottomUpList() {
-		LinkedList<CalculationUnitDAG> l = new LinkedList<>();
+	public List<CalculationUnitGroup> getBottomUpList() {
+		LinkedList<CalculationUnitGroup> l = new LinkedList<>();
 
 		for (int i = 0; i <= currentLevel; i++) {
-			CalculationUnitDAG set = new CalculationUnitDAG();
+			CalculationUnitGroup set = new CalculationUnitGroup();
 			for (CalculationUnit c : levelAssignmment.keySet()) {
 				if (levelAssignmment.get(c) == i)
 					set.add(c);

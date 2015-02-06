@@ -2,22 +2,22 @@ package gumbo.compiler;
 
 import gumbo.guardedfragment.gfexpressions.GFVisitorException;
 
-public class GFMRPlannerException extends GFVisitorException {
+public class GFCompilerException extends GFVisitorException {
 
 	private static final long serialVersionUID = 1L;
 	
-	public GFMRPlannerException() {
+	public GFCompilerException() {
 		this("Not implemented.");
 	}
 	
-	public GFMRPlannerException(String msg) {
+	public GFCompilerException(String msg) {
 		super(msg);
 	}
 
 	/**
 	 * @param e1
 	 */
-	public GFMRPlannerException(Exception e1) {
+	public GFCompilerException(Exception e1) {
 		super(e1);
 	}
 

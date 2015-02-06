@@ -3,7 +3,8 @@
  */
 package gumbo.compiler.partitioner;
 
-import gumbo.compiler.calculations.CalculationUnitDAG;
+import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.compiler.resolver.DirManager;
 
 /**
  * Partitions the CalculationUnits based on their depth in the DAG.
@@ -16,15 +17,15 @@ public class DepthPartitioner implements CalculationPartitioner {
 	 * @see gumbo.compiler.partitioner.CalculationPartitioner#partition(mapreduce.guardedfragment.planner.calculations.CalculationPartition)
 	 */
 	@Override
-	public PartitionedCalculationUnitDAG partition(CalculationUnitDAG partition) {
+	public PartitionedCalculationUnitGroup partition(CalculationUnitGroup partition, DirManager dm) {
 
 		int height = partition.getHeight();
-		PartitionedCalculationUnitDAG partitionedDAG = new PartitionedCalculationUnitDAG();
+		PartitionedCalculationUnitGroup partitionedDAG = new PartitionedCalculationUnitGroup();
 		
 		for (int i = height; i > 0; i--) {
 			
 			// OPTIMIZE this is rather inefficient as each time a DSF from top is done
-			CalculationUnitDAG calcSet = partition.getCalculationsByDepth(i);
+			CalculationUnitGroup calcSet = partition.getCalculationsByDepth(i);
 
 			partitionedDAG.addNewLevel(calcSet);
 		}

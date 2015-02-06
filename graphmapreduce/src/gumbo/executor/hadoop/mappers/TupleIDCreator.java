@@ -3,7 +3,7 @@
  */
 package gumbo.executor.hadoop.mappers;
 
-import gumbo.compiler.structures.RelationFileMapping;
+import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.utils.LongBase64Converter;
 
 import java.lang.reflect.Method;

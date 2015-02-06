@@ -3,14 +3,14 @@
  */
 package mapreduce.guardedfragment.planner;
 
-import gumbo.compiler.calculations.CalculationUnitDAG;
-import gumbo.compiler.calculations.GFtoCalculationUnitConverter;
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.compiler.linker.CULinker;
+import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.CalculationPartitioner;
 import gumbo.compiler.partitioner.DepthPartitioner;
-import gumbo.compiler.partitioner.PartitionedCalculationUnitDAG;
+import gumbo.compiler.partitioner.PartitionedCalculationUnitGroup;
 import gumbo.compiler.resolver.CalculationCompiler;
 import gumbo.compiler.structures.MRPlan;
-import gumbo.compiler.structures.RelationFileMapping;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
 
@@ -43,8 +43,8 @@ public class OldPlannerExample {
 		
 		
 		// convert to calculations
-		GFtoCalculationUnitConverter converter = new GFtoCalculationUnitConverter();
-		CalculationUnitDAG calcUnits = converter.createCalculationUnits(gfe);
+		CULinker converter = new CULinker();
+		CalculationUnitGroup calcUnits = converter.createDAG(gfe);
 		System.out.println("\nCalculation Units\n-----------------");
 		System.out.println(calcUnits);
 		
@@ -52,7 +52,7 @@ public class OldPlannerExample {
 //		CalculationPartitioner partitioner = new HeightPartitioner();
 		CalculationPartitioner partitioner = new DepthPartitioner();
 //		CalculationPartitioner partitioner = new UnitPartitioner();
-		PartitionedCalculationUnitDAG partitionedUnits = partitioner.partition(calcUnits);
+		PartitionedCalculationUnitGroup partitionedUnits = partitioner.partition(calcUnits);
 		System.out.println("\nPartitioned Units\n-----------------");
 		System.out.println(partitionedUnits);
 		

@@ -1,8 +1,9 @@
 /**
  * Created: 09 May 2014
  */
-package gumbo.compiler.calculations;
+package gumbo.compiler.linker;
 
+import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.structures.data.RelationSchema;
 
 import java.util.ArrayList;
@@ -12,25 +13,30 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Representation of a (set of) CalculationUnit DAG(s). The DAG indicates which
- * calculations depend on others. The structure allows for easy discovery of
- * leaf (depends on no other calculations) and root (no depending calculations)
- * calculations. It also allows for the discovery of input/output/intermediate
+ * Representation of a CalculationUnit DAG (may or may not be connected). 
+ * This class is a wrapper for a set of {@link CalculationUnits}, 
+ * which contain their own dependencies. The aim of this class is to provide
+ * a collection of operations on the DAG. 
+ * 
+ * For example, it allows for the discovery of input/output/intermediate
  * relation schemes, which in general cannot be discovered by solely looking at
  * root/leaf calculations. This is the case when an intermediate calculation
  * both depends on another calculation and at the same time needs a raw table.
  * 
+ * The structure also allows for easy discovery of
+ * leaf (depends on no other calculations) and root (no depending calculations)
+ * calculations. 
  * 
  * @author Jonny Daenen
  * 
  *         TODO write testcode
  */
-public class CalculationUnitDAG implements Iterable<CalculationUnit> {
+public class CalculationUnitGroup extends CalculationUnit implements Iterable<CalculationUnit> {
 
 	Set<CalculationUnit> calculations;
 
 
-	public CalculationUnitDAG() {
+	public CalculationUnitGroup() {
 		calculations = new HashSet<CalculationUnit>();
 	}
 
@@ -43,7 +49,7 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 	}
 
 
-	public void addAll(CalculationUnitDAG calcSet) {
+	public void addAll(CalculationUnitGroup calcSet) {
 		for (CalculationUnit cu : calcSet) {
 			calculations.add(cu);
 			// TODO check for cyclic dependencies
@@ -72,10 +78,10 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 	 * 
 	 * @return set of CalculationsUnits on which no others depend
 	 */
-	public CalculationUnitDAG getRoots() {
+	public CalculationUnitGroup getRoots() {
 
 
-		CalculationUnitDAG roots = new CalculationUnitDAG();
+		CalculationUnitGroup roots = new CalculationUnitGroup();
 
 		// add to root set if applicable
 		for (CalculationUnit currentCalc : calculations) {
@@ -125,8 +131,8 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 	 * @param height
 	 * @return partition with all calculations of the specified height
 	 */
-	public CalculationUnitDAG getCalculationsByHeight(int height) {
-		CalculationUnitDAG cp = new CalculationUnitDAG();
+	public CalculationUnitGroup getCalculationsByHeight(int height) {
+		CalculationUnitGroup cp = new CalculationUnitGroup();
 
 		for (CalculationUnit c : calculations) {
 			if (c.getHeight() == height)
@@ -143,15 +149,15 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 	 * @param depth
 	 * @return partition with all calculations of the specified depth
 	 */
-	public CalculationUnitDAG getCalculationsByDepth(int depth) {
+	public CalculationUnitGroup getCalculationsByDepth(int depth) {
 
 		// calculate roots (depth = 1)
-		CalculationUnitDAG currentLevel = getRoots();
+		CalculationUnitGroup currentLevel = getRoots();
 
 		// breadth first expansion
 		for (int level = 2; level <= depth; level++) {
 
-			CalculationUnitDAG newLevel = new CalculationUnitDAG();
+			CalculationUnitGroup newLevel = new CalculationUnitGroup();
 
 			// for each current cu
 			for (CalculationUnit c : currentLevel) {
@@ -234,6 +240,7 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 	 * @return the set of relations that cannot be obtained using a dependent
 	 *         calculation
 	 */
+	@Override
 	public Set<RelationSchema> getInputRelations() {
 		Set<RelationSchema> in = new HashSet<RelationSchema>();
 		in.addAll(getAllInputRelations());
@@ -295,5 +302,25 @@ public class CalculationUnitDAG implements Iterable<CalculationUnit> {
 		}
 		return maxDepth;
 
+	}
+
+
+	/**
+	 * @see gumbo.compiler.calculations.CalculationUnit#getNumRounds()
+	 */
+	@Override
+	public int getNumRounds() {
+		// TODO #core remove
+		return 0;
+	}
+
+
+	/**
+	 * @see gumbo.compiler.calculations.CalculationUnit#getOutputSchema()
+	 */
+	@Override
+	public RelationSchema getOutputSchema() {
+		// TODO #core implement
+		return null;
 	}
 }

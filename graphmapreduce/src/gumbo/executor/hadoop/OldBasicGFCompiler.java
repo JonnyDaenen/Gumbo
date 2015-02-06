@@ -5,7 +5,7 @@ package gumbo.executor.hadoop;
 
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnit;
-import gumbo.compiler.calculations.CalculationUnitDAG;
+import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.resolver.CompilerException;
 import gumbo.compiler.resolver.DirManager;
 import gumbo.compiler.resolver.UnsupportedCalculationUnitException;
@@ -64,7 +64,7 @@ public class OldBasicGFCompiler {
 	 * @pre CalculationUnits are independent
 	 * TODO maybe check independence?
 	 */
-	public Map<CalculationUnit, Set<ControlledJob>> compileBasicGFCalculationUnit(CalculationUnitDAG partition) throws UnsupportedCalculationUnitException, CompilerException {
+	public Map<CalculationUnit, Set<ControlledJob>> compileBasicGFCalculationUnit(CalculationUnitGroup partition) throws UnsupportedCalculationUnitException, CompilerException {
 		
 		// determine path suffix for intermediate dirs
 		String suffix = "";
@@ -147,7 +147,7 @@ public class OldBasicGFCompiler {
 	 * @param partition
 	 * @return
 	 */
-	private String generateName(CalculationUnitDAG partition) {
+	private String generateName(CalculationUnitGroup partition) {
 		StringBuilder builder = new StringBuilder();
 		for (CalculationUnit calculationUnit : partition) {
 			builder.append(calculationUnit.getOutputSchema().getName()+"_");

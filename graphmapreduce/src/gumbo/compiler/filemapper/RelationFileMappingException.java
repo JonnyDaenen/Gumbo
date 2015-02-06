@@ -1,4 +1,4 @@
-package gumbo.compiler.structures;
+package gumbo.compiler.filemapper;
 
 public class RelationFileMappingException extends Exception {
 	

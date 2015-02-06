@@ -1,10 +1,10 @@
 package gumbo.gui;
 
 import gumbo.compiler.GFMRPlanner;
-import gumbo.compiler.GFMRPlannerException;
+import gumbo.compiler.GFCompilerException;
+import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.HeightPartitioner;
 import gumbo.compiler.structures.MRPlan;
-import gumbo.compiler.structures.RelationFileMapping;
 import gumbo.executor.hadoop.HadoopExecutor;
 import gumbo.executor.spark.SparkExecutor;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
@@ -200,7 +200,7 @@ public class GumboMixIO {
 					HadoopExecutor executor = new HadoopExecutor();
 					executor.execute(plan);
 				
-				} catch (GFMRPlannerException e1) {
+				} catch (GFCompilerException e1) {
 					// TODO Auto-generated catch block
 					System.out.println(e1);
 					e1.printStackTrace();

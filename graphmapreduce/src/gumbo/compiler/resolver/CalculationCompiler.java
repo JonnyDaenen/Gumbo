@@ -4,11 +4,11 @@
 package gumbo.compiler.resolver;
 
 import gumbo.compiler.calculations.CalculationUnit;
-import gumbo.compiler.calculations.CalculationUnitDAG;
-import gumbo.compiler.partitioner.PartitionedCalculationUnitDAG;
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.compiler.partitioner.PartitionedCalculationUnitGroup;
 import gumbo.compiler.structures.MRJob;
 import gumbo.compiler.structures.MRPlan;
-import gumbo.compiler.structures.RelationFileMapping;
 import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
 
 import java.util.Collection;
@@ -49,7 +49,7 @@ public class CalculationCompiler {
 	 * 
 	 * @see gumbo.compiler.resolver.CalculationCompiler#compile(java.util.List)
 	 */
-	public MRPlan compile(PartitionedCalculationUnitDAG partitionedDAG, RelationFileMapping infiles, Path outdir, Path scratchdir)
+	public MRPlan compile(PartitionedCalculationUnitGroup partitionedDAG, RelationFileMapping infiles, Path outdir, Path scratchdir)
 			throws UnsupportedCalculationUnitException, CompilerException {
 
 		counter = 0;
@@ -66,7 +66,7 @@ public class CalculationCompiler {
 
 		// convert all to MR-jobs and set INTRA-calculation dependencies
 		Map<CalculationUnit, Set<MRJob>> jobmap = new HashMap<CalculationUnit, Set<MRJob>>();
-		for (CalculationUnitDAG partition : partitionedDAG.getBottomUpList()) {
+		for (CalculationUnitGroup partition : partitionedDAG.getBottomUpList()) {
 
 			Map<CalculationUnit, Set<MRJob>> unitjobs = compiler.compileBasicGFCalculationUnit(partition);
 			jobmap.putAll(unitjobs);

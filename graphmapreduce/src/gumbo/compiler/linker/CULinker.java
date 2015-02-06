@@ -1,12 +1,14 @@
 /**
  * Created: 28 Apr 2014
  */
-package gumbo.compiler.calculations;
+package gumbo.compiler.linker;
 
-import gumbo.compiler.GFMRPlannerException;
+import gumbo.compiler.GFCompilerException;
+import gumbo.compiler.calculations.BasicGFCalculationUnit;
+import gumbo.compiler.calculations.CalculationUnit;
+import gumbo.compiler.decomposer.GFDecomposer;
 import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.operations.GFDecomposer;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,34 +20,23 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * New version of the planner, supports multiple ranks.
+ * Links {@link CalculationUnit}s in a DAG.
+ * TODO #core separate decomposer
+ * TODO #core change to GFBasicExpression
+ * 
  * 
  * @author Jonny Daenen
  * 
  */
-public class GFtoCalculationUnitConverter {
+public class CULinker {
 
-	GFDecomposer decomposer;
 
-	private static final Log LOG = LogFactory.getLog(GFtoCalculationUnitConverter.class);
+	private static final Log LOG = LogFactory.getLog(CULinker.class);
 
-	/**
-	 * 
-	 */
-	public GFtoCalculationUnitConverter() {
-		decomposer = new GFDecomposer();
-	}
 
-	public CalculationUnitDAG createCalculationUnits(GFExistentialExpression gfe) {
-		Set<GFExistentialExpression> gfeset = new HashSet<GFExistentialExpression>();
-		gfeset.add(gfe);
-		return createCalculationUnits(gfeset);
-	}
-	
-	public CalculationUnitDAG createCalculationUnits(Collection<GFExistentialExpression> gfeset) {
 
-		// convert all non-basic expressions to basic
-		Map<RelationSchema, BasicGFCalculationUnit> basics = toBasic(gfeset);
+	public CalculationUnitGroup createDAG(Map<RelationSchema, BasicGFCalculationUnit> basics) {
+
 
 		// determine all relations that appear
 		Set<RelationSchema> relations = getRelations(basics);
@@ -82,7 +73,7 @@ public class GFtoCalculationUnitConverter {
 		
 		
 
-		CalculationUnitDAG partition = new CalculationUnitDAG();
+		CalculationUnitGroup partition = new CalculationUnitGroup();
 		for (CalculationUnit c : basics.values()) {
 			partition.add(c);
 		}
@@ -106,48 +97,17 @@ public class GFtoCalculationUnitConverter {
 		return relations;
 	}
 
-	/**
-	 * @param gfeset
-	 * @return
-	 */
-	private Map<RelationSchema, BasicGFCalculationUnit> toBasic(Collection<GFExistentialExpression> gfeset) {
-		Map<RelationSchema, BasicGFCalculationUnit> basics = new HashMap<RelationSchema, BasicGFCalculationUnit>();
-
-		for (GFExistentialExpression gfe : gfeset) {
-			try {
-				// split up into basics if necessary
-				if (!gfe.isAtomicBooleanCombination()) {
-
-					Set<GFExistentialExpression> current = decomposer.decompose(gfe);
-
-					for (GFExistentialExpression newGfe : current) {
-						BasicGFCalculationUnit cu = new BasicGFCalculationUnit(newGfe);
-						addGfe(basics, cu);
-					}
-
-				} else {
-					BasicGFCalculationUnit cu = new BasicGFCalculationUnit(gfe);
-					addGfe(basics, cu);
-				}
-			} catch (Exception e) {
-				LOG.error("Skipping formula because of error: " + gfe + ". Error message: "
-						+ e.getMessage());
-			}
-		}
-
-		return basics;
-	}
 
 	/**
 	 * @param basics
 	 * @param cu
-	 * @throws GFMRPlannerException
+	 * @throws GFCompilerException
 	 */
 	private void addGfe(Map<RelationSchema, BasicGFCalculationUnit> basics, BasicGFCalculationUnit cu)
-			throws GFMRPlannerException {
+			throws GFCompilerException {
 		// TODO fix duplicate schema's here!
 		if (basics.containsKey(cu.getOutputSchema()))
-			throw new GFMRPlannerException("duplicate intermediate relation schema");
+			throw new GFCompilerException("duplicate intermediate relation schema");
 
 		basics.put(cu.getOutputSchema(), cu);
 

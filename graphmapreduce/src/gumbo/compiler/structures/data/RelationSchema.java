@@ -2,6 +2,11 @@ package gumbo.compiler.structures.data;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * FIXME remove arity as an identifier.
+ * @author Jonny Daenen
+ *
+ */
 public class RelationSchema {
 
 	static final String COLPREFIX = "x";

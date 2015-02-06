@@ -1,9 +1,8 @@
 /**
  * Created: 12 May 2014
  */
-package gumbo.compiler.resolver;
+package gumbo.compiler.filemapper;
 
-import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.structures.data.RelationSchema;
 
@@ -15,12 +14,13 @@ import org.apache.hadoop.fs.Path;
 
 /**
  * Creates unique path names inside a given empty parent folder.
+ * # TODO #core add estimates?
  * 
  * @author Jonny Daenen
  * 
  *         TODO add unit tests
  */
-public class DirManager {
+public class FileManager {
 
 	protected Path output;
 	protected Path scratch;
@@ -42,7 +42,7 @@ public class DirManager {
 	 *            folder location that serves as parent directory to empty
 	 *            folders
 	 */
-	public DirManager(CalculationUnitGroup dag, RelationFileMapping infiles, Path output, Path scratch) {
+	public FileManager(CalculationUnitGroup dag, RelationFileMapping infiles, Path output, Path scratch) {
 
 		this.output = output;
 		this.scratch = scratch;

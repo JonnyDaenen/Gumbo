@@ -1,7 +1,7 @@
 /**
  * Created: 08 Oct 2014
  */
-package gumbo.compiler.structures;
+package gumbo.compiler.filemapper;
 
 import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.compiler.structures.data.RelationSchemaException;
@@ -21,7 +21,9 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
 /**
- * Maps a set of relations to a specific file/folder
+ * Maps a set of relations to a specific set of files (no directories/globs are stored).
+ * TODO #core ensure only real files are stored.
+ * 
  * @author Jonny Daenen
  *
  */

@@ -3,9 +3,9 @@
  */
 package gumbo.executor.spark;
 
+import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.structures.MRJob;
 import gumbo.compiler.structures.MRPlan;
-import gumbo.compiler.structures.RelationFileMapping;
 import gumbo.executor.ExecutionException;
 import gumbo.executor.GFExecutor;
 

@@ -5,7 +5,7 @@ package gumbo.compiler.resolver;
 
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnit;
-import gumbo.compiler.calculations.CalculationUnitDAG;
+import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.resolver.mappers.GFMapper1AtomBased;
 import gumbo.compiler.resolver.mappers.GFMapper2Generic;
 import gumbo.compiler.resolver.reducers.GFReducer1AtomBased;
@@ -53,7 +53,7 @@ public class BasicGFCompiler {
 	 * 
 	 * @pre CalculationUnits are independent TODO maybe check independence?
 	 */
-	public Map<CalculationUnit, Set<MRJob>> compileBasicGFCalculationUnit(CalculationUnitDAG partition)
+	public Map<CalculationUnit, Set<MRJob>> compileBasicGFCalculationUnit(CalculationUnitGroup partition)
 			throws UnsupportedCalculationUnitException, CompilerException {
 
 		// determine path suffix for intermediate dirs
@@ -147,7 +147,7 @@ public class BasicGFCompiler {
 	 * @param partition
 	 * @return
 	 */
-	private String generateName(CalculationUnitDAG partition) {
+	private String generateName(CalculationUnitGroup partition) {
 		StringBuilder builder = new StringBuilder();
 		for (CalculationUnit calculationUnit : partition) {
 			builder.append(calculationUnit.getOutputSchema().getName() + "_");
