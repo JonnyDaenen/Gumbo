@@ -1,4 +1,6 @@
-package mapreduce.guardedfragment.gumbogui.gumboguiSeparateIO;
+package gumbo.gui.gumboguiSeparateIO;
+
+import gumbo.gui.JTextAreaOutputStream;
 
 import java.awt.FlowLayout;
 
@@ -7,8 +9,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
-
-import mapreduce.guardedfragment.gumbogui.JTextAreaOutputStream;
 
 
 public class GumboMainWindowSeparateIO extends JFrame {

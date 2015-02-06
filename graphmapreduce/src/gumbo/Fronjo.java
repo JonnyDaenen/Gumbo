@@ -1,7 +1,7 @@
 /**
  * Created: 23 Jul 2014
  */
-package mapreduce.guardedfragment;
+package gumbo;
 
 import gumbo.compiler.GFMRPlanner;
 import gumbo.compiler.partitioner.HeightPartitioner;

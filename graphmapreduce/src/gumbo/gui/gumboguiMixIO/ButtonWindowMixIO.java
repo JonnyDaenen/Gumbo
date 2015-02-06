@@ -1,4 +1,4 @@
-package mapreduce.guardedfragment.gumbogui.gumboguiMixIO;
+package gumbo.gui.gumboguiMixIO;
 
 import java.awt.GridLayout;
 

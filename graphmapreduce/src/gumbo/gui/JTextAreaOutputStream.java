@@ -1,4 +1,4 @@
-package mapreduce.guardedfragment.gumbogui;
+package gumbo.gui;
 
 import java.io.IOException;
 

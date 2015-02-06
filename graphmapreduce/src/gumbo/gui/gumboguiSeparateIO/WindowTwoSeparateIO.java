@@ -1,4 +1,6 @@
-package mapreduce.guardedfragment.gumbogui.gumboguiSeparateIO;
+package gumbo.gui.gumboguiSeparateIO;
+
+import gumbo.gui.JTextAreaOutputStream;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,8 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
-
-import mapreduce.guardedfragment.gumbogui.JTextAreaOutputStream;
 
 class WindowTwoSeparateIO extends JPanel {
 	

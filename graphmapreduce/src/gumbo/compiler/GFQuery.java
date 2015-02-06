@@ -1,7 +1,7 @@
 /**
  * Created: 09 Jan 2015
  */
-package mapreduce.guardedfragment.structure;
+package gumbo.compiler;
 
 import gumbo.compiler.structures.RelationFileMapping;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;

@@ -1,4 +1,4 @@
-package mapreduce.guardedfragment.gumbogui;
+package gumbo.gui;
 
 import gumbo.compiler.GFMRPlanner;
 import gumbo.compiler.GFMRPlannerException;
@@ -10,6 +10,7 @@ import gumbo.executor.spark.SparkExecutor;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 import gumbo.guardedfragment.gfexpressions.GFExpression;
 import gumbo.guardedfragment.gfexpressions.io.GFInfixSerializer;
+import gumbo.gui.gumboguiMixIO.GumboMainWindowMixIOwithScroll;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -26,8 +27,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
-
-import mapreduce.guardedfragment.gumbogui.gumboguiMixIO.GumboMainWindowMixIOwithScroll;
 
 import org.apache.hadoop.fs.Path;
 

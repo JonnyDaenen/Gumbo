@@ -1,4 +1,4 @@
-package mapreduce.guardedfragment.gumbogui;
+package gumbo.gui;
 
 import gumbo.compiler.structures.MRPlan;
 import gumbo.compiler.structures.RelationFileMapping;
@@ -8,6 +8,7 @@ import gumbo.executor.hadoop.HadoopExecutor;
 import gumbo.executor.spark.SparkExecutor;
 import gumbo.guardedfragment.gfexpressions.GFExpression;
 import gumbo.guardedfragment.gfexpressions.io.GFInfixSerializer;
+import gumbo.gui.gumboguiSeparateIO.GumboMainWindowSeparateIO;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -22,8 +23,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
-
-import mapreduce.guardedfragment.gumbogui.gumboguiSeparateIO.GumboMainWindowSeparateIO;
 
 public class GumboSeparateIO extends JFrame {
 	
