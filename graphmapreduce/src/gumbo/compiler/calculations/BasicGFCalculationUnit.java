@@ -37,14 +37,6 @@ public class BasicGFCalculationUnit extends CalculationUnit {
 
 
 
-	/**
-	 * @see gumbo.compiler.calculations.CalculationUnit#getNumRounds()
-	 */
-	@Override
-	int getNumRounds() {
-		return 2;
-	}
-
 
 	/**
 	 * @see gumbo.compiler.calculations.CalculationUnit#getOutputSchema()

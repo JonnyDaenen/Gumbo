@@ -6,6 +6,7 @@ package gumbo.compiler;
 import gumbo.compiler.calculations.BGFE2CUConverter;
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.decomposer.GFDecomposer;
+import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.FileMapper;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CULinker;
@@ -14,10 +15,12 @@ import gumbo.compiler.partitioner.CalculationPartitioner;
 import gumbo.compiler.partitioner.PartitionedCalculationUnitGroup;
 import gumbo.compiler.partitioner.UnitPartitioner;
 import gumbo.compiler.resolver.CalculationCompiler;
+import gumbo.compiler.resolver.CompilerException;
 import gumbo.compiler.resolver.DirManager;
 import gumbo.compiler.structures.MRPlan;
 import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
+import gumbo.guardedfragment.gfexpressions.GFExpression;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -33,7 +36,7 @@ import org.apache.hadoop.fs.Path;
  * 
  */
 public class GFCompiler {
-	
+
 
 	private static final Log LOG = LogFactory.getLog(GFCompiler.class); 
 
@@ -42,17 +45,22 @@ public class GFCompiler {
 	protected CULinker linker;
 	protected FileMapper filemapper;
 	protected CalculationPartitioner partitioner;
-	
-	
+
+
 	/**
 	 * Default constructor, uses a {@link UnitPartitioner}.
 	 */
 	public GFCompiler() {
-		this.partitioner = new UnitPartitioner();
+		this(new UnitPartitioner());
 	}
 
 	public GFCompiler(CalculationPartitioner partitioner) {
 		this.partitioner = partitioner;
+		
+		decomposer = new GFDecomposer();
+		converter = new BGFE2CUConverter();
+		linker = new CULinker();
+		filemapper = new FileMapper();
 	}
 
 	/**
@@ -60,8 +68,8 @@ public class GFCompiler {
 	 * 
 	 * @throws GFCompilerException
 	 */
-	public GumboPlan createPlan(GFExistentialExpression expression, RelationFileMapping infiles, Path outdir, Path scratchdir) throws GFCompilerException {
-		HashSet<GFExistentialExpression> expressions = new HashSet<GFExistentialExpression>();
+	public GumboPlan createPlan(GFExpression expression, RelationFileMapping infiles, Path outdir, Path scratchdir) throws GFCompilerException {
+		HashSet<GFExpression> expressions = new HashSet<GFExpression>();
 		expressions.add(expression);
 		return createPlan(expressions, infiles, outdir, scratchdir);
 	}
@@ -78,47 +86,56 @@ public class GFCompiler {
 	 * 
 	 * @throws GFCompilerException 
 	 */
-	public GumboPlan createPlan(Collection<GFExistentialExpression> expressions, RelationFileMapping infiles, Path outdir, Path scratchdir) throws GFCompilerException {
+	public GumboPlan createPlan(Collection<GFExpression> expressions, RelationFileMapping infiles, Path outdir, Path scratchdir) throws GFCompilerException {
 
 		// decomposer -> CUConverter -> CULinker -> file mappings -> partition
+
+		try {
+			
+			// decompose expressions into basic ones
+			LOG.info("Decomposing GFEs into basic GFEs (BGFEs)...");
+			Set<GFExistentialExpression> bgfes = decomposer.decomposeAll(expressions);
+			LOG.info("Number of BGFEs: " + bgfes.size());
+			LOG.debug(bgfes);
+
+			// CUConverter 
+			LOG.info("Converting BGFEs into CalculationUnits (CUs)...");
+			Map<RelationSchema, BasicGFCalculationUnit> cus = converter.createCalculationUnits(bgfes);
+			LOG.info("Number of CUs: " + cus.size());
+			LOG.debug(cus);
+
+			// CULinker 
+			LOG.info("Linking Calculation Units (CUs)...");
+			CalculationUnitGroup dag = linker.createDAG(cus);
+			LOG.info("Input relations: " + dag.size());
+			LOG.info("Output relations: " + dag.size());
+			LOG.info("Intermediate relations: " + dag.size());
+			LOG.debug(dag);
+
+			// intitial file mappings 
+			LOG.info("Creating initial file mapping...");
+			FileManager fm = filemapper.expandFileMapping(infiles, outdir, scratchdir, dag);
+			LOG.info("Input files: " + fm);
+			LOG.info("Output files: " + fm);
+			LOG.info("Intermediate files: " + fm);
+			LOG.debug(fm);
+
+			// partition
+			LOG.info("Partitioning...");
+			PartitionedCalculationUnitGroup pdag = partitioner.partition(dag,fm);
+			LOG.info("Number of partitions: " + pdag.size());
+			LOG.debug(pdag);
+			
+			GumboPlan plan = new GumboPlan("GumboQuery",pdag,fm);
+			
+			return plan;
+			
+		} catch (Exception e) {
+			throw new GFCompilerException("Compiler error: " + e.getMessage(),e);
+		}
+
 		
-		// TODO #core implement
 		
-		// decompose expressions into basic ones
-		LOG.info("Decomposing GFEs into basic GFEs (BGFEs)...");
-		Set<GFExistentialExpression> bgfes = decomposer.decomposeAll(expressions);
-		LOG.info("Number of BGFEs: " + bgfes.size());
-		LOG.debug(bgfes);
-		
-		// CUConverter 
-		LOG.info("Converting BGFEs into CalculationUnits (CUs)...");
-		Map<RelationSchema, BasicGFCalculationUnit> cus = converter.createCalculationUnits(bgfes);
-		LOG.info("Number of CUs: " + cus.size());
-		LOG.debug(cus);
-		
-		// CULinker 
-		LOG.info("Linking Calculation Units (CUs)...");
-		CalculationUnitGroup dag = linker.createDAG(cus);
-		LOG.info("Input relations: " + dag.size());
-		LOG.info("Output relations: " + dag.size());
-		LOG.info("Intermediate relations: " + dag.size());
-		LOG.debug(dag);
-		
-		// file mappings 
-		LOG.info("Creating initial file mapping...");
-		DirManager dm = filemapper.expandFileMapping(infiles, dag);
-		LOG.info("Input files: " + fm.size());
-		LOG.info("Output files: " + fm.size());
-		LOG.info("Intermediate files: " + fm.size());
-		LOG.debug(fm);
-		
-		// partition
-		LOG.info("Partitioning...");
-		PartitonedCalculationUnitDAG pdag = partitioner.partition(dag,dm);
-		LOG.info("Number of partitions: " + pdag.size());
-		LOG.debug(pdag);
-		
-		return plan;
 
 	}
 

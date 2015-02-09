@@ -38,16 +38,8 @@ public abstract class CalculationUnit {
 	}
 
 	
-	
 	/**
-	 * @return the number of MR-rounds this calculation takes.
-	 */
-	@Deprecated
-	public
-	abstract int getNumRounds();
-	
-	/**
-	 * @return set of direct dependent
+	 * @return set of direct dependent {@link CalculationUnit}s
 	 */
 	public Collection<CalculationUnit> getDependencies() {
 		return directDependencies.values();

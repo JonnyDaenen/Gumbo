@@ -5,8 +5,8 @@ package gumbo.executor.hadoop;
 
 import gumbo.compiler.resolver.DirManager;
 import gumbo.compiler.resolver.mappers.GFMapper1AtomBased;
-import gumbo.compiler.structures.MRJob;
 import gumbo.compiler.structures.operations.GFOperationInitException;
+import gumbo.compiler.structures.operations.MRJob;
 import gumbo.executor.hadoop.input.GuardInputFormat;
 import gumbo.executor.hadoop.input.GuardTextInputFormat;
 import gumbo.executor.hadoop.mappers.GFMapper1GuardCsv;

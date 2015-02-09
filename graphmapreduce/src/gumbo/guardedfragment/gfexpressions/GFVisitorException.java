@@ -26,4 +26,13 @@ public class GFVisitorException extends Exception {
 		super(e1);
 	}
 
+
+	/**
+	 * @param msg
+	 * @param e
+	 */
+	public GFVisitorException(String msg, Exception e) {
+		super(msg,e);
+	}
+
 }

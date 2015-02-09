@@ -1,10 +1,8 @@
 /**
  * Created: 22 Aug 2014
  */
-package gumbo.compiler.structures;
+package gumbo.compiler.structures.operations;
 
-import gumbo.compiler.structures.operations.GFMapper;
-import gumbo.compiler.structures.operations.GFReducer;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 
 import java.util.Collection;

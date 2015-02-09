@@ -44,6 +44,7 @@ public class BGFE2CUConverter {
 			try {
 				
 					BasicGFCalculationUnit cu = createCalculationUnit(gfe);
+					basics.put(gfe.getOutputSchema(), cu);
 				
 			} catch (Exception e) {
 				LOG.error("Skipping formula because of error: " + gfe + ". Error message: "

@@ -3,6 +3,7 @@
  */
 package gumbo.compiler.partitioner;
 
+import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.resolver.DirManager;
 
@@ -16,6 +17,6 @@ import gumbo.compiler.resolver.DirManager;
 public interface CalculationPartitioner {
 
 
-	PartitionedCalculationUnitGroup partition(CalculationUnitGroup calculations, DirManager dm);
+	PartitionedCalculationUnitGroup partition(CalculationUnitGroup calculations, FileManager fm);
 
 }

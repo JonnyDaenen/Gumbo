@@ -6,6 +6,7 @@ package gumbo.compiler.filemapper;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.structures.data.RelationSchema;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,8 +14,12 @@ import java.util.Set;
 import org.apache.hadoop.fs.Path;
 
 /**
- * Creates unique path names inside a given empty parent folder.
- * # TODO #core add estimates?
+ * Bookkeeping for input/output locations,
+ * coupled to relations. 
+ * The relative paths are stored, TODO #core no, they are stored absolute!
+ *  making it possible to change the output and scratch roots afterwards.
+ * TODO check
+ * TODO #core add estimates?
  * 
  * @author Jonny Daenen
  * 
@@ -22,11 +27,10 @@ import org.apache.hadoop.fs.Path;
  */
 public class FileManager {
 
-	protected Path output;
-	protected Path scratch;
-	protected CalculationUnitGroup dag;
-	protected Path intdir;
-	protected Path tmpdir;
+	protected Path outputroot;
+	protected Path scratchroot;
+	
+	protected Path tmproot;
 
 	protected int counter;
 	protected final static String TMP_PREFIX = "TMP_";
@@ -37,34 +41,40 @@ public class FileManager {
 
 	RelationFileMapping filemapping;
 
-	/**
-	 * @param root
-	 *            folder location that serves as parent directory to empty
-	 *            folders
-	 */
-	public FileManager(CalculationUnitGroup dag, RelationFileMapping infiles, Path output, Path scratch) {
 
-		this.output = output;
-		this.scratch = scratch;
-		this.dag = dag;
+	public FileManager(RelationFileMapping infiles, Path output, Path scratch) {
 
-		this.intdir = scratch.suffix(Path.SEPARATOR + "intermediate");
-		this.tmpdir = scratch.suffix(Path.SEPARATOR + "tmp");
+		// output and scratch location
+		this.outputroot = output;
+		changeScratch(scratch);
 
+		// copy input mapping
 		this.filemapping = new RelationFileMapping();
 		this.filemapping.putAll(infiles, true);
 
+		// keep track of directories
+		// these are relative to outputroot and tmproot paths
 		this.tempdirs = new HashSet<Path>();
 		this.outdirs = new HashSet<Path>();
 
+		// used to make unique directories
 		this.counter = 0;
 
-		fillFileMap();
+	}
+	
+	/**
+	 * Should only be called once as paths are stored absolute.
+	 * @param scratch
+	 */
+	private void changeScratch(Path scratch) {
+		this.scratchroot = scratch;
+		// also change tmp root, other paths are relative
+		this.tmproot = scratch.suffix(Path.SEPARATOR + "tmp");
 	}
 
 	public Path getNewTmpPath(String suffix) {
 
-		Path tmp = tmpdir.suffix(Path.SEPARATOR + TMP_PREFIX + (counter++) + "_" + suffix);
+		Path tmp = tmproot.suffix(Path.SEPARATOR + TMP_PREFIX + (counter++) + "_" + suffix);
 		tempdirs.add(tmp);
 
 		return tmp;
@@ -73,111 +83,14 @@ public class FileManager {
 
 	public Path getNewOutPath(String suffix) {
 
-		Path out = tmpdir.suffix(Path.SEPARATOR + OUT_PREFIX + (counter++) + "_" + suffix);
+		Path out = outputroot.suffix(Path.SEPARATOR + OUT_PREFIX + (counter++) + "_" + suffix);
 		outdirs.add(out);
 
 		return out;
 
 	}
+	
 
-	/**
-	 * Constructs the set of paths where the relations can be found. When no
-	 * relations are found, the default path is returned if present.
-	 * 
-	 * 
-	 * @param relations
-	 *            the set of relations to look up
-	 * @return the set of Paths where the relations are located
-	 * 
-	 * @pre all relationschemas used are loaded
-	 */
-	public Set<Path> lookup(Set<RelationSchema> relations) {
-		Set<Path> result = new HashSet<Path>();
-
-		Path defaultInput = filemapping.getDefaultPath();
-
-		for (RelationSchema rs : relations) {
-			if (filemapping.containsSchema(rs))
-				result.addAll(filemapping.getPaths(rs));
-
-			// if this
-			else if (defaultInput != null) {
-				result.add(defaultInput);
-			}
-		}
-
-		return result;
-	}
-
-	public Set<Path> lookup(RelationSchema rs) {
-		Set<Path> result = new HashSet<Path>();
-
-		Path defaultInput = filemapping.getDefaultPath();
-
-		if (filemapping.containsSchema(rs))
-			result.addAll(filemapping.getPaths(rs));
-
-		// if this
-		else if (defaultInput != null) {
-			result.add(defaultInput);
-		}
-
-		return result;
-
-	}
-
-	/**
-	 * Creates a mapping from relations to locations (folders/files) on disk.
-	 * All input relations are mapped to the input path, output relations are
-	 * mapped to the output path, intermediate relations are mapped into a
-	 * separate folder in the scratch dir.
-	 * 
-	 * @see CalculationCompiler.getFolder for the folder naming.
-	 * 
-	 * 
-	 * @pre partitionedDAG contains no overlap in input,intermediate and output
-	 *      (correct implementation of getter functions :))
-	 */
-	private void fillFileMap() {
-
-		// intermediate relations
-		for (RelationSchema rs : dag.getIntermediateRelations()) {
-			filemapping.addPath(rs, getIntermediateFolder(scratch, rs));
-		}
-
-		// output relations
-		for (RelationSchema rs : dag.getOutputRelations()) {
-			filemapping.addPath(rs, output);
-		}
-
-	}
-
-	/**
-	 * Constructs a path representing a folder inside the working directory. The
-	 * folder name is a concatenation of the schema name and its arity.
-	 * 
-	 * @param outputSchema
-	 * @return unique path for the given schema inside the working directory
-	 */
-	private Path getIntermediateFolder(Path scratchdir, RelationSchema rs) {
-		return intdir.suffix(Path.SEPARATOR + rs.getName() + rs.getNumFields());
-	}
-
-	/**
-	 * 
-	 * @return a view on the set of generated temporary dirs
-	 */
-	public Set<Path> getTempDirs() {
-		return Collections.unmodifiableSet(tempdirs);
-	}
-
-	/**
-	 * 
-	 * @return a view on the set of generated output dirs
-	 */
-	public Set<Path> getOutDirs() {
-		return Collections.unmodifiableSet(outdirs);
-	}
 
 	/**
 	 * @see java.lang.Object#toString()
@@ -187,10 +100,17 @@ public class FileManager {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
+		
+
+		sb.append("Out root: " + outputroot + System.lineSeparator());
+		sb.append("Scratch root: " + scratchroot + System.lineSeparator());
+		sb.append("Temp root: " + tmproot + System.lineSeparator());
+
 		for (RelationSchema rs : filemapping.getSchemas()) {
-			sb.append(rs + " -> " + filemapping.getPaths(rs));
+			sb.append(rs + " <-> " + filemapping.getPaths(rs));
 			sb.append(System.lineSeparator());
 		}
+		
 		return sb.toString();
 	}
 
@@ -201,6 +121,7 @@ public class FileManager {
 	/**
 	 * @return the default input path
 	 */
+	@Deprecated
 	public Object getDefaultInputPath() {
 		return filemapping.getDefaultPath();
 	}
@@ -210,10 +131,71 @@ public class FileManager {
 	 * Returns a mapping between the used relations and paths.
 	 * @return a mapping between relations and paths
 	 */
+	@Deprecated
 	public RelationFileMapping getFileMapping(){
 		return filemapping;
 	}
 
+	/**
+	 * Creates a new path for the intermediate relation in the
+	 * temp directory (which resides in the scratch directory)
+	 * and adds it to the internal file mapping.
+	 * @param rs an intermediate relation
+	 */
+	public void addTempRelation(RelationSchema rs) {
+		
+		Path p = getNewTmpPath(rs.getName());
+		filemapping.addPath(rs, p);
+		
+	}
+
+	/**
+	 * Creates a new path for the output relation in the out directory
+	 * and adds it to the internal file mapping.
+	 * @param rs an output relation
+	 */
+	public void addOutRelation(RelationSchema rs) {
+		
+		Path p = getNewOutPath(rs.getName());
+		filemapping.addPath(rs, p);
+		
+	}
+
+	
+	// Path getters
+	/**
+	 * @return an unmodifiable collection containing all the temp locations
+	 */
+	public Collection<Path> getTempPaths() {
+		return Collections.unmodifiableSet(tempdirs);
+	}
+
+	/**
+	 * @return an unmodifiable collection containing all the output locations
+	 */
+	public Collection<Path> getOutPaths() {
+		return Collections.unmodifiableSet(outdirs);
+	}
+
+	/**
+	 * @return an unmodifiable collection containing all the input paths
+	 */
+	public Collection<Path> getInDirs() {
+		// input = all - output - temp
+		Set<Path> set = filemapping.getAllPaths();
+		set.removeAll(getTempPaths());
+		set.removeAll(getOutPaths());
+		return Collections.unmodifiableSet(set);
+	}
+
+	/**
+	 * @return an unmodifiable collection containing all the paths that appear in the mapping
+	 */
+	public Collection<Path> getAllPaths() {
+		return Collections.unmodifiableSet(filemapping.getAllPaths());
+	}
+	
+	
 	
 	
 

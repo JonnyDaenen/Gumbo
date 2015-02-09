@@ -4,6 +4,7 @@
 package gumbo.compiler.partitioner;
 
 import gumbo.compiler.calculations.CalculationUnit;
+import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.resolver.DirManager;
 
@@ -19,7 +20,7 @@ public class UnitPartitioner implements CalculationPartitioner {
 	 * @see gumbo.compiler.partitioner.CalculationPartitioner#partition(mapreduce.guardedfragment.planner.calculations.CalculationPartition)
 	 */
 	@Override
-	public PartitionedCalculationUnitGroup partition(CalculationUnitGroup partition, DirManager dm) {
+	public PartitionedCalculationUnitGroup partition(CalculationUnitGroup partition, FileManager fm) {
 		
 		int height = partition.getHeight();
 		PartitionedCalculationUnitGroup partitionedDAG = new PartitionedCalculationUnitGroup();

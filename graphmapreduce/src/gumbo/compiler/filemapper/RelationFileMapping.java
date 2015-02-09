@@ -393,7 +393,7 @@ public class RelationFileMapping {
 	}
 
 	/**
-	 * @return
+	 * @return a new set containing all the paths that appear in the mapping
 	 */
 	public Set<Path> getAllPaths() {
 		HashSet<Path> result = new HashSet<>();

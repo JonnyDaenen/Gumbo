@@ -27,9 +27,10 @@ import java.util.Set;
  * leaf (depends on no other calculations) and root (no depending calculations)
  * calculations. 
  * 
+ * TODO #core separate schema logic
+ * 
  * @author Jonny Daenen
  * 
- *         TODO write testcode
  */
 public class CalculationUnitGroup extends CalculationUnit implements Iterable<CalculationUnit> {
 
@@ -263,6 +264,7 @@ public class CalculationUnitGroup extends CalculationUnit implements Iterable<Ca
 	/**
 	 * Calculates the set of relations that will be calculated by calculations
 	 * units.
+	 * TODO #core is this "non-output"?
 	 * 
 	 * @return the set of non-output relations
 	 */
@@ -305,14 +307,6 @@ public class CalculationUnitGroup extends CalculationUnit implements Iterable<Ca
 	}
 
 
-	/**
-	 * @see gumbo.compiler.calculations.CalculationUnit#getNumRounds()
-	 */
-	@Override
-	public int getNumRounds() {
-		// TODO #core remove
-		return 0;
-	}
 
 
 	/**

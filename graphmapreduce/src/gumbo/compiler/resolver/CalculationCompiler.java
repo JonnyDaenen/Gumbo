@@ -7,8 +7,8 @@ import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.PartitionedCalculationUnitGroup;
-import gumbo.compiler.structures.MRJob;
 import gumbo.compiler.structures.MRPlan;
+import gumbo.compiler.structures.operations.MRJob;
 import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
 
 import java.util.Collection;

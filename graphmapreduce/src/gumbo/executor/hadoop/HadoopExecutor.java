@@ -3,8 +3,8 @@
  */
 package gumbo.executor.hadoop;
 
-import gumbo.compiler.structures.MRJob;
 import gumbo.compiler.structures.MRPlan;
+import gumbo.compiler.structures.operations.MRJob;
 
 import java.io.IOException;
 import java.util.Arrays;

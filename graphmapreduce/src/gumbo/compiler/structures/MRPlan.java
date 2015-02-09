@@ -3,6 +3,7 @@ package gumbo.compiler.structures;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.resolver.DirManager;
 import gumbo.compiler.structures.data.RelationSchema;
+import gumbo.compiler.structures.operations.MRJob;
 
 import java.util.Arrays;
 import java.util.Collection;

@@ -4,6 +4,7 @@
 package gumbo.compiler.partitioner;
 
 import gumbo.compiler.calculations.CalculationUnit;
+import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.resolver.DirManager;
 import cern.colt.Arrays;
@@ -19,7 +20,7 @@ public class OptimalPartitioner implements CalculationPartitioner {
 	 * @see gumbo.compiler.partitioner.CalculationPartitioner#partition(mapreduce.guardedfragment.planner.calculations.CalculationPartition)
 	 */
 	@Override
-	public PartitionedCalculationUnitGroup partition(CalculationUnitGroup set, DirManager dm) {
+	public PartitionedCalculationUnitGroup partition(CalculationUnitGroup set, FileManager fm) {
 
 		// TODO check implementation
 

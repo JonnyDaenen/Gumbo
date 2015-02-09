@@ -5,6 +5,7 @@ package gumbo.compiler;
 
 import org.apache.hadoop.fs.Path;
 
+import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.PartitionedCalculationUnitGroup;
@@ -19,39 +20,74 @@ import gumbo.compiler.structures.data.RelationSchema;
  *
  */
 public class GumboPlan {
-	
-	String queryName = "Gumbo_v1";
-	
+
+	String queryName = "Gumbo_query";
+
 	// calculations
-	protected CalculationUnitGroup calculations;
 	protected PartitionedCalculationUnitGroup partitions;
-	
+
 	// file mappings
-	protected RelationFileMapping fileMapping;
-	protected Path outputPath;
-	protected Path scratchPath;
-	
-	
-	/* getters & setters */
-	
-	public RelationFileMapping getFileMapping() {
-		return fileMapping;
+	protected FileManager fileManager;
+
+
+	public GumboPlan(String name, PartitionedCalculationUnitGroup pdag, FileManager fileManager) {
+		queryName = name;
+		this.partitions = pdag;
+		this.fileManager = fileManager;
 	}
-	public void setFilemapping(RelationFileMapping fileMapping) {
-		this.fileMapping = fileMapping;
-	}
-	public Path getOutputPath() {
-		return outputPath;
-	}
-	public void setOutputPath(Path outputPath) {
-		this.outputPath = outputPath;
-	}
-	public Path getScratchPath() {
-		return scratchPath;
-	}
-	public void setScratchPath(Path scratchPath) {
-		this.scratchPath = scratchPath;
+
+	/**
+	 * @return the fileMapping
+	 */
+	public FileManager getFileMapping() {
+		return fileManager;
 	}
 	
+
+	public String toString() {
+		String output = "";
+
+
+		// name
+		output += System.getProperty("line.separator");
+		output += "Query:";
+		output += System.getProperty("line.separator");
+		output += queryName;
+		output += System.getProperty("line.separator");
+		
+
+		// calculations
+//		output += System.getProperty("line.separator");
+//		output += "Calculations:";
+//		output += System.getProperty("line.separator");
+//		output += "-------------";
+//		output += System.getProperty("line.separator");
+//		
+//		output += calculations.toString();
+
+		// partitions
+		output += System.getProperty("line.separator");
+		output += "Partitions:";
+		output += System.getProperty("line.separator");
+		output += "-----------";
+		output += System.getProperty("line.separator");
+		
+		output += partitions.toString();
+
+		// folders
+		output += System.getProperty("line.separator");
+		output += "Folders:";
+		output += System.getProperty("line.separator");
+		output += "-------";
+		output += System.getProperty("line.separator");
+		
+		output += fileManager.toString();
+
+		return output;
+
+	}
+
+
+
 
 }

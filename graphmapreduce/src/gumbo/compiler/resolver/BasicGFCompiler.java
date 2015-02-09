@@ -11,9 +11,9 @@ import gumbo.compiler.resolver.mappers.GFMapper2Generic;
 import gumbo.compiler.resolver.reducers.GFReducer1AtomBased;
 import gumbo.compiler.resolver.reducers.GFReducer2Generic;
 import gumbo.compiler.resolver.reducers.GuardedProjectionReducer;
-import gumbo.compiler.structures.MRJob;
-import gumbo.compiler.structures.MRJob.MRJobType;
 import gumbo.compiler.structures.data.RelationSchema;
+import gumbo.compiler.structures.operations.MRJob;
+import gumbo.compiler.structures.operations.MRJob.MRJobType;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
 
