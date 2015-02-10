@@ -8,7 +8,7 @@ import gumbo.compiler.linker.CULinker;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.CalculationPartitioner;
 import gumbo.compiler.partitioner.DepthPartitioner;
-import gumbo.compiler.partitioner.PartitionedCalculationUnitGroup;
+import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.compiler.resolver.CalculationCompiler;
 import gumbo.compiler.structures.MRPlan;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
@@ -52,7 +52,7 @@ public class OldPlannerExample {
 //		CalculationPartitioner partitioner = new HeightPartitioner();
 		CalculationPartitioner partitioner = new DepthPartitioner();
 //		CalculationPartitioner partitioner = new UnitPartitioner();
-		PartitionedCalculationUnitGroup partitionedUnits = partitioner.partition(calcUnits);
+		PartitionedCUGroup partitionedUnits = partitioner.partition(calcUnits);
 		System.out.println("\nPartitioned Units\n-----------------");
 		System.out.println(partitionedUnits);
 		

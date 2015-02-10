@@ -20,7 +20,7 @@ public class OptimalPartitioner implements CalculationPartitioner {
 	 * @see gumbo.compiler.partitioner.CalculationPartitioner#partition(mapreduce.guardedfragment.planner.calculations.CalculationPartition)
 	 */
 	@Override
-	public PartitionedCalculationUnitGroup partition(CalculationUnitGroup set, FileManager fm) {
+	public PartitionedCUGroup partition(CalculationUnitGroup set, FileManager fm) {
 
 		// TODO check implementation
 
@@ -32,10 +32,10 @@ public class OptimalPartitioner implements CalculationPartitioner {
 	}
 
 
-	protected PartitionedCalculationUnitGroup getBest(CalculationUnit [] calculations, int [] levelassignment, PartitionedCalculationUnitGroup currentBest) {
+	protected PartitionedCUGroup getBest(CalculationUnit [] calculations, int [] levelassignment, PartitionedCUGroup currentBest) {
 
 		// construct partition
-		PartitionedCalculationUnitGroup candidate = new PartitionedCalculationUnitGroup(calculations, levelassignment);
+		PartitionedCUGroup candidate = new PartitionedCUGroup(calculations, levelassignment);
 
 		// check if the dependencies are ok 
 		// and all levels are occupied
@@ -64,10 +64,10 @@ public class OptimalPartitioner implements CalculationPartitioner {
 	 * @param candidate a partition
 	 * @return the score of a partition
 	 */
-	private double calculateScore(PartitionedCalculationUnitGroup candidate) {
+	private double calculateScore(PartitionedCUGroup candidate) {
 
 		int totalSpread = 0;
-		for (CalculationUnit c : candidate.getCalculations()) {
+		for (CalculationUnit c : candidate.getCalculationUnits()) {
 			totalSpread += candidate.getSpread(c); // * weight of calculation;
 		}
 
@@ -77,7 +77,7 @@ public class OptimalPartitioner implements CalculationPartitioner {
 	}
 
 
-	protected PartitionedCalculationUnitGroup findBestLevelAssignment(CalculationUnitGroup set, CalculationUnit [] calculations, int [] levelassignment, int nextItem, int minLevel, int maxLevel, PartitionedCalculationUnitGroup currentBest) {
+	protected PartitionedCUGroup findBestLevelAssignment(CalculationUnitGroup set, CalculationUnit [] calculations, int [] levelassignment, int nextItem, int minLevel, int maxLevel, PartitionedCUGroup currentBest) {
 
 		if(nextItem == levelassignment.length) {
 			System.out.println(Arrays.toString(levelassignment));

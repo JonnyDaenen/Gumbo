@@ -20,16 +20,16 @@ public class UnitPartitioner implements CalculationPartitioner {
 	 * @see gumbo.compiler.partitioner.CalculationPartitioner#partition(mapreduce.guardedfragment.planner.calculations.CalculationPartition)
 	 */
 	@Override
-	public PartitionedCalculationUnitGroup partition(CalculationUnitGroup partition, FileManager fm) {
+	public PartitionedCUGroup partition(CalculationUnitGroup partition, FileManager fm) {
 		
 		int height = partition.getHeight();
-		PartitionedCalculationUnitGroup partitionedDAG = new PartitionedCalculationUnitGroup();
+		PartitionedCUGroup partitionedDAG = new PartitionedCUGroup();
 		
 		for (int i = 1; i <= height; i++) {
 			
 			CalculationUnitGroup calcSet = partition.getCalculationsByHeight(i);
 			for (CalculationUnit cu : calcSet) {
-				partitionedDAG.add(cu);
+				partitionedDAG.addNewLevel(cu);
 			}
 			
 		}

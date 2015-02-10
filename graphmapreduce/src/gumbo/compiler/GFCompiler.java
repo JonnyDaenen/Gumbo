@@ -12,7 +12,7 @@ import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CULinker;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.CalculationPartitioner;
-import gumbo.compiler.partitioner.PartitionedCalculationUnitGroup;
+import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.compiler.partitioner.UnitPartitioner;
 import gumbo.compiler.resolver.CalculationCompiler;
 import gumbo.compiler.resolver.CompilerException;
@@ -122,8 +122,8 @@ public class GFCompiler {
 
 			// partition
 			LOG.info("Partitioning...");
-			PartitionedCalculationUnitGroup pdag = partitioner.partition(dag,fm);
-			LOG.info("Number of partitions: " + pdag.size());
+			PartitionedCUGroup pdag = partitioner.partition(dag,fm);
+			LOG.info("Number of partitions: " + pdag.getNumPartitions());
 			LOG.debug(pdag);
 			
 			GumboPlan plan = new GumboPlan("GumboQuery",pdag,fm);

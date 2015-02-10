@@ -10,43 +10,30 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * Provides level information to {@link CalculationUnit}s in a {@link CalculationUnitGroup},
- * creating a notion of partitions.
- * The partitions are ordered in a bottom-up fashion.
+ * Adds level information to {@link CalculationUnit}s in a {@link CalculationUnitGroup},
+ * creating partitions.
+ * The partitions are ordered in a bottom-up fashion, 0 being the first.
  * 
- * TODO #core maybe add dag as a field?
+ * TODO #core maybe add dag as a field? -> yes and do not expose operations
  * 
  * @author Jonny Daenen
  *
  */
-public class PartitionedCalculationUnitGroup extends CalculationUnitGroup {
+public class PartitionedCUGroup {
 
-	Map<CalculationUnit,Integer> levelAssignmment;
+	CalculationUnitGroup group;
+	
+	Map<CalculationUnit, Integer> levelAssignmment; // FUTURE convert to list?
+	// FUTURE add reverse mapping
 	int currentLevel = -1;
 
 
-	public PartitionedCalculationUnitGroup() {
+	public PartitionedCUGroup() {
 		levelAssignmment = new HashMap<>();
-	}
-
-	/**
-	 * Adds a partition as a new level.
-	 * @param partition a set of CalculationUnits
-	 */
-	public void addNewLevel(CalculationUnitGroup partition) {
-
-		// add calculations to the set of all calculations
-		super.addAll(partition);
-
-		// add partition
-		currentLevel++;
-		for (CalculationUnit c : partition) {
-			levelAssignmment.put(c, currentLevel);
-		}
-
-		// TODO throw exception when dependencies are missing
+		group = new CalculationUnitGroup();
 	}
 
 	/**
@@ -55,30 +42,51 @@ public class PartitionedCalculationUnitGroup extends CalculationUnitGroup {
 	 * @param units the CalculationUnits to add
 	 * @param levels the levels corresponding to the CalculationUnits
 	 */
-	public PartitionedCalculationUnitGroup(CalculationUnit [] units, int [] levels) {
+	public PartitionedCUGroup(CalculationUnit [] units, int [] levels) {
 		this();
 
 		for (int i = 0; i < units.length; i++) {
-			super.add(units[i]);
+			group.add(units[i]);
 			levelAssignmment.put(units[i], levels[i]);
 			currentLevel = Math.max(currentLevel, levels[i]);
 		}
 	}
+	
 
 	/**
-	 * Adds the calculation unit as a separate partition to the back of the list.
-	 * @see gumbo.compiler.linker.CalculationUnitGroup#addnewLevel(gumbo.compiler.calculations.CalculationUnit)
+	 * Adds a partition as a new level.
+	 * @param partition a set of CalculationUnits
 	 */
-	@Override
-	public void add(CalculationUnit c) {
-		CalculationUnitGroup unitDAG = new CalculationUnitGroup();
-		unitDAG.add(c);
-		addNewLevel(unitDAG);
+	public void addNewLevel(CalculationUnitGroup partition) {
+
+		// add calculations to the set of all calculations
+		group.addAll(partition);
+
+		// add partition
+		currentLevel++;
+		for (CalculationUnit c : partition) {
+			levelAssignmment.put(c,currentLevel);
+		}
+
+		// TODO throw exception when dependencies are missing
 	}
 
 
 	/**
-	 * @return a list of partitions of CalculationsUnits, ordered by their level (small to large)
+	 * Adds the calculation unit as a new, separate partition to the back of the list.
+	 * @see gumbo.compiler.linker.CalculationUnitGroup#addnewLevel(gumbo.compiler.calculations.CalculationUnit)
+	 */
+	public void addNewLevel(CalculationUnit c) {
+		group.add(c);
+		levelAssignmment.put(c,++currentLevel);
+	}
+
+
+	/**
+	 * Creates a list of {@link CalculationUnitGroup}s, corresponding to th differnt partitions.
+	 * The partitions are ordered by their level: small/bottom to large/top.
+	 * 
+	 * @return a list of partitions ordered by their level (small to large)
 	 */
 	public List<CalculationUnitGroup> getBottomUpList() {
 		LinkedList<CalculationUnitGroup> l = new LinkedList<>();
@@ -94,13 +102,36 @@ public class PartitionedCalculationUnitGroup extends CalculationUnitGroup {
 
 		return l;
 	}
+	
+	/**
+	 * Constructs a {@link CalculationUnitGroup} that contains precisely
+	 * the {@link CalculationUnit}s of the specified level.
+	 * 
+	 * @param level the requested level
+	 * 
+	 * @return the {@link CalculationUnit}s of the specified level
+	 */
+	public CalculationUnitGroup getLevel(int i) {
+		CalculationUnitGroup set = new CalculationUnitGroup();
+		for (CalculationUnit c : levelAssignmment.keySet()) {
+			if (levelAssignmment.get(c) == i)
+				set.add(c);
+		}
+		return set;
+	}
 
+	
+	/**
+	 * The number of partitions.
+	 * @return the number of partitions
+	 */
 	public int getNumPartitions() {
 		return currentLevel+1;
 	}
 
 
 	/**
+	 * Constructs a representation of the partition.
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -120,7 +151,10 @@ public class PartitionedCalculationUnitGroup extends CalculationUnitGroup {
 	}
 
 	/**
-	 * @return whether the partition retains the dependencies.
+	 * Checks whether the partition respects the dependencies between 
+	 * the contained {@link CalculationUnit}s.
+	 * 
+	 * @return whether the partition respects the dependencies
 	 */
 	public boolean checkDependencies() {
 
@@ -140,10 +174,11 @@ public class PartitionedCalculationUnitGroup extends CalculationUnitGroup {
 		// no errors were found
 		return true;
 	}
+	
 
 	/**
-	 * Checks if all levels contains at least one calculation unit.
-	 * @return true iff all indicated levels are occupied
+	 * Returns whether all levels contain at least one calculation unit.
+	 * @return <code>true</code> when every level in the partition is occupied, <code>false</code> otherwise
 	 */
 	public boolean allLevelsUsed() {
 		for (int i = 0; i <= currentLevel; i++) {
@@ -164,7 +199,10 @@ public class PartitionedCalculationUnitGroup extends CalculationUnitGroup {
 
 	/**
 	 * Calculates the spread of the CU, i.e., the
-	 * number of <b>different</b> levels a dependency appears on.
+	 * number of <b>different</b> levels a parent appears on.
+	 * In practice, this is useful to determine e.g. on how many
+	 * levels this {@link CalculationUnit} is read/accessed.
+	 * 
 	 * 
 	 * @param c a calculation unit
 	 * @return the spread of the calculationunit
@@ -173,7 +211,7 @@ public class PartitionedCalculationUnitGroup extends CalculationUnitGroup {
 		boolean [] levels = new boolean[currentLevel+1];
 
 		// for each possible parent
-		for (CalculationUnit p : getCalculations()) {
+		for (CalculationUnit p : group) {
 
 			// if it is a parent
 			if (p.getDependencies().contains(c)) {
@@ -193,6 +231,14 @@ public class PartitionedCalculationUnitGroup extends CalculationUnitGroup {
 		}
 
 		return counter;
+	}
+	
+	/**
+	 * TODO make it a copy?
+	 * @return the collection of {@link CalculationUnit}s
+	 */
+	public CalculationUnitGroup getCalculationUnits() {
+		return group;
 	}
 
 

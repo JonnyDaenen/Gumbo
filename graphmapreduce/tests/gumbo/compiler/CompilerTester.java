@@ -4,15 +4,17 @@
 package gumbo.compiler;
 
 
+import static org.junit.Assert.*;
 import gumbo.compiler.calculations.BGFE2CUConverter;
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.decomposer.GFDecomposer;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.FileMapper;
+import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CULinker;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.CalculationPartitioner;
-import gumbo.compiler.partitioner.PartitionedCalculationUnitGroup;
+import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.compiler.partitioner.UnitPartitioner;
 import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.guardedfragment.gfexpressions.GFAndExpression;
@@ -24,6 +26,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.hadoop.fs.Path;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -68,67 +71,41 @@ public class CompilerTester {
 	}
 
 
-	
 
 	@Test
-	public void testCUConverter() {
-
-		// same amount of expressions
-
-
-	}
-
-
-	@Test
-	public void testCULinker() {
-
-		// number of edges is ok
-
-		// number of roots
-
-		// number of leafs
-
-
-	}
-
-	@Test
-	public void testFileMapper() {
-
-		// number of different files
-
-	}
-
-
-	@Test
-	public void testUnitPartitioner() {
-
-		// number of partitions
-		// different partition sizes
-
-	}
-
-	public void testCompilerParts() {
-		// decompose expressions into basic ones
-		//		Set<GFExistentialExpression> bgfes = decomposer.decomposeAll(expressions);
-		//
-		//		// CUConverter 
-		//
-		//		Map<RelationSchema, BasicGFCalculationUnit> cus = converter.createCalculationUnits(bgfes);
-		//
-		//
-		//		// CULinker 
-		//		CalculationUnitGroup dag = linker.createDAG(cus);
-		//
-		//
-		//		// intitial file mappings 
-		//
-		//		FileManager fm = filemapper.expandFileMapping(infiles, outdir, scratchdir, dag);
-		//
-		//		// partition
-		//		PartitionedCalculationUnitGroup pdag = partitioner.partition(dag,fm);
-		//
-		//
-		//		GumboPlan plan = new GumboPlan("GumboQuery",pdag,fm);
+	public void testCompiler() {
+		GFCompiler compiler = new GFCompiler();
+		
+		Set<GFExpression> exps = new HashSet<>();
+		exps.add(CompilerTester.getQuery1());
+		exps.add(CompilerTester.getQuery2());
+		exps.add(CompilerTester.getQuery3());
+		
+		RelationFileMapping rfm = new RelationFileMapping();
+		rfm.addPath(new RelationSchema("R",2), new Path("in/R1"));
+		rfm.addPath(new RelationSchema("R",2), new Path("in/R2")); 
+		rfm.addPath(new RelationSchema("R",2), new Path("in/R3"));
+		rfm.addPath(new RelationSchema("R",2), new Path("in/R3")); // ignore copies
+		rfm.addPath(new RelationSchema("Q",2), new Path("in/Q"));
+		rfm.addPath(new RelationSchema("S",1), new Path("in/S"));
+		rfm.addPath(new RelationSchema("T",1), new Path("in/T"));
+		rfm.addPath(new RelationSchema("UNKNOWN",1), new Path("in/UNKNOWN"));
+		
+		try {
+			
+			GumboPlan plan = compiler.createPlan(exps, rfm, new Path("out"), new Path("Scratch"));
+			
+			assertNotNull(plan.fileManager);
+			assertNotNull(plan.partitions);
+			
+			assertEquals(3, plan.partitions.getNumPartitions());
+			assertEquals(3, plan.partitions.getCalculationUnits().size());
+			assertEquals(10, plan.fileManager.getAllPaths().size());
+			
+		} catch (IllegalArgumentException | GFCompilerException e) {
+			// TODO make exception tests
+			fail();
+		} 
 	}
 
 }

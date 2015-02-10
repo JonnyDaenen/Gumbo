@@ -6,7 +6,7 @@ package gumbo.compiler.resolver;
 import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.compiler.partitioner.PartitionedCalculationUnitGroup;
+import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.compiler.structures.MRPlan;
 import gumbo.compiler.structures.operations.MRJob;
 import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
@@ -49,7 +49,7 @@ public class CalculationCompiler {
 	 * 
 	 * @see gumbo.compiler.resolver.CalculationCompiler#compile(java.util.List)
 	 */
-	public MRPlan compile(PartitionedCalculationUnitGroup partitionedDAG, RelationFileMapping infiles, Path outdir, Path scratchdir)
+	public MRPlan compile(PartitionedCUGroup partitionedDAG, RelationFileMapping infiles, Path outdir, Path scratchdir)
 			throws UnsupportedCalculationUnitException, CompilerException {
 
 		counter = 0;

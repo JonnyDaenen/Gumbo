@@ -5,6 +5,7 @@ package gumbo.compiler;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 import gumbo.compiler.calculations.BGFE2CUConverter;
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnitException;
@@ -13,6 +14,7 @@ import gumbo.compiler.decomposer.GFDecomposerException;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 import gumbo.guardedfragment.gfexpressions.GFExpression;
@@ -28,12 +30,12 @@ import org.junit.Test;
  * @author Jonny Daenen
  *
  */
-public class FileMapperTest {
+public class PartitionerTest {
 
 
 
 	@Test
-	public void testFileMapper() {
+	public void testPartitioner() {
 		Set<GFExpression> exps;
 
 		//
@@ -58,13 +60,13 @@ public class FileMapperTest {
 		exps.add(CompilerTester.getQuery1());
 		exps.add(CompilerTester.getQuery2());
 		exps.add(CompilerTester.getQuery3());
-		testFileMapper(exps);
+		testPartitioner(exps);
 
 
 	}
 
 
-	private void testFileMapper(Set<GFExpression> exps) {
+	private void testPartitioner(Set<GFExpression> exps) {
 
 		try {
 			Set<GFExistentialExpression> result1 = CompilerTester.decomposer.decomposeAll(exps);
@@ -81,19 +83,19 @@ public class FileMapperTest {
 			rfm.addPath(new RelationSchema("UNKNOWN",1), new Path("in/UNKNOWN"));
 			FileManager result4 = CompilerTester.filemapper.expandFileMapping(rfm, new Path("out"), new Path("scratch"), result3);
 
-			assertEquals(0, result4.getTempPaths().size());
-			assertEquals(3, result4.getOutPaths().size()); // out1, out2, out2b
-			// FUTURE remove unused? :
-			assertEquals(7, result4.getInDirs().size()); // 4 - 1 (multi) + 1 + 1 + 1 + 1 = 6
+			PartitionedCUGroup result5 = CompilerTester.partitioner.partition(result3, result4);
 			
-			// union: all must be unique
-			assertEquals(10, result4.getAllPaths().size());
+			assertTrue(result5.allLevelsUsed());
+			assertTrue(result5.checkDependencies());
 			
-			// intersection: must be empty
-			Set<Path> intersection = new HashSet<Path>(result4.getInDirs());
-			intersection.retainAll(result4.getTempPaths());
-			intersection.retainAll(result4.getOutPaths());
-			assertEquals(0, intersection.size());
+			assertEquals(3,result5.getCalculationUnits().size());
+			
+			assertEquals(1,result5.getLevel(0).size());
+			assertEquals(1,result5.getLevel(1).size());
+			assertEquals(1,result5.getLevel(2).size());
+			
+			assertEquals(3,result5.getNumPartitions());
+			
 			
 
 		} catch (GFDecomposerException e) {
@@ -102,7 +104,6 @@ public class FileMapperTest {
 			fail();
 		}
 
-		// TODO test 2 schemas with common file
 	}
 
 

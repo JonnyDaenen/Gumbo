@@ -8,7 +8,7 @@ import org.apache.hadoop.fs.Path;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.compiler.partitioner.PartitionedCalculationUnitGroup;
+import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.compiler.structures.data.RelationSchema;
 
 /**
@@ -24,13 +24,13 @@ public class GumboPlan {
 	String queryName = "Gumbo_query";
 
 	// calculations
-	protected PartitionedCalculationUnitGroup partitions;
+	protected PartitionedCUGroup partitions;
 
 	// file mappings
 	protected FileManager fileManager;
 
 
-	public GumboPlan(String name, PartitionedCalculationUnitGroup pdag, FileManager fileManager) {
+	public GumboPlan(String name, PartitionedCUGroup pdag, FileManager fileManager) {
 		queryName = name;
 		this.partitions = pdag;
 		this.fileManager = fileManager;

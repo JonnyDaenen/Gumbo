@@ -17,6 +17,6 @@ import gumbo.compiler.resolver.DirManager;
 public interface CalculationPartitioner {
 
 
-	PartitionedCalculationUnitGroup partition(CalculationUnitGroup calculations, FileManager fm);
+	PartitionedCUGroup partition(CalculationUnitGroup calculations, FileManager fm);
 
 }

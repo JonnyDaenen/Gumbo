@@ -8,7 +8,7 @@ import static org.junit.Assert.fail;
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.HeightPartitioner;
-import gumbo.compiler.partitioner.PartitionedCalculationUnitGroup;
+import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
@@ -110,7 +110,7 @@ public class PartitionerTest {
 	public void heightPartitioner() {
 		HeightPartitioner partitioner = new HeightPartitioner();
 
-		PartitionedCalculationUnitGroup partitioned = partitioner.partition(cp);
+		PartitionedCUGroup partitioned = partitioner.partition(cp);
 		
 		List<CalculationUnitGroup> list = partitioned.getBottomUpList();
 
