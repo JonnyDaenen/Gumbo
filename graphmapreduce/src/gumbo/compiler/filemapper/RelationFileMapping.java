@@ -5,7 +5,7 @@ package gumbo.compiler.filemapper;
 
 import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.compiler.structures.data.RelationSchemaException;
-import gumbo.utils.TupleEstimator;
+import gumbo.utils.estimation.TupleEstimator;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -221,9 +221,10 @@ public class RelationFileMapping {
 	 * @return the pats of the relationschema, null if
 	 */
 	public Set<Path> getPaths(RelationSchema rs) {
-		if (!containsSchema(rs))
+		if (!containsSchema(rs)) {
 			return new HashSet<>();
-			return mapping.get(rs);
+		}
+		return mapping.get(rs);
 	}
 
 
@@ -266,6 +267,9 @@ public class RelationFileMapping {
 	}
 
 	/**
+	 * Constructs a serialized version of the mapping,
+	 * can be rebuild using one of the constructors.
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -303,6 +307,7 @@ public class RelationFileMapping {
 	 * @param filePath a path
 	 * @return a relationschema of the path
 	 */
+	@Deprecated
 	public RelationSchema findSchema(Path filePath) {
 		// find exact match
 		for (RelationSchema rs : mapping.keySet()){
@@ -332,6 +337,7 @@ public class RelationFileMapping {
 	 * @throws PathNotFoundError 
 	 * 
 	 */
+	@Deprecated
 	public Path findBestPathMatch(Path p) throws PathNotFoundError{
 		// find exact match
 		for (RelationSchema rs : mapping.keySet()){
@@ -443,6 +449,21 @@ public class RelationFileMapping {
 		}
 		return numTuples;
 
+	}
+
+	/**
+	 * Creates the union of this mapping with another mapping and returns
+	 * it as a new mapping.
+	 * 
+	 * @param otherMapping the other mapping
+	 * 
+	 * @return the union with another mapping
+	 */
+	public RelationFileMapping combine(RelationFileMapping otherMapping) {
+		RelationFileMapping newMapping = new RelationFileMapping();
+		newMapping.putAll(this, true);
+		newMapping.putAll(otherMapping, true);
+		return newMapping;
 	}
 
 

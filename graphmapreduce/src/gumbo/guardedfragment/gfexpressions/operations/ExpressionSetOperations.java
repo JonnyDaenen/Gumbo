@@ -3,7 +3,9 @@
  */
 package gumbo.guardedfragment.gfexpressions.operations;
 
+import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.InputFormat;
+import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.resolver.DirManager;
 import gumbo.compiler.structures.operations.GFOperationInitException;
 import gumbo.guardedfragment.booleanexpressions.BExpression;
@@ -12,6 +14,7 @@ import gumbo.guardedfragment.conversion.GFtoBooleanConversionException;
 import gumbo.guardedfragment.conversion.GFtoBooleanConvertor;
 import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
+import gumbo.guardedfragment.gfexpressions.GFExpression;
 import gumbo.guardedfragment.gfexpressions.io.Pair;
 
 import java.util.Arrays;
@@ -25,10 +28,17 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.Path;
 
 /**
+ * Wrapper for a set of GF Expressions.
+ * Offers a set of useful operations for which the result is precalculated.
+ * This is useful when operations are called often, e.g., in a mapper or reducer:
+ * The internal caching system will then avoid repeated calculations.
+ * 
  * @author Jonny Daenen
  * 
  */
 public class ExpressionSetOperations {
+	
+	// TODO #core translate paths to specific file paths?
 
 	private static final Log LOG = LogFactory.getLog(ExpressionSetOperations.class);
 
@@ -48,12 +58,9 @@ public class ExpressionSetOperations {
 
 	protected GFAtomicExpression[] atoms;
 
-	private DirManager dirManager;
+	private RelationFileMapping fileMapping;
 
-	/**
-	 * 
-	 */
-	public ExpressionSetOperations() {
+	private ExpressionSetOperations() {
 		guardeds = new HashMap<>();
 		booleanChildExpressions = new HashMap<>();
 		projections = new HashMap<>();
@@ -66,7 +73,14 @@ public class ExpressionSetOperations {
 		ggpairsAll = new HashSet<>();
 	}
 
-	public void setExpressionSet(Collection<GFExistentialExpression> expressionSet) throws GFOperationInitException {
+
+	public ExpressionSetOperations(Collection<GFExistentialExpression> expressionSet, RelationFileMapping fileMapping) throws GFOperationInitException {
+		this();
+		this.fileMapping = fileMapping;
+		setExpressionSet(expressionSet);
+	}
+
+	private void setExpressionSet(Collection<GFExistentialExpression> expressionSet) throws GFOperationInitException {
 		this.expressionSet = expressionSet;
 		preCalculate();
 	}
@@ -90,8 +104,6 @@ public class ExpressionSetOperations {
 			try {
 				BExpression booleanChildExpression = convertor.convert(e.getChild());
 
-				GFBooleanMapping mapGFtoB = convertor.getMapping();
-
 				booleanChildExpressions.put(e, booleanChildExpression);
 
 			} catch (GFtoBooleanConversionException e1) {
@@ -100,9 +112,10 @@ public class ExpressionSetOperations {
 				throw new GFOperationInitException(e1);
 			}
 		}
-		booleanMapping = convertor.getMapping();
+		// get mapping of ALL formulas
+		booleanMapping = convertor.getMapping(); 
 
-		// precalculate mappings
+		// precalculate mappings from guard to the output relation
 		projections.clear();
 		for (GFExistentialExpression e : expressionSet) {
 			GFAtomicExpression output = e.getOutputRelation();
@@ -111,7 +124,7 @@ public class ExpressionSetOperations {
 			projections.put(e, p);
 		}
 
-		// pairs and unions
+		// collect all the guards, guardeds and their combinations
 		guardsAll.clear();
 		guardedsAll.clear();
 		ggpairsAll.clear();
@@ -144,6 +157,7 @@ public class ExpressionSetOperations {
 		}
 
 		// map between guards and projections
+		// for each pair the projection is cached
 		for (Pair<GFAtomicExpression, GFAtomicExpression> p : ggpairsAll) {
 
 			GFAtomicExpression guard = p.fst;
@@ -151,32 +165,47 @@ public class ExpressionSetOperations {
 
 			GFAtomProjection r = new GFAtomProjection(guard, guarded);
 
-			guardHasProjection.put(p, r);
+			guardHasProjection.put(p, r); 
 
 		}
 
-		// order the atoms
+		// sort the atoms to obtain an ordering
 		HashSet<GFAtomicExpression> allAtoms = new HashSet<>(guardsAll);
 		allAtoms.addAll(guardedsAll);
 
 		atoms = allAtoms.toArray(new GFAtomicExpression[0]);
 		Arrays.sort(atoms);
-//		for (int i = 0; i < atoms.length; i++) {
-//			GFAtomicExpression atom = atoms[i];
-//			LOG.info("" + i + ": " + atom);
-//		}
 
 	}
 
+	/**
+	 * Creates a set of all guarded atom that appear below a given guard.
+	 * 
+	 * @param guard the guard
+	 * 
+	 * @return the set of all guarded atoms guarded by the specified guard
+	 * 
+	 * @throws GFOperationInitException
+	 */
 	public Set<GFAtomicExpression> getGuardeds(GFAtomicExpression guard) throws GFOperationInitException {
 		Set<GFAtomicExpression> r = guardHasGuard.get(guard);
 
-		if (r == null)
+		if (r == null) // TODO empty set? 
 			throw new GFOperationInitException("No guardeds found for: " + guard);
 
 		return r;
 	}
 
+	/**
+	 * Returns a projection to transform a guard tuple into a guarded tuple.
+	 * 
+	 * @param guard the guard atom
+	 * @param guarded the guarded atom
+	 * 
+	 * @return a projection from guard to guarded
+	 * 
+	 * @throws GFOperationInitException
+	 */
 	public GFAtomProjection getProjections(GFAtomicExpression guard, GFAtomicExpression guarded)
 			throws GFOperationInitException {
 
@@ -188,6 +217,15 @@ public class ExpressionSetOperations {
 		return r;
 	}
 
+	/**
+	 * Returns the set of guarded atoms that belong to a GF expression.
+	 * 
+	 * @param e a GF expression
+	 * 
+	 * @return the set of guardeds belonging to a GF expression
+	 * 
+	 * @throws GFOperationInitException
+	 */
 	public Collection<GFAtomicExpression> getGuardeds(GFExistentialExpression e) throws GFOperationInitException {
 
 		Collection<GFAtomicExpression> g = guardeds.get(e);
@@ -198,6 +236,15 @@ public class ExpressionSetOperations {
 		return g;
 	}
 
+	/**
+	 * Returns a boolean expression corresponding to the guarded part of the GF expression.
+	 * 
+	 * @param e a GF expression
+	 * 
+	 * @return the guarded part as a boolean expression
+	 * 
+	 * @throws GFOperationInitException
+	 */
 	public BExpression getBooleanChildExpression(GFExistentialExpression e) throws GFOperationInitException {
 		BExpression b = booleanChildExpressions.get(e);
 
@@ -211,12 +258,22 @@ public class ExpressionSetOperations {
 	 * A common boolean mapping used for ALL formulas in this set.
 	 * 
 	 * @return a mapping between atoms and variables
+	 * 
 	 * @throws GFOperationInitException
 	 */
 	public GFBooleanMapping getBooleanMapping() throws GFOperationInitException {
 		return booleanMapping;
 	}
-
+	
+	/**
+	 * Returns a mapping from guard to output relation
+	 * 
+	 * @param e the GF expression
+	 * 
+	 * @return a mapping from guard to output relation
+	 * 
+	 * @throws GFOperationInitException
+	 */
 	public GFAtomProjection getOutputProjection(GFExistentialExpression e) throws GFOperationInitException {
 		GFAtomProjection p = projections.get(e);
 
@@ -227,6 +284,9 @@ public class ExpressionSetOperations {
 	}
 
 	/**
+	 * Returns the set of all guarded atoms used in the GF expressions.
+	 * TODO also the ones that appear as guard?
+	 * 
 	 * @return the set of all guarded relations
 	 */
 	public Set<GFAtomicExpression> getGuardedsAll() {
@@ -234,6 +294,7 @@ public class ExpressionSetOperations {
 	}
 
 	/**
+	 * Returns the set of all guard atoms used in the GF expressions.
 	 * @return the set of all guards
 	 */
 	public Set<GFAtomicExpression> getGuardsAll() {
@@ -241,8 +302,8 @@ public class ExpressionSetOperations {
 	}
 
 	/**
-	 * Returns the set of all guard-guarded combinations, based on the
-	 * GFExistentialExpressions
+	 * Returns the set of all guard-guarded combinations.
+	 * TODO also the guards that appear as guard?
 	 * 
 	 * @return the set of all guard-guarded combinations
 	 */
@@ -250,26 +311,26 @@ public class ExpressionSetOperations {
 		return ggpairsAll;
 	}
 
+	/**
+	 * Returns the internal expression set.
+	 * 
+	 * @return the expressionset that is used
+	 */
 	public Collection<GFExistentialExpression> getExpressionSet() {
 		return expressionSet;
 	}
 
-	/**
-	 * @param dirManager
-	 */
-	public void setDirManager(DirManager dirManager) {
-		this.dirManager = dirManager;
-
-	}
 
 	/**
-	 * @return the input paths for the guarded relations
+	 * Constructs the set of {@link Path}s that serve as guarded inputs.
+	 * 
+	 * @return the set of input paths for the guarded relations
 	 */
 	public Set<Path> getGuardedPaths() {
 		HashSet<Path> result = new HashSet<Path>();
 
 		for (GFAtomicExpression guarded : getGuardedsAll()) {
-			Set<Path> paths = dirManager.lookup(guarded.getRelationSchema());
+			Set<Path> paths = fileMapping.getPaths(guarded.getRelationSchema());
 			result.addAll(paths);
 		}
 
@@ -277,6 +338,7 @@ public class ExpressionSetOperations {
 	}
 
 	/**
+	 * Constructs the set of {@link Path}s that serve as guard inputs.
 	 * 
 	 * @return the input paths for the guard relations
 	 */
@@ -284,7 +346,7 @@ public class ExpressionSetOperations {
 		HashSet<Path> result = new HashSet<Path>();
 
 		for (GFAtomicExpression guarded : getGuardsAll()) {
-			Set<Path> paths = dirManager.lookup(guarded.getRelationSchema());
+			Set<Path> paths = fileMapping.getPaths(guarded.getRelationSchema());
 			result.addAll(paths);
 		}
 
@@ -292,11 +354,11 @@ public class ExpressionSetOperations {
 	}
 
 	/**
-	 * Fetches an atom with the given internal id. Id is only unique for THIS
-	 * set of expressions.
+	 * Fetches an atom with the given internal id. 
+	 * <b>Warning:</b> the id is only unique for THIS set of expressions.
 	 * 
-	 * @param id
-	 *            the id of the atom
+	 * @param id the atom id
+	 *             
 	 * @return the atom with the given id
 	 */
 	public GFAtomicExpression getAtom(int id) throws GFOperationInitException {
@@ -307,11 +369,11 @@ public class ExpressionSetOperations {
 	}
 
 	/**
-	 * Fetches the internal id of a given atom. Id is only unique for THIS
-	 * set of expressions.
+	 * Fetches the internal id of a given atom. 
+	 * <b>Warning:</b> the id is only unique for THIS set of expressions.
 	 * 
-	 * @param atom
-	 *            the atom to look up
+	 * @param atom the atom
+	 * 
 	 * @return the id of the given atom
 	 */
 	public int getAtomId(GFAtomicExpression atom) throws GFOperationInitException {
@@ -329,7 +391,7 @@ public class ExpressionSetOperations {
 	 * @return the guarded paths that are in rel format
 	 */
 	public Set<Path> getGuardedRelPaths() {
-		Set<Path> paths = dirManager.getFileMapping().getPathsWithFormat(InputFormat.REL);
+		Set<Path> paths = fileMapping.getPathsWithFormat(InputFormat.REL);
 		paths.retainAll(getGuardedPaths());
 		return paths;
 	}
@@ -338,7 +400,7 @@ public class ExpressionSetOperations {
 	 * @return the guarded paths that are in csv format
 	 */
 	public Set<Path> getGuardedCsvPaths() {
-		Set<Path> paths = dirManager.getFileMapping().getPathsWithFormat(InputFormat.CSV);
+		Set<Path> paths = fileMapping.getPathsWithFormat(InputFormat.CSV);
 		paths.retainAll(getGuardedPaths());
 		return paths;
 	}
@@ -347,7 +409,7 @@ public class ExpressionSetOperations {
 	 * @return the guarded paths that are in rel format
 	 */
 	public Set<Path> getGuardRelPaths() {
-		Set<Path> paths = dirManager.getFileMapping().getPathsWithFormat(InputFormat.REL);
+		Set<Path> paths = fileMapping.getPathsWithFormat(InputFormat.REL);
 		paths.retainAll(getGuardPaths());
 		return paths;
 	}
@@ -356,8 +418,43 @@ public class ExpressionSetOperations {
 	 * @return the guarded paths that are in csv format
 	 */
 	public Set<Path> getGuardCsvPaths() {
-		Set<Path> paths = dirManager.getFileMapping().getPathsWithFormat(InputFormat.CSV);
+		Set<Path> paths = fileMapping.getPathsWithFormat(InputFormat.CSV);
 		paths.retainAll(getGuardPaths());
 		return paths;
+	}
+
+	/**
+	 * Creates the set of paths that appear in both as guarded and as guard.
+	 * 
+	 * @return the set of paths that are both guard and guarded.
+	 */
+	public Collection<Path> intersectGuardGuardedPaths() {
+		Set<Path> a1 = getGuardedRelPaths();
+		Set<Path> a2 = getGuardRelPaths();
+		
+		Set<Path> b1 = getGuardedCsvPaths();
+		Set<Path> b2 = getGuardCsvPaths();
+		
+		// union guarded
+		Set<Path> a = new HashSet<>(a1);
+		a.addAll(b1);
+		
+		// union guard
+		Set<Path> b = new HashSet<>(a2);
+		b.addAll(b2);
+		
+		// intersect
+		a.retainAll(b);
+		
+		return a;
+	}
+
+	/**
+	 * Returns the internal file mapping.
+	 * 
+	 * @return the internal file mapping
+	 */
+	public RelationFileMapping getFileMapping() {
+		return fileMapping;
 	}
 }

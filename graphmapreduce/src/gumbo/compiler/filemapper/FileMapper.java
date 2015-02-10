@@ -15,6 +15,7 @@ import gumbo.compiler.structures.data.RelationSchema;
  * Also, a scratch (or temp) dir used to store intermediate relations.
  * An output directory is also specified and indicates the location of the selected output relations.
  * 
+ * 
  * @author Jonny Daenen
  *
  */
@@ -31,7 +32,7 @@ public class FileMapper {
 	 * @pre partitionedDAG contains no overlap in input,intermediate and output
 	 *      (correct implementation of getter functions :))
 	 */
-	public FileManager expandFileMapping(RelationFileMapping rfm, Path out, Path scratch, CalculationUnitGroup dag) {
+	public FileManager createFileMapping(RelationFileMapping rfm, Path out, Path scratch, CalculationUnitGroup dag) {
 
 		// add input, scratch and output locations
 		FileManager fm =  new FileManager(rfm, out, scratch);

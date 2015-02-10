@@ -10,7 +10,7 @@ import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.UnitPartitioner;
 import gumbo.compiler.structures.MRPlan;
 import gumbo.compiler.structures.data.RelationSchema;
-import gumbo.executor.hadoop.HadoopExecutor;
+import gumbo.engine.hadoop.HadoopExecutor;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 import gumbo.guardedfragment.gfexpressions.GFExpression;
 import gumbo.guardedfragment.gfexpressions.io.DeserializeException;

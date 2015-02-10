@@ -81,7 +81,7 @@ public class PartitionerTest {
 			rfm.addPath(new RelationSchema("S",1), new Path("in/S"));
 			rfm.addPath(new RelationSchema("T",1), new Path("in/T"));
 			rfm.addPath(new RelationSchema("UNKNOWN",1), new Path("in/UNKNOWN"));
-			FileManager result4 = CompilerTester.filemapper.expandFileMapping(rfm, new Path("out"), new Path("scratch"), result3);
+			FileManager result4 = CompilerTester.filemapper.createFileMapping(rfm, new Path("out"), new Path("scratch"), result3);
 
 			PartitionedCUGroup result5 = CompilerTester.partitioner.partition(result3, result4);
 			

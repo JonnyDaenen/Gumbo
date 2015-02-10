@@ -114,7 +114,7 @@ public class GFCompiler {
 
 			// intitial file mappings 
 			LOG.info("Creating initial file mapping...");
-			FileManager fm = filemapper.expandFileMapping(infiles, outdir, scratchdir, dag);
+			FileManager fm = filemapper.createFileMapping(infiles, outdir, scratchdir, dag);
 			LOG.info("Input files: " + fm);
 			LOG.info("Output files: " + fm);
 			LOG.info("Intermediate files: " + fm);

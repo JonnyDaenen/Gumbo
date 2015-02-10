@@ -79,7 +79,7 @@ public class FileMapperTest {
 			rfm.addPath(new RelationSchema("S",1), new Path("in/S"));
 			rfm.addPath(new RelationSchema("T",1), new Path("in/T"));
 			rfm.addPath(new RelationSchema("UNKNOWN",1), new Path("in/UNKNOWN"));
-			FileManager result4 = CompilerTester.filemapper.expandFileMapping(rfm, new Path("out"), new Path("scratch"), result3);
+			FileManager result4 = CompilerTester.filemapper.createFileMapping(rfm, new Path("out"), new Path("scratch"), result3);
 
 			assertEquals(0, result4.getTempPaths().size());
 			assertEquals(3, result4.getOutPaths().size()); // out1, out2, out2b
