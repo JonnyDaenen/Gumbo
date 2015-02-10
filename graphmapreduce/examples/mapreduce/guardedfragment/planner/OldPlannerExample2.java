@@ -3,7 +3,6 @@
  */
 package mapreduce.guardedfragment.planner;
 
-import gumbo.compiler.GFMRPlanner;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.HeightPartitioner;
 import gumbo.compiler.structures.MRPlan;

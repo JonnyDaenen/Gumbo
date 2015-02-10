@@ -1,6 +1,5 @@
 package gumbo.compiler;
 
-import gumbo.guardedfragment.gfexpressions.GFVisitorException;
 
 public class GFCompilerException extends Exception {
 

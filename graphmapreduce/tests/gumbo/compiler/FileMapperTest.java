@@ -5,10 +5,8 @@ package gumbo.compiler;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import gumbo.compiler.calculations.BGFE2CUConverter;
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnitException;
-import gumbo.compiler.decomposer.GFDecomposer;
 import gumbo.compiler.decomposer.GFDecomposerException;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;

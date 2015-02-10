@@ -3,13 +3,13 @@
  */
 package gumbo.engine.hadoop.converter;
 
-import java.util.Collection;
-
-import org.apache.hadoop.fs.Path;
-
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.structures.data.RelationSchema;
+
+import java.util.Collection;
+
+import org.apache.hadoop.fs.Path;
 
 /**
  * Extracts a file mapping from a {@link FileManager}, possibly based on a set of

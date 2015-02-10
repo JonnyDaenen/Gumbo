@@ -3,14 +3,14 @@
  */
 package gumbo;
 
-import java.util.Set;
-
 import gumbo.compiler.GFCompiler;
 import gumbo.compiler.GumboPlan;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.guardedfragment.gfexpressions.GFExpression;
 import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
+
+import java.util.Set;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;

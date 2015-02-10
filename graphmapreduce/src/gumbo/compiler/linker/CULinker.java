@@ -6,12 +6,9 @@ package gumbo.compiler.linker;
 import gumbo.compiler.GFCompilerException;
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnit;
-import gumbo.compiler.decomposer.GFDecomposer;
 import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;

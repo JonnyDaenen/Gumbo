@@ -3,7 +3,6 @@
  */
 package mapreduce.experiments.profiling;
 
-import gumbo.compiler.GFMRPlanner;
 import gumbo.compiler.GFCompilerException;
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;

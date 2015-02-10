@@ -4,17 +4,15 @@
 package gumbo.compiler;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import gumbo.compiler.calculations.BGFE2CUConverter;
-import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.decomposer.GFDecomposer;
-import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.FileMapper;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CULinker;
-import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.CalculationPartitioner;
-import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.compiler.partitioner.UnitPartitioner;
 import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.guardedfragment.gfexpressions.GFAndExpression;
@@ -23,7 +21,6 @@ import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 import gumbo.guardedfragment.gfexpressions.GFExpression;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.hadoop.fs.Path;

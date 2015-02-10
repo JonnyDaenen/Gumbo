@@ -3,11 +3,7 @@
  */
 package gumbo.compiler;
 
-import org.apache.hadoop.fs.Path;
-
 import gumbo.compiler.filemapper.FileManager;
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.compiler.structures.data.RelationSchema;
 

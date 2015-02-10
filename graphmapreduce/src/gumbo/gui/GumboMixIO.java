@@ -1,6 +1,5 @@
 package gumbo.gui;
 
-import gumbo.compiler.GFMRPlanner;
 import gumbo.compiler.GFCompilerException;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.HeightPartitioner;

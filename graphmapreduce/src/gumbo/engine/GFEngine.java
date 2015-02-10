@@ -3,6 +3,7 @@
  */
 package gumbo.engine;
 
+import gumbo.compiler.GumboPlan;
 import gumbo.compiler.structures.MRPlan;
 
 /**
