@@ -20,10 +20,12 @@ import gumbo.guardedfragment.gfexpressions.operations.NonMatchingTupleException;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
@@ -219,18 +221,26 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 		return false;
 	}
 
-	public String generateFileName(RelationSchema relationSchema) {
+	public String generateFileName(RelationSchema rs) {
 
-		// cached?
-		if (filenames.containsKey(relationSchema)) {
-			return filenames.get(relationSchema);
-
-		} else {
-			String rel = relationSchema.getShortDescription();
-			String name = generateFolder(relationSchema) + "/" + rel;
-			filenames.put(relationSchema,name);
-			return name;
+		
+		Set<Path> paths = eso.getFileMapping().getPaths(rs);
+		// take first path
+		for (Path path: paths) {
+			return path.toString() + "/" + rs.getName();
 		}
+		return ""; // FIXME fallback system
+		
+		// cached?
+//		if (filenames.containsKey(relationSchema)) {
+//			return filenames.get(relationSchema);
+//
+//		} else {
+//			String rel = relationSchema.getShortDescription();
+//			String name = generateFolder(relationSchema) + "/" + rel;
+//			filenames.put(relationSchema,name);
+//			return name;
+//		}
 
 	}
 

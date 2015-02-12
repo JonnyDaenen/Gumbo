@@ -35,7 +35,7 @@ public class GumboPlan {
 	/**
 	 * @return the fileMapping
 	 */
-	public FileManager getFileMapping() {
+	public FileManager getFileManager() {
 		return fileManager;
 	}
 	

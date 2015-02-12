@@ -62,7 +62,7 @@ public class Rank1Test {
 		dataS.add("S(1,3)");
 
 
-		Set<String> result = doTest(gfe, dataG,dataS,"O");
+		Set<String> result = doTest(gfe, dataG,dataS,new RelationSchema("O",1));
 
 		//		System.out.println(result);
 
@@ -84,7 +84,7 @@ public class Rank1Test {
 		data.add("G(1,2)");
 
 
-		Set<String> result = doTest(gfe, data,null,"O");
+		Set<String> result = doTest(gfe, data,null,new RelationSchema("O",2));
 		//		System.out.println(result);
 
 		if(result.size() != 2 || !result.contains("O(1,2)") || !result.contains("O(1,1)"))
@@ -105,7 +105,7 @@ public class Rank1Test {
 		dataG.add("G(2,1)");
 
 
-		Set<String> result = doTest(gfe, dataG, null, "O");
+		Set<String> result = doTest(gfe, dataG, null, new RelationSchema("O",2));
 		//		System.out.println(result);
 
 		System.out.println(result);
@@ -113,7 +113,7 @@ public class Rank1Test {
 			fail("expected {O(2,1)}");
 	}
 
-	private Set<String> doTest(GFExpression gfe, Set<String> dataG, Set<String> dataS, String relname) throws Exception {
+	private Set<String> doTest(GFExpression gfe, Set<String> dataG, Set<String> dataS, RelationSchema outSchema) throws Exception {
 
 		// create tmp folders
 		File inputG = folder.newFolder("inputG");
@@ -156,10 +156,18 @@ public class Rank1Test {
 		// TODO we need a method to request the output files/directory of a relation
 
 		System.out.println(plan);
-
+		
+		Set<Path> outpaths = plan.getFileManager().getOutFileMapping().getPaths(outSchema);
+		System.out.println(plan.getFileManager().getOutFileMapping());
+		System.out.println(outSchema);
+		System.out.println(outpaths);
+		Path p = outpaths.iterator().next();
+		String path = p.toString() + "/" + outSchema.getName()+"-r-00000";
+		
+		
 		// read output file
 		//		File outputfile = new File(output.getAbsolutePath() + "/test/part-r-00000");
-		File outputfile = new File(output.getAbsolutePath() + "/OUT_0_"+relname+"/"+relname+"/"+relname+"-r-00000");
+		File outputfile = new File(path);
 		List<String> out = Files.readAllLines(outputfile.toPath(), StandardCharsets.US_ASCII);
 
 		return new HashSet<String>(out);

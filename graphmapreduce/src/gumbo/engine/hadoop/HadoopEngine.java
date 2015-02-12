@@ -49,7 +49,7 @@ public class HadoopEngine {
 	 */
 	public void executePlan (GumboPlan plan) throws ExecutionException {
 
-		GumboHadoopConverter jobConverter = new GumboHadoopConverter(plan.getName(), plan.getFileMapping(), new ExecutorSettings());
+		GumboHadoopConverter jobConverter = new GumboHadoopConverter(plan.getName(), plan.getFileManager(), new ExecutorSettings());
 
 		executeJobs(plan, jobConverter);
 		cleanup();

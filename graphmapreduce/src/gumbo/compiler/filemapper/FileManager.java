@@ -201,10 +201,13 @@ public class FileManager {
 	}
 
 	/**
-	 * @return an unmodifiable collection containing all the paths that appear in the mapping
+	 * @return an new collection containing all the paths that appear in the mapping
 	 */
 	public Collection<Path> getAllPaths() {
-		return Collections.unmodifiableSet(inMapping.getAllPaths());
+		Set<Path> all = inMapping.getAllPaths();
+		all.addAll(getOutPaths());
+		all.addAll(getTempPaths());
+		return all;
 	}
 
 
