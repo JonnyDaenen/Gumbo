@@ -6,6 +6,7 @@ package gumbo.engine.hadoop.mrcomponents.reducers;
 import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.compiler.structures.data.Tuple;
 import gumbo.compiler.structures.operations.GFOperationInitException;
+import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
 import gumbo.engine.hadoop.settings.ExecutorSettings;
 import gumbo.guardedfragment.booleanexpressions.BEvaluationContext;
 import gumbo.guardedfragment.booleanexpressions.BExpression;
@@ -77,31 +78,14 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 				context.getTaskAttemptID().getId());
 		LOG.info(s);
 
-		GFPrefixSerializer serializer = new GFPrefixSerializer();
-
-		// load guard
+		// load parameters
 		try {
-			HashSet<GFExistentialExpression> formulaSet = new HashSet<GFExistentialExpression>();
-			String formulaString = conf.get("formulaset");
-			Set<GFExpression> deserSet = serializer.deserializeSet(formulaString);
-
-			// check whether the type is existential
-			// FUTURE allow other types?
-			for (GFExpression exp : deserSet) {
-				if (exp instanceof GFExistentialExpression) {
-					formulaSet.add((GFExistentialExpression) exp);
-				}
-			}
-
-			eso = new ExpressionSetOperations();
-			eso.setExpressionSet(formulaSet);
-
+			ParameterPasser pp = new ParameterPasser(conf);
+			eso = pp.loadESO();
+			settings = pp.loadSettings();
 		} catch (Exception e) {
-			throw new InterruptedException("Reducer initialisation error: " + e.getMessage());
+			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}
-
-		// TODO load
-		settings = new ExecutorSettings();
 	}
 
 	@Override
@@ -133,18 +117,18 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 				// if tuple pointer optimization is on
 				// we need to find the actual tuple between the values.
 				if (settings.getBooleanProperty(ExecutorSettings.guardTuplePointerOptimizationOn)) {
-					
+
 					String val = v.toString();
 					// if this is a tuple instead of an id
 					if ( isTuple(val) ) {
-						
+
 						if (keyTuple != null) {
 							context.getCounter(GumboRed2Counter.RED2_COLLISIONS_FOUND).increment(1);
 							System.out.println("Collision: " + keyTuple + " " + val.toString());
 						}
 						// extract the tuple
 						keyTuple = getTuple(val);
-						
+
 						// skip id processing
 						continue;
 					}
@@ -175,7 +159,7 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 				context.getCounter(GumboRed2Counter.RED2_TUPLE_EXCEPTIONS).increment(1);
 				throw new GuardTupleNotFoundException("There was no guard tuple found for key "+ key.toString());
 			}
-			
+
 			context.getCounter(GumboRed2Counter.RED2_TUPLES_FOUND).increment(1);
 
 			/* evaluate all formulas */
@@ -205,7 +189,7 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 					} else {
 
 						context.getCounter(GumboRed2Counter.RED2_EVAL_FALSE).increment(1);
-						System.out.println("bad!: " + keyTuple);
+//						System.out.println("bad!: " + keyTuple);
 					}
 				}
 

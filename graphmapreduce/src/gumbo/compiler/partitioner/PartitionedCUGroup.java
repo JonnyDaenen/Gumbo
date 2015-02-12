@@ -244,9 +244,12 @@ public class PartitionedCUGroup {
 	}
 
 	/**
+	 * Constructs the set of partitions that each contain at least on of the dependencies
+	 * of a calculation in the given group.
 	 * 
-	 * @param cug
-	 * @return the set of partitions that contain
+	 * @param cug a group of calculations
+	 * 
+	 * @return the set of partitions that contain at least one of the dependencies
 	 */
 	public Collection<CalculationUnitGroup> getDependentPartitions(CalculationUnitGroup cug) {
 		HashSet<CalculationUnitGroup> depParts = new HashSet<>();
@@ -255,10 +258,13 @@ public class PartitionedCUGroup {
 		// for each partition
 		for (int i = 0; i <= currentPartition; i++) {
 			CalculationUnitGroup current = getPartition(i);
+			
 			// check if it contains dependencies
-			current.getCalculations().retainAll(deps);
-			if (current.size() != 0) {
-				depParts.add(getPartition(i)); // new request because we modified the previous one
+			Set<CalculationUnit> calcs = current.getCalculations();
+			calcs.retainAll(deps);
+			if (calcs.size() != 0) {
+				// add partition if there are
+				depParts.add(current); 
 			}
 		}
 		

@@ -11,6 +11,9 @@ import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.mapreduce.Counter;
+import org.apache.hadoop.mapreduce.CounterGroup;
+import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
 
@@ -81,96 +84,191 @@ public class HadoopEngine {
 	private boolean executeJobs(GumboPlan plan, GumboHadoopConverter jobConverter) throws ExecutionException {
 
 		boolean success = false;
+		long start = System.nanoTime();
 
 		try {
 
-		// 1. create JobControl
-		LOG.info("Creating Job Control for: " + plan.getName());
-		JobControl jc = new JobControl(plan.getName());
+			// 1. create JobControl
+			LOG.info("Creating Job Control for: " + plan.getName());
+			JobControl jc = new JobControl(plan.getName());
 
-		// create mapping for jobs and partitions
-		BidiMap<CalculationUnitGroup,ControlledJob> calc2job = new DualHashBidiMap<>();
-		BidiMap<ControlledJob, CalculationUnitGroup> job2calc = calc2job.inverseBidiMap();
 
-		
 
-		// 2. we execute the jobcontrol in a Thread
-		Thread workflowThread = new Thread(jc, "Gumbo-Workflow-Thread_" + plan.getName());
-		workflowThread.setDaemon(true); // will not avoid JVM to shutdown
-		LOG.info("Starting Job-control thread: " + workflowThread.getName());
-		workflowThread.start();
+			// 2. we execute the jobcontrol in a Thread
+			Thread workflowThread = new Thread(jc, "Gumbo-Workflow-Thread_" + plan.getName());
+			workflowThread.setDaemon(true); // will not avoid JVM to shutdown
+			LOG.info("Starting Job-control thread: " + workflowThread.getName());
+			workflowThread.start();
 
-		// 3. execute jobs
-		
-		// for each partition from bottom to top
-		PartitionQueue queue = new PartitionQueue(plan.getPartitions());
-		
-		LOG.info("Processing partition queue.");
-		// while not all completed
-		while (!queue.isEmpty()) {
+			// 3. execute jobs
 
-			// update states
-			Set<CalculationUnitGroup> newPartitions = queue.updateStatus();
+			// for each partition from bottom to top
+			PartitionQueue queue = new PartitionQueue(plan.getPartitions());
 
-			// for each job for which the dependencies are done
-			// (and whose input files are now available for analysis)
-			for (CalculationUnitGroup partition: newPartitions) {
+			LOG.info("Processing partition queue.");
+			// while not all completed or the jobcontrol is still running
+			while (!queue.isEmpty() || !jc.allFinished()) {
 
-				// convert job to hadoop job using only files 
-				// TODO #core (no glob nor directories)
-				List<ControlledJob> jobs = jobConverter.convert(partition);
+				// update states
+				Set<CalculationUnitGroup> newPartitions = queue.updateStatus();
 
-				// add all the controlled jobs to the job control
-				jc.addJobCollection(jobs);
-				
-				// update the queue
-				queue.addJobs(partition, jobs.get(0), jobs.get(1));
-			
+
+				//				LOG.info("Partitions to add: " + newPartitions.size());
+
+				// for each job for which the dependencies are done
+				// (and whose input files are now available for analysis)
+				for (CalculationUnitGroup partition: newPartitions) {
+
+					// convert job to hadoop job using only files 
+					// (glob and directory paths are converted)
+					List<ControlledJob> jobs = jobConverter.convert(partition);
+
+					// add all the controlled jobs to the job control
+					jc.addJobCollection(jobs);
+
+					// update the queue
+					queue.addJobs(partition, jobs.get(0), jobs.get(1));
+
+				}
+
+				// sleep
+				Thread.sleep(REFRESH_WAIT);
 			}
+			LOG.info("Partition queue exhausted.");
 
-			// sleep
-			Thread.sleep(REFRESH_WAIT);
-		}
-		LOG.info("Partition queue exhausted.");
 
-		jc.stop();
-		
-		// 4. remove intermediate data
+			long stop = System.nanoTime();
 
-		// TODO implement removal of intermediate data
+			// 4. remove intermediate data
 
-		// 5. report outcome
-		if (jc.getFailedJobList().size() > 0) {
-			LOG.error(jc.getFailedJobList().size() + " jobs failed!");
+			// TODO implement removal of intermediate data
 
-			for (ControlledJob job : jc.getFailedJobList()) {
-				LOG.error("\t" + job.getJobName() + " failed.");
+			// 5. report outcome
+			if (jc.getFailedJobList().size() > 0) {
+				LOG.error(jc.getFailedJobList().size() + " jobs failed!");
+
+				for (ControlledJob job : jc.getFailedJobList()) {
+					LOG.error("\t" + job.getJobName() + " failed.");
+				}
+
+				// TODO print out relations that failed
+			} else {
+				success = true;
+				LOG.info("SUCCESS: all jobs (" + jc.getSuccessfulJobList().size() + ") completed!");
+
 			}
 			
-			// TODO print out relations that failed
-		} else {
-			success = true;
-			LOG.info("SUCCESS: all jobs (" + jc.getSuccessfulJobList().size() + ") completed!");
-			
-			// move output to output directory
-			LOG.info("Copying output data...");
 
-			for (ControlledJob job : jc.getSuccessfulJobList()) {
-				LOG.error("profile: " +  job.getJob().getProfileParams());
-				LOG.error("time: " +  (job.getJob().getFinishTime() - job.getJob().getStartTime()));
-			}
+			System.out.println("Running time: " + (stop-start)/1000000 + "ms");
+			printCounters(jc);
+			printJobDAG(jc);
 
-		}
-		
+
+			jc.stop();
 		} catch (ConversionException | IOException | InterruptedException e) {
 			LOG.error("Exception during Gumbo plan execution: " + e.getMessage());
 			throw new ExecutionException("Execution failed: " + e.getMessage(), e);
 		}
+
+
 		return success;
 
 	}
 
+	/**
+	 * source: http://www.slideshare.net/martyhall/hadoop-tutorial-mapreduce-part-5-mapreduce-features 
+	 */
+	private void printCounters(JobControl jc) throws IOException {
 
+		//		if (jc.getSuccessfulJobList().size() == 0)
+		//			return;
+
+		// initialize overall counters
+		Counters overallCounters = new Counters();
+
+		for (ControlledJob job : jc.getSuccessfulJobList()) {
+			System.out.println();
+			System.out.println("Counters for job: " + job.getJobName());
+			Counters counters = job.getJob().getCounters();
+
+
+			for (String groupName : counters.getGroupNames()) {
+
+				if (!groupName.contains("."))
+					continue;
+
+				CounterGroup group = counters.getGroup(groupName);
+				System.out.println(group.getDisplayName());
+				System.out.println(groupName);
+
+				// aggregate counters
+				CounterGroup overallGroup = overallCounters.getGroup(group.getName());
+				//				CounterGroup overallGroup = overallCounters.addGroup(group.getName(), group.getDisplayName());
+
+
+				for (Counter counter : group.getUnderlyingGroup()) {
+					System.out.println("\t" + counter.getDisplayName() + "=" + counter.getValue() );
+
+					// aggregate counters
+					Counter overallCounter = overallGroup.findCounter(counter.getName(), true);
+					//					Counter overallCounter = overallGroup.addCounter(counter.getName(), counter.getDisplayName(), 0);
+					overallCounter.increment(counter.getValue());
+
+				}
+
+			}
+
+		}
+
+
+		Counters counters = overallCounters;
+
+
+		System.out.println();
+		System.out.println("Overall Counters");
+		for (String groupName : counters.getGroupNames()) {
+
+			if (!groupName.contains("org.apache.hadoop.mapreduce"))
+				continue;
+
+			CounterGroup group = counters.getGroup(groupName);
+			System.out.println(group.getDisplayName());
+
+			for (Counter counter : group.getUnderlyingGroup()) {
+				System.out.println("\t" + counter.getDisplayName() + "=" + counter.getValue() );
+			}
+		}
+
+
+	}
+
+	private void printJobDAG(JobControl jc) {
+
+		System.out.println();
+		for (ControlledJob job : jc.getSuccessfulJobList()) {
+			printJob(job);
+		}
+		System.out.println();
+
+	}
+
+	/**
+	 * @param job
+	 */
+	private void printJob(ControlledJob job) {
+		String depstring = "";
+		if (job.getDependentJobs() != null) { 
+			for (ControlledJob dep : job.getDependentJobs()) {
+				depstring += ", " + dep.getMapredJobId();
+			}
+			if (!depstring.isEmpty()) {
+				depstring = depstring.substring(1);
+				depstring = " ->" + depstring;
+			}
+		}
+		System.out.println(job.getMapredJobId() + " " + depstring);
+
+	}
 
 
 }

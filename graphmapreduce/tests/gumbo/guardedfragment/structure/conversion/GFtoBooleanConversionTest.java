@@ -1,4 +1,4 @@
-package mapreduce.guardedfragment.structure.conversion;
+package gumbo.guardedfragment.structure.conversion;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

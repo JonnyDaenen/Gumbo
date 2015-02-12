@@ -191,9 +191,19 @@ public class CalculationUnitGroup implements Iterable<CalculationUnit> {
 	 */
 	@Override
 	public String toString() {
-		String s = "Calculation Unit Set: {" + System.lineSeparator();
+		String s = "{" + System.lineSeparator();
 		for (CalculationUnit c : calculations) {
 			s += c + System.lineSeparator();
+		}
+		s += "}";
+
+		return s;
+	}
+	
+	public String toShortString() {
+		String s = "{";
+		for (CalculationUnit c : calculations) {
+			s += c.getId() + ",";
 		}
 		s += "}";
 
@@ -277,6 +287,7 @@ public class CalculationUnitGroup implements Iterable<CalculationUnit> {
 
 
 	/**
+	 * Constructs a set containing all calculations.
 	 * @return the set of calculations
 	 */
 	public Set<CalculationUnit> getCalculations() {

@@ -3,6 +3,8 @@
  */
 package gumbo.engine.hadoop.mrcomponents.combiners;
 
+import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
+import gumbo.engine.hadoop.settings.ExecutorSettings;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 import gumbo.guardedfragment.gfexpressions.GFExpression;
 import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
@@ -42,6 +44,8 @@ public class GFCombiner1 extends Reducer<Text, Text, Text, Text> {
 
 	boolean outputIDs = true;
 
+	private ExecutorSettings settings;
+
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
 	 */
@@ -50,41 +54,27 @@ public class GFCombiner1 extends Reducer<Text, Text, Text, Text> {
 		// load context
 		super.setup(context);
 		Configuration conf = context.getConfiguration();
-		
+
 		String s = String.format("Combiner-%05d-%d",
-		        context.getTaskAttemptID().getTaskID().getId(),
-		        context.getTaskAttemptID().getId());
+				context.getTaskAttemptID().getTaskID().getId(),
+				context.getTaskAttemptID().getId());
 		LOG.info(s);
 		LOG.info(FileOutputFormat.getUniqueFile(context, "Jonnyfile", "comb"));
-		
+
 
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 		FILENAME = "tmp_round1_comb"+timeStamp+".txt";
-		
+
 		mos = new MultipleOutputs<Text, Text>(context);
 		sb = new StringBuilder(100);
 
-		GFPrefixSerializer serializer = new GFPrefixSerializer();
-
-		// load guard
+		// load parameters
 		try {
-			HashSet<GFExistentialExpression> formulaSet = new HashSet<GFExistentialExpression>();
-			String formulaString = conf.get("formulaset");
-			Set<GFExpression> deserSet = serializer.deserializeSet(formulaString);
-
-			// check whether the type is existential
-			// FUTURE allow other types?
-			for (GFExpression exp : deserSet) {
-				if (exp instanceof GFExistentialExpression) {
-					formulaSet.add((GFExistentialExpression) exp);
-				}
-			}
-
-			eso = new ExpressionSetOperations();
-			eso.setExpressionSet(formulaSet);
-
+			ParameterPasser pp = new ParameterPasser(conf);
+			eso = pp.loadESO();
+			settings = pp.loadSettings();
 		} catch (Exception e) {
-			throw new InterruptedException("Reducer initialisation error: " + e.getMessage());
+			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}
 	}
 
@@ -165,7 +155,7 @@ public class GFCombiner1 extends Reducer<Text, Text, Text, Text> {
 
 		byte[] b = t.getBytes();
 		for (int i = 0; i < length; i++) { // FUTURE for unicode this doesn't
-											// work I guess..
+			// work I guess..
 			char c = (char) b[i];
 			// if we find the semicolon
 			if (c == ';') {

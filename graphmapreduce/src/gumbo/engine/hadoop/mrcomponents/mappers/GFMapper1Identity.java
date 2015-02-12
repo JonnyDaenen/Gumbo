@@ -6,6 +6,7 @@ package gumbo.engine.hadoop.mrcomponents.mappers;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.filemapper.RelationFileMappingException;
 import gumbo.compiler.structures.data.RelationSchemaException;
+import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
 import gumbo.engine.hadoop.settings.ExecutorSettings;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 import gumbo.guardedfragment.gfexpressions.GFExpression;
@@ -37,7 +38,6 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 	ExpressionSetOperations eso;
 	ExecutorSettings settings;
 
-	RelationFileMapping rm;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -53,50 +53,16 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 		        context.getTaskAttemptID().getTaskID().getId(),
 		        context.getTaskAttemptID().getId());
 		LOG.info(s);
+		
 
-		GFPrefixSerializer serializer = new GFPrefixSerializer();
-
-		// load guard
+		// load parameters
 		try {
-			HashSet<GFExistentialExpression> formulaSet = new HashSet<GFExistentialExpression>();
-			String formulaString = conf.get("formulaset");
-			Set<GFExpression> deserSet = serializer.deserializeSet(formulaString);
-
-			// check whether the type is existential
-			// FUTURE allow other types?
-			for (GFExpression exp : deserSet) {
-				if (exp instanceof GFExistentialExpression) {
-					formulaSet.add((GFExistentialExpression) exp);
-				}
-			}
-			
-			eso = new ExpressionSetOperations();
-			eso.setExpressionSet(formulaSet);
-
+			ParameterPasser pp = new ParameterPasser(conf);
+			eso = pp.loadESO();
+			settings = pp.loadSettings();
 		} catch (Exception e) {
 			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}
-		
-
-		// get relation name
-		String relmapping = conf.get("relationfilemapping");
-		//		LOG.error(relmapping);
-		try {
-			FileSystem fs = FileSystem.get(conf);
-			rm = new RelationFileMapping(relmapping,fs);
-			//			LOG.trace(rm.toString());
-
-		} catch (RelationSchemaException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RelationFileMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		// TODO load settings
-		settings = new ExecutorSettings();
-		
 		
 	}
 

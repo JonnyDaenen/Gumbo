@@ -10,6 +10,9 @@ import java.util.Queue;
 import java.util.Set;
 
 import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.DualHashBidiMap;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.mapred.jobcontrol.JobControl;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 
@@ -25,6 +28,9 @@ import gumbo.compiler.partitioner.PartitionedCUGroup;
  *
  */
 public class PartitionQueue {
+	
+
+	private static final Log LOG = LogFactory.getLog(PartitionQueue.class);
 	
 	PartitionedCUGroup partitions;
 	
@@ -43,6 +49,13 @@ public class PartitionQueue {
 	 */
 	PartitionQueue(PartitionedCUGroup partitions) {
 		this.partitions = partitions;
+		queue = new HashSet<CalculationUnitGroup>();
+		queue.addAll(partitions.getBottomUpList());
+		active = new HashSet<CalculationUnitGroup>();
+		ready = new HashSet<CalculationUnitGroup>();
+		
+		calc2firstjob = new DualHashBidiMap<CalculationUnitGroup, ControlledJob>();
+		calc2secondjob = new DualHashBidiMap<CalculationUnitGroup, ControlledJob>();
 	}
 
 	/**
@@ -61,23 +74,31 @@ public class PartitionQueue {
 	public Set<CalculationUnitGroup> updateStatus() {
 		
 		Set<CalculationUnitGroup> newlyActivated = new HashSet<>();
+
+//		LOG.info("queue " +  queue);
+//		LOG.info("active " + active);
+//		LOG.info("ready " +  ready);
+		
 		// for each job in active
-		for (CalculationUnitGroup job : active) {
+		for (CalculationUnitGroup group: active) {
 			// check if it is ready and mark it if so
-			if (isReady(job)) {
-				active.remove(job);
-				ready.add(job);
+			if (isReady(group)) {
+				active.remove(group);
+				ready.add(group);
 			}
 		}
 		
 		// for each job in queue
-		for (CalculationUnitGroup job: queue) {
+		for (CalculationUnitGroup group: queue) {
 		// check if dependencies are done
-			if (dependenciesReady(job)) {
+			if (dependenciesReady(group)) {
+
+				LOG.info("Calculation group " + group + " is ready to be scheduled.");
+				
 				// make it active if so
-				queue.remove(job);
-				active.add(job);
-				newlyActivated.add(job);
+				queue.remove(group);
+				active.add(group);
+				newlyActivated.add(group);
 			}
 		}
 		
@@ -97,6 +118,7 @@ public class PartitionQueue {
 		
 		Collection<CalculationUnitGroup> deps = partitions.getDependentPartitions(cug);
 		
+		LOG.info("Dependencies: " + deps);
 		// check their jobs
 		boolean depsReady = true;
 		for (CalculationUnitGroup dep : deps) {
@@ -115,9 +137,17 @@ public class PartitionQueue {
 	 * 
 	 * @return <code>true</code> if all dependcies are done, <code>false</code> otherwise
 	 */
-	private boolean isReady(CalculationUnitGroup job) {
-		ControlledJob job1 = calc2firstjob.get(job);
-		ControlledJob job2 = calc2secondjob.get(job);
+	private boolean isReady(CalculationUnitGroup group) {
+		ControlledJob job1 = calc2firstjob.get(group);
+		ControlledJob job2 = calc2secondjob.get(group);
+		
+		if (job1.isReady()) {
+			LOG.info("Calculation group " + group + " round1 is ready.");
+		}
+		
+		if (job2.isReady()) {
+			LOG.info("Calculation group " + group + " round2 is ready.");
+		}
 		 
 		return job1.isReady() && job2.isReady();
 	}

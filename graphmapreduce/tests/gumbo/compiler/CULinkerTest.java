@@ -67,7 +67,7 @@ public class CULinkerTest {
 			 CalculationUnitGroup result3 = CompilerTester.linker.createDAG(result2);
 			 
 			assertEquals(3,result3.getCalculations().size());
-			assertEquals(0,result3.getDependencies().size());
+			assertEquals(1,result3.getAllDependencies().size()); // 1 dependency (internal in this case)
 			assertEquals(2,result3.getHeight());
 			assertEquals(4,result3.getInputRelations().size());
 			assertEquals(1,result3.getIntermediateRelations().size()); // Out2b

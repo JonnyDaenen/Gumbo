@@ -1,7 +1,7 @@
 /**
  * Created: 29 Apr 2014
  */
-package mapreduce.guardedfragment.planner.partitioner;
+package gumbo.compiler.partitioner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -110,7 +110,7 @@ public class PartitionerTest {
 	public void heightPartitioner() {
 		HeightPartitioner partitioner = new HeightPartitioner();
 
-		PartitionedCUGroup partitioned = partitioner.partition(cp);
+		PartitionedCUGroup partitioned = partitioner.partition(cp,null);
 		
 		List<CalculationUnitGroup> list = partitioned.getBottomUpList();
 

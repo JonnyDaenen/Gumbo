@@ -61,6 +61,7 @@ public class FileMappingExtractor {
 			for (Path p : expandedPaths) {
 				newMapping.addPath(rs, p);
 			}
+			newMapping.setFormat(rs, ins.getFormat(rs));
 		}
 		return newMapping;
 	}

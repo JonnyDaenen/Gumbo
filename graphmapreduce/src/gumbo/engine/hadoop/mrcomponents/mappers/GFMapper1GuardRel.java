@@ -41,7 +41,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 	@Override
 	protected void setup(org.apache.hadoop.mapreduce.Mapper.Context context) throws IOException, InterruptedException {
 		super.setup(context);
-		pathids = new TupleIDCreator(rm);
+		pathids = new TupleIDCreator(eso.getFileMapping());
 	}
 
 	/**

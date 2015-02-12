@@ -281,7 +281,7 @@ public class GumboHadoopConverter {
 
 			/* GENERAL */
 			hadoopJob.setJarByClass(getClass());
-			hadoopJob.setJobName(getName(cug,1));
+			hadoopJob.setJobName(getName(cug,2));
 
 
 			// extract file mapping where input paths are made specific
@@ -358,7 +358,7 @@ public class GumboHadoopConverter {
 			}
 
 			// create dummy output path, as individual relations are sent to specific locations
-			Path dummyPath = fileManager.getNewTmpPath(getName(cug,1));
+			Path dummyPath = fileManager.getNewTmpPath(getName(cug,2));
 			FileOutputFormat.setOutputPath(hadoopJob, dummyPath);
 
 

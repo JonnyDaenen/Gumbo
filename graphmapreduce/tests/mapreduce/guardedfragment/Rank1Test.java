@@ -4,10 +4,13 @@
 package mapreduce.guardedfragment;
 
 import static org.junit.Assert.fail;
+import gumbo.compiler.GFCompiler;
+import gumbo.compiler.GumboPlan;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.HeightPartitioner;
 import gumbo.compiler.structures.MRPlan;
 import gumbo.compiler.structures.data.RelationSchema;
+import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.hadoop.HadoopExecutor;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 import gumbo.guardedfragment.gfexpressions.GFExpression;
@@ -61,7 +64,7 @@ public class Rank1Test {
 		dataS.add("S(1,3)");
 
 
-		Set<String> result = doTest(gfe, dataG,dataS,"O1");
+		Set<String> result = doTest(gfe, dataG,dataS,"O");
 
 		//		System.out.println(result);
 
@@ -83,7 +86,7 @@ public class Rank1Test {
 		data.add("G(1,2)");
 
 
-		Set<String> result = doTest(gfe, data,null,"O2");
+		Set<String> result = doTest(gfe, data,null,"O");
 		//		System.out.println(result);
 
 		if(result.size() != 2 || !result.contains("O(1,2)") || !result.contains("O(1,1)"))
@@ -104,7 +107,7 @@ public class Rank1Test {
 		dataG.add("G(2,1)");
 
 
-		Set<String> result = doTest(gfe, dataG, null, "O2");
+		Set<String> result = doTest(gfe, dataG, null, "O");
 		//		System.out.println(result);
 
 		System.out.println(result);
@@ -146,20 +149,19 @@ public class Rank1Test {
 		//		MRPlan plan = planner.convert(gfe.getSubExistentialExpression(1));
 		//		plan.execute();
 
-		gumbo.compiler.GFMRPlanner planner2 = new gumbo.compiler.GFMRPlanner(new HeightPartitioner());
-		MRPlan plan2 = planner2.createPlan((GFExistentialExpression)gfe, rfm , new Path(output.getAbsolutePath()), new Path(scratch.getAbsolutePath()));
-		//		plan2.execute();
-
-		HadoopExecutor executor = new HadoopExecutor();
-		executor.execute(plan2);
+		GFCompiler compiler = new GFCompiler(new HeightPartitioner());
+		GumboPlan plan = compiler.createPlan((GFExistentialExpression)gfe, rfm, new Path(output.getAbsolutePath()), new Path(scratch.getAbsolutePath()));
+		
+		HadoopEngine engine = new HadoopEngine();
+		engine.executePlan(plan);
 
 		// TODO we need a method to request the output files/directory of a relation
 
-		System.out.println(plan2.getOutputFolder());
+		System.out.println(plan);
 
 		// read output file
 		//		File outputfile = new File(output.getAbsolutePath() + "/test/part-r-00000");
-		File outputfile = new File(output.getAbsolutePath() + "/OUT_1_"+relname+"/"+relname+"/"+relname+"-r-00000");
+		File outputfile = new File(output.getAbsolutePath() + "/OUT_0_"+relname+"/"+relname+"/"+relname+"-r-00000");
 		List<String> out = Files.readAllLines(outputfile.toPath(), StandardCharsets.US_ASCII);
 
 		return new HashSet<String>(out);

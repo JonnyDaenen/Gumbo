@@ -51,7 +51,7 @@ public class GFMapper1GuardedCsv extends GFMapper1GuardedRel {
 
 			//				LOG.error("File Name: "+filePath);
 
-			RelationSchema rs = rm.findSchema(filePath);
+			RelationSchema rs = eso.getFileMapping().findSchema(filePath);
 
 			// trim is necessary to remove extra whitespace
 			String t1 = value.toString().trim();

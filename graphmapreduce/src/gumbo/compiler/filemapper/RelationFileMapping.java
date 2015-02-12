@@ -29,10 +29,6 @@ import org.apache.hadoop.fs.Path;
 public class RelationFileMapping {
 
 
-	/**
-	 * @author Jonny Daenen
-	 *
-	 */
 	public class PathNotFoundError extends Exception {
 		public PathNotFoundError(String msg) {
 			super(msg);
@@ -181,6 +177,18 @@ public class RelationFileMapping {
 		}
 		paths.add(p);
 
+	}
+	
+	
+	/**
+	 * <b>Warning:</b> changes all paths of specified relation to the given type!
+	 * 
+	 * @see #addPath(RelationSchema, Path)
+	 * @see #setFormat(RelationSchema, InputFormat)
+	 */
+	public void addPath(RelationSchema s, Path p, InputFormat f) {
+		addPath(s,p);
+		setFormat(s, f);
 	}
 
 	/**

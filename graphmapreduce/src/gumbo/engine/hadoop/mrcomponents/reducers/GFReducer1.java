@@ -3,6 +3,7 @@
  */
 package gumbo.engine.hadoop.mrcomponents.reducers;
 
+import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
 import gumbo.engine.hadoop.settings.ExecutorSettings;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
 import gumbo.guardedfragment.gfexpressions.GFExpression;
@@ -53,40 +54,23 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 		// load context
 		super.setup(context);
 		Configuration conf = context.getConfiguration();
-		
+
 		String s = String.format("Reducer"+this.getClass().getSimpleName()+"-%05d-%d",
-		        context.getTaskAttemptID().getTaskID().getId(),
-		        context.getTaskAttemptID().getId());
+				context.getTaskAttemptID().getTaskID().getId(),
+				context.getTaskAttemptID().getId());
 		LOG.info(s);
 
 		mos = new MultipleOutputs<>(context);
 		sb = new StringBuilder(100);
 
-		GFPrefixSerializer serializer = new GFPrefixSerializer();
-
-		// load guard
+		// load parameters
 		try {
-			HashSet<GFExistentialExpression> formulaSet = new HashSet<GFExistentialExpression>();
-			String formulaString = conf.get("formulaset");
-			Set<GFExpression> deserSet = serializer.deserializeSet(formulaString);
-
-			// check whether the type is existential
-			// FUTURE allow other types?
-			for (GFExpression exp : deserSet) {
-				if (exp instanceof GFExistentialExpression) {
-					formulaSet.add((GFExistentialExpression) exp);
-				}
-			}
-
-			eso = new ExpressionSetOperations();
-			eso.setExpressionSet(formulaSet);
-
+			ParameterPasser pp = new ParameterPasser(conf);
+			eso = pp.loadESO();
+			settings = pp.loadSettings();
 		} catch (Exception e) {
-			throw new InterruptedException("Reducer initialisation error: " + e.getMessage());
+			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}
-		
-		// TODO load settings
-		settings = new ExecutorSettings();
 	}
 
 	@Override
@@ -104,24 +88,24 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 		Set<Pair<String, Integer>> buffer = new HashSet<>();
 
 		// LOG.warn(key + ": ");
-		
-		boolean print = false;
-//		if (key.toString().contains("(1000)") || key.toString().contains(",1000,"))
-//			print = true;
 
-		
-		
+		boolean print = false;
+		//		if (key.toString().contains("(1000)") || key.toString().contains(",1000,"))
+		//			print = true;
+
+
+
 		boolean keyFound = false;
 
 		// WARNING Text object will be reused by Hadoop!
 		for (Text t : values) {
-		
-//			if (print)
-//				LOG.error("Red1: " + key + " " + t);
+
+			//			if (print)
+			//				LOG.error("Red1: " + key + " " + t);
 
 			// parse input
 			Pair<String, Integer> split = split(t);
-			
+
 			// is this not the key
 			// (key is only thing that can appear without atom)
 			// it does not matter whether its sent as S(1) or with a constant symbol such as '#'
@@ -132,12 +116,12 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 				if (keyFound) {
 					out1.set(split.fst);
 					out2.set(split.snd);
-//					System.out.println("Writing: " + out1.toString() + " " + out2.toString() + "" + split.snd);
+					//					System.out.println("Writing: " + out1.toString() + " " + out2.toString() + "" + split.snd);
 					mos.write(out1, out2, FILENAME);
 					context.getCounter(GumboRed1Counter.RED1_OUT_BYTES).increment(out1.getLength() + Integer.SIZE/8);
 					context.getCounter(GumboRed1Counter.RED1_OUT_RECORDS).increment(1);
-//					if (print)
-//						LOG.error("Red1 Out: " + out1 + " " + out2);
+					//					if (print)
+					//						LOG.error("Red1 Out: " + out1 + " " + out2);
 				}
 				// else we collect the data
 				else {
@@ -176,17 +160,17 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 
 		byte[] b = t.getBytes();
 		for (int i = 0; i < length; i++) { // FUTURE for unicode this doesn't
-											// work I guess..
+			// work I guess..
 			char c = (char)b[i];
 			// if we find the semicolon
 			if (c == ';') {
 				numberPart = true;
 				num = 0;
-			// assemble number
+				// assemble number
 			} else if (numberPart && ( '0' <= c && c <= '9')){
 				num *= 10;
 				num +=  c - '0';
-				
+
 			} else {
 				sb.append((char) b[i]);
 			}

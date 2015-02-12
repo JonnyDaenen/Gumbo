@@ -75,7 +75,7 @@ public class ExpressionSetOperations {
 		setExpressionSet(expressionSet);
 	}
 
-	private void setExpressionSet(Collection<GFExistentialExpression> expressionSet) throws GFOperationInitException {
+	public void setExpressionSet(Collection<GFExistentialExpression> expressionSet) throws GFOperationInitException {
 		this.expressionSet = expressionSet;
 		preCalculate();
 	}

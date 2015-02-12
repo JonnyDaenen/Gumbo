@@ -30,6 +30,7 @@ import org.apache.hadoop.mapreduce.Mapper;
  * @author Jonny Daenen
  *
  */
+@Deprecated
 public class GFMapperHadoop extends Mapper<Text, Text, Text, Text> {
 	
 

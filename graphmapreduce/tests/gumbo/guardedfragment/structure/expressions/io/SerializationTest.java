@@ -1,7 +1,7 @@
 /**
  * Created: 23 Apr 2014
  */
-package mapreduce.guardedfragment.structure.expressions.io;
+package gumbo.guardedfragment.structure.expressions.io;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
