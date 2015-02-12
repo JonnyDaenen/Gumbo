@@ -34,8 +34,6 @@ import org.apache.hadoop.fs.Path;
  * 
  */
 public class ExpressionSetOperations {
-	
-	// TODO #core translate paths to specific file paths?
 
 	private static final Log LOG = LogFactory.getLog(ExpressionSetOperations.class);
 

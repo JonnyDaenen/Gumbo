@@ -18,7 +18,6 @@ import org.apache.hadoop.fs.Path;
  * The relative paths are stored, TODO #core no, they are stored absolute!
  *  making it possible to change the output and scratch roots afterwards.
  * TODO check
- * TODO #core add estimates?
  * 
  * @author Jonny Daenen
  * 

@@ -28,7 +28,6 @@ import java.util.Set;
  * calculations. 
  * 
  * TODO #core separate schema logic
- * TODO #core equals functions that yields true when calculations are all equal
  * 
  * @author Jonny Daenen
  * 
@@ -253,7 +252,6 @@ public class CalculationUnitGroup implements Iterable<CalculationUnit> {
 	 * @return the set of relations that cannot be obtained using a dependent
 	 *         calculation TODO what?
 	 */
-	// TODO #core @Override
 	public Set<RelationSchema> getOutputRelations() {
 		Set<RelationSchema> out = new HashSet<RelationSchema>();
 		out.addAll(getAllOutputRelations());

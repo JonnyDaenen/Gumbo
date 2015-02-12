@@ -151,8 +151,10 @@ public class GumboHadoopConverter {
 			hadoopJob.setJarByClass(getClass());
 			hadoopJob.setJobName(getName(cug,1));
 
-			// wrapper object for expressions
+			// extract file mapping where input paths are made specific
+			// TODO also filter out non-related relations
 			RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
+			// wrapper object for expressions
 			ExpressionSetOperations eso = new ExpressionSetOperations(extractExpressions(cug),mapping); 
 
 			// pass arguments via configuration
@@ -281,9 +283,13 @@ public class GumboHadoopConverter {
 			hadoopJob.setJarByClass(getClass());
 			hadoopJob.setJobName(getName(cug,1));
 
-			// wrapper object for expressions
+
+			// extract file mapping where input paths are made specific
+			// TODO also filter out non-related relations
 			RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
+			// wrapper object for expressions
 			ExpressionSetOperations eso = new ExpressionSetOperations(extractExpressions(cug),mapping); 
+			
 
 			// pass arguments via configuration
 			Configuration conf = hadoopJob.getConfiguration();

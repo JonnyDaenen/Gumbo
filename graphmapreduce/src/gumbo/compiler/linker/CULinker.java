@@ -18,7 +18,6 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Links {@link CalculationUnit}s in a DAG.
- * TODO #core separate decomposer
  * TODO #core change to GFBasicExpression
  * 
  * 

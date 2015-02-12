@@ -62,7 +62,6 @@ public abstract class CalculationUnit {
 
 
 	/**
-	 * TODO #core change to set
 	 * @return the output schema
 	 */
 	abstract public RelationSchema getOutputSchema();

@@ -19,7 +19,6 @@ import java.util.Set;
  * creating partitions.
  * The partitions are ordered in a bottom-up fashion, 0 being the first.
  * 
- * TODO #core maybe add dag as a field? -> yes and do not expose operations
  * TODO replace level wording with partition
  * 
  * @author Jonny Daenen

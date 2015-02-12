@@ -22,7 +22,6 @@ import org.apache.hadoop.fs.Path;
 
 /**
  * Maps a set of relations to a specific set of files (no directories/globs are stored).
- * TODO #core ensure only real files are stored.
  * 
  * @author Jonny Daenen
  *

@@ -72,7 +72,7 @@ public class GFCompiler {
 
 	/**
 	 * Creates a {@link GumboPlan} for a given set of existential expressions.
-	 * TODO #core convert rfm, outdir and scratchdir to set of special expressions
+	 * FUTURE convert rfm, outdir and scratchdir to set of special expressions?
 	 * @param expressions the set of expressions to convert
 	 * @param indir the directory containing the input data
 	 * @param outdir the directory where to put the output data
