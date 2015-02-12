@@ -4,23 +4,15 @@
 package gumbo.engine.hadoop.mrcomponents.mappers;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.compiler.filemapper.RelationFileMappingException;
-import gumbo.compiler.structures.data.RelationSchemaException;
 import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
 import gumbo.engine.hadoop.settings.ExecutorSettings;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
-import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
 import gumbo.guardedfragment.gfexpressions.operations.ExpressionSetOperations;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;

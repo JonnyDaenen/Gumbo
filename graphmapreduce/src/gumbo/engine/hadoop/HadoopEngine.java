@@ -3,12 +3,17 @@
  */
 package gumbo.engine.hadoop;
 
+import gumbo.compiler.GumboPlan;
+import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.engine.ExecutionException;
+import gumbo.engine.hadoop.converter.GumboHadoopConverter;
+import gumbo.engine.hadoop.converter.GumboHadoopConverter.ConversionException;
+import gumbo.engine.hadoop.settings.ExecutorSettings;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.collections4.BidiMap;
-import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.mapreduce.Counter;
@@ -16,15 +21,6 @@ import org.apache.hadoop.mapreduce.CounterGroup;
 import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
-
-import gumbo.compiler.GumboPlan;
-import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.compiler.partitioner.PartitionedCUGroup;
-import gumbo.compiler.structures.MRPlan;
-import gumbo.engine.ExecutionException;
-import gumbo.engine.hadoop.converter.GumboHadoopConverter;
-import gumbo.engine.hadoop.converter.GumboHadoopConverter.ConversionException;
-import gumbo.engine.hadoop.settings.ExecutorSettings;
 
 /**
  * 

@@ -3,21 +3,19 @@
  */
 package gumbo.engine.hadoop;
 
+import gumbo.compiler.calculations.CalculationUnit;
+import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.compiler.partitioner.PartitionedCUGroup;
+
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Queue;
 import java.util.Set;
 
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.mapred.jobcontrol.JobControl;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
-
-import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.compiler.partitioner.PartitionedCUGroup;
 
 /**
  * Represents a queue of partitions, coupled to real hadoop jobs.

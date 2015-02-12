@@ -3,7 +3,6 @@
  */
 package gumbo.compiler.calculations;
 
-import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.structures.data.RelationSchema;
 
 import java.util.Collection;

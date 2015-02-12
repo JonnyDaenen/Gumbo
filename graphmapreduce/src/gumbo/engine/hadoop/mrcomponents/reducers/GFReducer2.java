@@ -14,16 +14,12 @@ import gumbo.guardedfragment.booleanexpressions.VariableNotFoundException;
 import gumbo.guardedfragment.conversion.GFBooleanMapping;
 import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
 import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
-import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
 import gumbo.guardedfragment.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.guardedfragment.gfexpressions.operations.GFAtomProjection;
 import gumbo.guardedfragment.gfexpressions.operations.NonMatchingTupleException;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

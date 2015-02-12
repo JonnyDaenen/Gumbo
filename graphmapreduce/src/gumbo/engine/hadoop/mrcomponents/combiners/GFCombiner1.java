@@ -5,9 +5,6 @@ package gumbo.engine.hadoop.mrcomponents.combiners;
 
 import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
 import gumbo.engine.hadoop.settings.ExecutorSettings;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
-import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
 import gumbo.guardedfragment.gfexpressions.io.Pair;
 import gumbo.guardedfragment.gfexpressions.operations.ExpressionSetOperations;
 

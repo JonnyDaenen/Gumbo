@@ -1,12 +1,5 @@
 package gumbo.engine.hadoop.mrcomponents;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
-
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.filemapper.RelationFileMappingException;
 import gumbo.compiler.structures.data.RelationSchemaException;
@@ -17,6 +10,13 @@ import gumbo.guardedfragment.gfexpressions.GFExpression;
 import gumbo.guardedfragment.gfexpressions.io.DeserializeException;
 import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
 import gumbo.guardedfragment.gfexpressions.operations.ExpressionSetOperations;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 
 public class ParameterPasser {
 
