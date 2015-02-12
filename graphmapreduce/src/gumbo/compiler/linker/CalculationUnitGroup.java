@@ -33,7 +33,7 @@ import java.util.Set;
  * @author Jonny Daenen
  * 
  */
-public class CalculationUnitGroup extends CalculationUnit implements Iterable<CalculationUnit> {
+public class CalculationUnitGroup implements Iterable<CalculationUnit> {
 
 	Set<CalculationUnit> calculations;
 
@@ -242,7 +242,6 @@ public class CalculationUnitGroup extends CalculationUnit implements Iterable<Ca
 	 * @return the set of relations that cannot be obtained using a dependent
 	 *         calculation
 	 */
-	@Override
 	public Set<RelationSchema> getInputRelations() {
 		Set<RelationSchema> in = new HashSet<RelationSchema>();
 		in.addAll(getAllInputRelations());
@@ -309,14 +308,49 @@ public class CalculationUnitGroup extends CalculationUnit implements Iterable<Ca
 	}
 
 
-
-
 	/**
-	 * @see gumbo.compiler.calculations.CalculationUnit#getOutputSchema()
+	 * Constructs the union of dependencies of all calculations.
+	 * 
+	 * @return the union of all dependencies
 	 */
-	@Override
-	public RelationSchema getOutputSchema() {
-		// TODO #core implement
-		return null;
+	public Collection<CalculationUnit> getAllDependencies() {
+		
+		HashSet<CalculationUnit> deps = new HashSet<>();
+		
+		for (CalculationUnit cu: calculations) {
+			deps.addAll(cu.getDependencies());
+		}
+		
+		return deps;
+		
 	}
+	
+	
+	@Override
+	public boolean equals(Object obj) {
+
+		// wrong object
+		if (!(obj instanceof CalculationUnitGroup)) {
+			return false;
+		}
+		
+		// cast
+		CalculationUnitGroup cug = (CalculationUnitGroup) obj;
+		
+		// wrong size
+		if (calculations.size() != cug.calculations.size())
+			return false;
+			
+		// size is ok, so one-way comparison suffices
+		for(CalculationUnit cu : cug.calculations) {
+			if (!calculations.contains(cu))
+				return false;
+		}
+		
+		
+		return super.equals(obj);
+	}
+
+	
+
 }

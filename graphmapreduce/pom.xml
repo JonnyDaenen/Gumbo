@@ -91,6 +91,13 @@
 		</plugins>
 	</build>
 	<dependencies>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
@@ -127,16 +134,11 @@
 			<artifactId>spark-core_2.10</artifactId>
 			<version>1.0.2</version>
 		</dependency>
-		
-		<!-- Hive dependency  -->
-		<!--  
-		<dependency> 
-			<groupId>org.apache.hive</groupId> 
-			<artifactId>hive-service</artifactId> 
-			<version>0.14.0</version>
-		</dependency>
-		-->
-		
+
+		<!-- Hive dependency -->
+		<!-- <dependency> <groupId>org.apache.hive</groupId> <artifactId>hive-service</artifactId> 
+			<version>0.14.0</version> </dependency> -->
+
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

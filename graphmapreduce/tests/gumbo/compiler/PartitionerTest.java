@@ -88,9 +88,9 @@ public class PartitionerTest {
 			
 			assertEquals(3,result5.getCalculationUnits().size());
 			
-			assertEquals(1,result5.getLevel(0).size());
-			assertEquals(1,result5.getLevel(1).size());
-			assertEquals(1,result5.getLevel(2).size());
+			assertEquals(1,result5.getPartition(0).size());
+			assertEquals(1,result5.getPartition(1).size());
+			assertEquals(1,result5.getPartition(2).size());
 			
 			assertEquals(3,result5.getNumPartitions());
 			

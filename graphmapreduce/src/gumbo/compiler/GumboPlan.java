@@ -83,6 +83,24 @@ public class GumboPlan {
 
 	}
 
+	/**
+	 * Returns the name of the query this plan belongs to.
+	 * 
+	 * @return the query name
+	 */
+	public String getName() {
+		return queryName;
+	}
+
+	/**
+	 * Returns the internal partition list
+	 * @return 
+	 * @return the internal partition list
+	 */
+	public PartitionedCUGroup getPartitions() {
+		return partitions;
+	}
+
 
 
 

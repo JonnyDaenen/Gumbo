@@ -6,10 +6,13 @@ package gumbo.compiler.partitioner;
 import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.linker.CalculationUnitGroup;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Adds level information to {@link CalculationUnit}s in a {@link CalculationUnitGroup},
@@ -17,6 +20,7 @@ import java.util.Map;
  * The partitions are ordered in a bottom-up fashion, 0 being the first.
  * 
  * TODO #core maybe add dag as a field? -> yes and do not expose operations
+ * TODO replace level wording with partition
  * 
  * @author Jonny Daenen
  *
@@ -27,7 +31,7 @@ public class PartitionedCUGroup {
 	
 	Map<CalculationUnit, Integer> levelAssignmment; // FUTURE convert to list?
 	// FUTURE add reverse mapping
-	int currentLevel = -1;
+	int currentPartition = -1;
 
 
 	public PartitionedCUGroup() {
@@ -47,7 +51,7 @@ public class PartitionedCUGroup {
 		for (int i = 0; i < units.length; i++) {
 			group.add(units[i]);
 			levelAssignmment.put(units[i], levels[i]);
-			currentLevel = Math.max(currentLevel, levels[i]);
+			currentPartition = Math.max(currentPartition, levels[i]);
 		}
 	}
 	
@@ -62,9 +66,9 @@ public class PartitionedCUGroup {
 		group.addAll(partition);
 
 		// add partition
-		currentLevel++;
+		currentPartition++;
 		for (CalculationUnit c : partition) {
-			levelAssignmment.put(c,currentLevel);
+			levelAssignmment.put(c,currentPartition);
 		}
 
 		// TODO throw exception when dependencies are missing
@@ -77,7 +81,7 @@ public class PartitionedCUGroup {
 	 */
 	public void addNewLevel(CalculationUnit c) {
 		group.add(c);
-		levelAssignmment.put(c,++currentLevel);
+		levelAssignmment.put(c,++currentPartition);
 	}
 
 
@@ -90,7 +94,7 @@ public class PartitionedCUGroup {
 	public List<CalculationUnitGroup> getBottomUpList() {
 		LinkedList<CalculationUnitGroup> l = new LinkedList<>();
 
-		for (int i = 0; i <= currentLevel; i++) {
+		for (int i = 0; i <= currentPartition; i++) {
 			CalculationUnitGroup set = new CalculationUnitGroup();
 			for (CalculationUnit c : levelAssignmment.keySet()) {
 				if (levelAssignmment.get(c) == i)
@@ -103,14 +107,14 @@ public class PartitionedCUGroup {
 	}
 	
 	/**
-	 * Constructs a {@link CalculationUnitGroup} that contains precisely
+	 * Constructs (!) a {@link CalculationUnitGroup} that contains precisely
 	 * the {@link CalculationUnit}s of the specified level.
 	 * 
 	 * @param level the requested level
 	 * 
 	 * @return the {@link CalculationUnit}s of the specified level
 	 */
-	public CalculationUnitGroup getLevel(int i) {
+	public CalculationUnitGroup getPartition(int i) {
 		CalculationUnitGroup set = new CalculationUnitGroup();
 		for (CalculationUnit c : levelAssignmment.keySet()) {
 			if (levelAssignmment.get(c) == i)
@@ -125,7 +129,7 @@ public class PartitionedCUGroup {
 	 * @return the number of partitions
 	 */
 	public int getNumPartitions() {
-		return currentLevel+1;
+		return currentPartition+1;
 	}
 
 
@@ -136,7 +140,7 @@ public class PartitionedCUGroup {
 	@Override
 	public String toString() {
 		String s = "Calculation Unit Partitions: {" + System.lineSeparator();
-		for (int i = 0; i <= currentLevel; i++) {
+		for (int i = 0; i <= currentPartition; i++) {
 			s += "{";
 			for (CalculationUnit c : levelAssignmment.keySet()) {
 				if (levelAssignmment.get(c) == i)
@@ -180,7 +184,7 @@ public class PartitionedCUGroup {
 	 * @return <code>true</code> when every level in the partition is occupied, <code>false</code> otherwise
 	 */
 	public boolean allLevelsUsed() {
-		for (int i = 0; i <= currentLevel; i++) {
+		for (int i = 0; i <= currentPartition; i++) {
 			// count number on this level
 			int counter = 0;
 			for (CalculationUnit c : levelAssignmment.keySet()) {
@@ -207,7 +211,7 @@ public class PartitionedCUGroup {
 	 * @return the spread of the calculationunit
 	 */
 	public int getSpread(CalculationUnit c) {
-		boolean [] levels = new boolean[currentLevel+1];
+		boolean [] levels = new boolean[currentPartition+1];
 
 		// for each possible parent
 		for (CalculationUnit p : group) {
@@ -238,6 +242,28 @@ public class PartitionedCUGroup {
 	 */
 	public CalculationUnitGroup getCalculationUnits() {
 		return group;
+	}
+
+	/**
+	 * 
+	 * @param cug
+	 * @return the set of partitions that contain
+	 */
+	public Collection<CalculationUnitGroup> getDependentPartitions(CalculationUnitGroup cug) {
+		HashSet<CalculationUnitGroup> depParts = new HashSet<>();
+		Collection<CalculationUnit> deps = cug.getAllDependencies();
+		
+		// for each partition
+		for (int i = 0; i <= currentPartition; i++) {
+			CalculationUnitGroup current = getPartition(i);
+			// check if it contains dependencies
+			current.getCalculations().retainAll(deps);
+			if (current.size() != 0) {
+				depParts.add(getPartition(i)); // new request because we modified the previous one
+			}
+		}
+		
+		return depParts;
 	}
 
 

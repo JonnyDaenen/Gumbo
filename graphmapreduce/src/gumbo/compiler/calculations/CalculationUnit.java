@@ -3,6 +3,7 @@
  */
 package gumbo.compiler.calculations;
 
+import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.structures.data.RelationSchema;
 
 import java.util.Collection;
@@ -16,17 +17,18 @@ import java.util.Set;
  * It can be translated directly into a (set of) (MR-)jobs in a framework. 
  * An example is a {@link BasicGFCalculationUnit}.
  *  
+ *  
  * 
  * @author Jonny Daenen
  *
  */
 public abstract class CalculationUnit {
-	
+
 	static int COUNTER = 0; // CLEAN dirty code
 	int id;
 	Map<RelationSchema,CalculationUnit> directDependencies;
-	
-	
+
+
 	public CalculationUnit() {
 		this(COUNTER);
 	}
@@ -37,14 +39,14 @@ public abstract class CalculationUnit {
 		directDependencies = new HashMap<RelationSchema,CalculationUnit>();
 	}
 
-	
+
 	/**
 	 * @return set of direct dependent {@link CalculationUnit}s
 	 */
 	public Collection<CalculationUnit> getDependencies() {
 		return directDependencies.values();
 	}
-	
+
 	/**
 	 * @param cu a CU on which this CU depends
 	 * @param rs the relation of the CU
@@ -52,19 +54,19 @@ public abstract class CalculationUnit {
 	public void setDependency(RelationSchema rs,CalculationUnit cu) {
 		directDependencies.put(rs, cu);
 	}
-	
-	
-	
-	abstract public Set<RelationSchema> getInputRelations();
-	
 
-	
+
+
+	abstract public Set<RelationSchema> getInputRelations();
+
+
+
 	/**
 	 * TODO #core change to set
 	 * @return the output schema
 	 */
 	abstract public RelationSchema getOutputSchema();
-	
+
 
 
 	/**
@@ -79,16 +81,16 @@ public abstract class CalculationUnit {
 	 * @return the height of the DAG rooted at this node
 	 */
 	public int getHeight() {
-		
+
 		int max = 0;
 		for (CalculationUnit dep : directDependencies.values()) {
 			max = Math.max(max, dep.getHeight());
 		}
-			
+
 		return max + 1;
-		
+
 	}
-	
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
@@ -101,16 +103,29 @@ public abstract class CalculationUnit {
 			s += "None.";
 		for (CalculationUnit c : directDependencies.values()) {
 			s += c.id +",";
-			
+
 		}
 		return s;
 	}
-	
+
 	/**
 	 * @return the id
 	 */
 	public int getId() {
 		return id;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		
+		// wrong object
+		if (!(obj instanceof CalculationUnit)) {
+			return false;
+		}
+
+		// cast
+		CalculationUnit cu = (CalculationUnit) obj;
+		return cu.id == id;
 	}
 
 }

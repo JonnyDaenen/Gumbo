@@ -32,6 +32,8 @@ import gumbo.guardedfragment.gfexpressions.operations.ExpressionSetOperations;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -113,7 +115,7 @@ public class GumboHadoopConverter {
 	 * 
 	 * @throws ConversionException when wrong types of calculation units are present
 	 */
-	public Set<ControlledJob> convert(CalculationUnitGroup cug) throws ConversionException {
+	public List<ControlledJob> convert(CalculationUnitGroup cug) throws ConversionException {
 
 		// extract expressions
 		for (CalculationUnit cu : cug) {
@@ -124,7 +126,7 @@ public class GumboHadoopConverter {
 		}
 
 		// create 2 jobs
-		Set<ControlledJob> jobs = new HashSet<>();
+		LinkedList<ControlledJob> jobs = new LinkedList<>();
 
 		ControlledJob job1 = createRound1Job(cug);
 		ControlledJob job2 = createRound2Job(cug,job1);
