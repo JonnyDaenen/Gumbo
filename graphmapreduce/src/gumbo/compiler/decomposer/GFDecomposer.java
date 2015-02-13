@@ -167,7 +167,7 @@ public class GFDecomposer implements GFVisitor<Pair<GFExpression,Set<GFExistenti
 	 * @param expressions a set of GFExpressions to decompose into basic GF expressions
 	 * @throws GFDecomposerException 
 	 */
-	public Set<GFExistentialExpression> decomposeAll(Collection<GFExpression> expressions) throws GFDecomposerException {
+	public Set<GFExistentialExpression> decomposeAll(Collection<? extends GFExpression> expressions) throws GFDecomposerException {
 		HashSet<GFExistentialExpression> result = new HashSet<GFExistentialExpression>();
 		for (GFExpression e : expressions) {
 			result.addAll(decompose(e));

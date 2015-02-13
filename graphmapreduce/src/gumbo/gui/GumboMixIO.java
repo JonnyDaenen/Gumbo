@@ -1,10 +1,12 @@
 package gumbo.gui;
 
+import gumbo.compiler.GFCompiler;
 import gumbo.compiler.GFCompilerException;
+import gumbo.compiler.GumboPlan;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.HeightPartitioner;
-import gumbo.compiler.resolver.MRPlan;
-import gumbo.engine.spark.SparkExecutor;
+import gumbo.engine.ExecutionException;
+import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.gui.gumboguiMixIO.GumboMainWindowMixIOwithScroll;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
@@ -52,9 +54,6 @@ public class GumboMixIO {
 	// Gumbo's variable
 	
 	private static Set<GFExistentialExpression> inputQuery;
-	private static MRPlan plan;
-	private static HadoopExecutor hadoopExec;
-	private static SparkExecutor SparkExec;
 	
 
 
@@ -180,34 +179,30 @@ public class GumboMixIO {
 	    		textConsole.setText("");
 	        	textConsole.append("Running Gumbo-Hadoop...\n");
 	    		
-	        	GFMRPlanner planner = new GFMRPlanner(new HeightPartitioner());
+	        	GFCompiler planner = new GFCompiler(new HeightPartitioner());
 	        	
 	        	textConsole.append("Parsing the input and output files...\n");
 	        	
 	        	
 	        	RelationFileMapping rfm = new RelationFileMapping();
 				rfm.setDefaultPath(new Path(inPathText.getText()));
-				MRPlan plan;
+				GumboPlan plan;
 				String xtime = "" + System.currentTimeMillis() / 1000;
 				try {
 					plan = planner.createPlan(
-							(Set<GFExistentialExpression>)inputQuery, rfm, 
+							inputQuery, 
+							rfm, 
 							new Path(outPathText.getText()), 
-							new Path("/Users/ntynvt/tempGumbo/"+xtime));
+							new Path("/Users/ntynvt/tempGumbo/"+xtime)); // FIXME use user-supplied path
 					
-					HadoopExecutor executor = new HadoopExecutor();
-					executor.execute(plan);
+					HadoopEngine engine = new HadoopEngine();
+					engine.executePlan(plan);
 				
-				} catch (GFCompilerException e1) {
+				} catch (GFCompilerException | ExecutionException | IllegalArgumentException e1) {
 					// TODO Auto-generated catch block
 					System.out.println(e1);
 					e1.printStackTrace();
-				} catch (IllegalArgumentException e1) {
-					// TODO Auto-generated catch block
-					System.out.println(e1);
-					e1.printStackTrace();
-				}
-				//plan.execute();
+				} 
 				
 				
 				

@@ -82,7 +82,7 @@ public class GFCompiler {
 	 * 
 	 * @throws GFCompilerException 
 	 */
-	public GumboPlan createPlan(Collection<GFExpression> expressions, RelationFileMapping infiles, Path outdir, Path scratchdir) throws GFCompilerException {
+	public GumboPlan createPlan(Collection<? extends GFExpression> expressions, RelationFileMapping infiles, Path outdir, Path scratchdir) throws GFCompilerException {
 
 		// decomposer -> CUConverter -> CULinker -> file mappings -> partition
 

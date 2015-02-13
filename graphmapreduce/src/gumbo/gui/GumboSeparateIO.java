@@ -3,6 +3,7 @@ package gumbo.gui;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.filemapper.RelationFileMappingException;
 import gumbo.compiler.resolver.MRPlan;
+import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.spark.SparkExecutor;
 import gumbo.gui.gumboguiSeparateIO.GumboMainWindowSeparateIO;
 import gumbo.structures.data.RelationSchemaException;
@@ -52,7 +53,7 @@ public class GumboSeparateIO extends JFrame {
 	
 	private static Set<GFExpression> inputQuery;
 	MRPlan plan;
-	HadoopExecutor hadoopExec;
+	HadoopEngine hadoopEngine;
 	SparkExecutor SparkExec;
 	
 
