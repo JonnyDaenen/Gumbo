@@ -42,7 +42,7 @@ public class FileMappingExtractor {
 		RelationFileMapping outs = fm.getOutFileMapping();
 
 		RelationFileMapping expandedIns = expand(ins);
-		expandedIns.putAll(outs, true);
+		expandedIns.putAll(outs);
 		
 		return expandedIns;
 	}

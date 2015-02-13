@@ -13,10 +13,7 @@ import java.util.Set;
 import org.apache.hadoop.fs.Path;
 
 /**
- * Bookkeeping for input/output locations,
- * coupled to relations. 
- * The relative paths are stored, TODO #core no, they are stored absolute!
- *  making it possible to change the output and scratch roots afterwards.
+ * Bookkeeping for input/output locations, coupled to relations. 
  * TODO check
  * 
  * @author Jonny Daenen
@@ -51,7 +48,7 @@ public class FileManager {
 
 		// copy input mapping
 		this.inMapping = new RelationFileMapping();
-		this.inMapping.putAll(infiles, true);
+		this.inMapping.putAll(infiles);
 
 		// set output mapping
 		this.outMapping = new RelationFileMapping();
@@ -122,14 +119,6 @@ public class FileManager {
 		inMapping.addPath(rs, p);
 	}
 
-	/**
-	 * @return the default input path
-	 */
-	@Deprecated
-	public Object getDefaultInputPath() {
-		return inMapping.getDefaultPath();
-	}
-
 
 	/**
 	 * Returns a mapping between the used relations and paths, both input and output.
@@ -145,7 +134,7 @@ public class FileManager {
 	 */
 	public RelationFileMapping getInFileMapping() {
 		RelationFileMapping newmap = new RelationFileMapping();
-		newmap.putAll(inMapping, true);
+		newmap.putAll(inMapping);
 		return newmap;
 	}
 	
@@ -155,7 +144,7 @@ public class FileManager {
 	 */
 	public RelationFileMapping getOutFileMapping() {
 		RelationFileMapping newmap = new RelationFileMapping();
-		newmap.putAll(outMapping, true);
+		newmap.putAll(outMapping);
 		return newmap;
 	}
 

@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.InputSplit;
+import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 /**
@@ -27,6 +28,8 @@ public class TupleIDCreator {
 	
 
 	public class TupleIDError extends Exception {
+		private static final long serialVersionUID = 1L;
+
 		public TupleIDError(String msg, Exception cause) {
 			super(msg, cause);
 		}
@@ -69,13 +72,19 @@ public class TupleIDCreator {
 
 	/**
 	 * Uses a file id and file offset to create a unique tuple id.
-	 * @param context
-	 * @param l
-	 * @return the id for the given filename
 	 * 
-	 * @throws TupleIDError 
+	 * <b>Precondition:</b> we assume that the paths in the {@link RelationFileMapping} 
+	 * are absolute (this can be done by the {@link PathExpander}).
+	 * 
+	 * @param context the MR context
+	 * @param offset the offset in the file
+	 * 
+	 * @return a unique identifier for this position in the file
+	 * 
+	 * @throws TupleIDError when no ID can be determined
+	 * 
 	 */
-	public String getTupleID(org.apache.hadoop.mapreduce.Mapper.Context context, long offset) throws TupleIDError  {
+	public String getTupleID(Context context, long offset) throws TupleIDError  {
 		
 		try {
 			
@@ -87,14 +96,12 @@ public class TupleIDCreator {
 			method.setAccessible(true);
 			FileSplit fileSplit = (FileSplit) method.invoke(is);
 			Path filePath = fileSplit.getPath();
-			
-//			FileStatus fs = filePath.getFileSystem(null).getFileStatus(filePath);
-			
-			
-			Path match = rm.findBestPathMatch(filePath);
-			// TODO #core these must be absoule paths!! adjust expander
 
-			long pathID = getPathID(match);
+//			FileStatus fs = filePath.getFileSystem(null).getFileStatus(filePath);
+
+
+			// filePath must be absolute
+			long pathID = getPathID(filePath);
 			
 //			OPTIMIZE try this:
 //			String filename= ((FileSplit)context.getInputSplit()).getPath().getName();

@@ -66,7 +66,6 @@ public class RelationFileMapping {
 
 	HashMap<RelationSchema, Set<Path>> mapping;
 	HashMap<RelationSchema, InputFormat> format;
-	private Path defaultPath;
 
 	public RelationFileMapping() {
 		mapping = new HashMap<>();
@@ -197,17 +196,13 @@ public class RelationFileMapping {
 	 * @param infiles the mapping to incorporate into this one
 	 * @param copyDefault true iff the default path should be copied too
 	 */
-	public void putAll(RelationFileMapping infiles, boolean copyDefault) {
+	public void putAll(RelationFileMapping infiles) {
 		for (RelationSchema rs : infiles.mapping.keySet()) {
 			Set<Path> set = infiles.mapping.get(rs);
 			for (Path path : set) {
 				addPath(rs,path);
 			}
 			format.putAll(infiles.format);
-		}
-
-		if (copyDefault) {
-			defaultPath = infiles.defaultPath;
 		}
 
 	}
@@ -258,22 +253,6 @@ public class RelationFileMapping {
 		return false;
 	}
 
-	/**
-	 * Sets the path to be used when no other input is available.
-	 * @param defaultPath a path
-	 */
-	public void setDefaultPath(Path defaultPath) {
-		this.defaultPath = defaultPath;
-
-	}
-
-	/**
-	 * Fetches the default path to be used when no other input is available.
-	 * @return the default path
-	 */
-	public Path getDefaultPath() {
-		return defaultPath;
-	}
 
 	/**
 	 * Constructs a serialized version of the mapping,
@@ -470,8 +449,8 @@ public class RelationFileMapping {
 	 */
 	public RelationFileMapping combine(RelationFileMapping otherMapping) {
 		RelationFileMapping newMapping = new RelationFileMapping();
-		newMapping.putAll(this, true);
-		newMapping.putAll(otherMapping, true);
+		newMapping.putAll(this);
+		newMapping.putAll(otherMapping);
 		return newMapping;
 	}
 

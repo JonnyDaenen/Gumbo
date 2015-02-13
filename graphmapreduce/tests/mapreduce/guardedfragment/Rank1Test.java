@@ -133,7 +133,6 @@ public class Rank1Test {
 
 
 		RelationFileMapping rfm = new RelationFileMapping();
-		rfm.setDefaultPath(new Path(inputG.getAbsolutePath()));
 		rfm.addPath(new RelationSchema("G",2), new Path(inputfileG.getAbsolutePath()));
 		rfm.addPath(new RelationSchema("G",3), new Path(inputfileG.getAbsolutePath()));
 		rfm.addPath(new RelationSchema("S",1), new Path(inputfileS.getAbsolutePath()));

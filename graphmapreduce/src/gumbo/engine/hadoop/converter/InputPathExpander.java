@@ -38,13 +38,13 @@ public class InputPathExpander {
 	public static void main(String[] args) throws IOException {
 		InputPathExpander ipe = new InputPathExpander();
 		LinkedList<Path> paths = new LinkedList<>();
-		paths.add(new Path("input/experiments/EXP_005/R/R.txt"));
-		paths.add(new Path("input/experiments/EXP_005/R/"));
-		paths.add(new Path("input/experiments/EXP_005/R"));
-		paths.add(new Path("input/experiments/EXP_005/*/*.txt"));
-		paths.add(new Path("input/experiments/EXP_005/*"));
-		paths.add(new Path("input/q4/1e04"));
-		paths.add(new Path("input/notexists"));
+		paths.add(new Path("input/experiments/EXP_005/R/R.txt")); // file
+		paths.add(new Path("input/experiments/EXP_005/R/")); // dir
+		paths.add(new Path("input/experiments/EXP_005/R")); //dir
+		paths.add(new Path("input/experiments/EXP_005/*/*.txt")); // none
+		paths.add(new Path("input/experiments/EXP_005/*")); // none
+		paths.add(new Path("input/q4/1e04")); // dir
+		paths.add(new Path("input/notexists")); // none
 
 
 
@@ -65,6 +65,7 @@ public class InputPathExpander {
 		System.out.println("file: " + fs.isFile(p));
 		//System.out.println("content: " + fs.getContentSummary(p));
 		System.out.println("files: " + expand(p));
+		System.out.println();
 
 
 	}
@@ -96,6 +97,7 @@ public class InputPathExpander {
 			if (fs.isFile(p) || fs.isDirectory(p) ) {
 				FileStatus [] files = fs.listStatus(p);
 				addFiles(files, result);
+				// TODO #core when a directory, filter out only files!
 			} else {
 				
 				// if it is a glob, we expand and process one more time as files and directories
@@ -131,8 +133,19 @@ public class InputPathExpander {
 	}
 
 	/**
-	 * @param p
-	 * @return
+	 * Expands an input path into a set of absolute paths.
+	 * When the paths is either a directory or a glob,
+	 * they are expanded, when it is a file, it is unchanged
+	 * (apart from being converted to a absolute file).
+	 * 
+	 * Expansion of <b>directories</b> happens by listing all the files in the directory.
+	 * Expansion of <b>globs</b> evaluates the glob to a set of paths, and then applies
+	 * the above algorithm to the result.
+	 * 
+	 * 
+	 * @param p a path
+	 * 
+	 * @return a set of absolute expanded paths
 	 */
 	public Collection<Path> expand(Path p) {
 		HashSet<Path> result = new HashSet<>();

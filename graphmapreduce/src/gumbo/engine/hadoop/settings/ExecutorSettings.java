@@ -42,11 +42,11 @@ public class ExecutorSettings {
 	 * Loads the default settings.
 	 */
 	private void loadDefaults() {
-		propertiesMap.put(guardedIdOptimizationOn, "true");  // TODO make toggle
+		propertiesMap.put(guardedIdOptimizationOn, "true");  // TODO #core make toggle
 		propertiesMap.put(guardIdOptimizationOn, "true");
 		propertiesMap.put(guardKeepaliveOptimizationOn, "true");
 		propertiesMap.put(guardTuplePointerOptimizationOn, "true");
-		propertiesMap.put(guardAsGuardedReReadOptimizationOn, "true"); // TODO make toggle
+		propertiesMap.put(guardAsGuardedReReadOptimizationOn, "true"); // TODO #core make toggle
 		propertiesMap.put(PROOF_SYMBOL, "#");
 
 	}

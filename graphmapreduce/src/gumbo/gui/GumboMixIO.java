@@ -185,7 +185,7 @@ public class GumboMixIO {
 	        	
 	        	
 	        	RelationFileMapping rfm = new RelationFileMapping();
-				rfm.setDefaultPath(new Path(inPathText.getText()));
+//				rfm.setDefaultPath(new Path(inPathText.getText())); // FIXME this is incorrect
 				GumboPlan plan;
 				String xtime = "" + System.currentTimeMillis() / 1000;
 				try {
