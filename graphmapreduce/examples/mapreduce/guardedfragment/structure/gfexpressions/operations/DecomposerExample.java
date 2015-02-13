@@ -4,9 +4,9 @@
 package mapreduce.guardedfragment.structure.gfexpressions.operations;
 
 import gumbo.compiler.decomposer.GFDecomposer;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
-import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 
 import java.util.Set;
 

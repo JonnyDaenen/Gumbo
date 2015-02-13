@@ -4,7 +4,7 @@
 package gumbo.compiler.linker;
 
 import gumbo.compiler.calculations.CalculationUnit;
-import gumbo.compiler.structures.data.RelationSchema;
+import gumbo.structures.data.RelationSchema;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -3,8 +3,8 @@
  */
 package gumbo.compiler.filemapper;
 
-import gumbo.compiler.structures.data.RelationSchema;
-import gumbo.compiler.structures.data.RelationSchemaException;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.data.RelationSchemaException;
 import gumbo.utils.estimation.TupleEstimator;
 
 import java.io.IOException;

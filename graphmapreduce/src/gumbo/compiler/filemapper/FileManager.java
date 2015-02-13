@@ -3,7 +3,7 @@
  */
 package gumbo.compiler.filemapper;
 
-import gumbo.compiler.structures.data.RelationSchema;
+import gumbo.structures.data.RelationSchema;
 
 import java.util.Collection;
 import java.util.Collections;

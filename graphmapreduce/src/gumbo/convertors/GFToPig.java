@@ -3,12 +3,12 @@
  */
 package gumbo.convertors;
 
-import gumbo.guardedfragment.conversion.DNFConversionException;
-import gumbo.guardedfragment.conversion.DNFConverter;
-import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
-import gumbo.guardedfragment.gfexpressions.GFNotExpression;
+import gumbo.structures.conversion.DNFConversionException;
+import gumbo.structures.conversion.DNFConverter;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.GFNotExpression;
 
 /**
  * Contains methods to convert a Basic GF Formula to a Pig Latin script.

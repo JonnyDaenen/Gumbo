@@ -3,7 +3,7 @@
  */
 package gumbo.compiler.decomposer;
 
-import gumbo.guardedfragment.gfexpressions.GFVisitorException;
+import gumbo.structures.gfexpressions.GFVisitorException;
 
 /**
  * TODO move to the GFDecomposer class

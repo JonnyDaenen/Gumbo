@@ -7,10 +7,10 @@ import gumbo.compiler.GFCompiler;
 import gumbo.compiler.GumboPlan;
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.engine.hadoop.HadoopEngine;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
-import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

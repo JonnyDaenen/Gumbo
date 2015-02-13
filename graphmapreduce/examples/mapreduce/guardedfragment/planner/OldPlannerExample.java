@@ -10,9 +10,9 @@ import gumbo.compiler.partitioner.CalculationPartitioner;
 import gumbo.compiler.partitioner.DepthPartitioner;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.compiler.resolver.CalculationCompiler;
-import gumbo.compiler.structures.MRPlan;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
+import gumbo.compiler.resolver.MRPlan;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 
 import org.apache.hadoop.fs.Path;
 

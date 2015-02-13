@@ -14,9 +14,9 @@ import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.CalculationPartitioner;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.compiler.partitioner.UnitPartitioner;
-import gumbo.compiler.structures.data.RelationSchema;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
 
 import java.util.Collection;
 import java.util.HashSet;

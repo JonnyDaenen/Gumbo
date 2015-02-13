@@ -5,10 +5,10 @@ package mapreduce.guardedfragment.convertors;
 
 import gumbo.convertors.GFConversionException;
 import gumbo.convertors.GFToPig;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
-import gumbo.guardedfragment.gfexpressions.io.DeserializeException;
-import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.DeserializeException;
+import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 
 import java.util.Collection;
 import java.util.HashSet;

@@ -5,8 +5,8 @@ package gumbo.engine.hadoop.mrcomponents.reducers;
 
 import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
 import gumbo.engine.hadoop.settings.ExecutorSettings;
-import gumbo.guardedfragment.gfexpressions.io.Pair;
-import gumbo.guardedfragment.gfexpressions.operations.ExpressionSetOperations;
+import gumbo.structures.gfexpressions.io.Pair;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 import java.io.IOException;
 import java.util.HashSet;

@@ -3,10 +3,10 @@
  */
 package gumbo.engine.spark;
 
-import gumbo.compiler.structures.operations.GFOperationInitException;
-import gumbo.compiler.structures.operations.GFReducer;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.io.Pair;
+import gumbo.compiler.resolver.operations.GFOperationInitException;
+import gumbo.compiler.resolver.operations.GFReducer;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.io.Pair;
 
 import java.util.Collection;
 import java.util.HashSet;

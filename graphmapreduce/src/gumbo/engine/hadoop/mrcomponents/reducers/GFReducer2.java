@@ -3,20 +3,20 @@
  */
 package gumbo.engine.hadoop.mrcomponents.reducers;
 
-import gumbo.compiler.structures.data.RelationSchema;
-import gumbo.compiler.structures.data.Tuple;
-import gumbo.compiler.structures.operations.GFOperationInitException;
+import gumbo.compiler.resolver.operations.GFOperationInitException;
 import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
 import gumbo.engine.hadoop.settings.ExecutorSettings;
-import gumbo.guardedfragment.booleanexpressions.BEvaluationContext;
-import gumbo.guardedfragment.booleanexpressions.BExpression;
-import gumbo.guardedfragment.booleanexpressions.VariableNotFoundException;
-import gumbo.guardedfragment.conversion.GFBooleanMapping;
-import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.operations.ExpressionSetOperations;
-import gumbo.guardedfragment.gfexpressions.operations.GFAtomProjection;
-import gumbo.guardedfragment.gfexpressions.operations.NonMatchingTupleException;
+import gumbo.structures.booleanexpressions.BEvaluationContext;
+import gumbo.structures.booleanexpressions.BExpression;
+import gumbo.structures.booleanexpressions.VariableNotFoundException;
+import gumbo.structures.conversion.GFBooleanMapping;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.data.Tuple;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
+import gumbo.structures.gfexpressions.operations.GFAtomProjection;
+import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
 
 import java.io.IOException;
 import java.util.HashMap;

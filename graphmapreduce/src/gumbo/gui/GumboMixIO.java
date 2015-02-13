@@ -3,13 +3,12 @@ package gumbo.gui;
 import gumbo.compiler.GFCompilerException;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.HeightPartitioner;
-import gumbo.compiler.structures.MRPlan;
-import gumbo.engine.hadoop.HadoopExecutor;
+import gumbo.compiler.resolver.MRPlan;
 import gumbo.engine.spark.SparkExecutor;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
-import gumbo.guardedfragment.gfexpressions.io.GFInfixSerializer;
 import gumbo.gui.gumboguiMixIO.GumboMainWindowMixIOwithScroll;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.GFInfixSerializer;
 
 import java.awt.Dimension;
 import java.awt.Font;

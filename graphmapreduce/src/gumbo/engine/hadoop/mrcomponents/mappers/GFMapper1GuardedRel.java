@@ -3,9 +3,9 @@
  */
 package gumbo.engine.hadoop.mrcomponents.mappers;
 
-import gumbo.compiler.structures.data.Tuple;
 import gumbo.engine.hadoop.settings.ExecutorSettings;
-import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
+import gumbo.structures.data.Tuple;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
 
 import java.io.IOException;
 
@@ -40,7 +40,7 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 	/**
 	 * @throws InterruptedException
 	 * @throws IOException
-	 * @see gumbo.compiler.structures.operations.GFMapper#map(org.apache.hadoop.io.Text,
+	 * @see gumbo.compiler.resolver.operations.GFMapper#map(org.apache.hadoop.io.Text,
 	 *      org.apache.hadoop.mapreduce.Mapper.Context)
 	 */
 	@Override

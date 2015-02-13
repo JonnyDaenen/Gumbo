@@ -3,7 +3,7 @@
  */
 package gumbo.engine.hadoop.mrcomponents.mappers;
 
-import gumbo.compiler.structures.data.RelationSchema;
+import gumbo.structures.data.RelationSchema;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -33,7 +33,7 @@ public class GFMapper1GuardedCsv extends GFMapper1GuardedRel {
 	/**
 	 * @throws InterruptedException
 	 * @throws IOException
-	 * @see gumbo.compiler.structures.operations.GFMapper#map(org.apache.hadoop.io.Text,
+	 * @see gumbo.compiler.resolver.operations.GFMapper#map(org.apache.hadoop.io.Text,
 	 *      org.apache.hadoop.mapreduce.Mapper.Context)
 	 */
 	@Override

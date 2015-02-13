@@ -5,11 +5,10 @@ package mapreduce.guardedfragment.planner;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.HeightPartitioner;
-import gumbo.compiler.structures.MRPlan;
-import gumbo.engine.hadoop.HadoopExecutor;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.io.DeserializeException;
-import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
+import gumbo.compiler.resolver.MRPlan;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.io.DeserializeException;
+import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 
 import java.util.Collection;
 import java.util.HashSet;

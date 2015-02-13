@@ -3,7 +3,7 @@
  */
 package gumbo.convertors;
 
-import gumbo.guardedfragment.conversion.DNFConversionException;
+import gumbo.structures.conversion.DNFConversionException;
 
 /**
  * @author Jonny Daenen

@@ -1,9 +1,9 @@
 package mapreduce.guardedfragment.structure;
 
-import gumbo.compiler.structures.data.KeyValuePair;
-import gumbo.compiler.structures.data.Tuple;
-import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
+import gumbo.structures.data.KeyValuePair;
+import gumbo.structures.data.Tuple;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExpression;
 
 import java.util.Collection;
 import java.util.HashMap;

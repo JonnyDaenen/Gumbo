@@ -4,7 +4,7 @@
 package gumbo.engine;
 
 import gumbo.compiler.GumboPlan;
-import gumbo.compiler.structures.MRPlan;
+import gumbo.compiler.resolver.MRPlan;
 
 /**
  * Interface for {@link GumboPlan} execution.

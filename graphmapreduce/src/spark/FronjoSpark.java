@@ -5,19 +5,19 @@ package spark;
  * Computing the query R(x,y) & S(y)
  */
 
-import gumbo.compiler.structures.data.Tuple;
-import gumbo.guardedfragment.booleanexpressions.BEvaluationContext;
-import gumbo.guardedfragment.booleanexpressions.BExpression;
-import gumbo.guardedfragment.booleanexpressions.VariableNotFoundException;
-import gumbo.guardedfragment.conversion.GFBooleanMapping;
-import gumbo.guardedfragment.conversion.GFtoBooleanConversionException;
-import gumbo.guardedfragment.conversion.GFtoBooleanConvertor;
-import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
-import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
-import gumbo.guardedfragment.gfexpressions.operations.GFAtomProjection;
-import gumbo.guardedfragment.gfexpressions.operations.NonMatchingTupleException;
+import gumbo.structures.booleanexpressions.BEvaluationContext;
+import gumbo.structures.booleanexpressions.BExpression;
+import gumbo.structures.booleanexpressions.VariableNotFoundException;
+import gumbo.structures.conversion.GFBooleanMapping;
+import gumbo.structures.conversion.GFtoBooleanConversionException;
+import gumbo.structures.conversion.GFtoBooleanConvertor;
+import gumbo.structures.data.Tuple;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
+import gumbo.structures.gfexpressions.operations.GFAtomProjection;
+import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
 
 import java.util.Collection;
 import java.util.HashSet;

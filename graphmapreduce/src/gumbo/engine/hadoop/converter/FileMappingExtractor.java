@@ -5,7 +5,7 @@ package gumbo.engine.hadoop.converter;
 
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.compiler.structures.data.RelationSchema;
+import gumbo.structures.data.RelationSchema;
 
 import java.util.Collection;
 

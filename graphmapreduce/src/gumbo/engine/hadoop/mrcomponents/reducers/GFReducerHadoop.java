@@ -3,10 +3,10 @@
  */
 package gumbo.engine.hadoop.mrcomponents.reducers;
 
-import gumbo.compiler.structures.operations.GFReducer;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
-import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
+import gumbo.compiler.resolver.operations.GFReducer;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 
 import java.io.IOException;
 import java.util.HashSet;

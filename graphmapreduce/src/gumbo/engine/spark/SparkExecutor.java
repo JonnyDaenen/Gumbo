@@ -4,8 +4,8 @@
 package gumbo.engine.spark;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.compiler.structures.MRPlan;
-import gumbo.compiler.structures.operations.MRJob;
+import gumbo.compiler.resolver.MRPlan;
+import gumbo.compiler.resolver.operations.MRJob;
 import gumbo.engine.ExecutionException;
 import gumbo.engine.GFEngine;
 

@@ -2,14 +2,14 @@ package gumbo.engine.hadoop.mrcomponents;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.filemapper.RelationFileMappingException;
-import gumbo.compiler.structures.data.RelationSchemaException;
-import gumbo.compiler.structures.operations.GFOperationInitException;
+import gumbo.compiler.resolver.operations.GFOperationInitException;
 import gumbo.engine.hadoop.settings.ExecutorSettings;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
-import gumbo.guardedfragment.gfexpressions.io.DeserializeException;
-import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
-import gumbo.guardedfragment.gfexpressions.operations.ExpressionSetOperations;
+import gumbo.structures.data.RelationSchemaException;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.DeserializeException;
+import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 import java.io.IOException;
 import java.util.HashSet;

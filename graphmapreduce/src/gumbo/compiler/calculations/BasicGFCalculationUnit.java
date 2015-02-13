@@ -3,8 +3,8 @@
  */
 package gumbo.compiler.calculations;
 
-import gumbo.compiler.structures.data.RelationSchema;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 import java.util.Set;
 

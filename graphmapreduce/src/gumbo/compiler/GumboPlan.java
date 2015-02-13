@@ -5,7 +5,7 @@ package gumbo.compiler;
 
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
-import gumbo.compiler.structures.data.RelationSchema;
+import gumbo.structures.data.RelationSchema;
 
 /**
  * A Gumbo query plan.

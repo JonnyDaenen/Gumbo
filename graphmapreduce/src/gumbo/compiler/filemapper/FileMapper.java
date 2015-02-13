@@ -4,7 +4,7 @@
 package gumbo.compiler.filemapper;
 
 import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.compiler.structures.data.RelationSchema;
+import gumbo.structures.data.RelationSchema;
 
 import org.apache.hadoop.fs.Path;
 

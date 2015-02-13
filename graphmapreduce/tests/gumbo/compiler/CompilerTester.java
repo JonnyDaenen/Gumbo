@@ -14,11 +14,11 @@ import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CULinker;
 import gumbo.compiler.partitioner.CalculationPartitioner;
 import gumbo.compiler.partitioner.UnitPartitioner;
-import gumbo.compiler.structures.data.RelationSchema;
-import gumbo.guardedfragment.gfexpressions.GFAndExpression;
-import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFAndExpression;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
 
 import java.util.HashSet;
 import java.util.Set;

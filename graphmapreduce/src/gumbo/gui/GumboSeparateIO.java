@@ -2,13 +2,12 @@ package gumbo.gui;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.filemapper.RelationFileMappingException;
-import gumbo.compiler.structures.MRPlan;
-import gumbo.compiler.structures.data.RelationSchemaException;
-import gumbo.engine.hadoop.HadoopExecutor;
+import gumbo.compiler.resolver.MRPlan;
 import gumbo.engine.spark.SparkExecutor;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
-import gumbo.guardedfragment.gfexpressions.io.GFInfixSerializer;
 import gumbo.gui.gumboguiSeparateIO.GumboMainWindowSeparateIO;
+import gumbo.structures.data.RelationSchemaException;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.GFInfixSerializer;
 
 import java.awt.Dimension;
 import java.awt.Font;

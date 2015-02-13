@@ -1,8 +1,8 @@
 package mapreduce.guardedfragment.structure;
 
-import gumbo.compiler.structures.data.RelationSchema;
-import gumbo.compiler.structures.data.Tuple;
-import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.data.Tuple;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
 
 public class ProjectionExample {
 	

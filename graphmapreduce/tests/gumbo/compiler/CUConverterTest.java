@@ -8,9 +8,9 @@ import static org.junit.Assert.fail;
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnitException;
 import gumbo.compiler.decomposer.GFDecomposerException;
-import gumbo.compiler.structures.data.RelationSchema;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
 
 import java.util.HashSet;
 import java.util.Map;

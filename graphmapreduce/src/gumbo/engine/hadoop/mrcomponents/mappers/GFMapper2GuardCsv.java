@@ -5,8 +5,8 @@ package gumbo.engine.hadoop.mrcomponents.mappers;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.filemapper.RelationFileMappingException;
-import gumbo.compiler.structures.data.RelationSchema;
-import gumbo.compiler.structures.data.RelationSchemaException;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.data.RelationSchemaException;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -61,7 +61,7 @@ public class GFMapper2GuardCsv extends GFMapper2GuardRel {
 	/**
 	 * @throws InterruptedException
 	 * @throws IOException
-	 * @see gumbo.compiler.structures.operations.GFMapper#map(org.apache.hadoop.io.Text,
+	 * @see gumbo.compiler.resolver.operations.GFMapper#map(org.apache.hadoop.io.Text,
 	 *      org.apache.hadoop.mapreduce.Mapper.Context)
 	 */
 	@Override

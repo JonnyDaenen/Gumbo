@@ -3,15 +3,15 @@
  */
 package gumbo.compiler.decomposer;
 
-import gumbo.guardedfragment.gfexpressions.GFAndExpression;
-import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
-import gumbo.guardedfragment.gfexpressions.GFNotExpression;
-import gumbo.guardedfragment.gfexpressions.GFOrExpression;
-import gumbo.guardedfragment.gfexpressions.GFVisitor;
-import gumbo.guardedfragment.gfexpressions.GFVisitorException;
-import gumbo.guardedfragment.gfexpressions.io.Pair;
+import gumbo.structures.gfexpressions.GFAndExpression;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.GFNotExpression;
+import gumbo.structures.gfexpressions.GFOrExpression;
+import gumbo.structures.gfexpressions.GFVisitor;
+import gumbo.structures.gfexpressions.GFVisitorException;
+import gumbo.structures.gfexpressions.io.Pair;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -58,7 +58,7 @@ public class GFDecomposer implements GFVisitor<Pair<GFExpression,Set<GFExistenti
 	}
 
 	/**
-	 * @see gumbo.guardedfragment.gfexpressions.GFVisitor#visit(gumbo.guardedfragment.gfexpressions.GFExpression)
+	 * @see gumbo.structures.gfexpressions.GFVisitor#visit(gumbo.structures.gfexpressions.GFExpression)
 	 */
 	@Override
 	public Pair<GFExpression,Set<GFExistentialExpression>> visit(GFExpression e) throws GFVisitorException {
@@ -66,7 +66,7 @@ public class GFDecomposer implements GFVisitor<Pair<GFExpression,Set<GFExistenti
 	}
 
 	/**
-	 * @see gumbo.guardedfragment.gfexpressions.GFVisitor#visit(gumbo.guardedfragment.gfexpressions.GFAtomicExpression)
+	 * @see gumbo.structures.gfexpressions.GFVisitor#visit(gumbo.structures.gfexpressions.GFAtomicExpression)
 	 */
 	@Override
 	public Pair<GFExpression,Set<GFExistentialExpression>> visit(GFAtomicExpression e) throws GFVisitorException {
@@ -78,7 +78,7 @@ public class GFDecomposer implements GFVisitor<Pair<GFExpression,Set<GFExistenti
 	}
 
 	/**
-	 * @see gumbo.guardedfragment.gfexpressions.GFVisitor#visit(gumbo.guardedfragment.gfexpressions.GFAndExpression)
+	 * @see gumbo.structures.gfexpressions.GFVisitor#visit(gumbo.structures.gfexpressions.GFAndExpression)
 	 */
 	@Override
 	public Pair<GFExpression,Set<GFExistentialExpression>> visit(GFAndExpression e) throws GFVisitorException {
@@ -97,7 +97,7 @@ public class GFDecomposer implements GFVisitor<Pair<GFExpression,Set<GFExistenti
 	}
 
 	/**
-	 * @see gumbo.guardedfragment.gfexpressions.GFVisitor#visit(gumbo.guardedfragment.gfexpressions.GFOrExpression)
+	 * @see gumbo.structures.gfexpressions.GFVisitor#visit(gumbo.structures.gfexpressions.GFOrExpression)
 	 */
 	@Override
 	public Pair<GFExpression,Set<GFExistentialExpression>> visit(GFOrExpression e) throws GFVisitorException {
@@ -114,7 +114,7 @@ public class GFDecomposer implements GFVisitor<Pair<GFExpression,Set<GFExistenti
 	}
 
 	/**
-	 * @see gumbo.guardedfragment.gfexpressions.GFVisitor#visit(gumbo.guardedfragment.gfexpressions.GFNotExpression)
+	 * @see gumbo.structures.gfexpressions.GFVisitor#visit(gumbo.structures.gfexpressions.GFNotExpression)
 	 */
 	@Override
 	public Pair<GFExpression,Set<GFExistentialExpression>> visit(GFNotExpression e) throws GFVisitorException {
@@ -129,7 +129,7 @@ public class GFDecomposer implements GFVisitor<Pair<GFExpression,Set<GFExistenti
 	}
 
 	/**
-	 * @see gumbo.guardedfragment.gfexpressions.GFVisitor#visit(gumbo.guardedfragment.gfexpressions.GFExistentialExpression)
+	 * @see gumbo.structures.gfexpressions.GFVisitor#visit(gumbo.structures.gfexpressions.GFExistentialExpression)
 	 */
 	@Override
 	public Pair<GFExpression,Set<GFExistentialExpression>> visit(GFExistentialExpression e) throws GFVisitorException {

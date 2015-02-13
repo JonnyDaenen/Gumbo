@@ -6,10 +6,10 @@ package gumbo.engine.hadoop.converter;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.engine.hadoop.settings.ExecutorSettings;
-import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.utils.estimation.RandomTupleEstimator;
 import gumbo.utils.estimation.TupleEstimator;
 

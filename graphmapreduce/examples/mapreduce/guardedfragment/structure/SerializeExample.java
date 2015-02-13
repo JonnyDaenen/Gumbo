@@ -3,8 +3,8 @@
  */
 package mapreduce.guardedfragment.structure;
 
-import gumbo.guardedfragment.gfexpressions.GFAtomicExpression;
-import gumbo.guardedfragment.gfexpressions.io.GFInfixSerializer;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.io.GFInfixSerializer;
 
 import java.util.HashSet;
 import java.util.Set;

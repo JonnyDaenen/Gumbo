@@ -8,11 +8,11 @@ import gumbo.compiler.GFCompiler;
 import gumbo.compiler.GumboPlan;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.HeightPartitioner;
-import gumbo.compiler.structures.data.RelationSchema;
 import gumbo.engine.hadoop.HadoopEngine;
-import gumbo.guardedfragment.gfexpressions.GFExistentialExpression;
-import gumbo.guardedfragment.gfexpressions.GFExpression;
-import gumbo.guardedfragment.gfexpressions.io.GFPrefixSerializer;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;

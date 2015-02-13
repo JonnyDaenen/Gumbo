@@ -6,7 +6,7 @@ package gumbo.engine.hadoop.mrcomponents.mappers;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
 import gumbo.engine.hadoop.settings.ExecutorSettings;
-import gumbo.guardedfragment.gfexpressions.operations.ExpressionSetOperations;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 import java.io.IOException;
 
@@ -64,7 +64,7 @@ public class GFMapper2Identity extends Mapper<LongWritable, Text, Text, IntWrita
 	/**
 	 * @throws InterruptedException
 	 * @throws IOException
-	 * @see gumbo.compiler.structures.operations.GFMapper#map(org.apache.hadoop.io.Text,
+	 * @see gumbo.compiler.resolver.operations.GFMapper#map(org.apache.hadoop.io.Text,
 	 *      org.apache.hadoop.mapreduce.Mapper.Context)
 	 */
 	@Override
