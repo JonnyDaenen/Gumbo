@@ -66,7 +66,7 @@ public abstract class AbstractExecutorSettings {
 	}
 	
 
-	public Set<String> getAllKeys() {
+	public static Set<String> getAllKeys() {
 		HashSet<String> keys = new HashSet<>();
 		keys.add(guardedIdOptimizationOn);
 		keys.add(guardIdOptimizationOn);

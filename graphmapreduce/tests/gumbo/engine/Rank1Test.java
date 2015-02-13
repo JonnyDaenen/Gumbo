@@ -1,7 +1,7 @@
 /**
  * Created: 24 Apr 2014
  */
-package mapreduce.guardedfragment;
+package gumbo.engine;
 
 import static org.junit.Assert.fail;
 import gumbo.compiler.GFCompiler;
@@ -10,6 +10,7 @@ import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.HeightPartitioner;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
@@ -19,6 +20,7 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,21 +32,92 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 /**
  * @author Jonny Daenen
  * 
  */
+@RunWith(Parameterized.class)  
 public class Rank1Test {
 
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 
+
 	GFPrefixSerializer serializer;
+	Configuration conf;
 
 	@Before
 	public void setUp() throws Exception {
 		serializer = new GFPrefixSerializer();
+	}
+
+	public Rank1Test(Configuration conf, String descr) {
+		this.conf = conf;
+	}
+
+	@Parameters(name = "{index}: conf:{1}")
+	public static Collection<Object[]> getOnOffConfigurations() {
+
+
+		Collection<Object[]> confs = new HashSet<Object[]>();
+
+		Configuration on = new Configuration();
+		(new HadoopExecutorSettings(on)).turnOnOptimizations();
+
+		Configuration off = new Configuration();
+		(new HadoopExecutorSettings(off)).turnOffOptimizations();
+
+		Object [] onconf = {on, "optOn"};
+		Object [] offconf = {off, "optOff"};
+
+		confs.add(onconf);
+		confs.add(offconf);
+
+		return confs;
+
+	}
+
+
+	private Set<Configuration> allConfigurations() {
+
+		String [] keys = (String[]) AbstractExecutorSettings.getAllKeys().toArray();
+		return generateAllConfsRec(keys,0);
+
+	}
+
+	/**
+	 * Creates all possible settings for the optimizations.
+	 */
+	private Set<Configuration> generateAllConfsRec(String[] keys, int i) {
+
+		if (i >= keys.length) {
+			HashSet<Configuration> confs = new HashSet<Configuration>();
+			confs.add(new Configuration());
+			return new HashSet<>();
+		} else {
+
+			HashSet<Configuration> confs = new HashSet<Configuration>();
+
+			Set<Configuration> otherConfs = generateAllConfsRec(keys, i+1);
+			for (Configuration conf : otherConfs) {
+				// add true and false version of this settings
+				Configuration confTrue = new Configuration(conf);
+				Configuration confFalse = new Configuration(conf);
+
+				confTrue.setBoolean(keys[i], true);
+				confFalse.setBoolean(keys[i], false);
+
+				confs.add(confTrue);
+				confs.add(confFalse);
+			}
+
+		}
+
+		return null;
 	}
 
 	@After
@@ -56,6 +129,8 @@ public class Rank1Test {
 	 */
 	@Test
 	public void Reducer1Multimatch() throws Exception {
+
+
 		GFExpression gfe = serializer.deserialize("#O(x)&G(x,y,z)&S(x,z)!S(y,z)");
 
 		Set<String> dataS = new HashSet<String>();
@@ -63,15 +138,18 @@ public class Rank1Test {
 		dataG.add("G(1,2,3)");
 		dataS.add("S(1,3)");
 
-
-		Set<String> result = doTest(gfe, dataG,dataS,new RelationSchema("O",1));
+		Set<String> result = doTest(gfe, dataG,dataS,new RelationSchema("O",1),conf);
 
 		//		System.out.println(result);
 
 		if(result.size() != 1 || !result.contains("O(1)"))
 			fail("expected {O(1)}");
 
+
 	}
+
+
+
 
 	/**
 	 * Test what happens when the guard appears as guarded as well.
@@ -86,11 +164,12 @@ public class Rank1Test {
 		data.add("G(1,2)");
 
 
-		Set<String> result = doTest(gfe, data,null,new RelationSchema("O",2));
+		Set<String> result = doTest(gfe, data,null,new RelationSchema("O",2),conf);
 		//		System.out.println(result);
 
 		if(result.size() != 2 || !result.contains("O(1,2)") || !result.contains("O(1,1)"))
 			fail("expected {O(1,1), O(1,2)}");
+
 	}
 
 	/**
@@ -106,16 +185,16 @@ public class Rank1Test {
 		dataG.add("G(1,2)");
 		dataG.add("G(2,1)");
 
-
-		Set<String> result = doTest(gfe, dataG, null, new RelationSchema("O",2));
+		Set<String> result = doTest(gfe, dataG, null, new RelationSchema("O",2),conf);
 		//		System.out.println(result);
 
 		System.out.println(result);
 		if(result.size() != 1 || result.contains("O(1,2)") || result.contains("O(1,1)") || !result.contains("O(2,1)"))
 			fail("expected {O(2,1)}");
+
 	}
 
-	private Set<String> doTest(GFExpression gfe, Set<String> dataG, Set<String> dataS, RelationSchema outSchema) throws Exception {
+	private Set<String> doTest(GFExpression gfe, Set<String> dataG, Set<String> dataS, RelationSchema outSchema, Configuration conf) throws Exception {
 
 		// create tmp folders
 		File inputG = folder.newFolder("inputG");
@@ -150,31 +229,28 @@ public class Rank1Test {
 
 		GFCompiler compiler = new GFCompiler(new HeightPartitioner());
 		GumboPlan plan = compiler.createPlan(this.getClass().getSimpleName(), (GFExistentialExpression)gfe, rfm, new Path(output.getAbsolutePath()), new Path(scratch.getAbsolutePath()));
-		
+
 		HadoopEngine engine = new HadoopEngine();
-		Configuration conf = new Configuration();
-		HadoopExecutorSettings hs = new HadoopExecutorSettings(conf);
-		hs.loadDefaults();
-		hs.turnOffOptimizations();
-		
 		engine.executePlan(plan,conf);
 
 		// TODO we need a method to request the output files/directory of a relation
 
 		System.out.println(plan);
-		
+
 		Set<Path> outpaths = plan.getFileManager().getOutFileMapping().getPaths(outSchema);
 		System.out.println(plan.getFileManager().getOutFileMapping());
 		System.out.println(outSchema);
 		System.out.println(outpaths);
 		Path p = outpaths.iterator().next();
 		String path = p.toString() + "/" + outSchema.getName()+"-r-00000";
-		
-		
+
+
 		// read output file
 		//		File outputfile = new File(output.getAbsolutePath() + "/test/part-r-00000");
 		File outputfile = new File(path);
 		List<String> out = Files.readAllLines(outputfile.toPath(), StandardCharsets.US_ASCII);
+
+
 
 		return new HashSet<String>(out);
 	}
