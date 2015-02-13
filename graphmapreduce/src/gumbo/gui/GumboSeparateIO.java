@@ -155,6 +155,8 @@ public class GumboSeparateIO extends JFrame {
 	        		e1.printStackTrace();
 				}
 	        	
+	        	
+	        	
 	        	// In the future should be:
 	        	// plan = new MRPlan(inputQuery,rfmInPath, rfmOutPath);
 

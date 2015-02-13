@@ -330,7 +330,7 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 	 */
 	@Override
 	public String visit(GFExistentialExpression e) {
-		String o = serialize(e.getOutput());
+		String o = serialize(e.getOutputRelation());
 		String g = serialize(e.getGuard());
 		String c = serialize(e.getChild());
 		return "#" + o + "&" + g + c;

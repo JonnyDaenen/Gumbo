@@ -23,6 +23,7 @@ import org.apache.hadoop.mapreduce.lib.input.KeyValueLineRecordReader;
  */
 public class GuardTextRecordReaderFast extends RecordReader<Text, Text> {
 
+	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(GuardTextRecordReaderFast.class);
 
     private Text value = new Text();

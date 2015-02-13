@@ -23,7 +23,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 /**
- * @author jonny
+ * @author Jonny Daenen
  * 
  */
 public class GFCombiner1 extends Reducer<Text, Text, Text, Text> {
@@ -73,6 +73,10 @@ public class GFCombiner1 extends Reducer<Text, Text, Text, Text> {
 		} catch (Exception e) {
 			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}
+		
+		// dummy usage
+		eso.getClass(); 
+		settings.getClass();
 	}
 
 	@Override
@@ -90,6 +94,7 @@ public class GFCombiner1 extends Reducer<Text, Text, Text, Text> {
 		Set<Pair<String, Integer>> buffer = new HashSet<>();
 
 		// LOG.warn("Combining: " + key);
+		
 
 		boolean keyFound = false;
 

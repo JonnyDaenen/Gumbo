@@ -36,7 +36,7 @@ public class GFMapper2GuardRel extends GFMapper2Identity {
 	 * @see gumbo.engine.hadoop.mrcomponents.mappers.GFMapper2Identity#setup(org.apache.hadoop.mapreduce.Mapper.Context)
 	 */
 	@Override
-	protected void setup(org.apache.hadoop.mapreduce.Mapper.Context context) throws IOException, InterruptedException {
+	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
 		pathids = new TupleIDCreator(rm);
 	}

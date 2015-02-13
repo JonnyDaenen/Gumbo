@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
 public class CULinker {
 
 
+	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(CULinker.class);
 
 
@@ -35,7 +36,7 @@ public class CULinker {
 
 
 		// determine all relations that appear
-		Set<RelationSchema> relations = getRelations(basics);
+//		Set<RelationSchema> relations = getRelations(basics);
 		
 		Set<RelationSchema> inputRelations = new HashSet<RelationSchema>();
 		Set<RelationSchema> intermediateRelations = new HashSet<RelationSchema>();
@@ -81,6 +82,7 @@ public class CULinker {
 	 * @param basics
 	 * @return all the used relations in the expression
 	 */
+	@SuppressWarnings("unused")
 	private Set<RelationSchema> getRelations(Map<RelationSchema, BasicGFCalculationUnit> basics) {
 		Set<RelationSchema> relations = new HashSet<RelationSchema>();
 
@@ -99,6 +101,7 @@ public class CULinker {
 	 * @param cu
 	 * @throws GFCompilerException
 	 */
+	@SuppressWarnings("unused")
 	private void addGfe(Map<RelationSchema, BasicGFCalculationUnit> basics, BasicGFCalculationUnit cu)
 			throws GFCompilerException {
 		// TODO fix duplicate schema's here!

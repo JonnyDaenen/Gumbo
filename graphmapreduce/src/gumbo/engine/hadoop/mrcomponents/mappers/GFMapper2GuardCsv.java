@@ -33,7 +33,7 @@ public class GFMapper2GuardCsv extends GFMapper2GuardRel {
 	private static final Log LOG = LogFactory.getLog(GFMapper2GuardCsv.class);
 	private RelationFileMapping rm;
 	@Override
-	protected void setup(org.apache.hadoop.mapreduce.Mapper.Context context) throws IOException, InterruptedException {
+	protected void setup(Context context) throws IOException, InterruptedException {
 
 		
 		super.setup(context);

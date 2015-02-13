@@ -59,9 +59,6 @@ public class ParameterPasser {
 
 			FileSystem fs = FileSystem.get(conf);
 			RelationFileMapping rm = new RelationFileMapping(relmapping,fs);
-
-
-			RelationFileMapping mapping;
 			ExpressionSetOperations eso = new ExpressionSetOperations(formulaSet, rm);
 
 			return eso;

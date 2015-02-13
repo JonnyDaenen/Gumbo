@@ -9,6 +9,7 @@ import java.util.Set;
 
 public class GFExistentialExpression extends GFExpression {
 	
+	private static final long serialVersionUID = 1L;
 	GFAtomicExpression guard;
 	GFExpression child;
 	int rank;
@@ -157,10 +158,6 @@ public class GFExistentialExpression extends GFExpression {
 		return	guard;
 	}
 	
-	@Deprecated
-	public GFAtomicExpression getOutput() {
-		return output;
-	}
 
 
 	/**

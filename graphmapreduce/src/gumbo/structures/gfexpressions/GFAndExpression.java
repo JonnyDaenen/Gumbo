@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GFAndExpression extends GFExpression{
+public class GFAndExpression extends GFExpression {
 	
-	
+	private static final long serialVersionUID = 1L;
 	GFExpression child1;
 	GFExpression child2;
 	int rank;

@@ -153,7 +153,7 @@ public class GFDecomposer implements GFVisitor<Pair<GFExpression,Set<GFExistenti
 		
 		// create new expression and add it to this
 		GFAtomicExpression newGuard = new GFAtomicExpression(e.getGuard());
-		GFAtomicExpression newOutput = new GFAtomicExpression(e.getOutput());
+		GFAtomicExpression newOutput = new GFAtomicExpression(e.getOutputRelation());
 		
 		GFExistentialExpression ee = new GFExistentialExpression(newGuard,newChild,newOutput);
 		subexps.add(ee);

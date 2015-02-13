@@ -30,6 +30,8 @@ public class RelationFileMapping {
 
 
 	public class PathNotFoundError extends Exception {
+		private static final long serialVersionUID = 1L;
+
 		public PathNotFoundError(String msg) {
 			super(msg);
 		}
@@ -49,7 +51,7 @@ public class RelationFileMapping {
 		rm.addPath(new RelationSchema("S",3), new Path("data/jonny3"));
 		rm.setFormat(new RelationSchema("S",3), InputFormat.CSV);
 
-		Path cp = new Path("data/jonny1");
+//		Path cp = new Path("data/jonny1");
 
 
 		System.out.println(rm);

@@ -4,21 +4,19 @@
 package gumbo.engine;
 
 /**
- * @author jonny
+ * @author Jonny Daenen
  *
  */
 public class ExecutionException extends Exception {
 
-	/**
-	 * @param string
-	 */
+	private static final long serialVersionUID = 1L;
+
+	
 	public ExecutionException(String message, Throwable cause) {
 		super(message, cause);
 	}
 	
-	/**
-	 * 
-	 */
+
 	public ExecutionException(String message) {
 		super(message);
 	}

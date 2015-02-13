@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
 public class ReduceJobEstimator {
 
 
-	private ExecutorSettings settings; // TODO change to a parameter of estimate function
+	private ExecutorSettings settings; // TODO #core fix settings passing
 	private TupleEstimator tupleEstimator;
 
 
@@ -263,12 +263,15 @@ public class ReduceJobEstimator {
 
 
 	/**
-	 * Estimates the output of a keep-alive mapper without id's
+	 * Estimates the output of a keep-alive mapper without id's.
+	 * (OLD version)
+	 * 
 	 * @param guard the guard schema
 	 * @param guardeds the guarded schemas
 	 * @param rfm a file mapping
 	 * @return a map output size estimate
 	 */
+	@SuppressWarnings("unused")
 	private long estimateSize(RelationSchema guard, HashSet<RelationSchema> guardeds, RelationFileMapping rfm) {
 		long alpha = rfm.getRelationSize(guard);
 		long beta = 0;

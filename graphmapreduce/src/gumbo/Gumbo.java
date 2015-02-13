@@ -31,7 +31,7 @@ public class Gumbo extends Configured implements Tool {
 
 	public int run(String[] args) throws Exception {
 		// Configuration processed by ToolRunner
-		Configuration conf = getConf();
+		Configuration conf = getConf(); // TODO pass??
 
 		// parse query
 		GFPrefixSerializer parser = new GFPrefixSerializer();
@@ -60,14 +60,6 @@ public class Gumbo extends Configured implements Tool {
 		return 0;
 	}
 
-	/**
-	 * @param string
-	 * @return
-	 */
-	private String readFile(String string) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	public static void main(String[] args) throws Exception {
 		// Let ToolRunner handle generic command-line options 

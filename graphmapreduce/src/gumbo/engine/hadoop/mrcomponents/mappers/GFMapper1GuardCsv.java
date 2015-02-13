@@ -31,6 +31,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
  */
 public class GFMapper1GuardCsv extends GFMapper1GuardRel {
 
+	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(GFMapper1GuardCsv.class);
 
 	Text out1 = new Text();
@@ -39,7 +40,7 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRel {
 	private RelationFileMapping rm;
 	
 	@Override
-	protected void setup(org.apache.hadoop.mapreduce.Mapper.Context context) throws IOException, InterruptedException {
+	protected void setup(Context  context) throws IOException, InterruptedException {
 
 		
 		super.setup(context);

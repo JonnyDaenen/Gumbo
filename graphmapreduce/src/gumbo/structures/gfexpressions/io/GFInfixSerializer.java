@@ -38,7 +38,7 @@ public class GFInfixSerializer {
 	
 	public Set<GFExpression> GetGFExpression(String s) throws DeserializeException {
 		
-		GFPrefixSerializer prefixParser = new GFPrefixSerializer();
+//		GFPrefixSerializer prefixParser = new GFPrefixSerializer();
 		
 		String [] sArray = s.split(";");
 		HashSet<String> sSet = new HashSet<String>(Arrays.asList(sArray));

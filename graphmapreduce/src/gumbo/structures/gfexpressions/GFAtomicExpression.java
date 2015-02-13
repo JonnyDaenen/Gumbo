@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-public class GFAtomicExpression extends GFExpression implements Comparable{
+public class GFAtomicExpression extends GFExpression implements Comparable<Object>{
 
 	private static final long serialVersionUID = 1L;
 

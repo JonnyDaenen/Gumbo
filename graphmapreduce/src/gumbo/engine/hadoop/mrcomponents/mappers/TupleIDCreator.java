@@ -92,6 +92,7 @@ public class TupleIDCreator {
 			
 			
 			Path match = rm.findBestPathMatch(filePath);
+			// TODO #core these must be absoule paths!! adjust expander
 
 			long pathID = getPathID(match);
 			

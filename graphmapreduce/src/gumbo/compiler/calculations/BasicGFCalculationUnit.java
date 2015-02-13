@@ -25,7 +25,6 @@ public class BasicGFCalculationUnit extends CalculationUnit {
 		this.basicExpression = basicExpression;
 	}
 	
-	@Deprecated
 	public BasicGFCalculationUnit(GFExistentialExpression basicExpression ) throws CalculationUnitException {
 		if(!basicExpression.isBasicGF())
 			throw new CalculationUnitException("Supplied expression is not basic");

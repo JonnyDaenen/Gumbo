@@ -28,7 +28,6 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
  */
 public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 
-	private static final long serialVersionUID = 1L;
 	private final static String FILENAME = "tmp_round1_red.txt";
 
 	protected Text out1 = new Text();
@@ -68,6 +67,9 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 		} catch (Exception e) {
 			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}
+		
+		// dummy usage
+		eso.getClass();
 	}
 
 	@Override
@@ -86,7 +88,7 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 
 		// LOG.warn(key + ": ");
 
-		boolean print = false;
+//		boolean print = false;
 		//		if (key.toString().contains("(1000)") || key.toString().contains(",1000,"))
 		//			print = true;
 

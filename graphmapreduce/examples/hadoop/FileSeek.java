@@ -156,6 +156,7 @@ public class FileSeek {
 			input.nextLine();
 			counter++;
 		}
+		input.close();
 		return counter;
 	}
 
@@ -173,6 +174,7 @@ public class FileSeek {
 			bytes += line.length();
 			counter++;
 		}
+		input.close();
 		return bytes/(double)counter;
 	}
 

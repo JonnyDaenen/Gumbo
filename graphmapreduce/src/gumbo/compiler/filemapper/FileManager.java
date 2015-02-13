@@ -135,7 +135,6 @@ public class FileManager {
 	 * Returns a mapping between the used relations and paths, both input and output.
 	 * @return a mapping between relations and paths
 	 */
-	@Deprecated
 	public RelationFileMapping getFileMapping(){
 		return inMapping.combine(outMapping);
 	}

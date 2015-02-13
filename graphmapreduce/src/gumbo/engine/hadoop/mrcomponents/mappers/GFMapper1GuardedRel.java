@@ -24,6 +24,7 @@ import org.apache.hadoop.io.Text;
 
 public class GFMapper1GuardedRel extends GFMapper1Identity {
 
+	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(GFMapper1GuardedRel.class);
 	Text proofSymbol;
 	
@@ -31,9 +32,9 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 	 * @see gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1Identity#setup(org.apache.hadoop.mapreduce.Mapper.Context)
 	 */
 	@Override
-	protected void setup(org.apache.hadoop.mapreduce.Mapper.Context context) throws IOException, InterruptedException {
+	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
-		proofSymbol = new Text(settings.getProperty(settings.PROOF_SYMBOL));
+		proofSymbol = new Text(settings.getProperty(ExecutorSettings.PROOF_SYMBOL));
 		
 	}
 
@@ -47,7 +48,7 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
 
-		boolean print = false;
+//		boolean print = false;
 //		if (value.toString().contains("1000")) {
 //			LOG.error("Mapper1: " + value);
 //			print = true;

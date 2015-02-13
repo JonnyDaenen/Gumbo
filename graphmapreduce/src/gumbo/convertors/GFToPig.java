@@ -3,8 +3,8 @@
  */
 package gumbo.convertors;
 
-import gumbo.structures.conversion.DNFConversionException;
 import gumbo.structures.conversion.DNFConverter;
+import gumbo.structures.conversion.DNFConverter.DNFConversionException;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
@@ -42,7 +42,7 @@ public class GFToPig {
 		try {
 			gfe2 = converter.convert(gfe);
 		} catch (DNFConversionException e) {
-			throw new GFConversionException(e);
+			throw new GFConversionException("Something went wrong during conversion to DNF.",e);
 		}
 
 		if(gfe2.containsOr())

@@ -30,23 +30,26 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
  */
 public class GFMapper2GuardTextCsv extends GFMapper2GuardTextRel {
 
+	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(GFMapper2GuardTextCsv.class);
 	private RelationFileMapping rm;
-	@Override
-	protected void setup(org.apache.hadoop.mapreduce.Mapper.Context context) throws IOException, InterruptedException {
 
-		
+
+	@Override
+	protected void setup(Context context) throws IOException, InterruptedException {
+
+
 		super.setup(context);
-		
+
 		Configuration conf = context.getConfiguration();
-		
+
 		// get relation name
 		String relmapping = conf.get("relationfilemapping");
-//		LOG.error(relmapping);
+		//		LOG.error(relmapping);
 		try {
 			FileSystem fs = FileSystem.get(conf);
 			rm = new RelationFileMapping(relmapping,fs);
-//			LOG.trace(rm.toString());
+			//			LOG.trace(rm.toString());
 
 		} catch (RelationSchemaException e) {
 			// TODO Auto-generated catch block
@@ -69,34 +72,34 @@ public class GFMapper2GuardTextCsv extends GFMapper2GuardTextRel {
 
 
 		// find out relation name
-			// TODO optimize
-			
+		// TODO optimize
+
 		try {
 
-			
+
 			InputSplit is = context.getInputSplit();
 			Method method = is.getClass().getMethod("getInputSplit");
-			
+
 			method.setAccessible(true);
 			FileSplit fileSplit = (FileSplit) method.invoke(is);
 			Path filePath = fileSplit.getPath();
-			
-//			LOG.error("File Name: "+filePath);
-			
+
+			//			LOG.error("File Name: "+filePath);
+
 			RelationSchema rs = rm.findSchema(filePath);
-			
+
 			// trim is necessary to remove extra whitespace
 			String t1 = value.toString().trim();
-			
+
 			t1 = rs.getName() + "(" + t1 + ")";
 			value.set(t1);
-			
+
 			super.map(key, value, context);
-			
-			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 

@@ -8,6 +8,7 @@ import java.util.Set;
 
 public class GFOrExpression extends GFExpression{
 
+	private static final long serialVersionUID = 1L;
 	GFExpression child1,child2;
 	int rank;
 

@@ -3,13 +3,14 @@
  */
 package gumbo.convertors;
 
-import gumbo.structures.conversion.DNFConversionException;
 
 /**
  * @author Jonny Daenen
  * 
  */
 public class GFConversionException extends Exception {
+
+	private static final long serialVersionUID = 1L;
 
 	public GFConversionException(String msg) {
 		super(msg);
@@ -18,8 +19,8 @@ public class GFConversionException extends Exception {
 	/**
 	 * @param e
 	 */
-	public GFConversionException(DNFConversionException e) {
-		super(e);
+	public GFConversionException(String msg, Exception e) {
+		super(msg, e);
 	}
 
 }

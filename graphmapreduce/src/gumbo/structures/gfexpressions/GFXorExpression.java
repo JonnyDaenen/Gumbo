@@ -6,6 +6,7 @@ import java.util.Set;
 
 public class GFXorExpression extends GFExpression{
 
+	private static final long serialVersionUID = 1L;
 	GFExpression child1,child2;
 	int rank;
 

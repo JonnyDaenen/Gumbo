@@ -26,10 +26,20 @@ import org.apache.commons.logging.LogFactory;
  * 
  */
 public class DNFConverter implements BEVisitor<BExpression> {
-	
 
+	public class DNFConversionException extends Exception {
+		
+		private static final long serialVersionUID = 1L;
+
+		public DNFConversionException(Throwable e) {
+			super(e);
+		}
+
+	}
+
+	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(DNFConverter.class); 
-	
+
 	DNFOrRemover orRemover;
 	GFtoBooleanConvertor boolConverter;
 	BooleanToGFConvertor gfConverter;
@@ -39,7 +49,7 @@ public class DNFConverter implements BEVisitor<BExpression> {
 		boolConverter = new GFtoBooleanConvertor();
 		gfConverter = new BooleanToGFConvertor();
 	}
-	
+
 	/**
 	 * Converts a basic GF to DNF
 	 * @param e
@@ -49,38 +59,38 @@ public class DNFConverter implements BEVisitor<BExpression> {
 	 * @pre e is a basic {@link GFExpression}
 	 */
 	public GFExpression convert(GFExpression e) throws DNFConversionException {
-		
+
 		if(!e.isBasicGF()){
 			;
 			// TODO throw excp.
 		}
-		
-		
+
+
 		try {
 			GFExistentialExpression gfee = (GFExistentialExpression) e;
-			
+
 			// extract boolean part
 			BExpression be = boolConverter.convert(gfee.getChild());
 			GFBooleanMapping mapping = boolConverter.getMapping();
-			
+
 			// convert to DNF
 			BExpression beDNF = convert(be);
-			
+
 			// re-assemble using variable/atomic mapping
 			gfConverter.setMapping(mapping);
 			GFExpression dnfChild = gfConverter.convert(beDNF);
-			
+
 			return new GFExistentialExpression(gfee.getGuard(), dnfChild, gfee.getOutputRelation());
-			
-			
-			
-			
+
+
+
+
 		} catch (GFtoBooleanConversionException e1) {
 			throw new DNFConversionException(e1);
 		}
-		
-		
-		
+
+
+
 	}
 
 	public BExpression convert(BExpression e) {
@@ -97,9 +107,9 @@ public class DNFConverter implements BEVisitor<BExpression> {
 
 		// double negation
 		if (c instanceof BNotExpression)
-			
+
 			return convert(((BNotExpression) c).getChild());
-		
+
 		// de morgan 1: push negation in OR
 		else if (c instanceof BOrExpression) {
 			BExpression orChild1 = ((BOrExpression) c).getChild1();
@@ -133,16 +143,16 @@ public class DNFConverter implements BEVisitor<BExpression> {
 	 */
 	@Override
 	public BExpression visit(BAndExpression e) {
-		
 
-		
+
+
 		// convert children
 		BExpression c1 = convert(e.getChild1());
 		BExpression c2 = convert(e.getChild2());
 		Iterable<BExpression> set1 = orRemover.extractTopLevel(c1);
 		Iterable<BExpression> set2 = orRemover.extractTopLevel(c2);
-		
-		
+
+
 		// pairwise combine
 		Set<BAndExpression> andSet = new HashSet<>();
 		for(BExpression p : set1){
@@ -154,17 +164,17 @@ public class DNFConverter implements BEVisitor<BExpression> {
 		// 0 cannot happen
 		if (andSet.size() < 2)
 			return andSet.iterator().next();
-		
+
 		BAndExpression [] array = andSet.toArray(new BAndExpression[0]);
-		
-		
+
+
 		// add disjunction between the AND-statements
 		BOrExpression result = new BOrExpression(array[0], array[1]);
 		for (int i = 2; i < array.length; i++) {
 			BAndExpression ae = array[i];
 			result = new BOrExpression(result,ae);
 		}
-		
+
 		return result;
 	}
 

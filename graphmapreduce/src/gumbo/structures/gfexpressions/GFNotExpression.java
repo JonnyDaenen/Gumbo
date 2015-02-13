@@ -8,6 +8,7 @@ import java.util.Set;
 public class GFNotExpression extends GFExpression{
 
 	
+	private static final long serialVersionUID = 1L;
 	GFExpression child;
 	int rank;
 	

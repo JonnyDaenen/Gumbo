@@ -23,6 +23,7 @@ import org.apache.hadoop.io.IOUtils;
 public abstract class TupleEstimator {
 	
 
+	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(TupleEstimator.class); 
 	protected long defaultValue = 1;
 	

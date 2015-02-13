@@ -39,7 +39,7 @@ public class GFReducerHadoop extends Reducer<Text, Text, Text, Text> {
 	@Override
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
-		mos = new MultipleOutputs(context);
+		mos = new MultipleOutputs<>(context);
 
 		Configuration conf = context.getConfiguration();
 

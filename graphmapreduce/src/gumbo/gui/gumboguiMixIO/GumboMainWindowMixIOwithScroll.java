@@ -11,6 +11,8 @@ import javax.swing.JTextArea;
 
 public class GumboMainWindowMixIOwithScroll extends JFrame {
 	
+	private static final long serialVersionUID = 1L;
+
 	public GumboMainWindowMixIOwithScroll(
 			JEditorPane editorIQ, JTextArea textConsole, JButton buttonQC, 
 			JButton buttonSche, JButton buttonFH, JButton buttonFS, JCheckBox cbLevel,

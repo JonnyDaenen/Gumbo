@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public abstract class GFExpression implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	protected static final long serialVersionUID = 1L;
 
 	public abstract Set<String> getFreeVariables();
 

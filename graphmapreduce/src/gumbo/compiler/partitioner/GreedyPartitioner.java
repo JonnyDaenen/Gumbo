@@ -19,7 +19,7 @@ public class GreedyPartitioner implements CalculationPartitioner {
 	@Override
 	public PartitionedCUGroup partition(CalculationUnitGroup partition, FileManager fm) {
 		
-		int height = partition.getHeight();
+//		int height = partition.getHeight();
 		PartitionedCUGroup partitionedDAG = new PartitionedCUGroup();
 		
 		// TODO implement
