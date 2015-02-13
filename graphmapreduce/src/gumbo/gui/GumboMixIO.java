@@ -190,13 +190,14 @@ public class GumboMixIO {
 				String xtime = "" + System.currentTimeMillis() / 1000;
 				try {
 					plan = planner.createPlan(
+							"GUIGumboQuery",
 							inputQuery, 
 							rfm, 
 							new Path(outPathText.getText()), 
 							new Path("/Users/ntynvt/tempGumbo/"+xtime)); // FIXME use user-supplied path
 					
 					HadoopEngine engine = new HadoopEngine();
-					engine.executePlan(plan);
+					engine.executePlan(plan,null);
 				
 				} catch (GFCompilerException | ExecutionException | IllegalArgumentException e1) {
 					// TODO Auto-generated catch block

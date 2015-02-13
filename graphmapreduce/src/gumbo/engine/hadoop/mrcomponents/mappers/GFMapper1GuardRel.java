@@ -5,7 +5,7 @@ package gumbo.engine.hadoop.mrcomponents.mappers;
 
 import gumbo.compiler.resolver.operations.GFOperationInitException;
 import gumbo.engine.hadoop.mrcomponents.mappers.TupleIDCreator.TupleIDError;
-import gumbo.engine.hadoop.settings.ExecutorSettings;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
@@ -68,7 +68,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 			Tuple t = new Tuple(value);
 
 			// replace value with pointer when optimization is on
-			if (settings.getBooleanProperty(ExecutorSettings.guardTuplePointerOptimizationOn)) {
+			if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
 				value.set(pathids.getTupleID(context, key.get())); // key indicates offset in TextInputFormat
 			}
 			// System.out.println(t);
@@ -87,7 +87,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 					int guardID = eso.getAtomId(guard);
 
 					// output guard
-					if (!settings.getBooleanProperty(ExecutorSettings.guardKeepaliveOptimizationOn)) {
+					if (!settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn)) {
 						out1.set(value.toString() + ";" + guardID);
 						context.write(value, out1);
 						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST).increment(1);
@@ -135,7 +135,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 			}
 
 			// only output keep-alive if it matched a guard
-			if (!settings.getBooleanProperty(ExecutorSettings.guardKeepaliveOptimizationOn) && outputGuard) {
+			if (!settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn) && outputGuard) {
 				context.write(value, value);
 				context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE).increment(1);
 				context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()*2);
@@ -146,7 +146,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 			if (guardIsGuarded) {
 //				LOG.error("guard output POE");
 				out1.set(t.toString());
-				out2.set(settings.getProperty(ExecutorSettings.PROOF_SYMBOL));
+				out2.set(settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL));
 				context.write(out1, out2);
 			}
 			

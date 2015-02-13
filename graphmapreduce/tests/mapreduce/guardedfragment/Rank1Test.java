@@ -9,6 +9,7 @@ import gumbo.compiler.GumboPlan;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.HeightPartitioner;
 import gumbo.engine.hadoop.HadoopEngine;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
@@ -22,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.junit.After;
 import org.junit.Before;
@@ -147,10 +149,15 @@ public class Rank1Test {
 		//		plan.execute();
 
 		GFCompiler compiler = new GFCompiler(new HeightPartitioner());
-		GumboPlan plan = compiler.createPlan((GFExistentialExpression)gfe, rfm, new Path(output.getAbsolutePath()), new Path(scratch.getAbsolutePath()));
+		GumboPlan plan = compiler.createPlan(this.getClass().getSimpleName(), (GFExistentialExpression)gfe, rfm, new Path(output.getAbsolutePath()), new Path(scratch.getAbsolutePath()));
 		
 		HadoopEngine engine = new HadoopEngine();
-		engine.executePlan(plan);
+		Configuration conf = new Configuration();
+		HadoopExecutorSettings hs = new HadoopExecutorSettings(conf);
+		hs.loadDefaults();
+		hs.turnOffOptimizations();
+		
+		engine.executePlan(plan,conf);
 
 		// TODO we need a method to request the output files/directory of a relation
 

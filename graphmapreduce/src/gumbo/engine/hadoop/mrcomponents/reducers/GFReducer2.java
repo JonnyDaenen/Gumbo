@@ -5,7 +5,7 @@ package gumbo.engine.hadoop.mrcomponents.reducers;
 
 import gumbo.compiler.resolver.operations.GFOperationInitException;
 import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
-import gumbo.engine.hadoop.settings.ExecutorSettings;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.booleanexpressions.BEvaluationContext;
 import gumbo.structures.booleanexpressions.BExpression;
 import gumbo.structures.booleanexpressions.VariableNotFoundException;
@@ -20,10 +20,12 @@ import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -56,7 +58,7 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 	private static final Log LOG = LogFactory.getLog(GFReducer2.class);
 
 	boolean receiveIDs = true;
-	private ExecutorSettings settings;
+	private HadoopExecutorSettings settings;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -101,7 +103,7 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 
 			Tuple keyTuple = null;
 
-			if (!settings.getBooleanProperty(ExecutorSettings.guardTuplePointerOptimizationOn)) {
+			if (!settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
 				keyTuple = new Tuple(key);
 			}
 
@@ -113,7 +115,7 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 
 				// if tuple pointer optimization is on
 				// we need to find the actual tuple between the values.
-				if (settings.getBooleanProperty(ExecutorSettings.guardTuplePointerOptimizationOn)) {
+				if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
 					// TODO implement...
 				}
 
@@ -177,18 +179,26 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 		} 
 	}
 
-	public String generateFileName(RelationSchema relationSchema) {
-
-		// cached?
-		if (filenames.containsKey(relationSchema)) {
-			return filenames.get(relationSchema);
-
-		} else {
-			String rel = relationSchema.getShortDescription();
-			String name = generateFolder(relationSchema) + "/" + rel;
-			filenames.put(relationSchema,name);
-			return name;
+	public String generateFileName(RelationSchema rs) {
+		
+		
+		Set<Path> paths = eso.getFileMapping().getPaths(rs);
+		// take first path
+		for (Path path: paths) {
+			return path.toString() + "/" + rs.getName();
 		}
+		return ""; // FIXME fallback system + duplicate code in other reducer2
+
+//		// cached?
+//		if (filenames.containsKey(relationSchema)) {
+//			return filenames.get(relationSchema);
+//
+//		} else {
+//			String rel = relationSchema.getShortDescription();
+//			String name = generateFolder(relationSchema) + "/" + rel;
+//			filenames.put(relationSchema,name);
+//			return name;
+//		}
 
 	}
 

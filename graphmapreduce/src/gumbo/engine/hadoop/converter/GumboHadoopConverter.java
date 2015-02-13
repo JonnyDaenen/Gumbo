@@ -23,7 +23,7 @@ import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper2GuardTextRel;
 import gumbo.engine.hadoop.mrcomponents.reducers.GFReducer1;
 import gumbo.engine.hadoop.mrcomponents.reducers.GFReducer2;
 import gumbo.engine.hadoop.mrcomponents.reducers.GFReducer2Text;
-import gumbo.engine.hadoop.settings.ExecutorSettings;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
@@ -81,7 +81,7 @@ public class GumboHadoopConverter {
 	}
 
 	private GFPrefixSerializer serializer;
-	private ExecutorSettings settings;
+	private HadoopExecutorSettings settings;
 	private FileManager fileManager;
 	private FileMappingExtractor extractor;
 
@@ -93,9 +93,9 @@ public class GumboHadoopConverter {
 	/**
 	 * 
 	 */
-	public GumboHadoopConverter(String queryName, FileManager fileManager, ExecutorSettings settings) {
+	public GumboHadoopConverter(String queryName, FileManager fileManager, Configuration conf) {
 		this.queryName = queryName;
-		this.settings = settings;
+		this.settings = new HadoopExecutorSettings(conf);
 		this.fileManager = fileManager;
 
 		this.extractor = new FileMappingExtractor();
@@ -145,7 +145,7 @@ public class GumboHadoopConverter {
 		try {
 
 			// create job
-			Job hadoopJob = Job.getInstance();
+			Job hadoopJob = Job.getInstance(settings.getConf()); // note: makes a copy of the conf
 
 			/* GENERAL */
 			hadoopJob.setJarByClass(getClass());
@@ -277,7 +277,7 @@ public class GumboHadoopConverter {
 			Path inPath = FileOutputFormat.getOutputPath(previousJob.getJob());
 
 			// create job
-			Job hadoopJob = Job.getInstance();
+			Job hadoopJob = Job.getInstance(settings.getConf()); // note: creates a copy of the conf
 
 			/* GENERAL */
 			hadoopJob.setJarByClass(getClass());
@@ -300,7 +300,7 @@ public class GumboHadoopConverter {
 
 			/* MAPPER */
 
-			if (settings.getBooleanProperty(ExecutorSettings.guardKeepaliveOptimizationOn)) {
+			if (settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn)) {
 
 				// add special non-identity mapper to process the guard input again
 
@@ -341,7 +341,7 @@ public class GumboHadoopConverter {
 			// if we use a tuplepointeroptimization
 			// we cannot use the ints for now, as we need to re-send the tuple itself
 			hadoopJob.setMapOutputKeyClass(Text.class);
-			if (settings.getBooleanProperty(ExecutorSettings.guardTuplePointerOptimizationOn)) {
+			if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
 				hadoopJob.setMapOutputValueClass(Text.class); // OPTIMIZE make it a combined class
 			} else {
 				hadoopJob.setMapOutputValueClass(IntWritable.class); // FUTURE make it a list? for combiner
@@ -351,7 +351,7 @@ public class GumboHadoopConverter {
 			/* REDUCER */
 
 			// the reducer reads text or int format, depending on the optimization
-			if (settings.getBooleanProperty(ExecutorSettings.guardTuplePointerOptimizationOn)) {
+			if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
 				hadoopJob.setReducerClass(GFReducer2Text.class);
 			} else {
 				hadoopJob.setReducerClass(GFReducer2.class);
@@ -395,13 +395,13 @@ public class GumboHadoopConverter {
 	private Class<? extends Mapper> getRound2GuardMapperClass(String string) {
 
 		if (string.equals("csv") ) {
-			if (settings.getBooleanProperty(ExecutorSettings.guardTuplePointerOptimizationOn)) {
+			if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
 				return GFMapper2GuardTextCsv.class;
 			} else {
 				return GFMapper2GuardCsv.class;
 			}
 		} else {
-			if (settings.getBooleanProperty(ExecutorSettings.guardTuplePointerOptimizationOn)) {
+			if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
 				return GFMapper2GuardTextRel.class;
 			} else {
 				return GFMapper2GuardRel.class;
@@ -421,7 +421,7 @@ public class GumboHadoopConverter {
 	@SuppressWarnings("rawtypes")
 	private Class<? extends InputFormat> getRound2MapInputFormat() {
 		Class<? extends InputFormat> atomInputFormat = GuardInputFormat.class;
-		if (settings.getBooleanProperty(ExecutorSettings.guardTuplePointerOptimizationOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
 			atomInputFormat = GuardTextInputFormat.class;
 		}
 		return atomInputFormat;

@@ -3,7 +3,7 @@
  */
 package gumbo.engine.hadoop.mrcomponents.mappers;
 
-import gumbo.engine.hadoop.settings.ExecutorSettings;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 
@@ -34,7 +34,7 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 	@Override
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
-		proofSymbol = new Text(settings.getProperty(ExecutorSettings.PROOF_SYMBOL));
+		proofSymbol = new Text(settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL));
 		
 	}
 
@@ -65,7 +65,7 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 			// if no guarded expression matches this tuple, it will not be output
 			if (guarded.matches(t)) {
 				// reduce data size by using a constant symbol
-				if (settings.getBooleanProperty(ExecutorSettings.guardedIdOptimizationOn)) {
+				if (settings.getBooleanProperty(HadoopExecutorSettings.guardedIdOptimizationOn)) {
 					context.write(value, proofSymbol);
 					context.getCounter(GumboMap1Counter.PROOF_OF_EXISTENCE).increment(1);
 					context.getCounter(GumboMap1Counter.PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()+1);

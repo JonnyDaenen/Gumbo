@@ -90,7 +90,7 @@ public class CompilerTester {
 		
 		try {
 			
-			GumboPlan plan = compiler.createPlan(exps, rfm, new Path("out"), new Path("Scratch"));
+			GumboPlan plan = compiler.createPlan(this.getClass().getSimpleName(),exps, rfm, new Path("out"), new Path("Scratch"));
 			
 			assertNotNull(plan.fileManager);
 			assertNotNull(plan.partitions);

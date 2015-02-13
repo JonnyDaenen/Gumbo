@@ -37,32 +37,7 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRel {
 	Text out1 = new Text();
 	Text out2 = new Text();
 
-	private RelationFileMapping rm;
-	
-	@Override
-	protected void setup(Context  context) throws IOException, InterruptedException {
 
-		
-		super.setup(context);
-		
-		Configuration conf = context.getConfiguration();
-		
-		// get relation name
-		String relmapping = conf.get("relationfilemapping");
-//		LOG.error(relmapping);
-		try {
-			FileSystem fs = FileSystem.get(conf);
-			rm = new RelationFileMapping(relmapping,fs);
-//			LOG.trace(rm.toString());
-
-		} catch (RelationSchemaException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RelationFileMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 
 
 	/**
@@ -90,7 +65,7 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRel {
 			
 //			LOG.error("File Name: "+filePath);
 			
-			RelationSchema rs = rm.findSchema(filePath);
+			RelationSchema rs = eso.getFileMapping().findSchema(filePath);
 			
 			// trim is necessary to remove extra whitespace
 			String t1 = value.toString().trim();

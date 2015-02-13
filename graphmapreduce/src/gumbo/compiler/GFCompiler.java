@@ -64,15 +64,16 @@ public class GFCompiler {
 	 * 
 	 * @throws GFCompilerException
 	 */
-	public GumboPlan createPlan(GFExpression expression, RelationFileMapping infiles, Path outdir, Path scratchdir) throws GFCompilerException {
+	public GumboPlan createPlan(String name, GFExpression expression, RelationFileMapping infiles, Path outdir, Path scratchdir) throws GFCompilerException {
 		HashSet<GFExpression> expressions = new HashSet<GFExpression>();
 		expressions.add(expression);
-		return createPlan(expressions, infiles, outdir, scratchdir);
+		return createPlan(name, expressions, infiles, outdir, scratchdir);
 	}
 
 	/**
 	 * Creates a {@link GumboPlan} for a given set of existential expressions.
 	 * FUTURE convert rfm, outdir and scratchdir to set of special expressions?
+	 * @param name 
 	 * @param expressions the set of expressions to convert
 	 * @param indir the directory containing the input data
 	 * @param outdir the directory where to put the output data
@@ -82,7 +83,7 @@ public class GFCompiler {
 	 * 
 	 * @throws GFCompilerException 
 	 */
-	public GumboPlan createPlan(Collection<? extends GFExpression> expressions, RelationFileMapping infiles, Path outdir, Path scratchdir) throws GFCompilerException {
+	public GumboPlan createPlan(String name, Collection<? extends GFExpression> expressions, RelationFileMapping infiles, Path outdir, Path scratchdir) throws GFCompilerException {
 
 		// decomposer -> CUConverter -> CULinker -> file mappings -> partition
 
@@ -122,7 +123,7 @@ public class GFCompiler {
 			LOG.info("Number of partitions: " + pdag.getNumPartitions());
 			LOG.debug(pdag);
 			
-			GumboPlan plan = new GumboPlan("GumboQuery",pdag,fm);
+			GumboPlan plan = new GumboPlan(name, pdag, fm);
 			
 			return plan;
 			

@@ -8,7 +8,7 @@ import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.engine.ExecutionException;
 import gumbo.engine.hadoop.converter.GumboHadoopConverter;
 import gumbo.engine.hadoop.converter.GumboHadoopConverter.ConversionException;
-import gumbo.engine.hadoop.settings.ExecutorSettings;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.CounterGroup;
 import org.apache.hadoop.mapreduce.Counters;
@@ -45,11 +46,12 @@ public class HadoopEngine {
 	/**
 	 * Executes a MR plan using Hadoop.
 	 * @param plan a MR plan
+	 * @param conf 
 	 * @throws ExecutionException 
 	 */
-	public void executePlan (GumboPlan plan) throws ExecutionException {
+	public void executePlan (GumboPlan plan, Configuration conf) throws ExecutionException {
 
-		GumboHadoopConverter jobConverter = new GumboHadoopConverter(plan.getName(), plan.getFileManager(), new ExecutorSettings());
+		GumboHadoopConverter jobConverter = new GumboHadoopConverter(plan.getName(), plan.getFileManager(), conf);
 
 		executeJobs(plan, jobConverter);
 		cleanup();

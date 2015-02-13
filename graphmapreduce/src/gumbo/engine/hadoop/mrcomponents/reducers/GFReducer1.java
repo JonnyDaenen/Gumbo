@@ -4,7 +4,7 @@
 package gumbo.engine.hadoop.mrcomponents.reducers;
 
 import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
-import gumbo.engine.hadoop.settings.ExecutorSettings;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
@@ -40,7 +40,7 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 	StringBuilder sb;
 
 	boolean outputIDs = true;
-	ExecutorSettings settings;
+	HadoopExecutorSettings settings;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)

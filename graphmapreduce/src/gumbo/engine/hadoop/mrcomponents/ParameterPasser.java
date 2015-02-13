@@ -3,7 +3,7 @@ package gumbo.engine.hadoop.mrcomponents;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.filemapper.RelationFileMappingException;
 import gumbo.compiler.resolver.operations.GFOperationInitException;
-import gumbo.engine.hadoop.settings.ExecutorSettings;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.RelationSchemaException;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
@@ -68,8 +68,8 @@ public class ParameterPasser {
 
 	}
 
-	public ExecutorSettings loadSettings() {
-		return new ExecutorSettings(); // FIXME load
+	public HadoopExecutorSettings loadSettings() {
+		return new HadoopExecutorSettings(conf);
 	}
 
 }

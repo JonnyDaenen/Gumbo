@@ -4,10 +4,11 @@
 package gumbo.engine.hadoop.mrcomponents.mappers;
 
 import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
-import gumbo.engine.hadoop.settings.ExecutorSettings;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 import java.io.IOException;
+import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,7 +28,7 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 	private static final Log LOG = LogFactory.getLog(GFMapper1Identity.class);
 
 	ExpressionSetOperations eso;
-	ExecutorSettings settings;
+	HadoopExecutorSettings settings;
 
 
 	/**
@@ -51,6 +52,13 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 			ParameterPasser pp = new ParameterPasser(conf);
 			eso = pp.loadESO();
 			settings = pp.loadSettings();
+			
+			System.out.println("Mapper1");
+			for (Entry<String, String> entry: conf) {
+				if(entry.getKey().contains("gumbo")) {
+				System.out.printf("%s=%s\n", entry.getKey(), entry.getValue());
+				}
+			}
 		} catch (Exception e) {
 			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}

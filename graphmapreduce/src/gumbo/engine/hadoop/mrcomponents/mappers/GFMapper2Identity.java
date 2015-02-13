@@ -5,7 +5,7 @@ package gumbo.engine.hadoop.mrcomponents.mappers;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
-import gumbo.engine.hadoop.settings.ExecutorSettings;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 import java.io.IOException;
@@ -29,7 +29,7 @@ public class GFMapper2Identity extends Mapper<LongWritable, Text, Text, IntWrita
 	private static final Log LOG = LogFactory.getLog(GFMapper2Identity.class);
 
 	ExpressionSetOperations eso;
-	ExecutorSettings settings;
+	HadoopExecutorSettings settings;
 	IntWritable out = new IntWritable();
 
 	RelationFileMapping rm;

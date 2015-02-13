@@ -6,7 +6,7 @@ package gumbo.engine.hadoop.converter;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.engine.hadoop.settings.ExecutorSettings;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
@@ -31,14 +31,14 @@ import org.apache.commons.logging.LogFactory;
 public class ReduceJobEstimator {
 
 
-	private ExecutorSettings settings; // TODO #core fix settings passing
+	private HadoopExecutorSettings settings; // TODO #core fix settings passing
 	private TupleEstimator tupleEstimator;
 
 
 	/**
 	 * 
 	 */
-	public ReduceJobEstimator( ExecutorSettings settings, TupleEstimator tupleEstimator) {
+	public ReduceJobEstimator( HadoopExecutorSettings settings, TupleEstimator tupleEstimator) {
 		this.settings = settings;
 		this.tupleEstimator = tupleEstimator;
 	}
@@ -46,7 +46,7 @@ public class ReduceJobEstimator {
 	/**
 	 * 
 	 */
-	public ReduceJobEstimator(ExecutorSettings settings) {
+	public ReduceJobEstimator(HadoopExecutorSettings settings) {
 		this(settings, new RandomTupleEstimator(1024,10));
 	}
 
@@ -141,7 +141,7 @@ public class ReduceJobEstimator {
 
 
 		// values
-		if (settings.getBooleanProperty(ExecutorSettings.guardedIdOptimizationOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.guardedIdOptimizationOn)) {
 			// value is now a constant
 			for (RelationSchema rs : schemas) {
 
@@ -169,7 +169,7 @@ public class ReduceJobEstimator {
 	private long estimateKeepAlives(RelationSchema guard, Collection<GFAtomicExpression> guardeds, RelationFileMapping rfm) {
 
 		// if optimization is on, no keep-alives are sent
-		if (settings.getBooleanProperty(ExecutorSettings.guardKeepaliveOptimizationOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn)) {
 			return 0;
 		}
 
@@ -182,7 +182,7 @@ public class ReduceJobEstimator {
 		guardSize -= numTuples;
 
 		// optimization correction
-		if (settings.getBooleanProperty(ExecutorSettings.guardedIdOptimizationOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.guardedIdOptimizationOn)) {
 			// 2 bytes for an atom id
 			atomSize = 2;
 		}
@@ -230,7 +230,7 @@ public class ReduceJobEstimator {
 
 		// optimization corrections
 
-		if (settings.getBooleanProperty(ExecutorSettings.guardTuplePointerOptimizationOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
 			// use numtuples * 16 as the guardsize
 			// 16 is approx for 10byte 64-bit long encoding and 6 ascii digits for file id 
 			guardSize2 = numTuples * 16;
@@ -238,7 +238,7 @@ public class ReduceJobEstimator {
 		}
 
 
-		if (settings.getBooleanProperty(ExecutorSettings.guardIdOptimizationOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.guardIdOptimizationOn)) {
 			// guardeds.size() must be replaced with 2, as an approximation for id bytes.
 			totalGuardedAtomSize = guardedAtoms.size() * 2;
 

@@ -5,7 +5,7 @@ package gumbo.engine.hadoop.mrcomponents.reducers;
 
 import gumbo.compiler.resolver.operations.GFOperationInitException;
 import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
-import gumbo.engine.hadoop.settings.ExecutorSettings;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.booleanexpressions.BEvaluationContext;
 import gumbo.structures.booleanexpressions.BExpression;
 import gumbo.structures.booleanexpressions.VariableNotFoundException;
@@ -55,7 +55,7 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 	private static final Log LOG = LogFactory.getLog(GFReducer2Text.class);
 
 	boolean receiveIDs = true;
-	private ExecutorSettings settings;
+	private HadoopExecutorSettings settings;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -99,7 +99,7 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 
 			Tuple keyTuple = null;
 
-			if (!settings.getBooleanProperty(ExecutorSettings.guardTuplePointerOptimizationOn)) {
+			if (!settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
 				keyTuple = new Tuple(key);
 			}
 
@@ -111,7 +111,7 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 
 				// if tuple pointer optimization is on
 				// we need to find the actual tuple between the values.
-				if (settings.getBooleanProperty(ExecutorSettings.guardTuplePointerOptimizationOn)) {
+				if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
 
 					String val = v.toString();
 					// if this is a tuple instead of an id
@@ -226,7 +226,7 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 		for (Path path: paths) {
 			return path.toString() + "/" + rs.getName();
 		}
-		return ""; // FIXME fallback system
+		return ""; // FIXME fallback system + duplicate code in other reducer2
 		
 		// cached?
 //		if (filenames.containsKey(relationSchema)) {

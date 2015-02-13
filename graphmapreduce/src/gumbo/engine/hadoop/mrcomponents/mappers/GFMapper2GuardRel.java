@@ -5,7 +5,7 @@ package gumbo.engine.hadoop.mrcomponents.mappers;
 
 import gumbo.compiler.resolver.operations.GFOperationInitException;
 import gumbo.engine.hadoop.mrcomponents.mappers.TupleIDCreator.TupleIDError;
-import gumbo.engine.hadoop.settings.ExecutorSettings;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 
@@ -62,7 +62,7 @@ public class GFMapper2GuardRel extends GFMapper2Identity {
 			// System.out.println(t);
 
 			// replace value with pointer when optimization is on
-			if (settings.getBooleanProperty(ExecutorSettings.guardTuplePointerOptimizationOn)) {
+			if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
 				value.set(pathids.getTupleID(context, key.get())); // key indicates offset in TextInputFormat
 			}
 
@@ -84,7 +84,7 @@ public class GFMapper2GuardRel extends GFMapper2Identity {
 					// output tuple value
 					// only when pointer optimization is on
 					// to be able to recover the tuple in the reducer
-					if (settings.getBooleanProperty(ExecutorSettings.guardTuplePointerOptimizationOn)) {
+					if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
 						out2.set(t.toString());
 //						context.write(value, out2); // FIXME change output to text... :-(
 						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_R2).increment(1);
