@@ -9,7 +9,6 @@ import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.compiler.resolver.operations.GFOperationInitException;
 import gumbo.engine.hadoop.input.GuardInputFormat;
 import gumbo.engine.hadoop.input.GuardTextInputFormat;
 import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardCsv;
@@ -28,6 +27,7 @@ import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
+import gumbo.structures.gfexpressions.operations.GFOperationInitException;
 
 import java.io.IOException;
 import java.util.Collection;

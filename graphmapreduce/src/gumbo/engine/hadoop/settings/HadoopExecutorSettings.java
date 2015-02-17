@@ -4,11 +4,6 @@
 package gumbo.engine.hadoop.settings;
 
 import gumbo.engine.settings.AbstractExecutorSettings;
-import gumbo.engine.settings.ExecutorSettings;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -3,12 +3,12 @@
  */
 package gumbo.engine.hadoop.mrcomponents.mappers;
 
-import gumbo.compiler.resolver.operations.GFOperationInitException;
 import gumbo.engine.hadoop.mrcomponents.mappers.TupleIDCreator.TupleIDError;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
+import gumbo.structures.gfexpressions.operations.GFOperationInitException;
 import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
 
 import java.io.IOException;

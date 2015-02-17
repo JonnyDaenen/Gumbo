@@ -8,7 +8,6 @@ import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.engine.ExecutionException;
 import gumbo.engine.hadoop.converter.GumboHadoopConverter;
 import gumbo.engine.hadoop.converter.GumboHadoopConverter.ConversionException;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 
 import java.io.IOException;
 import java.util.List;

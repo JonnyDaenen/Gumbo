@@ -3,11 +3,11 @@
  */
 package gumbo.engine.hadoop.mrcomponents.mappers;
 
-import gumbo.compiler.resolver.operations.GFMapper;
-import gumbo.compiler.resolver.operations.GFOperationInitException;
+import gumbo.engine.abstractMR.GFMapper;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
+import gumbo.structures.gfexpressions.operations.GFOperationInitException;
 
 import java.io.IOException;
 import java.util.HashSet;

@@ -3,7 +3,6 @@
  */
 package gumbo.engine.hadoop.mrcomponents.reducers;
 
-import gumbo.compiler.resolver.operations.GFOperationInitException;
 import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.booleanexpressions.BEvaluationContext;
@@ -16,6 +15,7 @@ import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
+import gumbo.structures.gfexpressions.operations.GFOperationInitException;
 import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
 
 import java.io.IOException;
