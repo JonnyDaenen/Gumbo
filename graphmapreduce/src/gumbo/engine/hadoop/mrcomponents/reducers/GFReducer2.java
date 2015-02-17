@@ -14,8 +14,8 @@ import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
-import gumbo.structures.gfexpressions.operations.GFOperationInitException;
 import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
 
 import java.io.IOException;

@@ -9,7 +9,7 @@ import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.io.DeserializeException;
 import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
-import gumbo.structures.gfexpressions.operations.GFOperationInitException;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 
 import java.io.IOException;
 import java.util.HashSet;

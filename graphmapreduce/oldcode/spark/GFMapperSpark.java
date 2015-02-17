@@ -3,8 +3,6 @@
  */
 package gumbo.engine.spark;
 
-import gumbo.compiler.resolver.operations.GFMapper;
-import gumbo.compiler.resolver.operations.GFOperationInitException;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.io.Pair;
 

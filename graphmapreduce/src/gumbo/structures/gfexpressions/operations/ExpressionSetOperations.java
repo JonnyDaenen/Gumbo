@@ -34,6 +34,17 @@ import org.apache.hadoop.fs.Path;
  */
 public class ExpressionSetOperations {
 
+	public class GFOperationInitException extends Exception {
+
+		public GFOperationInitException(String msg) {
+			super(msg);
+		}
+		
+		public GFOperationInitException(String msg, Exception e) {
+			super(msg,e);
+		}
+	}
+
 	private static final Log LOG = LogFactory.getLog(ExpressionSetOperations.class);
 
 	protected Collection<GFExistentialExpression> expressionSet;
@@ -103,7 +114,7 @@ public class ExpressionSetOperations {
 			} catch (GFtoBooleanConversionException e1) {
 
 				LOG.error("Something went wrong when converting GF to boolean: " + e);
-				throw new GFOperationInitException(e1);
+				throw new GFOperationInitException("Problem when during GF-boolean conversion: " + e,e1);
 			}
 		}
 		// get mapping of ALL formulas

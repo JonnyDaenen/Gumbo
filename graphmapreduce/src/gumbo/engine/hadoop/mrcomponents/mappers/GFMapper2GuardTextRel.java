@@ -7,7 +7,7 @@ import gumbo.engine.hadoop.mrcomponents.mappers.TupleIDCreator.TupleIDError;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.operations.GFOperationInitException;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 
 import java.io.IOException;
 

@@ -1,13 +1,12 @@
 /**
  * Created: 22 Aug 2014
  */
-package gumbo.engine.abstractMR;
+package gumbo.engine.hadoop.abstractMR;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
-import gumbo.structures.gfexpressions.operations.GFOperationInitException;
 
 import java.io.IOException;
 import java.util.Collection;
