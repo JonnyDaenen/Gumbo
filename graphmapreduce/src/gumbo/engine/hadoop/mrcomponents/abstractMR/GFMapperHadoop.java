@@ -1,9 +1,8 @@
 /**
  * Created: 21 Aug 2014
  */
-package gumbo.engine.hadoop.mrcomponents.mappers;
+package gumbo.engine.hadoop.mrcomponents.abstractMR;
 
-import gumbo.engine.hadoop.mrcomponents.abstractMR.GFMapper;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
