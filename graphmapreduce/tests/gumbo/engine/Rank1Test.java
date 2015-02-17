@@ -11,6 +11,7 @@ import gumbo.compiler.partitioner.HeightPartitioner;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.engine.settings.AbstractExecutorSettings;
+import gumbo.input.GumboQuery;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
@@ -228,7 +229,8 @@ public class Rank1Test {
 		//		plan.execute();
 
 		GFCompiler compiler = new GFCompiler(new HeightPartitioner());
-		GumboPlan plan = compiler.createPlan(this.getClass().getSimpleName(), (GFExistentialExpression)gfe, rfm, new Path(output.getAbsolutePath()), new Path(scratch.getAbsolutePath()));
+		GumboQuery query = new GumboQuery(this.getClass().getSimpleName(), (GFExistentialExpression)gfe, rfm, new Path(output.getAbsolutePath()), new Path(scratch.getAbsolutePath()));
+		GumboPlan plan = compiler.createPlan(query);
 
 		HadoopEngine engine = new HadoopEngine();
 		engine.executePlan(plan,conf);

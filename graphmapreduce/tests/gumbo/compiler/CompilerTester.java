@@ -14,6 +14,7 @@ import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CULinker;
 import gumbo.compiler.partitioner.CalculationPartitioner;
 import gumbo.compiler.partitioner.UnitPartitioner;
+import gumbo.input.GumboQuery;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFAndExpression;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
@@ -89,8 +90,8 @@ public class CompilerTester {
 		rfm.addPath(new RelationSchema("UNKNOWN",1), new Path("in/UNKNOWN"));
 		
 		try {
-			
-			GumboPlan plan = compiler.createPlan(this.getClass().getSimpleName(),exps, rfm, new Path("out"), new Path("Scratch"));
+			GumboQuery query = new GumboQuery(this.getClass().getSimpleName(),exps, rfm, new Path("out"), new Path("Scratch"));
+			GumboPlan plan = compiler.createPlan(query);
 			
 			assertNotNull(plan.fileManager);
 			assertNotNull(plan.partitions);
