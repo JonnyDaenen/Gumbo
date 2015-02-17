@@ -4,7 +4,6 @@
 package gumbo.engine;
 
 import gumbo.compiler.GumboPlan;
-import gumbo.compiler.resolver.MRPlan;
 
 /**
  * Interface for {@link GumboPlan} execution.
@@ -13,6 +12,6 @@ import gumbo.compiler.resolver.MRPlan;
  */
 public interface GFEngine {
 
-	public void execute(MRPlan plan) throws ExecutionException;
+	public void execute(GumboPlan plan) throws ExecutionException;
 	
 }
