@@ -5,7 +5,6 @@ package gumbo.structures.gfexpressions.operations;
 
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.compiler.resolver.operations.GFOperationInitException;
 import gumbo.structures.booleanexpressions.BExpression;
 import gumbo.structures.conversion.GFBooleanMapping;
 import gumbo.structures.conversion.GFtoBooleanConversionException;
