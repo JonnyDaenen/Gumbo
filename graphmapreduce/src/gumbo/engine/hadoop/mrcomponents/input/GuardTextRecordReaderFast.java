@@ -1,35 +1,45 @@
 /**
  * Created: 08 Oct 2014
  */
-package gumbo.engine.hadoop.input;
+package gumbo.engine.hadoop.mrcomponents.input;
 
 import java.io.IOException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
-import org.apache.hadoop.mapreduce.lib.input.LineRecordReader;
+import org.apache.hadoop.mapreduce.lib.input.KeyValueLineRecordReader;
+
 
 /**
- * @author jonny
+ * This class should be replaced by KeyValueLineRecordReader.
+ * 
+ * @author Jonny Daenen
  *
  */
-public class GuardRecordReader extends RecordReader<Text, IntWritable> {
-	
+public class GuardTextRecordReaderFast extends RecordReader<Text, Text> {
 
-    private IntWritable value = new IntWritable();
-    private Text key = new Text();
-    LineRecordReader reader;
+	@SuppressWarnings("unused")
+	private static final Log LOG = LogFactory.getLog(GuardTextRecordReaderFast.class);
+
+    private Text value = new Text();
+    KeyValueLineRecordReader reader;
     
     /**
      * @param configuration 
 	 * 
 	 */
-	public GuardRecordReader(Configuration configuration) {
-		reader = new LineRecordReader();
+	public GuardTextRecordReaderFast(Configuration configuration) {
+		try {
+			reader = new KeyValueLineRecordReader(configuration);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -47,24 +57,7 @@ public class GuardRecordReader extends RecordReader<Text, IntWritable> {
 	 */
 	@Override
 	public boolean nextKeyValue() throws IOException, InterruptedException {
-		if (!reader.nextKeyValue())
-			return false;
-		
-		Text val = reader.getCurrentValue();
-		String[] vals = val.toString().split("\t");
-		
-		if (vals.length == 2) {
-			key.set(vals[0]);
-			value.set(Integer.parseInt(vals[1]));
-		} else if (vals.length == 1) {
-			// TODO skip?
-			throw new InterruptedException("Missing value!");
-		} else {
-			throw new InterruptedException("Missing values!");
-		}
-		
-		
-		return true;
+		return reader.nextKeyValue();
 	}
 
 	/**
@@ -72,15 +65,17 @@ public class GuardRecordReader extends RecordReader<Text, IntWritable> {
 	 */
 	@Override
 	public Text getCurrentKey() throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
-		return key;
+		return reader.getCurrentKey();
 	}
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.RecordReader#getCurrentValue()
 	 */
 	@Override
-	public IntWritable getCurrentValue() throws IOException, InterruptedException {
+	public Text getCurrentValue() throws IOException, InterruptedException {
+		Text help = reader.getCurrentValue();
+//		LOG.warn("test: " + i);
+		value.set(help);
 		return value;
 	}
 

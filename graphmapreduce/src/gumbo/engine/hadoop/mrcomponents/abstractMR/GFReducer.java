@@ -1,7 +1,7 @@
 /**
  * Created: 22 Aug 2014
  */
-package gumbo.engine.hadoop.abstractMR;
+package gumbo.engine.hadoop.mrcomponents.abstractMR;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.structures.gfexpressions.GFExistentialExpression;

@@ -1,13 +1,14 @@
 /**
  * Created: 08 Oct 2014
  */
-package gumbo.engine.hadoop.input;
+package gumbo.engine.hadoop.mrcomponents.input;
 
 import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
@@ -16,24 +17,22 @@ import org.apache.hadoop.mapreduce.lib.input.KeyValueLineRecordReader;
 
 
 /**
- * This class should be replaced by KeyValueLineRecordReader.
- * 
- * @author Jonny Daenen
+ * @author jonny
  *
  */
-public class GuardTextRecordReaderFast extends RecordReader<Text, Text> {
+public class GuardRecordReaderFast extends RecordReader<Text, IntWritable> {
 
 	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(GuardTextRecordReaderFast.class);
+	private static final Log LOG = LogFactory.getLog(GuardRecordReaderFast.class);
 
-    private Text value = new Text();
+    private IntWritable value = new IntWritable();
     KeyValueLineRecordReader reader;
     
     /**
      * @param configuration 
 	 * 
 	 */
-	public GuardTextRecordReaderFast(Configuration configuration) {
+	public GuardRecordReaderFast(Configuration configuration) {
 		try {
 			reader = new KeyValueLineRecordReader(configuration);
 		} catch (IOException e) {
@@ -72,10 +71,11 @@ public class GuardTextRecordReaderFast extends RecordReader<Text, Text> {
 	 * @see org.apache.hadoop.mapreduce.RecordReader#getCurrentValue()
 	 */
 	@Override
-	public Text getCurrentValue() throws IOException, InterruptedException {
+	public IntWritable getCurrentValue() throws IOException, InterruptedException {
 		Text help = reader.getCurrentValue();
+		int i = Integer.parseInt(help.toString());
 //		LOG.warn("test: " + i);
-		value.set(help);
+		value.set(i);
 		return value;
 	}
 

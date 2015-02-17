@@ -3,7 +3,7 @@
  */
 package gumbo.engine.hadoop.mrcomponents.mappers;
 
-import gumbo.engine.hadoop.abstractMR.GFMapper;
+import gumbo.engine.hadoop.mrcomponents.abstractMR.GFMapper;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.io.GFPrefixSerializer;

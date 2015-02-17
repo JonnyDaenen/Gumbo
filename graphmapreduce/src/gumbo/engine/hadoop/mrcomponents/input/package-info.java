@@ -7,4 +7,4 @@
  * @author Jonny Daenen
  *
  */
-package gumbo.engine.hadoop.input;
+package gumbo.engine.hadoop.mrcomponents.input;

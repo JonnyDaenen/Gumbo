@@ -1,44 +1,35 @@
 /**
  * Created: 08 Oct 2014
  */
-package gumbo.engine.hadoop.input;
+package gumbo.engine.hadoop.mrcomponents.input;
 
 import java.io.IOException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
-import org.apache.hadoop.mapreduce.lib.input.KeyValueLineRecordReader;
-
+import org.apache.hadoop.mapreduce.lib.input.LineRecordReader;
 
 /**
  * @author jonny
  *
  */
-public class GuardRecordReaderFast extends RecordReader<Text, IntWritable> {
-
-	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(GuardRecordReaderFast.class);
+public class GuardRecordReader extends RecordReader<Text, IntWritable> {
+	
 
     private IntWritable value = new IntWritable();
-    KeyValueLineRecordReader reader;
+    private Text key = new Text();
+    LineRecordReader reader;
     
     /**
      * @param configuration 
 	 * 
 	 */
-	public GuardRecordReaderFast(Configuration configuration) {
-		try {
-			reader = new KeyValueLineRecordReader(configuration);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public GuardRecordReader(Configuration configuration) {
+		reader = new LineRecordReader();
 	}
 
 	/**
@@ -56,7 +47,24 @@ public class GuardRecordReaderFast extends RecordReader<Text, IntWritable> {
 	 */
 	@Override
 	public boolean nextKeyValue() throws IOException, InterruptedException {
-		return reader.nextKeyValue();
+		if (!reader.nextKeyValue())
+			return false;
+		
+		Text val = reader.getCurrentValue();
+		String[] vals = val.toString().split("\t");
+		
+		if (vals.length == 2) {
+			key.set(vals[0]);
+			value.set(Integer.parseInt(vals[1]));
+		} else if (vals.length == 1) {
+			// TODO skip?
+			throw new InterruptedException("Missing value!");
+		} else {
+			throw new InterruptedException("Missing values!");
+		}
+		
+		
+		return true;
 	}
 
 	/**
@@ -64,7 +72,8 @@ public class GuardRecordReaderFast extends RecordReader<Text, IntWritable> {
 	 */
 	@Override
 	public Text getCurrentKey() throws IOException, InterruptedException {
-		return reader.getCurrentKey();
+		// TODO Auto-generated method stub
+		return key;
 	}
 
 	/**
@@ -72,10 +81,6 @@ public class GuardRecordReaderFast extends RecordReader<Text, IntWritable> {
 	 */
 	@Override
 	public IntWritable getCurrentValue() throws IOException, InterruptedException {
-		Text help = reader.getCurrentValue();
-		int i = Integer.parseInt(help.toString());
-//		LOG.warn("test: " + i);
-		value.set(i);
 		return value;
 	}
 
