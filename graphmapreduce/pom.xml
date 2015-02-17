@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>be.uhasselt.graphmapreduce</groupId>
 	<artifactId>Gumbo</artifactId>
-	<version>0.1.0</version>
+	<version>0.2.0</version>
 
 	<repositories>
 		<repository>
@@ -19,6 +19,7 @@
 
 	<build>
 		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>tests</testSourceDirectory>
 		<resources>
 			<resource>
 				<directory>src</directory>
@@ -128,6 +129,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency> <!-- Spark dependency -->
 			<groupId>org.apache.spark</groupId>
