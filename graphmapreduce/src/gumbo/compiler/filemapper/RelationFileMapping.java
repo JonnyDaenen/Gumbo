@@ -290,12 +290,10 @@ public class RelationFileMapping {
 
 	/**
 	 * Finds a schema that has a given path as input source.
-	 * TODO return set of schemas? fuzzy matching with wildcard support
-	 * OPTIMIZE make reverse mapping
+	 * <b>Warning:</b> it has to be an exact match!
 	 * @param filePath a path
 	 * @return a relationschema of the path
 	 */
-	@Deprecated
 	public RelationSchema findSchema(Path filePath) {
 		// find exact match
 		for (RelationSchema rs : mapping.keySet()){
@@ -303,17 +301,6 @@ public class RelationFileMapping {
 			if(paths.contains(filePath))
 				return rs;
 		}
-		// find partial match
-		for (RelationSchema rs : mapping.keySet()){
-			Set<Path> paths = mapping.get(rs);
-			for ( Path path : paths) {
-				//				LOG.debug("Looking for relation name:" + filePath + " " + path); 
-				if(filePath.toString().contains(path.toString()))
-					return rs;
-			}	
-		}
-
-		//		LOG.debug("Looking for relation name: nothing found"); 
 		// TODO throw error
 		return null;
 	}

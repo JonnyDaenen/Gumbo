@@ -29,6 +29,7 @@ public class Gumbo extends Configured implements Tool {
 	private static final Log LOG = LogFactory.getLog(Gumbo.class);
 
 	public class NoQueryException extends Exception {
+		private static final long serialVersionUID = 1L;
 
 		public NoQueryException(String msg) {
 			super(msg);

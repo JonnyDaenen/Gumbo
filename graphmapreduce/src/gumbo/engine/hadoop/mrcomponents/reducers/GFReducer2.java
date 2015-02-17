@@ -19,7 +19,6 @@ import gumbo.structures.gfexpressions.operations.GFAtomProjection;
 import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -53,7 +52,6 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 	private ExpressionSetOperations eso;
 	private MultipleOutputs<Text, Text> mos;
 
-	private HashMap<RelationSchema, String> filenames;
 
 	private static final Log LOG = LogFactory.getLog(GFReducer2.class);
 
@@ -70,7 +68,6 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 		Configuration conf = context.getConfiguration();
 
 		mos = new MultipleOutputs<>(context);
-		filenames = new HashMap<RelationSchema, String>();
 
 		String s = String.format("Reducer"+this.getClass().getSimpleName()+"-%05d-%d",
 				context.getTaskAttemptID().getTaskID().getId(),
