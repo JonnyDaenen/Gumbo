@@ -8,6 +8,7 @@ import gumbo.compiler.partitioner.HeightPartitioner;
 import gumbo.engine.ExecutionException;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.gui.gumboguiMixIO.GumboMainWindowMixIOwithScroll;
+import gumbo.input.GumboQuery;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.io.GFInfixSerializer;
@@ -53,7 +54,7 @@ public class GumboMixIO {
 		
 	// Gumbo's variable
 	
-	private static Set<GFExistentialExpression> inputQuery;
+	private static Set<GFExpression> inputQuery;
 	
 
 
@@ -189,12 +190,12 @@ public class GumboMixIO {
 				GumboPlan plan;
 				String xtime = "" + System.currentTimeMillis() / 1000;
 				try {
-					plan = planner.createPlan(
-							"GUIGumboQuery",
+					GumboQuery query = new GumboQuery("GUIGumboQuery",
 							inputQuery, 
 							rfm, 
 							new Path(outPathText.getText()), 
-							new Path("/Users/ntynvt/tempGumbo/"+xtime)); // FIXME use user-supplied path
+							new Path("/Users/ntynvt/tempGumbo/"+xtime));// FIXME use user-supplied path
+					plan = planner.createPlan(query); 
 					
 					HadoopEngine engine = new HadoopEngine();
 					engine.executePlan(plan,null);
