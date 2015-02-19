@@ -214,7 +214,7 @@ public class GumboHadoopConverter {
 
 			// determine reducer
 			hadoopJob.setReducerClass(GFReducer1.class); 
-			ReduceJobEstimator redestimator = new ReduceJobEstimator(settings);
+			Round1ReduceJobEstimator redestimator = new Round1ReduceJobEstimator(settings);
 			hadoopJob.setNumReduceTasks(redestimator.getNumReducers(eso.getExpressionSet(),mapping));
 
 			// set reducer output
@@ -356,6 +356,9 @@ public class GumboHadoopConverter {
 			} else {
 				hadoopJob.setReducerClass(GFReducer2.class);
 			}
+
+			Round2ReduceJobEstimator redestimator = new Round2ReduceJobEstimator(conf);
+			hadoopJob.setNumReduceTasks(redestimator.getNumReducers(eso.getExpressionSet(),mapping));
 
 			// create dummy output path, as individual relations are sent to specific locations
 			Path dummyPath = fileManager.getNewTmpPath(getName(cug,2));

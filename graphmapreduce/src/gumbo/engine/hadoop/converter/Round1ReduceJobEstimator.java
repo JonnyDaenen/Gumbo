@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Jonny Daenen
  *
  */
-public class ReduceJobEstimator {
+public class Round1ReduceJobEstimator {
 
 
 	private HadoopExecutorSettings settings; // TODO #core fix settings passing
@@ -38,7 +38,7 @@ public class ReduceJobEstimator {
 	/**
 	 * 
 	 */
-	public ReduceJobEstimator( HadoopExecutorSettings settings, TupleEstimator tupleEstimator) {
+	public Round1ReduceJobEstimator( HadoopExecutorSettings settings, TupleEstimator tupleEstimator) {
 		this.settings = settings;
 		this.tupleEstimator = tupleEstimator;
 	}
@@ -46,13 +46,13 @@ public class ReduceJobEstimator {
 	/**
 	 * 
 	 */
-	public ReduceJobEstimator(HadoopExecutorSettings settings) {
+	public Round1ReduceJobEstimator(HadoopExecutorSettings settings) {
 		this(settings, new RandomTupleEstimator(1024,10));
 	}
 
 
 
-	private static final Log LOG = LogFactory.getLog(ReduceJobEstimator.class);
+	private static final Log LOG = LogFactory.getLog(Round1ReduceJobEstimator.class);
 
 
 	/**
@@ -69,7 +69,7 @@ public class ReduceJobEstimator {
 
 			bytesize += estimateSize(e, mapping);
 		}
-		// TODO compensate for multi-query
+		// TODO #multiquery compensate for multi-query
 		// this can be done by ... 
 
 
