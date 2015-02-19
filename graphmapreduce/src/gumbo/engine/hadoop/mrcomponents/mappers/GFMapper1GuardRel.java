@@ -54,7 +54,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
 		boolean print = false;
-		if (value.toString().contains(",1000,")) {
+		if (print && value.toString().contains(",1000,")) {
 			LOG.error("Mapper1: " + value);
 			print = true;
 		}

@@ -404,15 +404,15 @@ public class RelationFileMapping {
 				// maybe there is a better way...
 				FileStatus[] files = fs.globStatus(p); 
 				for(FileStatus file: files) {
-					LOG.error("processing path: " + file.getPath());
+//					LOG.error("processing path: " + file.getPath());
 					if (!file.isDirectory()) {
-						LOG.error("counting path: " + file.getPath());
+//						LOG.error("counting path: " + file.getPath());
 						numTuples += tupleEstimator.estimateNumTuples(file.getPath());
 					} else {
 						FileStatus[] files2 = fs.listStatus(file.getPath());
 						for(FileStatus file2: files2) {
 							if (!file2.isDirectory()) {
-								LOG.error("counting subpath: " + file2.getPath());
+//								LOG.error("counting subpath: " + file2.getPath());
 								numTuples += tupleEstimator.estimateNumTuples(file2.getPath());
 							}
 

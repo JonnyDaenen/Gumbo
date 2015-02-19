@@ -53,12 +53,6 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 			eso = pp.loadESO();
 			settings = pp.loadSettings();
 			
-			System.out.println("Mapper1");
-			for (Entry<String, String> entry: conf) {
-				if(entry.getKey().contains("gumbo")) {
-				System.out.printf("%s=%s\n", entry.getKey(), entry.getValue());
-				}
-			}
 		} catch (Exception e) {
 			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}
