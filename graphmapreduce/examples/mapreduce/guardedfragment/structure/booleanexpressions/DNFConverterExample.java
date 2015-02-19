@@ -3,7 +3,12 @@
  */
 package mapreduce.guardedfragment.structure.booleanexpressions;
 
-import mapreduce.guardedfragment.structure.conversion.DNFConverter;
+import gumbo.structures.booleanexpressions.BAndExpression;
+import gumbo.structures.booleanexpressions.BExpression;
+import gumbo.structures.booleanexpressions.BNotExpression;
+import gumbo.structures.booleanexpressions.BOrExpression;
+import gumbo.structures.booleanexpressions.BVariable;
+import gumbo.structures.conversion.DNFConverter;
 
 /**
  * @author Jonny Daenen

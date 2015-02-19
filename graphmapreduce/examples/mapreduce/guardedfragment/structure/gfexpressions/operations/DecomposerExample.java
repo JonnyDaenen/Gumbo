@@ -3,11 +3,12 @@
  */
 package mapreduce.guardedfragment.structure.gfexpressions.operations;
 
-import java.util.Set;
+import gumbo.compiler.decomposer.GFDecomposer;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 
-import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
+import java.util.Set;
 
 /**
  * @author Jonny Daenen

@@ -1,5 +1,13 @@
 package mapreduce.guardedfragment.structure.booleanexpressions;
 
+import gumbo.structures.booleanexpressions.BAndExpression;
+import gumbo.structures.booleanexpressions.BEvaluationContext;
+import gumbo.structures.booleanexpressions.BExpression;
+import gumbo.structures.booleanexpressions.BNotExpression;
+import gumbo.structures.booleanexpressions.BOrExpression;
+import gumbo.structures.booleanexpressions.BVariable;
+import gumbo.structures.booleanexpressions.VariableNotFoundException;
+
 
 public class BooleanExpressionExample {
 	

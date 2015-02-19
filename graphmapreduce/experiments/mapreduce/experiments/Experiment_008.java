@@ -3,35 +3,32 @@
  */
 package mapreduce.experiments;
 
+import gumbo.compiler.filemapper.InputFormat;
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.input.GumboQuery;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.DeserializeException;
+import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import mapreduce.guardedfragment.executor.hadoop.HadoopExecutor;
-import mapreduce.guardedfragment.planner.GFMRPlanner;
-import mapreduce.guardedfragment.planner.GFMRPlannerException;
-import mapreduce.guardedfragment.planner.partitioner.UnitPartitioner;
-import mapreduce.guardedfragment.planner.structures.InputFormat;
-import mapreduce.guardedfragment.planner.structures.MRPlan;
-import mapreduce.guardedfragment.planner.structures.RelationFileMapping;
-import mapreduce.guardedfragment.planner.structures.data.RelationSchema;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.io.DeserializeException;
-import mapreduce.guardedfragment.structure.gfexpressions.io.GFPrefixSerializer;
-
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.util.ToolRunner;
 
 /**
  * @author jonny
  *
  */
-public class Experiment_008 {
+public class Experiment_008 extends Experiment {
 
-	public static void main(String[] args) throws DeserializeException, GFMRPlannerException, IllegalArgumentException,
-	InterruptedException {
+
+	public GumboQuery getQuery(String[] args) {
 
 		// ClassLoader cl = ClassLoader.getSystemClassLoader();
 		//
@@ -82,37 +79,24 @@ public class Experiment_008 {
 		// parse query
 		GFPrefixSerializer parser = new GFPrefixSerializer();
 
-		Collection<GFExpression> gfes1 = parser.deserialize(queries);
-		Collection<GFExistentialExpression> gfes = new HashSet<GFExistentialExpression>();
-		for (GFExpression gfExpression : gfes1) {
-			gfes.add((GFExistentialExpression) gfExpression);
+		Collection<GFExpression> gfes1;
+		try {
+			gfes1 = parser.deserialize(queries);
+			return new GumboQuery(this.getClass().getSimpleName(),gfes1, files, new Path(output), new Path(scratch));
+		} catch (DeserializeException e) {
+			e.printStackTrace();
 		}
+		
 
-		// plan
-		// GFMRPlanner planner = new GFMRPlanner(new HeightPartitioner());
-		GFMRPlanner planner = new GFMRPlanner(new UnitPartitioner());
-		MRPlan plan = planner.createPlan(gfes, files, new Path(output), new Path(scratch));
+		return null;
 
-		// print plan in text
-		System.out.println(plan);
+	}
+	
+	public static void main(String[] args) throws Exception {
+		// Let ToolRunner handle generic command-line options 
+		int res = ToolRunner.run(new Configuration(), new ExperimentRunner(Experiment_008.class), args);
 
-		// print plan in dot
-		// System.out.println(plan.toDot());
-
-		// Thread.sleep(15000);
-		// execute plan
-		long startTime = System.nanoTime();
-
-		HadoopExecutor hExecutor = new HadoopExecutor();
-		hExecutor.execute(plan);
-		// SparkExecutor sExecutor = new SparkExecutor();
-		// sExecutor.execute(plan);
-
-		long endTime = System.nanoTime();
-
-		long duration = (endTime - startTime) / 1000000;
-		System.out.println(duration);
-
+		System.exit(res);
 	}
 
 }

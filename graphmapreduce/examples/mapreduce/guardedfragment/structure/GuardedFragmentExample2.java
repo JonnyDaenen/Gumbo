@@ -1,13 +1,13 @@
 package mapreduce.guardedfragment.structure;
 
-import mapreduce.guardedfragment.structure.booleanexpressions.BExpression;
-import mapreduce.guardedfragment.structure.conversion.GFBooleanMapping;
-import mapreduce.guardedfragment.structure.conversion.GFtoBooleanConversionException;
-import mapreduce.guardedfragment.structure.conversion.GFtoBooleanConvertor;
-import mapreduce.guardedfragment.structure.gfexpressions.GFAndExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFAtomicExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExistentialExpression;
-import mapreduce.guardedfragment.structure.gfexpressions.GFExpression;
+import gumbo.structures.booleanexpressions.BExpression;
+import gumbo.structures.conversion.GFBooleanMapping;
+import gumbo.structures.conversion.GFtoBooleanConversionException;
+import gumbo.structures.conversion.GFtoBooleanConvertor;
+import gumbo.structures.gfexpressions.GFAndExpression;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
 
 public class GuardedFragmentExample2 {
 
