@@ -3,19 +3,12 @@
  */
 package gumbo.engine.hadoop.converter;
 
-import gumbo.compiler.filemapper.FileManager;
-import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.utils.estimation.RandomTupleEstimator;
 import gumbo.utils.estimation.TupleEstimator;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,7 +16,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.hdfs.protocol.FsAclPermission;
 
 /**
  * Estimates the number of reducers needed for round 2.

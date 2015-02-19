@@ -3,8 +3,6 @@
  */
 package gumbo.engine.hadoop.converter;
 
-import gumbo.compiler.GFCompiler;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;

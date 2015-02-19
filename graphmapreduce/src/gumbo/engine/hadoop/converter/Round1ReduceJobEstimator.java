@@ -3,7 +3,6 @@
  */
 package gumbo.engine.hadoop.converter;
 
-import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
