@@ -8,7 +8,6 @@ import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.engine.ExecutionException;
 import gumbo.engine.GFEngine;
 import gumbo.engine.hadoop.PartitionQueue;
-import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.engine.spark.converter.GumboSparkConverter;
 
 import java.util.Set;

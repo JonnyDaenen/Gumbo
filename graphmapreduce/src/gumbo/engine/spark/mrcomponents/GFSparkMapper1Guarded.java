@@ -3,11 +3,11 @@
  */
 package gumbo.engine.spark.mrcomponents;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.spark.api.java.function.PairFlatMapFunction;
 

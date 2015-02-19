@@ -9,20 +9,6 @@ import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.engine.hadoop.mrcomponents.input.GuardInputFormat;
-import gumbo.engine.hadoop.mrcomponents.input.GuardTextInputFormat;
-import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardCsv;
-import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardRel;
-import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardedCsv;
-import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardedRel;
-import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper2GuardCsv;
-import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper2GuardRel;
-import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper2GuardTextCsv;
-import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper2GuardTextRel;
-import gumbo.engine.hadoop.mrcomponents.reducers.GFReducer1;
-import gumbo.engine.hadoop.mrcomponents.reducers.GFReducer2;
-import gumbo.engine.hadoop.mrcomponents.reducers.GFReducer2Text;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.engine.spark.mrcomponents.GFSparkMapper1Guard;
 import gumbo.engine.spark.mrcomponents.GFSparkMapper1Guarded;
@@ -34,32 +20,14 @@ import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.NullWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.InputFormat;
-import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
-import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.function.PairFlatMapFunction;
 
 
 /**
