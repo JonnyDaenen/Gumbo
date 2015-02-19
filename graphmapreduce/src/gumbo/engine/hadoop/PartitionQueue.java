@@ -45,7 +45,7 @@ public class PartitionQueue {
 	/**
 	 * Creates and initializes a queue based on a partitioned set of {@link CalculationUnit}s.
 	 */
-	PartitionQueue(PartitionedCUGroup partitions) {
+	public PartitionQueue(PartitionedCUGroup partitions) {
 		this.partitions = partitions;
 		queue = new HashSet<CalculationUnitGroup>();
 		queue.addAll(partitions.getBottomUpList());
