@@ -60,15 +60,14 @@ public class ReduceJobEstimator {
 	 * @param dirManager
 	 * @return
 	 */
-	public int getNumReducers(Collection<GFExistentialExpression> exps, FileManager fileManager) {
+	public int getNumReducers(Collection<GFExistentialExpression> exps, RelationFileMapping mapping) {
 		int num;
 		long bytesize = 0;
 
-		RelationFileMapping rfm = fileManager.getFileMapping();
 
 		for (GFExistentialExpression e: exps) {
 
-			bytesize += estimateSize(e, rfm);
+			bytesize += estimateSize(e, mapping);
 		}
 		// TODO compensate for multi-query
 		// this can be done by ... 

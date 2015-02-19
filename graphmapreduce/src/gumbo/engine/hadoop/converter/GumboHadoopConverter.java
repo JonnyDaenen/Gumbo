@@ -215,7 +215,7 @@ public class GumboHadoopConverter {
 			// determine reducer
 			hadoopJob.setReducerClass(GFReducer1.class); 
 			ReduceJobEstimator redestimator = new ReduceJobEstimator(settings);
-			hadoopJob.setNumReduceTasks(redestimator.getNumReducers(eso.getExpressionSet(),fileManager));
+			hadoopJob.setNumReduceTasks(redestimator.getNumReducers(eso.getExpressionSet(),mapping));
 
 			// set reducer output
 			// hadoopJob.setOutputKeyClass(NullWritable.class);

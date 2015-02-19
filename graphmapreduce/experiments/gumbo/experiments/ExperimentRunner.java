@@ -3,12 +3,15 @@ package gumbo.experiments;
 import gumbo.compiler.GFCompiler;
 import gumbo.compiler.GumboPlan;
 import gumbo.engine.hadoop.HadoopEngine;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.input.GumboQuery;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map.Entry;
 
 import org.apache.commons.cli.MissingArgumentException;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 
@@ -36,24 +39,38 @@ public class ExperimentRunner extends Configured implements Tool {
 
 		if (args.length < 1)
 			throw new MissingArgumentException("Missing Experiment class.");
-		
+
+		// Configuration processed by ToolRunner
+		Configuration conf = getConf(); 
+
+		HadoopExecutorSettings settings = new HadoopExecutorSettings(conf);
+		settings.loadDefaults();
+		settings.turnOnOptimizations();
+
+		for (Entry<String, String> entry: conf) {
+			if(entry.getKey().contains("gumbo")) {
+				System.out.printf("%s=%s\n", entry.getKey(), entry.getValue());
+			}
+		}
+
+
 		// get query
 		GumboQuery query = experiment.getQuery(args);
-		
+
 		// compile
 		GFCompiler compiler = new GFCompiler();
 		GumboPlan plan = compiler.createPlan(query);
-		
+
 		// execute and time execution
 		long startTime = System.nanoTime();
 
 		HadoopEngine engine = new HadoopEngine();
 		engine.executePlan(plan, getConf());
-		
+
 		long endTime = System.nanoTime();
 		long duration = (endTime - startTime) / 1000000;
 		System.out.println(duration);
-		
+
 		return 0;
 	}
 

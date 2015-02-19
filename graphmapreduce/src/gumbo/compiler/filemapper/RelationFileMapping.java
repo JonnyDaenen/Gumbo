@@ -389,6 +389,8 @@ public class RelationFileMapping {
 	 * @param guard
 	 * @param tupleEstimator
 	 * 
+	 *  TODO extract this and use a path resolver
+	 * 
 	 * @return an estimate for the number of tuples.
 	 */
 	public long visitAllPaths(RelationSchema rs, TupleEstimator tupleEstimator) {
