@@ -3,11 +3,15 @@
  */
 package gumbo.engine.hadoop.converter;
 
+import gumbo.compiler.GFCompiler;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -21,6 +25,9 @@ import org.apache.hadoop.fs.Path;
  *
  */
 public class InputPathExpander {
+	
+
+	private static final Log LOG = LogFactory.getLog(InputPathExpander.class); 
 
 	protected FileSystem fs;
 
@@ -127,8 +134,10 @@ public class InputPathExpander {
 	private void addFiles(FileStatus[] files, HashSet<Path> result) throws IOException {
 		for ( FileStatus f : files) {
 			Path p = f.getPath();
-			if (f.isFile()  && f.getBlockSize() > 0 && fs.exists(p))
+			if (f.isFile()  && f.getLen() > 0 && fs.exists(p))
 				result.add(p);
+			else 
+				LOG.info("Skipping input file: " + p);
 		}
 		
 		

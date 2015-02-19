@@ -103,7 +103,7 @@ public class Round2ReduceJobEstimator {
 		long totalBytes = 0;
 		try {
 		FileSystem fs = FileSystem.get(conf);
-		for (Path p : rfm.getPaths(e.getOutputSchema())) {
+		for (Path p : rfm.getPaths(e.getGuard().getRelationSchema())) {
 			FileStatus fstatus = fs.getFileStatus(p);
 			totalBytes += fstatus.getBlockSize(); 
 			

@@ -78,7 +78,7 @@ public class GFCompiler {
 			
 			// adjust output directory
 			// FUTURE make option to switch this off
-			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+			String timeStamp = "/"+new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 			LOG.info("Adding suffix to scratch and output paths: "+ timeStamp);
 			query.setOutput(query.getOutput().suffix(timeStamp));
 			query.setScratch(query.getOutput().suffix(timeStamp));
