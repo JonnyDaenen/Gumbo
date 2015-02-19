@@ -1,7 +1,7 @@
 /**
  * 
  */
-package mapreduce.experiments;
+package gumbo.experiments;
 
 import gumbo.input.GumboQuery;
 

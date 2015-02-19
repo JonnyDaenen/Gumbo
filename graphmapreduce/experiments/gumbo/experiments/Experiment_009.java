@@ -1,7 +1,7 @@
 /**
  * Created: 12 Jan 2015
  */
-package mapreduce.experiments;
+package gumbo.experiments;
 
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;

@@ -1,4 +1,4 @@
-package mapreduce.experiments;
+package gumbo.experiments;
 
 import gumbo.compiler.GFCompiler;
 import gumbo.compiler.GumboPlan;

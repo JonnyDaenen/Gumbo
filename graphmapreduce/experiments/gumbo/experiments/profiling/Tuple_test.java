@@ -1,7 +1,7 @@
 /**
  * Created: 17 Sep 2014
  */
-package mapreduce.experiments.profiling;
+package gumbo.experiments.profiling;
 
 import gumbo.structures.data.Tuple;
 

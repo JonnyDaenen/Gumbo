@@ -1,10 +1,11 @@
 /**
  * Created: 10 Sep 2014
  */
-package mapreduce.experiments.profiling;
+package gumbo.experiments.profiling;
 
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.experiments.Experiment;
 import gumbo.input.GumboQuery;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExpression;
@@ -16,8 +17,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import mapreduce.experiments.Experiment;
 
 import org.apache.hadoop.fs.Path;
 
