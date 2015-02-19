@@ -82,7 +82,7 @@ public abstract class AbstractExecutorSettings {
 	public abstract void setProperty(String key, String value);
 
 	public boolean getBooleanProperty(String key) {
-		if (getProperty(key) == "true")
+		if (getProperty(key).equals("true"))
 			return true;
 		else
 			return false;

@@ -65,7 +65,7 @@ public class ExperimentRunner extends Configured implements Tool {
 		long startTime = System.nanoTime();
 
 		HadoopEngine engine = new HadoopEngine();
-		engine.executePlan(plan, getConf());
+		engine.executePlan(plan, conf);
 
 		long endTime = System.nanoTime();
 		long duration = (endTime - startTime) / 1000000;
