@@ -96,8 +96,8 @@ public class InputPathExpander {
 		try {
 			if (fs.isFile(p) || fs.isDirectory(p) ) {
 				FileStatus [] files = fs.listStatus(p);
+				// add "good" files to result
 				addFiles(files, result);
-				// TODO #core when a directory, filter out only files!
 			} else {
 				
 				// if it is a glob, we expand and process one more time as files and directories
@@ -119,16 +119,18 @@ public class InputPathExpander {
 	}
 
 	/**
+	 * Adds files to a set, filtering out non-files and 0-size files.
 	 * @param files
 	 * @param result
 	 * @throws IOException 
 	 */
 	private void addFiles(FileStatus[] files, HashSet<Path> result) throws IOException {
-		Path[] paths = FileUtil.stat2Paths(files);
-		for ( Path p : paths) {
-			if (fs.isFile(p))
+		for ( FileStatus f : files) {
+			Path p = f.getPath();
+			if (f.isFile()  && f.getBlockSize() > 0 && fs.exists(p))
 				result.add(p);
 		}
+		
 		
 	}
 
