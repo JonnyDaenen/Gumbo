@@ -14,7 +14,13 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
@@ -51,6 +57,8 @@ public class SparkEngine implements GFEngine {
 		SparkConf sparkConf = new SparkConf().setMaster("local[1]").setAppName("Gumbo");
 		// SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
 		ctx = new JavaSparkContext(sparkConf);
+		
+		// TODO close context in engine!
 
 	}
 
@@ -64,6 +72,8 @@ public class SparkEngine implements GFEngine {
 			GumboSparkConverter converter = new GumboSparkConverter(plan.getName(), plan.getFileManager(), null); // TODO add settings
 
 			long start = System.nanoTime();
+			
+			JavaPairRDD<LongWritable, Text> newAPIHadoopRDD = ctx.newAPIHadoopFile("test", TextInputFormat.class, LongWritable.class, Text.class, null);
 
 			// 1. create queue
 			PartitionQueue queue = new PartitionQueue(plan.getPartitions());

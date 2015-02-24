@@ -102,10 +102,8 @@ public class GumboSparkConverter {
 			// perform map1 on guarded
 			JavaPairRDD<String, String> mappedGuarded = guardedInput.flatMapToPair(new GFSparkMapper1Guarded(eso,settings));
 
-			// combine both results
-			// TODO is this bag union?
+			// combine both results (bag union @see JavaRDD#union)
 			JavaPairRDD<String, String> union = mappedGuard.union(mappedGuarded);
-
 
 			// group them
 			JavaPairRDD<String, Iterable<String>> grouped = union.groupByKey();
@@ -118,7 +116,8 @@ public class GumboSparkConverter {
 			// group again
 			JavaPairRDD<String, Iterable<String>> grouped2 = round1out.groupByKey();
 
-			// perform reduce 2
+			// perform reduce 2, 
+			// TODO maybe return multiple RDDS?
 			JavaRDD<String> round2out = grouped2.flatMap(new GFSparkReducer2(eso,settings));
 
 			// TODO split into multiple relations

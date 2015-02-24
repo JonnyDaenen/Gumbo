@@ -37,7 +37,7 @@ public class GFSparkMapper1Guarded extends GFSparkComponent implements PairFlatM
 		Set<Tuple2<String,String>> output = new HashSet<>();
 		
 		// emit proof of existance
-		output.add(new Tuple2<>(value,value)); // TODO change to special symbol
+		output.add(new Tuple2<>(value,settings.getProperty(AbstractExecutorSettings.PROOF_SYMBOL)));
 		
 		return output;
 	}
