@@ -140,7 +140,7 @@ public class ExpressionSetOperations {
 			guardsAll.add(guard);
 
 			for (GFAtomicExpression c : e.getGuardedRelations()) {
-				guardedsAll.add(c);
+				guardedsAll.add(c); // TODO what if an atom is both?
 				ggpairsAll.add(new Pair<>(guard, c));
 			}
 

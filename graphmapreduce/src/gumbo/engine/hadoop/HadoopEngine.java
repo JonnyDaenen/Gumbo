@@ -100,7 +100,7 @@ public class HadoopEngine {
 			// 3. execute jobs
 
 			// for each partition from bottom to top
-			PartitionQueue queue = new PartitionQueue(plan.getPartitions());
+			HadoopPartitionQueue queue = new HadoopPartitionQueue(plan.getPartitions());
 
 			LOG.info("Processing partition queue.");
 			// while not all completed or the jobcontrol is still running

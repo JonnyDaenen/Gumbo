@@ -21,14 +21,17 @@ import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.fs.Path;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.Function;
 
 import scala.Tuple2;
 
@@ -95,13 +98,13 @@ public class GumboSparkConverter {
 			/* ROUND 1: MAP */
 
 			// assemble guard input dataset
-			JavaPairRDD<String, String> guardInput = getGuardInput(cug);
+			JavaPairRDD<String, String> guardInput = getGuardInput(eso);
 
 			// perform map1 on guard
 			JavaPairRDD<String, String> mappedGuard = guardInput.flatMapToPair(new GFSparkMapper1Guard(eso,settings));
 
 			// assemble guarded input dataset
-			JavaRDD<String> guardedInput = getGuardedInput(cug);
+			JavaRDD<String> guardedInput = getGuardedInput(eso);
 
 			// perform map1 on guarded
 			JavaPairRDD<String, String> mappedGuarded = guardedInput.flatMapToPair(new GFSparkMapper1Guarded(eso,settings));
@@ -110,7 +113,7 @@ public class GumboSparkConverter {
 			JavaPairRDD<String, String> union = mappedGuard.union(mappedGuarded);
 
 			/* ROUND 1: REDUCE */
-			
+
 			// group them
 			JavaPairRDD<String, Iterable<String>> grouped = union.groupByKey();
 
@@ -121,7 +124,7 @@ public class GumboSparkConverter {
 
 			// re-add guardInput
 			JavaPairRDD<String, String> round2in = round1out.union(guardInput);
-			
+
 			// group again
 			JavaPairRDD<String, Iterable<String>> grouped2 = round2in.groupByKey();
 
@@ -129,7 +132,7 @@ public class GumboSparkConverter {
 			JavaRDD<Tuple2<String, String>> round2out = grouped2.flatMap(new GFSparkReducer2(eso,settings));
 
 			// split into multiple relations
-			Map<RelationSchema, JavaRDD<String>> rddmap = unravel(round2out);
+			Map<RelationSchema, JavaRDD<String>> rddmap = unravel(cug,round2out);
 
 			// FUTURE persist?
 
@@ -151,63 +154,135 @@ public class GumboSparkConverter {
 
 
 	/**
-	 * @param rddmap
+	 * Writes out the tuples for each {@link RelationSchema} to the location
+	 * specified in the {@link FileManager}.
+	 * 
+	 * @param rddmap mapping from schemas to RDDs
 	 */
 	private void writeOut(Map<RelationSchema, JavaRDD<String>> rddmap) {
-		// TODO implement
-//		TODO round2out.saveAsTextFile(outfile.toString());
-		
-		// lookup output folder
+
+		RelationFileMapping filemapping = fileManager.getOutFileMapping();
+
 		// for each relationschema (key)
-		// create folder
-		// save data
-		// adjust file mapping
-		
+		for (RelationSchema rs : rddmap.keySet()) {
+			// lookup output folder in filemanager
+			Path[] paths = filemapping.getPaths(rs).toArray(new Path[0]);
+			// TODO check if it is only one path
+			Path outfile = paths[0];
+
+			// save data
+			rddmap.get(rs).saveAsTextFile(outfile.toString());
+
+			// TODO adjust file mapping?
+		}
+
 	}
 
 
 	/**
-	 * @param round2out
-	 * @return
+	 * Separates a set of outputs by their relation schema.
+	 * 
+	 * @param cug the partition
+	 * @param round2out the total output
+	 * 
+	 * @return a mapping between the output schemas and RDDs
 	 */
-	private Map<RelationSchema, JavaRDD<String>> unravel(JavaRDD<Tuple2<String, String>> round2out) {
-		// TODO implement
-		
+	private Map<RelationSchema, JavaRDD<String>> unravel(CalculationUnitGroup cug, JavaRDD<Tuple2<String, String>> round2out) {
+
+		HashMap<RelationSchema, JavaRDD<String>> outputMap = new HashMap<>();
+
 		// for each output relationschema in the partition
-		// filter the RDD
-		// couple relationschema to RDD
-		
-		return null;
+		for (RelationSchema rs : cug.getOutputRelations()) {
+			final String rsstring = rs.toString();
+
+			// filter only output tuples having this rs as the key
+			JavaRDD<Tuple2<String, String>> currentRdd = round2out.filter(new Function<Tuple2<String,String>, Boolean>() {
+				private static final long serialVersionUID = 1L;
+				@Override
+				public Boolean call(Tuple2<String, String> v1) throws Exception {
+					return v1._1().equals(rsstring);
+				}});
+
+			// remove key
+			JavaRDD<String> currentValueRdd = currentRdd.map(new Function<Tuple2<String,String>, String>() {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public String call(Tuple2<String, String> v1) throws Exception {
+					return v1._2;
+				}
+			});
+
+			// couple relationschema to RDD
+			outputMap.put(rs, currentValueRdd);
+
+		}
+
+		return outputMap;
 	}
+
+
 
 
 	/**
 	 * @param cug
 	 * @return
 	 */
-	private JavaRDD<String> getGuardedInput(CalculationUnitGroup cug) {
+	private JavaRDD<String> getGuardedInput(ExpressionSetOperations eso) {
 		// TODO implement
-		
-		// just read each file
-		
-		// TODO remove guard files
-		
+
+		// get guarded CSV files
+		Set<Path> csvPaths = eso.getGuardedCsvPaths();
+
+		// read them all
+
+		// augment them with relation annotation
+
+
+		// get guarded Rel files
+		Set<Path> relPaths = eso.getGuardedRelPaths();
+
+		// read them all
+
+
+		// Take union
+
+		// TODO are guard files already removed by eso?
+
 		return null;
 	}
 
 
 	/**
-	 * @param cug
+	 * @param eso
 	 * @return
 	 */
-	private JavaPairRDD<String, String> getGuardInput(CalculationUnitGroup cug) {
+	private JavaPairRDD<String, String> getGuardInput(ExpressionSetOperations eso) {
 		// TODO implement
 		
-		// get guarded files
-		// load them in RDDs
+		// OPTIMIZE maybe it is possible to do the mapping here already
+		// using specific mapper, suited for the formulas
+		// this way, we do not throw everything onto one big pile...
+
+		// get guard CSV files
+		Set<Path> csvPaths = eso.getGuardedCsvPaths();
+
+		// read them all
+
+		// augment them with relation annotation
+
+
+		// get guard Rel files
+		Set<Path> relPaths = eso.getGuardedRelPaths();
+
+		// read them all
+
+
+		// Take union
+
 		// key is file offset + TODO file id
 		// value is line
-		
+
 		return null;
 	}
 
