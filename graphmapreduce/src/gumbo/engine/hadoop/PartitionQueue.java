@@ -71,7 +71,6 @@ public class PartitionQueue {
 	 */
 	public Set<CalculationUnitGroup> updateStatus() {
 		
-		Set<CalculationUnitGroup> newlyActivated = new HashSet<>();
 
 //		LOG.info("queue " +  queue);
 //		LOG.info("active " + active);
@@ -81,11 +80,15 @@ public class PartitionQueue {
 		for (CalculationUnitGroup group: active) {
 			// check if it is ready and mark it if so
 			if (isReady(group)) {
-				active.remove(group);
 				ready.add(group);
 			}
 		}
 		
+		// remove all ready jobs from the active list
+		active.removeAll(ready);
+		
+
+		Set<CalculationUnitGroup> newlyActivated = new HashSet<>();
 		// for each job in queue
 		for (CalculationUnitGroup group: queue) {
 		// check if dependencies are done
