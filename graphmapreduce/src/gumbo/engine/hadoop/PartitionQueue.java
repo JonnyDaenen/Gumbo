@@ -103,6 +103,9 @@ public class PartitionQueue {
 			}
 		}
 		
+		// remove active jobs from the queue
+		queue.removeAll(active);
+		
 		return newlyActivated;
 	}
 
