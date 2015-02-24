@@ -97,7 +97,6 @@ public class PartitionQueue {
 				LOG.info("Calculation group " + group + " is ready to be scheduled.");
 				
 				// make it active if so
-				queue.remove(group);
 				active.add(group);
 				newlyActivated.add(group);
 			}
