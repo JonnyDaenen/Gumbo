@@ -3,9 +3,16 @@
  */
 package gumbo.engine.spark.mrcomponents;
 
-import gumbo.engine.settings.AbstractExecutorSettings;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
+import java.util.HashSet;
 
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.engine.settings.AbstractExecutorSettings;
+import gumbo.structures.data.Tuple;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
+import gumbo.structures.gfexpressions.operations.GFAtomProjection;
+
+import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
 
 import scala.Tuple2;
@@ -15,7 +22,7 @@ import scala.Tuple2;
  * @author Jonny Daenen
  *
  */
-public class GFSparkMapper1Guard extends GFSparkComponent implements PairFlatMapFunction<String, String, String> {
+public class GFSparkMapper1Guard extends GFSparkComponent implements PairFlatMapFunction<Tuple2<String,String>, String, String> {
 
 
 	private static final long serialVersionUID = 1L;
@@ -26,17 +33,60 @@ public class GFSparkMapper1Guard extends GFSparkComponent implements PairFlatMap
 	}
 
 
-	/* (non-Javadoc)
+
+
+	/**
+	 * Maps a key-value pair onto a new set of key-value pairs.
 	 * @see org.apache.spark.api.java.function.PairFlatMapFunction#call(java.lang.Object)
 	 */
 	@Override
-	public Iterable<Tuple2<String, String>> call(String arg0) throws Exception {
+	public Iterable<Tuple2<String, String>> call(Tuple2<String, String> kvpair) throws Exception {
 		
-		// for each expression in which the guard matches
-		// for each guarded atom
-		// TODO emit value request
+		HashSet<Tuple2<String, String>> result = new HashSet<>();
 		
-		return null;
+		String tupleID = kvpair._1;
+		Tuple t = new Tuple(kvpair._2);
+		boolean guardIsGuarded = false;
+		
+		// for each guard atom ...
+		for (GFAtomicExpression guard : eso.getGuardsAll()) {
+			
+			// ... that matches the current tuple
+			if (guard.matches(t)) {
+				
+				// for each guarded atom
+				for (GFAtomicExpression guarded : eso.getGuardeds(guard)) {
+					
+					// if guarded is same relation, output proof of existence afterwards
+					if (guarded.getRelationSchema().equals(guard.getRelationSchema())) {
+						guardIsGuarded = true;
+					}
+					
+					// project onto guarded
+					GFAtomProjection p = eso.getProjections(guard, guarded);
+					Tuple tprime = p.project(t);
+					
+					// output request
+					int guardedID = eso.getAtomId(guarded);
+					
+					String outKey = tprime.toString();
+					String outVal = tupleID + ";" + guardedID;
+					result.add(new Tuple2<String, String>(outKey, outVal));
+					
+				}
+				
+			}
+			
+		}
+		if (guardIsGuarded) {
+//			LOG.error("guard output POE");
+			String outKey = t.toString();
+			String outVal = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL);
+			result.add(new Tuple2<String, String>(outKey, outVal));
+			
+		}
+		
+		return result;
 	}
 
 }

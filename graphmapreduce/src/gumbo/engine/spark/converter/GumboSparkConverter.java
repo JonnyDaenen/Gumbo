@@ -22,12 +22,17 @@ import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOpera
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.PairFlatMapFunction;
+
+import scala.Tuple2;
 
 
 /**
@@ -75,7 +80,7 @@ public class GumboSparkConverter {
 	}
 
 
-	public JavaRDD<String> convert(CalculationUnitGroup cug) throws ConversionException {
+	public Map<RelationSchema, JavaRDD<String>> convert(CalculationUnitGroup cug) throws ConversionException {
 
 
 		try {
@@ -89,10 +94,11 @@ public class GumboSparkConverter {
 
 
 
-			/* ROUND 1 */
+			/* ROUND 1: MAP */
 
 			// assemble guard input dataset
-			JavaRDD<String> guardInput = getGuardInput(cug);
+			JavaPairRDD<String, String> guardInput = getGuardInput(cug);
+
 			// perform map1 on guard
 			JavaPairRDD<String, String> mappedGuard = guardInput.flatMapToPair(new GFSparkMapper1Guard(eso,settings));
 
@@ -105,31 +111,36 @@ public class GumboSparkConverter {
 			// combine both results (bag union @see JavaRDD#union)
 			JavaPairRDD<String, String> union = mappedGuard.union(mappedGuarded);
 
+			/* ROUND 1: REDUCE */
+			
 			// group them
 			JavaPairRDD<String, Iterable<String>> grouped = union.groupByKey();
 
 			// perform reduce1
 			JavaPairRDD<String,String> round1out = grouped.flatMapToPair(new GFSparkReducer1(eso,settings));
 
-			/* ROUND 2 */
+			/* ROUND 2: REDUCE */
 
+			// re-add guardInput
+			JavaPairRDD<String, String> round2in = round1out.union(guardInput);
+			
 			// group again
-			JavaPairRDD<String, Iterable<String>> grouped2 = round1out.groupByKey();
+			JavaPairRDD<String, Iterable<String>> grouped2 = round2in.groupByKey();
 
-			// perform reduce 2, 
-			// TODO maybe return multiple RDDS?
-			JavaRDD<String> round2out = grouped2.flatMap(new GFSparkReducer2(eso,settings));
+			// perform reduce 2
+			JavaRDD<Tuple2<String, String>> round2out = grouped2.flatMap(new GFSparkReducer2(eso,settings));
 
-			// TODO split into multiple relations
+			// split into multiple relations
+			Map<RelationSchema, JavaRDD<String>> rddmap = unravel(round2out);
 
 			// FUTURE persist?
 
 
 			// write output to files
-			//		TODO round2out.saveAsTextFile(outfile.toString());
+			writeOut(rddmap);
 
 
-			return round2out;
+			return rddmap;
 		} catch (GFOperationInitException e) {
 			LOG.error("Problem during Spark execution: " + e.getMessage());
 			e.printStackTrace();
@@ -142,11 +153,32 @@ public class GumboSparkConverter {
 
 
 	/**
-	 * @param cug
+	 * @param rddmap
+	 */
+	private void writeOut(Map<RelationSchema, JavaRDD<String>> rddmap) {
+		// TODO implement
+//		TODO round2out.saveAsTextFile(outfile.toString());
+		
+		// lookup output folder
+		// for each relationschema (key)
+		// create folder
+		// save data
+		// adjust file mapping
+		
+	}
+
+
+	/**
+	 * @param round2out
 	 * @return
 	 */
-	private JavaRDD<String> getGuardedInput(CalculationUnitGroup cug) {
+	private Map<RelationSchema, JavaRDD<String>> unravel(JavaRDD<Tuple2<String, String>> round2out) {
 		// TODO implement
+		
+		// for each output relationschema in the partition
+		// filter the RDD
+		// couple relationschema to RDD
+		
 		return null;
 	}
 
@@ -155,8 +187,29 @@ public class GumboSparkConverter {
 	 * @param cug
 	 * @return
 	 */
-	private JavaRDD<String> getGuardInput(CalculationUnitGroup cug) {
+	private JavaRDD<String> getGuardedInput(CalculationUnitGroup cug) {
 		// TODO implement
+		
+		// just read each file
+		
+		// TODO remove guard files
+		
+		return null;
+	}
+
+
+	/**
+	 * @param cug
+	 * @return
+	 */
+	private JavaPairRDD<String, String> getGuardInput(CalculationUnitGroup cug) {
+		// TODO implement
+		
+		// get guarded files
+		// load them in RDDs
+		// key is file offset + TODO file id
+		// value is line
+		
 		return null;
 	}
 

@@ -9,7 +9,9 @@ import gumbo.engine.ExecutionException;
 import gumbo.engine.GFEngine;
 import gumbo.engine.hadoop.PartitionQueue;
 import gumbo.engine.spark.converter.GumboSparkConverter;
+import gumbo.structures.data.RelationSchema;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -72,15 +74,13 @@ public class SparkEngine implements GFEngine {
 			GumboSparkConverter converter = new GumboSparkConverter(plan.getName(), plan.getFileManager(), null); // TODO add settings
 
 			long start = System.nanoTime();
-			
-			JavaPairRDD<LongWritable, Text> newAPIHadoopRDD = ctx.newAPIHadoopFile("test", TextInputFormat.class, LongWritable.class, Text.class, null);
 
 			// 1. create queue
 			PartitionQueue queue = new PartitionQueue(plan.getPartitions());
 
 			// 2. process jobs in queue
 			LOG.info("Processing partition queue.");
-			// while not all completed or the jobcontrol is still running
+			// while not all completed 
 			while (!queue.isEmpty()) {
 				// update states
 				Set<CalculationUnitGroup> newPartitions = queue.updateStatus();
@@ -94,10 +94,10 @@ public class SparkEngine implements GFEngine {
 
 					// convert job to hadoop job using only files 
 					// (glob and directory paths are converted)
-					JavaRDD<String> rdd = converter.convert(partition);
+					Map<RelationSchema, JavaRDD<String>> rdd = converter.convert(partition);
 
 					// TODO update the queue
-					//				queue.addRdds(partition, rdds);
+					//	queue.addRdds(partition, rdds);
 
 				}
 
