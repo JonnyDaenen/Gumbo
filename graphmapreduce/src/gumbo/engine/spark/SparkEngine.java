@@ -7,17 +7,13 @@ import gumbo.compiler.GumboPlan;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.engine.ExecutionException;
 import gumbo.engine.GFEngine;
-import gumbo.engine.hadoop.HadoopPartitionQueue;
 import gumbo.engine.spark.converter.GumboSparkConverter;
-import gumbo.structures.data.RelationSchema;
 
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
 /**

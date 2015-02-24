@@ -3,14 +3,9 @@
  */
 package gumbo.engine.hadoop;
 
-import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.engine.general.PartitionQueue;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
