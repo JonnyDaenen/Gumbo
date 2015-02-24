@@ -3,8 +3,6 @@
  */
 package gumbo.engine.spark.mrcomponents;
 
-import java.util.HashSet;
-
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.Tuple;
@@ -12,7 +10,8 @@ import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
 
-import org.apache.spark.api.java.function.Function;
+import java.util.HashSet;
+
 import org.apache.spark.api.java.function.PairFlatMapFunction;
 
 import scala.Tuple2;

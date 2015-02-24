@@ -3,13 +3,12 @@
  */
 package gumbo.engine.spark.mrcomponents;
 
-import java.util.HashSet;
-
 import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
-import org.apache.hadoop.io.Text;
+import java.util.HashSet;
+
 import org.apache.spark.api.java.function.PairFlatMapFunction;
 
 import scala.Tuple2;
