@@ -60,7 +60,7 @@ public class HadoopPartitionQueue extends PartitionQueue {
 			LOG.info("Calculation group " + group + " round2 is ready.");
 		}
 		 
-		return job1.isReady() && job2.isReady();
+		return job1.isCompleted() && job2.isCompleted();
 	}
 
 	/**

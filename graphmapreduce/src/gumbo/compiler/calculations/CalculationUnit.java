@@ -125,5 +125,10 @@ public abstract class CalculationUnit {
 		CalculationUnit cu = (CalculationUnit) obj;
 		return cu.id == id;
 	}
+	
+	@Override
+	public int hashCode() {
+		return id;
+	}
 
 }

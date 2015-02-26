@@ -357,9 +357,15 @@ public class CalculationUnitGroup implements Iterable<CalculationUnit> {
 		}
 		
 		
-		return super.equals(obj);
+		return true;
 	}
 
-	
-
+	@Override
+    public int hashCode() {
+		int hashcode = 0;
+	    for (CalculationUnit cu : calculations) {
+	        hashcode ^= cu.hashCode();
+	    }
+	    return hashcode;
+    }
 }
