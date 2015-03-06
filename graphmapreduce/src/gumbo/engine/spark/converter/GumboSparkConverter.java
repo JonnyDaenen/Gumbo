@@ -10,6 +10,7 @@ import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.engine.general.FileMappingExtractor;
 import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.engine.spark.mrcomponents.GFSparkMapper1Guard;
 import gumbo.engine.spark.mrcomponents.GFSparkMapper1Guarded;
@@ -18,7 +19,6 @@ import gumbo.engine.spark.mrcomponents.GFSparkReducer2;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
-import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 
@@ -35,7 +35,6 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
-import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -43,7 +42,6 @@ import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.PairFunction;
 
 import scala.Tuple2;
-import scala.reflect.ClassTag;
 
 
 /**
@@ -72,6 +70,7 @@ public class GumboSparkConverter {
 	}
 
 	private FileManager fileManager;
+	private FileMappingExtractor extractor;
 
 	private String queryName;
 	private AbstractExecutorSettings settings;
@@ -88,6 +87,7 @@ public class GumboSparkConverter {
 		this.fileManager = fileManager;
 		this.settings = settings;
 		this.ctx = ctx;
+		this.extractor = new FileMappingExtractor();
 	}
 
 
@@ -97,7 +97,7 @@ public class GumboSparkConverter {
 		try {
 			// extract file mapping where input paths are made specific
 			// FUTURE also filter out non-related relations
-			RelationFileMapping mapping = null; // TODO extractor.extractFileMapping(fileManager);
+			RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
 			// wrapper object for expressions
 			ExpressionSetOperations eso;
 

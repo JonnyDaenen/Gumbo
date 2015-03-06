@@ -1,7 +1,7 @@
 /**
  * Created: 05 Feb 2015
  */
-package gumbo.engine.hadoop.converter;
+package gumbo.engine.general;
 
 import java.io.IOException;
 import java.util.Collection;

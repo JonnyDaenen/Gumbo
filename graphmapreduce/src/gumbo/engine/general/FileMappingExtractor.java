@@ -1,7 +1,7 @@
 /**
  * Created: 10 Feb 2015
  */
-package gumbo.engine.hadoop.converter;
+package gumbo.engine.general;
 
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
@@ -37,7 +37,7 @@ public class FileMappingExtractor {
 	 * 
 	 * @return expanded mapping, extracted from the file manager 
 	 */
-	RelationFileMapping extractFileMapping(FileManager fm) {
+	public RelationFileMapping extractFileMapping(FileManager fm) {
 		RelationFileMapping ins = fm.getInFileMapping();
 		RelationFileMapping outs = fm.getOutFileMapping();
 

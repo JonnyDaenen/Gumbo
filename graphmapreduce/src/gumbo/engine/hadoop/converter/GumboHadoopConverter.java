@@ -9,6 +9,7 @@ import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.engine.general.FileMappingExtractor;
 import gumbo.engine.hadoop.mrcomponents.input.GuardInputFormat;
 import gumbo.engine.hadoop.mrcomponents.input.GuardTextInputFormat;
 import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardCsv;

@@ -32,7 +32,6 @@ public class Round2ReduceJobEstimator {
 
 
 	private Configuration conf;
-	private TupleEstimator tupleEstimator;
 
 
 	/**
@@ -40,7 +39,6 @@ public class Round2ReduceJobEstimator {
 	 */
 	public Round2ReduceJobEstimator( Configuration conf, TupleEstimator tupleEstimator) {
 		this.conf = conf;
-		this.tupleEstimator = tupleEstimator;
 	}
 
 	/**
