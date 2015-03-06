@@ -61,7 +61,7 @@ public class SparkEngine implements GFEngine {
 	private void executeLevelwise(GumboPlan plan) throws ExecutionException {
 
 		try {
-			GumboSparkConverter converter = new GumboSparkConverter(plan.getName(), plan.getFileManager(), null); // TODO add settings
+			GumboSparkConverter converter = new GumboSparkConverter(plan.getName(), plan.getFileManager(), null, ctx); // TODO add settings
 
 			long start = System.nanoTime();
 

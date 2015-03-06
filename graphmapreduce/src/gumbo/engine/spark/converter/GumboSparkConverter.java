@@ -7,6 +7,7 @@ import gumbo.compiler.GumboPlan;
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.filemapper.FileManager;
+import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.engine.settings.AbstractExecutorSettings;
@@ -15,6 +16,7 @@ import gumbo.engine.spark.mrcomponents.GFSparkMapper1Guarded;
 import gumbo.engine.spark.mrcomponents.GFSparkReducer1;
 import gumbo.engine.spark.mrcomponents.GFSparkReducer2;
 import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
@@ -28,12 +30,20 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.PairFunction;
 
 import scala.Tuple2;
+import scala.reflect.ClassTag;
 
 
 /**
@@ -61,23 +71,23 @@ public class GumboSparkConverter {
 		}
 	}
 
-	private GFPrefixSerializer serializer;
 	private FileManager fileManager;
 
 	private String queryName;
 	private AbstractExecutorSettings settings;
 
+	private JavaSparkContext ctx;
 
 	private static final Log LOG = LogFactory.getLog(GumboSparkConverter.class);
 
 	/**
 	 * 
 	 */
-	public GumboSparkConverter(String queryName, FileManager fileManager, AbstractExecutorSettings settings) {
+	public GumboSparkConverter(String queryName, FileManager fileManager, AbstractExecutorSettings settings, JavaSparkContext ctx) {
 		this.queryName = queryName;
 		this.fileManager = fileManager;
 		this.settings = settings;
-		this.serializer = new GFPrefixSerializer();
+		this.ctx = ctx;
 	}
 
 
@@ -86,7 +96,7 @@ public class GumboSparkConverter {
 
 		try {
 			// extract file mapping where input paths are made specific
-			// TODO also filter out non-related relations
+			// FUTURE also filter out non-related relations
 			RelationFileMapping mapping = null; // TODO extractor.extractFileMapping(fileManager);
 			// wrapper object for expressions
 			ExpressionSetOperations eso;
@@ -96,6 +106,7 @@ public class GumboSparkConverter {
 
 
 			/* ROUND 1: MAP */
+			/* ------------ */
 
 			// assemble guard input dataset
 			JavaPairRDD<String, String> guardInput = getGuardInput(eso);
@@ -112,7 +123,10 @@ public class GumboSparkConverter {
 			// combine both results (bag union @see JavaRDD#union)
 			JavaPairRDD<String, String> union = mappedGuard.union(mappedGuarded);
 
+
+
 			/* ROUND 1: REDUCE */
+			/* --------------- */
 
 			// group them
 			JavaPairRDD<String, Iterable<String>> grouped = union.groupByKey();
@@ -120,7 +134,10 @@ public class GumboSparkConverter {
 			// perform reduce1
 			JavaPairRDD<String,String> round1out = grouped.flatMapToPair(new GFSparkReducer1(eso,settings));
 
+
+
 			/* ROUND 2: REDUCE */
+			/* --------------- */
 
 			// re-add guardInput
 			JavaPairRDD<String, String> round2in = round1out.union(guardInput);
@@ -225,32 +242,82 @@ public class GumboSparkConverter {
 
 
 	/**
-	 * @param cug
+	 * Collects all guarded input tuples into one RDD.
+	 * 
+	 * @param eso
+	 * 
 	 * @return
 	 */
 	private JavaRDD<String> getGuardedInput(ExpressionSetOperations eso) {
-		// TODO implement
+
+		JavaRDD<String> totalInput = ctx.emptyRDD();
 
 		// get guarded CSV files
-		Set<Path> csvPaths = eso.getGuardedCsvPaths();
+		Set<GFAtomicExpression> guardeds = eso.getGuardedsAll();
 
-		// read them all
+		// for each guarded atom
+		for (GFAtomicExpression atom : guardeds) {
 
-		// augment them with relation annotation
+			// get its schema
+			RelationSchema schema = atom.getRelationSchema();
+
+			// get the relational paths
+			for (Path path : eso.getFileMapping().getPaths(schema)){
+				// load them
+				JavaRDD<String> newData = ctx.textFile(path.toString());
+
+				// add relation info when it is a CSV-file
+				if (eso.getFileMapping().getInputFormat(schema) == InputFormat.CSV) {
+					newData = addSchema(schema, newData);
+				}
+
+				// put it together with previous data
+				totalInput = totalInput.union(newData);
+			}
 
 
-		// get guarded Rel files
-		Set<Path> relPaths = eso.getGuardedRelPaths();
 
-		// read them all
+		}
 
-
-		// Take union
-
-		// TODO are guard files already removed by eso?
-
-		return null;
+		return totalInput;
 	}
+
+
+	/**
+	 * Adds schema information to the csv value in a String RDD.
+	 * 
+	 * @return the RDD augmented with schema information
+	 */
+	private JavaRDD<String> addSchema(RelationSchema schema, JavaRDD<String> input) {
+		final String name = schema.getName();
+		JavaRDD<String> output = input.map(new Function<String, String>() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public String call(String v1) throws Exception {
+				return name + "(" + v1 + ")";
+			}
+		});
+		return output;
+	}
+	
+	/**
+	 * Adds schema information to the csv value in a key-value pair RDD.
+	 * 
+	 * @return the RDD augmented with schema information
+	 */
+	private JavaPairRDD<String, String> addSchema(RelationSchema schema, JavaPairRDD<String, String> input) {
+		final String name = schema.getName();
+		JavaPairRDD<String, String> output = input.mapToPair(new PairFunction<Tuple2<String,String>, String, String>() {
+			private static final long serialVersionUID = 1L;
+			@Override
+			public Tuple2<String, String> call(Tuple2<String, String> t) throws Exception {
+				return new Tuple2<String, String>(t._1,name + "(" + t._2 + ")");// OPTIMIZE do we need to create a new object? maybe reuse parameter?
+			}
+		});
+		return output;
+	}
+
 
 
 	/**
@@ -259,31 +326,78 @@ public class GumboSparkConverter {
 	 */
 	private JavaPairRDD<String, String> getGuardInput(ExpressionSetOperations eso) {
 		// TODO implement
-		
+
 		// OPTIMIZE maybe it is possible to do the mapping here already
 		// using specific mapper, suited for the formulas
 		// this way, we do not throw everything onto one big pile...
 
-		// get guard CSV files
-		Set<Path> csvPaths = eso.getGuardedCsvPaths();
 
-		// read them all
+		JavaPairRDD<String, String> totalInput = null; // CLEAN how to initialize this?
 
-		// augment them with relation annotation
+		// get guarded CSV files
+		Set<GFAtomicExpression> guards = eso.getGuardsAll();
+
+		// for each guarded atom
+		for (GFAtomicExpression atom : guards) {
+
+			// get its schema
+			RelationSchema schema = atom.getRelationSchema();
+
+			// get the paths
+			for (Path path : eso.getFileMapping().getPaths(schema)){
+				
+				// load them
+				JavaPairRDD<String, String> newData = readGuardFile(path);
+
+				// add relation info when it is a CSV-file
+				if (eso.getFileMapping().getInputFormat(schema) == InputFormat.CSV) {
+					newData = addSchema(schema, newData);
+				}
+				
+				// put it together with previous data
+				if (totalInput == null) {
+					totalInput = newData;
+				} else {
+					totalInput = totalInput.union(newData);
+				}
+			}
 
 
-		// get guard Rel files
-		Set<Path> relPaths = eso.getGuardedRelPaths();
 
-		// read them all
+		}
+
+		return totalInput;
+
+	}
 
 
-		// Take union
 
-		// key is file offset + TODO file id
-		// value is line
 
-		return null;
+	/**
+	 * Reads a guard file and outputs (byte offset,line) tuples.
+	 * The byte offset indicates where in the file the line starts
+	 * 
+	 * @return contents of a guard file together with file offset
+	 */
+	private JavaPairRDD<String,String> readGuardFile(Path p) {
+		
+		final String fileID = p.getName(); // FIXME we need real file id! this is too long
+
+		// load using hadoop
+		JavaPairRDD<LongWritable, Text> rdd = ctx.newAPIHadoopFile(p.toString(), TextInputFormat.class, LongWritable.class, Text.class, new Configuration()); // FIXME conf must be from hadoop
+		
+		// convert to Java types
+		JavaPairRDD<String, String> rdd2 = rdd.mapToPair(new PairFunction<Tuple2<LongWritable,Text>, String, String>() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Tuple2<String, String> call(Tuple2<LongWritable, Text> t) throws Exception {
+
+				return new Tuple2<String, String>(t._1.get() + fileID,new String(t._2.getBytes(),0,t._2.getLength()));
+			}
+		});
+		
+		return rdd2;
 	}
 
 

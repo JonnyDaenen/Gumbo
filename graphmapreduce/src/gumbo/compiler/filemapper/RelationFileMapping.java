@@ -148,7 +148,7 @@ public class RelationFileMapping {
 	public InputFormat getFormat(RelationSchema s) {
 		if (format.containsKey(s))
 			return format.get(s);
-		return InputFormat.REL;
+		return InputFormat.REL; // default
 	}
 
 
@@ -160,6 +160,7 @@ public class RelationFileMapping {
 		}
 		return result;
 	}
+	
 
 
 	/**
@@ -238,6 +239,17 @@ public class RelationFileMapping {
 	 */
 	public Iterable<RelationSchema> getSchemas() {
 		return mapping.keySet();
+	}
+	
+	/**
+	 * Returns the input format of all the paths of a relation schema.
+	 * 
+	 * @param rs the schema
+	 * 
+	 * @return the input format of the relation schema
+	 */
+	public InputFormat getInputFormat(RelationSchema rs) {
+		return getFormat(rs);
 	}
 
 	/**
