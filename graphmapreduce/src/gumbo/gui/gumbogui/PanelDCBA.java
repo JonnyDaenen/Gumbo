@@ -26,7 +26,7 @@ public class PanelDCBA extends JSplitPane {
 		
 		setOneTouchExpandable(false);
 		//setDividerLocation(1400);
-		setResizeWeight(0.99);
+		setResizeWeight(0.9);
 		setBorder(null);
 		
 	}

@@ -19,6 +19,9 @@ public class PanelA extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private int height = 100;
+	private int width = 800;
 
 	public PanelA(JEditorPane eIQ) {
 		super();
@@ -27,7 +30,7 @@ public class PanelA extends JPanel {
 
 		JScrollPane editorIQScroll = new JScrollPane(eIQ);
 		editorIQScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		editorIQScroll.setPreferredSize(new Dimension(800, 180));
+		editorIQScroll.setPreferredSize(new Dimension(width,height));
 		//editorIQScroll.setPreferredSize(new Dimension(1240, 210));
 		editorIQScroll.setMinimumSize(new Dimension(10, 10));
 		

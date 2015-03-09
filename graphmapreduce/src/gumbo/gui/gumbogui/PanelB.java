@@ -22,35 +22,26 @@ public class PanelB extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-
+	private int height = 100;
+	private int width = 330;
+	
 	public PanelB(JEditorPane eI, JTextArea tC) {
 		super();
 		setLayout(new GridLayout(1,2,6,3));	
 		
 		JScrollPane editorInScroll = new JScrollPane(eI);
 		editorInScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		editorInScroll.setPreferredSize(new Dimension(300, 190));
+		editorInScroll.setPreferredSize(new Dimension(width,height));
 		//editorInScroll.setPreferredSize(new Dimension(300, 190));
 		editorInScroll.setMinimumSize(new Dimension(10, 10));
-		editorInScroll.setBorder(BorderFactory.createTitledBorder(null, "INPUT FILES", 
+		editorInScroll.setBorder(BorderFactory.createTitledBorder(null, "INPUT DIRECTORIES", 
 				TitledBorder.CENTER, TitledBorder.TOP, new Font("Courier new",1,14),Color.blue));
 		
 		add(editorInScroll);
-					
-/*
-		JScrollPane editorIOScroll = new JScrollPane(eIO);
-		editorIOScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		editorIOScroll.setPreferredSize(new Dimension(620, 250));
-		editorIOScroll.setMinimumSize(new Dimension(10, 10));
-		editorIOScroll.setBorder(BorderFactory.createTitledBorder(null, "INPUT & OUTPUT FILES", 
-				TitledBorder.CENTER, TitledBorder.TOP, new Font("Courier new",1,14),Color.blue));
-		
-		add(editorIOScroll);
-		*/
-				
+							
 		JScrollPane textConsoleScroll = new JScrollPane(tC);
 		textConsoleScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		textConsoleScroll.setPreferredSize(new Dimension(300, 400));
+		textConsoleScroll.setPreferredSize(new Dimension(width,height));
 		textConsoleScroll.setMinimumSize(new Dimension(10, 10));
 		textConsoleScroll.setBorder(BorderFactory.createTitledBorder(null, "CONSOLE", 
 				TitledBorder.CENTER, TitledBorder.TOP, new Font("Courier new",1,14),Color.blue));
@@ -67,27 +58,16 @@ public class PanelB extends JPanel {
 		
 		JScrollPane editorInScroll = new JScrollPane(eI);
 		editorInScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		editorInScroll.setPreferredSize(new Dimension(300, 190));
+		editorInScroll.setPreferredSize(new Dimension(width,height));
 		editorInScroll.setMinimumSize(new Dimension(10, 10));
-		editorInScroll.setBorder(BorderFactory.createTitledBorder(null, "INPUT FILES", 
+		editorInScroll.setBorder(BorderFactory.createTitledBorder(null, "INPUT DIRECTORIES", 
 				TitledBorder.CENTER, TitledBorder.TOP, new Font("Courier new",1,14),Color.blue));
 		
 		add(editorInScroll);
-					
-/*
-		JScrollPane editorIOScroll = new JScrollPane(eIO);
-		editorIOScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		editorIOScroll.setPreferredSize(new Dimension(620, 250));
-		editorIOScroll.setMinimumSize(new Dimension(10, 10));
-		editorIOScroll.setBorder(BorderFactory.createTitledBorder(null, "INPUT & OUTPUT FILES", 
-				TitledBorder.CENTER, TitledBorder.TOP, new Font("Courier new",1,14),Color.blue));
-		
-		add(editorIOScroll);
-		*/
-				
+									
 		JScrollPane textConsoleScroll = new JScrollPane(tC.giveDest());
 		textConsoleScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		textConsoleScroll.setPreferredSize(new Dimension(300, 400));
+		textConsoleScroll.setPreferredSize(new Dimension(width,height));
 		textConsoleScroll.setMinimumSize(new Dimension(10, 10));
 		textConsoleScroll.setBorder(BorderFactory.createTitledBorder(null, "CONSOLE", 
 				TitledBorder.CENTER, TitledBorder.TOP, new Font("Courier new",1,14),Color.blue));
