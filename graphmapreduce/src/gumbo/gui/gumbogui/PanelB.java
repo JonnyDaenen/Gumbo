@@ -23,7 +23,7 @@ public class PanelB extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private int height = 100;
-	private int width = 330;
+	private int width = 300;
 	
 	public PanelB(JEditorPane eI, JTextArea tC) {
 		super();

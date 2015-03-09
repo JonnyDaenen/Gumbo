@@ -1,9 +1,11 @@
 package gumbo.gui;
 
+import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.filemapper.RelationFileMappingException;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.gui.gumbogui.*;
+import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.RelationSchemaException;
 import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.io.GFInfixSerializer;
@@ -16,6 +18,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.PrintStream;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JButton;
@@ -24,6 +28,8 @@ import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
+
+import org.apache.hadoop.fs.Path;
 
 public class GumboMain extends JFrame {
 	
@@ -67,6 +73,11 @@ public class GumboMain extends JFrame {
 		editorIQ = new JEditorPane();
 		editorIQ.setEditable(true);
 		editorIQ.setFont(new Font("Courier New",0,19));
+		
+		editorIQ.setText("Out1(x) = E(x,y) & (!F(y) & G(x,z)); \n"
+				+ "Out2(x) = E(x,y) & !Out1(y); \n"
+				+ "Out3(x) = E(x,y) & (Out1(y) & !Out2(x)); \n"
+				+ "Out4(x,y) = E(x,y) & (!Out1(x));");
 		
 		PanelA panelA = new PanelA(editorIQ);
 		
@@ -138,24 +149,23 @@ public class GumboMain extends JFrame {
 	    buttonQC.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        	textConsole.setText("");
+	        	inputQuery = new HashSet();
+	        	
 	        	textConsole.append("Compiling the input queries...\n");
 	        	
-	        	System.out.println("Testing, testing !!!!");
+	        	//System.out.println("Testing, testing !!!!");
 	        	
 	        	GFInfixSerializer parser = new GFInfixSerializer();
 	        	
 	        	try {
 	        		inputQuery = parser.GetGFExpression(editorIQ.getText().trim());
 	        	} catch (Exception exc) {
-	        		
-	        		/*StringWriter errors = new StringWriter();
-	        		exc.printStackTrace(new PrintWriter(errors));
-	        		textConsole.append(errors.toString());
-	        		*/
-	        		System.out.println(exc);
-	    			exc.printStackTrace();
+	        		textConsole.append(exc.toString());
+	        		//exc.printStackTrace();
+	    			return;
 	    		} 
 
+	        	//textConsole.setText("");
 	        	textConsole.append("The following queries compiled:\n");
 	        	
 	        	for (GFExpression gf : inputQuery) {
@@ -165,15 +175,17 @@ public class GumboMain extends JFrame {
 	        	
 	        	
 	        	
-	        	textConsole.append("Parsing the input and output files...\n");
+	        	textConsole.append("Parsing the input directories...\n");
 	        	
-	        	RelationFileMapping rfmInPath;
+	        	/*RelationFileMapping rm = new RelationFileMapping();
 	        	try {
-					rfmInPath = new RelationFileMapping(editorIn.getText().trim());
+					rm = new RelationFileMapping(editorIn.getText().trim());
+	        		
+	        			        		
 				} catch (RelationSchemaException | RelationFileMappingException e1) {
 					
 	        		e1.printStackTrace();
-				}
+				}*/
 				
 	        	
 	        	
