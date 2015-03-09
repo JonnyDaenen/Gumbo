@@ -18,7 +18,7 @@ class TextWindowSeparateIO extends JSplitPane {
 		super(JSplitPane.VERTICAL_SPLIT,fw,sw);
 
 		setOneTouchExpandable(false);
-		setResizeWeight(0.7);
+		setResizeWeight(0.5);
 		setBorder(null);
 		
 	}

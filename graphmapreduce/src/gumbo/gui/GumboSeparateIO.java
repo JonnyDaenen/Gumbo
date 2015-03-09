@@ -3,6 +3,7 @@ package gumbo.gui;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.filemapper.RelationFileMappingException;
 import gumbo.engine.hadoop.HadoopEngine;
+import gumbo.gui.gumboguiSeparateIO.GumboMainSplitPaneSeparateIO;
 import gumbo.gui.gumboguiSeparateIO.GumboMainWindowSeparateIO;
 import gumbo.structures.data.RelationSchemaException;
 import gumbo.structures.gfexpressions.GFExpression;
@@ -89,6 +90,7 @@ public class GumboSeparateIO extends JFrame {
 		
 		GumboMainWindowSeparateIO mainwindow = new GumboMainWindowSeparateIO(editorIQ, editorIn, editorOut, outPipe,buttonQC,
 				buttonSche,buttonFH,buttonFS,cbLevel);
+		
 			
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
