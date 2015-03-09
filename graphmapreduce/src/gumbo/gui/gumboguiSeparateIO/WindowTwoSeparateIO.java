@@ -59,7 +59,7 @@ class WindowTwoSeparateIO extends JPanel {
 				
 		JScrollPane textConsoleScroll = new JScrollPane(tC);
 		textConsoleScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		textConsoleScroll.setPreferredSize(new Dimension(620, 400));
+		textConsoleScroll.setPreferredSize(new Dimension(300, 400));
 		textConsoleScroll.setMinimumSize(new Dimension(10, 10));
 		textConsoleScroll.setBorder(BorderFactory.createTitledBorder(null, "CONSOLE", 
 				TitledBorder.CENTER, TitledBorder.TOP, new Font("Courier new",1,14),Color.blue));
