@@ -8,6 +8,7 @@ import gumbo.compiler.GumboPlan;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.input.GumboFileParser;
+import gumbo.input.GumboScriptFileParser;
 import gumbo.input.GumboQuery;
 
 import java.util.Map.Entry;
@@ -69,7 +70,8 @@ public class Gumbo extends Configured implements Tool {
 		}
 		
 		// parse file
-		GumboFileParser parser = new GumboFileParser();
+		//GumboFileParser parser = new GumboFileParser();
+		GumboScriptFileParser parser = new GumboScriptFileParser();
 		GumboQuery query = parser.parse(filename);
 		
 		LOG.info(query);
