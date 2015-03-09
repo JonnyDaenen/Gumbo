@@ -3,14 +3,7 @@ package gumbo.gui;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.filemapper.RelationFileMappingException;
 import gumbo.engine.hadoop.HadoopEngine;
-import gumbo.gui.gumbogui.GumboMainFrame;
-import gumbo.gui.gumbogui.PanelA;
-import gumbo.gui.gumbogui.PanelB;
-import gumbo.gui.gumbogui.PanelBA;
-import gumbo.gui.gumbogui.PanelC;
-import gumbo.gui.gumbogui.PanelD;
-import gumbo.gui.gumbogui.PanelDC;
-import gumbo.gui.gumbogui.PanelDCBA;
+import gumbo.gui.gumbogui.*;
 import gumbo.structures.data.RelationSchemaException;
 import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.io.GFInfixSerializer;
@@ -21,6 +14,7 @@ import java.awt.TextField;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.PrintStream;
 import java.util.Set;
 
@@ -46,6 +40,8 @@ public class GumboMain extends JFrame {
 	
 	private static TextField outPathText;
 	private static JButton browseOutPathButton;
+	
+	private static JFileChooser outPathChooser;
 	
 	private static JTextArea textConsole;
 	
@@ -86,8 +82,9 @@ public class GumboMain extends JFrame {
 		
 		outPipe = new JTextAreaOutputStream(textConsole);
 					
-		JFileChooser outPathChooser = new JFileChooser();
+		outPathChooser = new JFileChooser();
 		outPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		outPathChooser.setDialogTitle("Select target directory");
 		
 		outPathText = new TextField(87);
 		outPathText.setEditable(false);
@@ -123,6 +120,20 @@ public class GumboMain extends JFrame {
 		mainwindow.setVisible(true);
 		
 		System.setOut (new PrintStream (outPipe));
+		
+		browseOutPathButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				File s;
+				int returnVal = outPathChooser.showOpenDialog(null);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					s = outPathChooser.getSelectedFile();
+					System.out.println(s.toString());
+					outPathText.setText(s.toString());
+				}
+				
+			}
+		});
 		
 	    buttonQC.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
