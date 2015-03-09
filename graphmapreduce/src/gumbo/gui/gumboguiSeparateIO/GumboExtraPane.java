@@ -11,9 +11,10 @@ public class GumboExtraPane extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public GumboExtraPane (WindowThreeSeparateIO w) {
+	public GumboExtraPane (DirOutWindow dw, WindowThreeSeparateIO w) {
 		
 		setLayout(new FlowLayout());
+		add(dw);
 		add(w);
 		add(new JPanel());
 		setVisible(true);

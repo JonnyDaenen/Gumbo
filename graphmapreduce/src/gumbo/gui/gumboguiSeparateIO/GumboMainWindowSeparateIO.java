@@ -22,7 +22,7 @@ public class GumboMainWindowSeparateIO extends JFrame {
 
 
 	public GumboMainWindowSeparateIO(
-			JEditorPane editorIQ, JEditorPane editorI, JEditorPane editorO, 
+			JEditorPane editorIQ, JEditorPane editorI,
 			JTextArea textConsole, JButton buttonQC, 
 			JButton buttonSche, JButton buttonFH, JButton buttonFS, JCheckBox cbLevel) {
 		super("GUMBO");
@@ -30,7 +30,7 @@ public class GumboMainWindowSeparateIO extends JFrame {
 		
 				
 		TextWindowSeparateIO textWin = new TextWindowSeparateIO(
-				new WindowOneSeparateIO(editorIQ),new WindowTwoSeparateIO(editorI, editorO,textConsole));	
+				new WindowOneSeparateIO(editorIQ),new WindowTwoSeparateIO(editorI, textConsole));	
 				
 		WindowThreeSeparateIO buttonWin = new WindowThreeSeparateIO(buttonQC,buttonSche,buttonFH,buttonFS,cbLevel);
 		
@@ -42,18 +42,32 @@ public class GumboMainWindowSeparateIO extends JFrame {
 	}
 	
 	
-	public GumboMainWindowSeparateIO(
-			JEditorPane editorIQ, JEditorPane editorI, JEditorPane editorO, 
+	public GumboMainWindowSeparateIO(TextWindowSeparateIO tw, WindowThreeSeparateIO bw) {
+		super("GUMBO");
+		
+		setLayout(new FlowLayout());
+		add(tw);
+		add(bw);
+        setVisible(true);
+		
+		
+	}
+	
+	
+	
+	
+	public GumboMainWindowSeparateIO(DirOutWindow dw,
+			JEditorPane editorIQ, JEditorPane editorI, 
 			JTextAreaOutputStream textConsole, JButton buttonQC, 
 			JButton buttonSche, JButton buttonFH, JButton buttonFS, JCheckBox cbLevel) {
 		super("GUMBO");
 				
 		
 		TextWindowSeparateIO w1 = new TextWindowSeparateIO(new WindowOneSeparateIO(editorIQ),
-				new WindowTwoSeparateIO(editorI, editorO,textConsole));
+				new WindowTwoSeparateIO(editorI,textConsole));
 		WindowThreeSeparateIO w2 = new WindowThreeSeparateIO(buttonQC,buttonSche,
 				buttonFH,buttonFS,cbLevel);
-		GumboExtraPane w3 = new GumboExtraPane(w2);
+		GumboExtraPane w3 = new GumboExtraPane(dw,w2);
 		add(new GumboMainSplitPaneSeparateIO(w1,w3));
 		
 		setVisible(true);
