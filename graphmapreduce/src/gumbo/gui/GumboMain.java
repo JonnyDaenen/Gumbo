@@ -5,6 +5,7 @@ import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.filemapper.RelationFileMappingException;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.gui.gumbogui.*;
+import gumbo.input.GumboQuery;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.RelationSchemaException;
 import gumbo.structures.gfexpressions.GFExpression;
@@ -19,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -47,6 +49,9 @@ public class GumboMain extends JFrame {
 	private static TextField outPathText;
 	private static JButton browseOutPathButton;
 	
+	private static TextField scratchPathText;
+	private static JButton browseScratchPathButton;
+	
 	private static JFileChooser outPathChooser;
 	
 	private static JTextArea textConsole;
@@ -62,7 +67,9 @@ public class GumboMain extends JFrame {
 	
 	// Gumbo's variable
 	
-	private static Set<GFExpression> inputQuery;
+	private static GumboQuery gumboQuery;
+	
+	
 
 	HadoopEngine hadoopEngine;
 	
@@ -74,10 +81,10 @@ public class GumboMain extends JFrame {
 		editorIQ.setEditable(true);
 		editorIQ.setFont(new Font("Courier New",0,19));
 		
-		editorIQ.setText("Out1(x) = E(x,y) & (!F(y) & G(x,z)); \n"
-				+ "Out2(x) = E(x,y) & !Out1(y); \n"
-				+ "Out3(x) = E(x,y) & (Out1(y) & !Out2(x)); \n"
-				+ "Out4(x,y) = E(x,y) & (!Out1(x));");
+		editorIQ.setText("Out1(x) : E(x,y) & (!F(y) & G(x,z)); \n"
+				+ "Out2(x) : E(x,y) & !Out1(y); \n"
+				+ "Out3(x) : E(x,y) & (Out1(y) & !Out2(x)); \n"
+				+ "Out4(x,y) : E(x,y) & (!Out1(x));");
 		
 		PanelA panelA = new PanelA(editorIQ);
 		
@@ -97,12 +104,19 @@ public class GumboMain extends JFrame {
 		outPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		outPathChooser.setDialogTitle("Select target directory");
 		
-		outPathText = new TextField(87);
+		outPathText = new TextField(97);
 		outPathText.setEditable(false);
 		browseOutPathButton = new JButton("Browse");
-
-		PanelC panelC = new PanelC(outPathText,browseOutPathButton);
+		
+		scratchPathText = new TextField(97);
+		scratchPathText.setEditable(false);
+		browseScratchPathButton = new JButton("Browse");
+		
+		PanelC panelC = new PanelC("Output directory: ", outPathText,browseOutPathButton);
 			
+		PanelC panelCs = new PanelC("Scratch directory: ", scratchPathText,browseScratchPathButton);
+		
+		
 		buttonQC = new JButton("Query Compiler");		
 		buttonSche = new JButton("Jobs constructor");
 		buttonFH = new JButton("GUMBO-Hadoop");
@@ -112,7 +126,7 @@ public class GumboMain extends JFrame {
 		PanelD panelD = new PanelD(buttonQC,buttonSche,buttonFH,buttonFS,cbLevel);
 		
 		PanelBA panelBA = new PanelBA(panelB, panelA);
-		PanelDC panelDC = new PanelDC(panelD, panelC);
+		PanelDC panelDC = new PanelDC(panelD, panelC,panelCs);
 		PanelDCBA panelDCBA = new PanelDCBA(panelDC, panelBA);
 		
 		GumboMainFrame mainwindow = new GumboMainFrame(panelDCBA);
@@ -148,8 +162,31 @@ public class GumboMain extends JFrame {
 		
 	    buttonQC.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	        	textConsole.setText("");
-	        	inputQuery = new HashSet();
+	        	
+	        	textConsole.setText("");      	
+	        	
+	        	Set<GFExpression> inputQuery = new HashSet();
+	        	Path output;
+	        	Path scratch;
+	        	RelationFileMapping inputs = new RelationFileMapping();
+	        	String nameGumboQuery = new String("Default Gumbo Query");
+	        	
+	        	String sout = outPathText.getText();
+	        	if (sout.length() == 0) {
+	        		textConsole.setText("The output directory is still empty\n");
+	        		return;
+	        	} else {
+	        		output = new Path(sout);
+	        	}
+	        	
+	        	String sscratch = scratchPathText.getText();
+	        	if (sscratch.length() == 0) {
+	        		textConsole.setText("The scratch directory is still empty\n");
+	        		return;
+	        	} else {
+	        		output = new Path(sscratch);
+	        	}
+	        	
 	        	
 	        	textConsole.append("Compiling the input queries...\n");
 	        	
@@ -177,15 +214,32 @@ public class GumboMain extends JFrame {
 	        	
 	        	textConsole.append("Parsing the input directories...\n");
 	        	
-	        	/*RelationFileMapping rm = new RelationFileMapping();
 	        	try {
-					rm = new RelationFileMapping(editorIn.getText().trim());
+					String s = editorIn.getText().trim();
+	        		String [] sin = s.split(";");
 	        		
+	        		RelationSchema r;
 	        			        		
-				} catch (RelationSchemaException | RelationFileMappingException e1) {
+	        		String [] dummy;
+	        		for(int i =0;i< sin.length;i++){
+	        			
+	        			dummy = sin[i].split("-");
+	        			if (dummy.length == 2) {
+	        				        					        				
+	        				inputs.addPath(new RelationSchema(dummy[0].trim()), new Path(dummy[1].trim()));
+	        			} else {
+	        				textConsole.append("Error in line"+i+"in INPUT DIRECTORIES");
+	        				textConsole.append("Expecting <Relation> - <Path> ");
+	        				return;
+	        			}       			   			
+	        		}
+	        		     			        		
+				} catch (Exception e1) {
 					
-	        		e1.printStackTrace();
-				}*/
+					textConsole.append("Get exception in reading the INPUT DIRECTORIES.\n");
+					textConsole.append(e1.toString());
+	        		return;
+				}
 				
 	        	
 	        	

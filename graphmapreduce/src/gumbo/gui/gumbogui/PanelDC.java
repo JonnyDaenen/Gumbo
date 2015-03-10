@@ -20,5 +20,17 @@ public class PanelDC extends JPanel {
 		setVisible(true);
 			
 	}
+	
+	public PanelDC (PanelD w, PanelC dw, PanelC ew) {
+		
+		setLayout(new FlowLayout());
+		add(dw);
+		add(ew);
+		add(w);
+		add(new JPanel());
+		setVisible(true);
+			
+	}
+	
 
 }
