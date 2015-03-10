@@ -1,4 +1,6 @@
-package gumbo.input;
+package gumbo.input.parser;
+
+import gumbo.input.GumboQuery;
 
 import java.io.FileInputStream;
 import java.io.IOException;

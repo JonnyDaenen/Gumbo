@@ -1,4 +1,4 @@
-package gumbo.input;
+package gumbo.input.parser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,8 +9,8 @@ import org.apache.hadoop.fs.Path;
 
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.input.GumboParser.InputCsvContext;
-import gumbo.input.GumboParser.InputRelContext;
+import gumbo.input.parser.GumboParser.InputCsvContext;
+import gumbo.input.parser.GumboParser.InputRelContext;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 
@@ -34,7 +34,7 @@ public class GumboInputVisitor extends GumboBaseVisitor<String> {
 	}
 
 	/**
-	 * @see gumbo.input.GumboBaseVisitor#visitInputCsv(gumbo.input.GumboParser.InputCsvContext)
+	 * @see gumbo.input.parser.GumboBaseVisitor#visitInputCsv(gumbo.input.parser.GumboParser.InputCsvContext)
 	 */
 	@Override
 	public String visitInputCsv(InputCsvContext ctx) {
@@ -59,7 +59,7 @@ public class GumboInputVisitor extends GumboBaseVisitor<String> {
 	}
 	
 	/**
-	 * @see gumbo.input.GumboBaseVisitor#visitInputRel(gumbo.input.GumboParser.InputRelContext)
+	 * @see gumbo.input.parser.GumboBaseVisitor#visitInputRel(gumbo.input.parser.GumboParser.InputRelContext)
 	 */
 	@Override
 	public String visitInputRel(InputRelContext ctx) {

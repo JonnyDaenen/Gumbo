@@ -1,7 +1,7 @@
-package gumbo.input;
+package gumbo.input.parser;
 
-import gumbo.input.GumboParser.OutputpathContext;
-import gumbo.input.GumboParser.ScratchpathContext;
+import gumbo.input.parser.GumboParser.OutputpathContext;
+import gumbo.input.parser.GumboParser.ScratchpathContext;
 
 import org.apache.hadoop.fs.Path;
 
@@ -14,7 +14,7 @@ import org.apache.hadoop.fs.Path;
 public class GumboPathVisitor extends GumboBaseVisitor<Path> {
 
 	/**
-	 * @see gumbo.input.GumboBaseVisitor#visitOutputpath(gumbo.input.GumboParser.OutputpathContext)
+	 * @see gumbo.input.parser.GumboBaseVisitor#visitOutputpath(gumbo.input.parser.GumboParser.OutputpathContext)
 	 */
 	@Override
 	public Path visitOutputpath(OutputpathContext ctx) {
@@ -22,7 +22,7 @@ public class GumboPathVisitor extends GumboBaseVisitor<Path> {
 	}
 	
 	/**
-	 * @see gumbo.input.GumboBaseVisitor#visitScratchpath(gumbo.input.GumboParser.ScratchpathContext)
+	 * @see gumbo.input.parser.GumboBaseVisitor#visitScratchpath(gumbo.input.parser.GumboParser.ScratchpathContext)
 	 */
 	@Override
 	public Path visitScratchpath(ScratchpathContext ctx) {

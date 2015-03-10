@@ -8,8 +8,8 @@ import gumbo.compiler.GumboPlan;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.input.GumboFileParser;
-import gumbo.input.GumboScriptFileParser;
 import gumbo.input.GumboQuery;
+import gumbo.input.parser.GumboScriptFileParser;
 
 import java.util.Map.Entry;
 

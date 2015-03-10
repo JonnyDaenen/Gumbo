@@ -1,4 +1,4 @@
-package gumbo.input;
+package gumbo.input.parser;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -7,15 +7,15 @@ import java.util.HashMap;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import gumbo.input.GumboParser.AndExprContext;
-import gumbo.input.GumboParser.GfqueryContext;
-import gumbo.input.GumboParser.GuardedExprContext;
-import gumbo.input.GumboParser.NestedGuardedContext;
-import gumbo.input.GumboParser.NotExprContext;
-import gumbo.input.GumboParser.OrExprContext;
-import gumbo.input.GumboParser.ParExprContext;
-import gumbo.input.GumboParser.RegularGuardedContext;
-import gumbo.input.GumboParser.SelectContext;
+import gumbo.input.parser.GumboParser.AndExprContext;
+import gumbo.input.parser.GumboParser.GfqueryContext;
+import gumbo.input.parser.GumboParser.GuardedExprContext;
+import gumbo.input.parser.GumboParser.NestedGuardedContext;
+import gumbo.input.parser.GumboParser.NotExprContext;
+import gumbo.input.parser.GumboParser.OrExprContext;
+import gumbo.input.parser.GumboParser.ParExprContext;
+import gumbo.input.parser.GumboParser.RegularGuardedContext;
+import gumbo.input.parser.GumboParser.SelectContext;
 import gumbo.structures.gfexpressions.GFAndExpression;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
@@ -55,7 +55,7 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 	}
 	
 	/**
-	 * @see gumbo.input.GumboBaseVisitor#visitGfquery(gumbo.input.GumboParser.GfqueryContext)
+	 * @see gumbo.input.parser.GumboBaseVisitor#visitGfquery(gumbo.input.parser.GumboParser.GfqueryContext)
 	 */
 	@Override
 	public GFExpression visitGfquery(GfqueryContext ctx) {
