@@ -153,8 +153,20 @@ public class GumboMain extends JFrame {
 				int returnVal = outPathChooser.showOpenDialog(null);
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
 					s = outPathChooser.getSelectedFile();
-					System.out.println(s.toString());
 					outPathText.setText(s.toString());
+				}
+				
+			}
+		});
+		
+		browseScratchPathButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				File s;
+				int returnVal = outPathChooser.showOpenDialog(null);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					s = outPathChooser.getSelectedFile();
+					scratchPathText.setText(s.toString());
 				}
 				
 			}
@@ -169,13 +181,14 @@ public class GumboMain extends JFrame {
 	        	Path output;
 	        	Path scratch;
 	        	RelationFileMapping inputs = new RelationFileMapping();
-	        	String nameGumboQuery = new String("Default Gumbo Query");
 	        	
 	        	String sout = outPathText.getText();
 	        	if (sout.length() == 0) {
 	        		textConsole.setText("The output directory is still empty\n");
 	        		return;
 	        	} else {
+	        		textConsole.append("The output directory is:" + sout);
+	        		textConsole.append("\n");
 	        		output = new Path(sout);
 	        	}
 	        	
@@ -184,7 +197,9 @@ public class GumboMain extends JFrame {
 	        		textConsole.setText("The scratch directory is still empty\n");
 	        		return;
 	        	} else {
-	        		output = new Path(sscratch);
+	        		textConsole.append("The scratch directory is:" + sscratch);
+	        		textConsole.append("\n");
+	        		scratch = new Path(sscratch);
 	        	}
 	        	
 	        	
@@ -242,14 +257,11 @@ public class GumboMain extends JFrame {
 				}
 				
 	        	
+	        	gumboQuery = new GumboQuery("Gumbo query",inputQuery, inputs, output,scratch);
 	        	
-	        	
-	        	// In the future should be:
-	        	// plan = new MRPlan(inputQuery,rfmInPath, rfmOutPath);
 
 	       	}
 	    });
-		
 		
 		
 	}
