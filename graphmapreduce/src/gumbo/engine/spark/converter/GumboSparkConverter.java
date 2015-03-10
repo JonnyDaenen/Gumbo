@@ -22,6 +22,7 @@ import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -76,18 +77,21 @@ public class GumboSparkConverter {
 	private AbstractExecutorSettings settings;
 
 	private JavaSparkContext ctx;
+	private Configuration hadoopConf;
 
 	private static final Log LOG = LogFactory.getLog(GumboSparkConverter.class);
 
 	/**
+	 * @param conf 
 	 * 
 	 */
-	public GumboSparkConverter(String queryName, FileManager fileManager, AbstractExecutorSettings settings, JavaSparkContext ctx) {
+	public GumboSparkConverter(String queryName, FileManager fileManager, AbstractExecutorSettings settings, JavaSparkContext ctx, Configuration conf) {
 		this.queryName = queryName;
 		this.fileManager = fileManager;
 		this.settings = settings;
 		this.ctx = ctx;
 		this.extractor = new FileMappingExtractor();
+		this.hadoopConf = conf;
 	}
 
 
@@ -213,22 +217,10 @@ public class GumboSparkConverter {
 			final String rsstring = rs.toString();
 
 			// filter only output tuples having this rs as the key
-			JavaRDD<Tuple2<String, String>> currentRdd = round2out.filter(new Function<Tuple2<String,String>, Boolean>() {
-				private static final long serialVersionUID = 1L;
-				@Override
-				public Boolean call(Tuple2<String, String> v1) throws Exception {
-					return v1._1().equals(rsstring);
-				}});
+			JavaRDD<Tuple2<String, String>> currentRdd = round2out.filter(new Unravel1(rsstring));
 
 			// remove key
-			JavaRDD<String> currentValueRdd = currentRdd.map(new Function<Tuple2<String,String>, String>() {
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public String call(Tuple2<String, String> v1) throws Exception {
-					return v1._2;
-				}
-			});
+			JavaRDD<String> currentValueRdd = currentRdd.map(new Unravel2());
 
 			// couple relationschema to RDD
 			outputMap.put(rs, currentValueRdd);
@@ -238,6 +230,27 @@ public class GumboSparkConverter {
 		return outputMap;
 	}
 
+	static class Unravel1 implements  Function<Tuple2<String,String>, Boolean> {
+		private static final long serialVersionUID = 1L;
+		private String schema;
+
+		public Unravel1(String schema) {
+			this.schema = schema;
+		}
+
+		@Override
+		public Boolean call(Tuple2<String, String> v1) throws Exception {
+			return v1._1().equals(schema); 
+		}}
+
+	static class Unravel2 implements Function<Tuple2<String,String>, String> {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public String call(Tuple2<String, String> v1) throws Exception {
+			return v1._2;
+		}
+	}
 
 
 
@@ -290,17 +303,25 @@ public class GumboSparkConverter {
 	 */
 	private JavaRDD<String> addSchema(RelationSchema schema, JavaRDD<String> input) {
 		final String name = schema.getName();
-		JavaRDD<String> output = input.map(new Function<String, String>() {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public String call(String v1) throws Exception {
-				return name + "(" + v1 + ")";
-			}
-		});
+		JavaRDD<String> output = input.map(new F3(name));
 		return output;
 	}
-	
+
+	static class F3 implements Function<String, String> {
+		private static final long serialVersionUID = 1L;
+
+		private String name;
+
+		public F3(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String call(String v1) throws Exception {
+			return  name+"(" + v1 + ")"; // FIXME
+		}
+	}
+
 	/**
 	 * Adds schema information to the csv value in a key-value pair RDD.
 	 * 
@@ -308,15 +329,23 @@ public class GumboSparkConverter {
 	 */
 	private JavaPairRDD<String, String> addSchema(RelationSchema schema, JavaPairRDD<String, String> input) {
 		final String name = schema.getName();
-		JavaPairRDD<String, String> output = input.mapToPair(new PairFunction<Tuple2<String,String>, String, String>() {
-			private static final long serialVersionUID = 1L;
-			@Override
-			public Tuple2<String, String> call(Tuple2<String, String> t) throws Exception {
-				return new Tuple2<String, String>(t._1,name + "(" + t._2 + ")");// OPTIMIZE do we need to create a new object? maybe reuse parameter?
-			}
-		});
+		JavaPairRDD<String, String> output = input.mapToPair(new F2(name));
 		return output;
 	}
+
+	static class F2 implements PairFunction<Tuple2<String,String>, String, String> {
+		private static final long serialVersionUID = 1L;
+		private String name;
+
+		public F2(String name) {
+			this.name = name;
+		}
+		@Override
+		public Tuple2<String, String> call(Tuple2<String, String> t) throws Exception {
+			System.out.println(t);
+			return new Tuple2<String, String>(t._1, name+"(" + t._2 + ")");// OPTIMIZE do we need to create a new object? maybe reuse parameter?
+		}// FIXME
+	};
 
 
 
@@ -345,7 +374,7 @@ public class GumboSparkConverter {
 
 			// get the paths
 			for (Path path : eso.getFileMapping().getPaths(schema)){
-				
+
 				// load them
 				JavaPairRDD<String, String> newData = readGuardFile(path);
 
@@ -353,7 +382,7 @@ public class GumboSparkConverter {
 				if (eso.getFileMapping().getInputFormat(schema) == InputFormat.CSV) {
 					newData = addSchema(schema, newData);
 				}
-				
+
 				// put it together with previous data
 				if (totalInput == null) {
 					totalInput = newData;
@@ -380,26 +409,32 @@ public class GumboSparkConverter {
 	 * @return contents of a guard file together with file offset
 	 */
 	private JavaPairRDD<String,String> readGuardFile(Path p) {
-		
+
 		final String fileID = p.getName(); // FIXME we need real file id! this is too long
 
+
 		// load using hadoop
-		JavaPairRDD<LongWritable, Text> rdd = ctx.newAPIHadoopFile(p.toString(), TextInputFormat.class, LongWritable.class, Text.class, new Configuration()); // FIXME conf must be from hadoop
-		
+		JavaPairRDD<LongWritable, Text> rdd = ctx.newAPIHadoopFile(p.toString(), TextInputFormat.class, LongWritable.class, Text.class, hadoopConf);
+
 		// convert to Java types
-		JavaPairRDD<String, String> rdd2 = rdd.mapToPair(new PairFunction<Tuple2<LongWritable,Text>, String, String>() {
-			private static final long serialVersionUID = 1L;
+		JavaPairRDD<String, String> rdd2 = rdd.mapToPair(new Hadoop2JavaConverter(fileID));
 
-			@Override
-			public Tuple2<String, String> call(Tuple2<LongWritable, Text> t) throws Exception {
-
-				return new Tuple2<String, String>(t._1.get() + fileID,new String(t._2.getBytes(),0,t._2.getLength()));
-			}
-		});
-		
 		return rdd2;
 	}
 
+	static class Hadoop2JavaConverter implements PairFunction<Tuple2<LongWritable,Text>, String, String> {
+		private static final long serialVersionUID = 1L;
+		private String fileID;
+
+		public Hadoop2JavaConverter(String fileID) {
+			this.fileID = fileID;
+		}
+
+		@Override
+		public Tuple2<String, String> call(Tuple2<LongWritable, Text> t) throws Exception {
+			return new Tuple2<String, String>(t._1.get() + fileID ,new String(t._2.getBytes(),0,t._2.getLength()));
+		}
+	}
 
 	/**
 	 * Extracts the GF expressions from the group.

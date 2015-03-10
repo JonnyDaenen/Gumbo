@@ -13,6 +13,11 @@ import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.io.Pair;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,7 +37,7 @@ import org.apache.hadoop.fs.Path;
  * @author Jonny Daenen
  * 
  */
-public class ExpressionSetOperations {
+public class ExpressionSetOperations implements Externalizable {
 
 	public class GFOperationInitException extends Exception {
 
@@ -50,6 +55,7 @@ public class ExpressionSetOperations {
 	private static final Log LOG = LogFactory.getLog(ExpressionSetOperations.class);
 
 	protected Collection<GFExistentialExpression> expressionSet;
+	private RelationFileMapping fileMapping;
 
 	protected HashMap<GFExistentialExpression, Collection<GFAtomicExpression>> guardeds;
 	protected HashMap<GFExistentialExpression, BExpression> booleanChildExpressions;
@@ -65,7 +71,6 @@ public class ExpressionSetOperations {
 
 	protected GFAtomicExpression[] atoms;
 
-	private RelationFileMapping fileMapping;
 
 	private ExpressionSetOperations() {
 		guardeds = new HashMap<>();
@@ -464,6 +469,29 @@ public class ExpressionSetOperations {
 	public RelationFileMapping getFileMapping() {
 		return fileMapping;
 	}
+
+
+	/* (non-Javadoc)
+	 * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
+	 */
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		out.writeObject(expressionSet);
+		out.writeObject(fileMapping);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
+	 */
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		expressionSet = (Collection<GFExistentialExpression>) in.readObject();
+		fileMapping = (RelationFileMapping) in.readObject();
+		
+	}
+	
+	
 
 
 }

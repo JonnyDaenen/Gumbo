@@ -7,12 +7,14 @@ import gumbo.compiler.GumboPlan;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.engine.ExecutionException;
 import gumbo.engine.GFEngine;
+import gumbo.engine.settings.ExecutorSettings;
 import gumbo.engine.spark.converter.GumboSparkConverter;
 
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 
@@ -31,14 +33,7 @@ public class SparkEngine implements GFEngine {
 	@Override
 	public void execute(GumboPlan plan) throws ExecutionException {
 
-		// initialize
-		initialize();
-
-		// execute
-		executeLevelwise(plan);
-
-		// cleanup
-		// TODO
+		executePlan(plan,null);  // TODO hadoop config??
 	}
 
 	/**
@@ -47,21 +42,27 @@ public class SparkEngine implements GFEngine {
 	private void initialize() {
 		// TODO this local stuff needs to be changed:
 		SparkConf sparkConf = new SparkConf().setMaster("local[1]").setAppName("Gumbo");
+		sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
+//		sparkConf.set("spark.kryo.registrator", "org.kitesdk.examples.spark.AvroKyroRegistrator");
+//		sparkConf.registerKryoClasses(
+//				gumbo.structures.gfexpressions.operations.ExpressionSetOperations.class
+//				);
 		// SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
 		ctx = new JavaSparkContext(sparkConf);
-		
+
 		// TODO close context in engine!
 
 	}
 
 	/**
 	 * @param plan
+	 * @param conf 
 	 * @throws ExecutionException
 	 */
-	private void executeLevelwise(GumboPlan plan) throws ExecutionException {
+	private void executeLevelwise(GumboPlan plan, Configuration conf) throws ExecutionException {
 
 		try {
-			GumboSparkConverter converter = new GumboSparkConverter(plan.getName(), plan.getFileManager(), null, ctx); // TODO add settings
+			GumboSparkConverter converter = new GumboSparkConverter(plan.getName(), plan.getFileManager(), new ExecutorSettings(), ctx, conf); // TODO load real settings
 
 			long start = System.nanoTime();
 
@@ -105,12 +106,27 @@ public class SparkEngine implements GFEngine {
 			System.out.println("Running time: " + (stop-start)/1000000 + "ms");
 			//		printCounters(jc);
 			//		printJobDAG(jc);
-			
+
 		} catch (Exception e) {
 			LOG.error("Spark engine was interrupted: " + e.getMessage());
 			throw new ExecutionException("Spark engine interrupted.", e);
 		}
 
+
+	}
+
+
+	public void executePlan(GumboPlan plan, Configuration conf) throws ExecutionException {
+		
+		
+		// initialize
+		initialize();
+
+		// execute
+		executeLevelwise(plan,conf);
+
+		// cleanup
+		// TODO
 
 	}
 

@@ -22,6 +22,10 @@ public class GFSparkMapper1Guarded extends GFSparkComponent implements PairFlatM
 
 	private static final long serialVersionUID = 1L;
 
+	public GFSparkMapper1Guarded() {
+		// TODO for serialization
+	}
+
 	public GFSparkMapper1Guarded(ExpressionSetOperations eso, AbstractExecutorSettings settings) {
 		super(eso, settings);
 	}

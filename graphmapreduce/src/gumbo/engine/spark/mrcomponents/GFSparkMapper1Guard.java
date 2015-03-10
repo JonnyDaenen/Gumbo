@@ -21,12 +21,15 @@ import scala.Tuple2;
  * @author Jonny Daenen
  *
  */
-public class GFSparkMapper1Guard extends GFSparkComponent implements PairFlatMapFunction<Tuple2<String,String>, String, String> {
+public class GFSparkMapper1Guard extends GFSparkComponent implements  PairFlatMapFunction<Tuple2<String,String>, String, String> {
 
 
-	private static final long serialVersionUID = 1L;
 
-
+	
+	public GFSparkMapper1Guard() {
+		super();
+	}
+	
 	public GFSparkMapper1Guard(ExpressionSetOperations eso, AbstractExecutorSettings settings) {
 		super(eso, settings);
 	}
@@ -46,6 +49,7 @@ public class GFSparkMapper1Guard extends GFSparkComponent implements PairFlatMap
 		String tupleID = kvpair._1;
 		Tuple t = new Tuple(kvpair._2);
 		boolean guardIsGuarded = false;
+		
 		
 		// for each guard atom ...
 		for (GFAtomicExpression guard : eso.getGuardsAll()) {

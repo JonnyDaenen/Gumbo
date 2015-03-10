@@ -29,6 +29,10 @@ public class GFSparkReducer2 extends GFSparkComponent implements FlatMapFunction
 	private static final long serialVersionUID = 1L;
 
 
+	public GFSparkReducer2() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public GFSparkReducer2(ExpressionSetOperations eso, AbstractExecutorSettings settings) {
 		super(eso, settings);
 	}
@@ -116,7 +120,8 @@ public class GFSparkReducer2 extends GFSparkComponent implements FlatMapFunction
 	 */
 	private boolean isTuple(String val) {
 		if (val.length() > 0)
-			return val.charAt(0) == '#'; // TODO put this in settings
+			return val.contains("(");
+//			return val.charAt(0) == '#'; // FIXME put this in settings
 		return false;
 	}
 

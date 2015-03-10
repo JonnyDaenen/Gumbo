@@ -23,6 +23,11 @@ public class GFSparkReducer1 extends GFSparkComponent implements PairFlatMapFunc
 
 	StringBuilder sb;
 	
+	public GFSparkReducer1() {
+		// TODO Auto-generated constructor stub
+		sb = new StringBuilder(100);
+	}
+	
 	public GFSparkReducer1(ExpressionSetOperations eso, AbstractExecutorSettings settings) {
 		super(eso, settings);
 

@@ -3,12 +3,15 @@
  */
 package gumbo.engine.settings;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+
 
 /**
  * Provides access to settings for the gumbo framework.
@@ -19,28 +22,28 @@ import org.apache.commons.logging.LogFactory;
 public abstract class AbstractExecutorSettings {
 
 
+
 	private static final Log LOG = LogFactory.getLog(AbstractExecutorSettings.class);
 
 	public static final String PROOF_SYMBOL = "PROOF_SYMBOL";
 
-	public static final String guardedIdOptimizationOn = "gumbo.engine.guardedIdOptimizationOn";
+	public static final String guardedIdOptimizationOn = "gumbo.engine.guardedIdOptimizationOn"; // TODO this is currently implemented, but needs to become a toggle
 	public static final String guardIdOptimizationOn = "gumbo.engine.guardIdOptimizationOn";
 	public static final String guardKeepaliveOptimizationOn = "gumbo.engine.guardKeepaliveOn";
 	public static final String guardTuplePointerOptimizationOn = "gumbo.engine.guardTuplePointerOptimizationOn";
-	public static final String guardAsGuardedReReadOptimizationOn = "gumbo.engine.guardAsGuardedReReadOptimizationOn";
+	public static final String guardAsGuardedReReadOptimizationOn = "gumbo.engine.guardAsGuardedReReadOptimizationOn"; // TODO this is currently implemented, but needs to become a toggle
 
-	Map<String,String> propertiesMap;
 
 
 	/**
 	 * Loads the default settings.
 	 */
 	public void loadDefaults() {
-		setBooleanProperty(guardedIdOptimizationOn, true);  // TODO #core make toggle
+		setBooleanProperty(guardedIdOptimizationOn, true);  
 		setBooleanProperty(guardIdOptimizationOn, true);
 		setBooleanProperty(guardKeepaliveOptimizationOn, true);
 		setBooleanProperty(guardTuplePointerOptimizationOn, true);
-		setBooleanProperty(guardAsGuardedReReadOptimizationOn, true); // TODO #core make toggle
+		setBooleanProperty(guardAsGuardedReReadOptimizationOn, true); 
 		setProperty(PROOF_SYMBOL, "#");
 
 	}
@@ -134,7 +137,29 @@ public abstract class AbstractExecutorSettings {
 
 
 	}
+	
 
+	public String save() {
+		String output = "";
+		for (String key : getAllKeys()) {
+			String value = getProperty(key);
+			output += key + "=" + value + ";";
+		}
+		return output;
+	}
+
+	
+	public void load(String input) {
+		String [] pairs = input.split(";");
+		for (String pair : pairs) {
+			String [] kv = pair.split("=");
+			if (kv.length != 2)
+				continue;
+			String key = kv[0];
+			String value = kv[1];
+			setProperty(key, value);
+		}
+	}
 
 
 }

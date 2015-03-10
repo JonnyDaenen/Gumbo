@@ -8,6 +8,7 @@ import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.engine.general.PartitionQueue;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * @author Jonny Daenen
@@ -20,6 +21,7 @@ public class SparkPartitionQueue extends PartitionQueue {
 	
 	public SparkPartitionQueue(PartitionedCUGroup pcug) {
 		super(pcug);
+		finishedCUGs = new HashSet<>();
 	}
 
 	/* (non-Javadoc)
