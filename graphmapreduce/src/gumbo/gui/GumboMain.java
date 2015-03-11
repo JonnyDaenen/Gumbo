@@ -159,6 +159,27 @@ public class GumboMain extends JFrame {
 			}
 		});
 		
+		buttonFH.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				textConsole.setText("");
+				textConsole.append("Evaluating the input query with Hadoop....\n");
+				
+			}
+		});
+
+		
+		buttonFS.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				textConsole.setText("");
+				textConsole.append("Evaluating the input query with Spark....\n");
+				
+			}
+		});
+
+		
+		
 		browseScratchPathButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				

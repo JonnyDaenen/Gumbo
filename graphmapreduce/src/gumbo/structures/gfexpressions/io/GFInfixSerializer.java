@@ -27,7 +27,7 @@ import java.util.Stack;
  * while deserializer is the other way round. 
  * 
  * A GF query is written in the form:
- * OutputName(x1,...,xk) : GuardRelation(x1,...xk,y1,...,ym) & Boolean combination of guarded relations
+ * OutputName(x1,...,xk) = GuardRelation(x1,...xk,y1,...,ym) & Boolean combination of guarded relations
  * 
  */
 public class GFInfixSerializer {
@@ -36,11 +36,14 @@ public class GFInfixSerializer {
 		return e.generateString();
 	}
 	
+	private final String queryDef = new String(":");
+	private final String endQueryDef = new String(";");
+	
 	public Set<GFExpression> GetGFExpression(String s) throws DeserializeException {
 		
 //		GFPrefixSerializer prefixParser = new GFPrefixSerializer();
 		
-		String [] sArray = s.split(";");
+		String [] sArray = s.split(endQueryDef);
 		HashSet<String> sSet = new HashSet<String>(Arrays.asList(sArray));
 		
 		String [] dummyArray;
@@ -48,18 +51,19 @@ public class GFInfixSerializer {
 		String dummyString=new String();
 		
 		for (String ss : sSet) {
-		    dummyArray = ss.split(":");
-		    System.out.println("length of dummyArray" + dummyArray.length);
+		    dummyArray = ss.split(queryDef);
+		    //System.out.println("length of dummyArray" + dummyArray.length);
 		    
-		    for(int i =0 ; i < dummyArray.length; i++) {
+		    /*for(int i =0 ; i < dummyArray.length; i++) {
 		    	System.out.println(dummyArray[i]);
-		    }
+		    }*/
 		    		    
 		    if (dummyArray.length != 2) {
-		    	throw new DeserializeException("Expect exactly one : on defining the query "+ss);		    	
+		    	System.out.println("Expect exactly one " + queryDef + " on defining the query "+ss);
+		    	throw new DeserializeException("Expect exactly one " + queryDef + " on defining the query "+ss);		    	
 		    }
-		       
-		    dummyString = dummyString+"#"+dummyArray[0].trim()+InfixToPrefix(dummyArray[1])+";";	
+		    
+		    dummyString = dummyString+"#"+dummyArray[0].trim()+InfixToPrefix(dummyArray[1])+endQueryDef;	
 		}
 		
 		

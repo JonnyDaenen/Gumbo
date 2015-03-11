@@ -117,8 +117,7 @@ public abstract class PartitionQueue {
 		for (CalculationUnitGroup dep : deps) {
 			depsReady = depsReady &&  ready.contains(dep);
 		}
-		
-		
+			
 		return depsReady;
 	}
 
