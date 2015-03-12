@@ -149,11 +149,13 @@ public class GumboSparkConverter {
 			// group them
 			LOG.info("Reduce1: starting grouping");
 			JavaPairRDD<String, Iterable<String>> grouped = union.groupByKey();
+			grouped.saveAsTextFile("debug/8");
 			LOG.info("Reduce1: finished grouping");
 
 			// perform reduce1
 			LOG.info("Reduce1: starting reduce1");
 			JavaPairRDD<String,String> round1out = grouped.flatMapToPair(new GFSparkReducer1(eso,settings));
+			round1out.saveAsTextFile("debug/9");
 			LOG.info("Reduce1: finished reduce1");
 
 
@@ -164,16 +166,19 @@ public class GumboSparkConverter {
 			// re-add guardInput
 			LOG.info("Reduce2: starting union");
 			JavaPairRDD<String, String> round2in = round1out.union(guardInput);
+			round2in.saveAsTextFile("debug/10");
 			LOG.info("Reduce2: finished union");
 
 			// group again
 			LOG.info("Reduce2: starting grouping");
 			JavaPairRDD<String, Iterable<String>> grouped2 = round2in.groupByKey();
+			grouped2.saveAsTextFile("debug/11");
 			LOG.info("Reduce2: finished grouping");
 
 			// perform reduce 2
 			LOG.info("Reduce2: starting reduce2");
 			JavaRDD<Tuple2<String, String>> round2out = grouped2.flatMap(new GFSparkReducer2(eso,settings));
+			round2out.saveAsTextFile("debug/12");
 			LOG.info("Reduce2: starting reduce2");
 
 			// split into multiple relations

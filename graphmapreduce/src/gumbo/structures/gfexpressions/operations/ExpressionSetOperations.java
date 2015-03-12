@@ -187,6 +187,7 @@ public class ExpressionSetOperations implements Externalizable {
 
 		atoms = allAtoms.toArray(new GFAtomicExpression[0]);
 		Arrays.sort(atoms);
+		LOG.info("ATOM IDS:" + Arrays.toString(atoms));
 
 	}
 

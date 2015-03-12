@@ -50,10 +50,11 @@ public class GFSparkReducer2 extends GFSparkComponent implements FlatMapFunction
 		// create boolean value mapping
 		GFBooleanMapping mapGFtoB = eso.getBooleanMapping();
 		BEvaluationContext booleanContext = new BEvaluationContext();
+		
 
 		HashSet<Tuple2<String,String>> output = new HashSet<>();
 		Tuple keyTuple = null;
-
+boolean print = false;
 		for (String value : values) {
 
 			// we need to find the actual tuple between the values.
@@ -65,6 +66,8 @@ public class GFSparkReducer2 extends GFSparkComponent implements FlatMapFunction
 			} else {
 				// non-tuples are id's
 				int id = Integer.parseInt(value);
+				System.out.println(id);
+				print = true;
 
 				// adjust context
 				GFAtomicExpression atom = eso.getAtom(id); 
@@ -72,25 +75,53 @@ public class GFSparkReducer2 extends GFSparkComponent implements FlatMapFunction
 			}
 		}
 
+		if (print) {
+			System.out.println(keyTuple);
+			System.out.println(mapGFtoB);
+			System.out.println(booleanContext);
+		}
 		// TODO exception if tuple is not found
 
 
 		// evaluate all formulas
 		for (GFExistentialExpression formula : eso.getExpressionSet()) {
 
+//			System.out.println("Considering formula " + formula);
+			
+			GFAtomicExpression guard = formula.getGuard();
+			if (print) {
+			System.out.println("Guard:" + guard);
+			System.out.println("Keytuple: " + keyTuple);
+			}
+
 			// only if applicable
-			if (formula.getGuard().matches(keyTuple)) {
+			if (guard.matches(keyTuple)) {
+				if (print) {
+				System.out.println("formula ok");
+				}
+				
+
 
 				// get associated boolean expression
 				BExpression booleanChildExpression = eso.getBooleanChildExpression(formula);
+				
+
+//				System.out.println(booleanChildExpression);
+//				System.out.println(booleanContext);
 
 				if (booleanChildExpression.evaluate(booleanContext)) {
+					if (print) 
+					System.out.println("evaluation ok");
 
 					// determine output
 					GFAtomProjection p = eso.getOutputProjection(formula);
 					String outputRelation = p.getOutputSchema().toString(); // TODO #spark check this!
 					String outputTuple = p.project(keyTuple).generateString();
 
+					if (print) 
+					System.out.println(outputRelation);
+					if (print) 
+					System.out.println(outputTuple);
 					// add relation identicator + real tuple to the output
 					output.add(new Tuple2<>(outputRelation,outputTuple));
 				} 
@@ -108,7 +139,7 @@ public class GFSparkReducer2 extends GFSparkComponent implements FlatMapFunction
 	 * @return
 	 */
 	private Tuple getTuple(String val) {
-		return new Tuple(val.substring(1));
+		return new Tuple(val);
 	}
 
 	/**
@@ -120,7 +151,7 @@ public class GFSparkReducer2 extends GFSparkComponent implements FlatMapFunction
 	 */
 	private boolean isTuple(String val) {
 		if (val.length() > 0)
-			return val.contains("(");
+			return val.contains("(");// FIXME regex and only when non-tuple mode on
 //			return val.charAt(0) == '#'; // FIXME put this in settings
 		return false;
 	}

@@ -83,7 +83,7 @@ public class GFMapper2GuardTextRel extends GFMapper1Identity {
 
 					// output guardid
 					out1.set(""+guardID);
-					context.write(value, out1);
+					context.write(value, out1); // OPTIMIZE I think this is not necessary with tuplepointeropt
 					context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_R2).increment(1);
 					context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_R2_BYTES).increment(Integer.SIZE/8 + value.getLength());
 					
