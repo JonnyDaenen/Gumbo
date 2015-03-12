@@ -113,19 +113,33 @@ public class GumboSparkConverter {
 			/* ------------ */
 
 			// assemble guard input dataset
+
+			LOG.info("I/O: loading guard");
 			JavaPairRDD<String, String> guardInput = getGuardInput(eso);
+			guardInput.saveAsTextFile("debug/2");
 
 			// perform map1 on guard
+			LOG.info("Map1: performing map1 on guard");
 			JavaPairRDD<String, String> mappedGuard = guardInput.flatMapToPair(new GFSparkMapper1Guard(eso,settings));
+			mappedGuard.saveAsTextFile("debug/3");
+			LOG.info("Map1: finished map1 on guard");
 
 			// assemble guarded input dataset
+			LOG.info("I/O: loading guard");
 			JavaRDD<String> guardedInput = getGuardedInput(eso);
+			guardedInput.saveAsTextFile("debug/5");
 
 			// perform map1 on guarded
+			LOG.info("Map1: performing map1 on guarded");
 			JavaPairRDD<String, String> mappedGuarded = guardedInput.flatMapToPair(new GFSparkMapper1Guarded(eso,settings));
+			mappedGuarded.saveAsTextFile("debug/6");
+			LOG.info("Map1: finished map1 on guarded");
 
 			// combine both results (bag union @see JavaRDD#union)
+			LOG.info("Map1: combining output");
 			JavaPairRDD<String, String> union = mappedGuard.union(mappedGuarded);
+			union.saveAsTextFile("debug/7");
+			LOG.info("Map1: combined output");
 
 
 
@@ -133,10 +147,14 @@ public class GumboSparkConverter {
 			/* --------------- */
 
 			// group them
+			LOG.info("Reduce1: starting grouping");
 			JavaPairRDD<String, Iterable<String>> grouped = union.groupByKey();
+			LOG.info("Reduce1: finished grouping");
 
 			// perform reduce1
+			LOG.info("Reduce1: starting reduce1");
 			JavaPairRDD<String,String> round1out = grouped.flatMapToPair(new GFSparkReducer1(eso,settings));
+			LOG.info("Reduce1: finished reduce1");
 
 
 
@@ -144,21 +162,29 @@ public class GumboSparkConverter {
 			/* --------------- */
 
 			// re-add guardInput
+			LOG.info("Reduce2: starting union");
 			JavaPairRDD<String, String> round2in = round1out.union(guardInput);
+			LOG.info("Reduce2: finished union");
 
 			// group again
+			LOG.info("Reduce2: starting grouping");
 			JavaPairRDD<String, Iterable<String>> grouped2 = round2in.groupByKey();
+			LOG.info("Reduce2: finished grouping");
 
 			// perform reduce 2
+			LOG.info("Reduce2: starting reduce2");
 			JavaRDD<Tuple2<String, String>> round2out = grouped2.flatMap(new GFSparkReducer2(eso,settings));
+			LOG.info("Reduce2: starting reduce2");
 
 			// split into multiple relations
+			LOG.info("Reduce2: unravelling output");
 			Map<RelationSchema, JavaRDD<String>> rddmap = unravel(cug,round2out);
 
 			// FUTURE persist?
 
 
 			// write output to files
+			LOG.info("Reduce2: writing output");
 			writeOut(rddmap);
 
 
@@ -267,6 +293,7 @@ public class GumboSparkConverter {
 
 		// get guarded CSV files
 		Set<GFAtomicExpression> guardeds = eso.getGuardedsAll();
+		Set<Path> consideredPaths = new HashSet<>();
 
 		// for each guarded atom
 		for (GFAtomicExpression atom : guardeds) {
@@ -276,16 +303,21 @@ public class GumboSparkConverter {
 
 			// get the relational paths
 			for (Path path : eso.getFileMapping().getPaths(schema)){
-				// load them
-				JavaRDD<String> newData = ctx.textFile(path.toString());
 
-				// add relation info when it is a CSV-file
-				if (eso.getFileMapping().getInputFormat(schema) == InputFormat.CSV) {
-					newData = addSchema(schema, newData);
+				if (!consideredPaths.contains(path)) {
+					// load them
+					JavaRDD<String> newData = ctx.textFile(path.toString());
+
+					// add relation info when it is a CSV-file
+					if (eso.getFileMapping().getInputFormat(schema) == InputFormat.CSV) {
+						newData = addSchema(schema, newData);
+					}
+
+					// put it together with previous data
+					totalInput = totalInput.union(newData);
+
+					consideredPaths.add(path);
 				}
-
-				// put it together with previous data
-				totalInput = totalInput.union(newData);
 			}
 
 
@@ -342,7 +374,7 @@ public class GumboSparkConverter {
 		}
 		@Override
 		public Tuple2<String, String> call(Tuple2<String, String> t) throws Exception {
-			System.out.println(t);
+			//			System.out.println(t);
 			return new Tuple2<String, String>(t._1, name+"(" + t._2 + ")");// OPTIMIZE do we need to create a new object? maybe reuse parameter?
 		}// FIXME
 	};
