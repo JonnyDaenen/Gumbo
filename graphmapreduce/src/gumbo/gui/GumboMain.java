@@ -105,11 +105,11 @@ public class GumboMain extends JFrame {
 		outPathChooser.setDialogTitle("Select target directory");
 		
 		outPathText = new TextField(97);
-		outPathText.setEditable(false);
+		outPathText.setEditable(true);
 		browseOutPathButton = new JButton("Browse");
 		
 		scratchPathText = new TextField(97);
-		scratchPathText.setEditable(false);
+		scratchPathText.setEditable(true);
 		browseScratchPathButton = new JButton("Browse");
 		
 		PanelC panelC = new PanelC("Output directory: ", outPathText,browseOutPathButton);
