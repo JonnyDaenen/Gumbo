@@ -1,6 +1,6 @@
 Definition: 
 On input graph G=(V,E), 
-a coloring c(V) -> {R,G,B} is a weak coloring, if
+a coloring c: V -> {R,G,B} is a weak coloring, if
 for every vertex u with out-degree > 0, 
 there is an edge (u,v) such that c(v) != c(u).
 
