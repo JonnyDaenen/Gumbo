@@ -1,0 +1,29 @@
+
+
+
+R = load '/data/dirR4' using PigStorage(',') as (x1,x2,x3,x4);
+S = load '/data/dirS' using PigStorage(',') as (x);
+
+A1 = cogroup R by x1, S by x;
+B1 = foreach A1 generate flatten(R), (IsEmpty(S)? null : 0) as Sx1;
+
+A2 = cogroup R by x2, S by x;
+B2 = foreach A2 generate flatten(R), (IsEmpty(S)? null : 0) as Sx2;
+
+A3 = cogroup R by x3, S by x;
+B3 = foreach A3 generate flatten(R), (IsEmpty(S)? null : 0) as Sx3;
+
+A4 = cogroup R by x4, S by x;
+B4 = foreach A4 generate flatten(R), (IsEmpty(S)? null : 0) as Sx4;
+
+X = cogroup B1 by (x1,x2,x3,x4), B2 by (x1,x2,x3,x4), 
+            B3 by (x1,x2,x3,x4), B4 by (x1,x2,x3,x4);
+Y = foreach X generate group,
+              flatten(B1.Sx1),flatten(B2.Sx2),flatten(B3.Sx3),flatten(B4.Sx4);
+
+Z = filter Y by ((Sx1 is not null AND Sx2 is null AND Sx3 is null AND Sx4 is null) OR
+                 (Sx1 is null AND Sx2 is not null AND Sx3 is null AND Sx4 is null) OR
+                 (Sx1 is null AND Sx2 is null AND Sx3 is not null AND Sx4 is null) OR
+                 (Sx1 is null AND Sx2 is null AND Sx3 is null AND Sx4 is not null));
+
+Store Z into '/output/query2-pig';
