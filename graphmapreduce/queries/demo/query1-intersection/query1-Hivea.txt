@@ -1,0 +1,35 @@
+
+
+
+
+create table Rdata4 (x1 int, x2 int, x3 int, x4 int)
+row format delimited fields terminated by ','
+location '/data/dirR4';
+create table Sdata (x int) location '/data/DirS/';
+
+create table outtable (x1 int, x2 int, x3 int, x4 int)
+row format delimited fields terminated by ','
+location '/output/hive4a';
+
+create view conj1 as
+select r.x1, r.x2, r.x3, r.x4 from Rdata4 r left outer join Sdata s
+on r.x1 = s.x
+where s.x IS null;
+
+create view conj2 as
+select r.x1, r.x2, r.x3, r.x4 from conj1 r left outer join Sdata s
+on r.x2 = s.x
+where s.x IS null;
+
+create view conj3 as
+select r.x1, r.x2, r.x3, r.x4 from conj2 r left outer join Sdata s
+on r.x3 = s.x
+where s.x IS null;
+
+insert overwrite table outtable
+select r.x1, r.x2, r.x3, r.x4 from conj3 r left outer join Sdata s
+on r.x4 = s.x
+where s.x IS null;
+
+
+

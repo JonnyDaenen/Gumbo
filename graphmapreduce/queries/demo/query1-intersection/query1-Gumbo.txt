@@ -1,0 +1,9 @@
+Comment on query:
+On a database R (of arity 4) and S (of arity 1),
+the query Out1(w,x,y,z) collects all the R-tuple (w,x,y,z) where
+none of w,x,y,z are in S.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Out1(w,x,y,z) : R(w,x,y,z) & (!S(w) & !S(x) & !S(y) & !S(z)); 
