@@ -1,0 +1,47 @@
+
+
+
+
+E = load '/data/Edges' using PigStorage(',') as (x,y);
+R = load '/data/dirR' using PigStorage(',') as (x);
+G = load '/data/dirG' using PigStorage(',') as (x);
+B = load '/data/dirB' using PigStorage(',') as (x);
+
+ERx = cogroup E by x, R by x;
+ERxp = foreach ERx generate flatten(E), (IsEmpty(R)? null : 0) as SERx;
+
+ERy = cogroup E by y, R by x;
+ERyp = foreach ERy generate flatten(E), (IsEmpty(R)? null : 0) as SERy;
+
+EGx = cogroup E by x, G by x;
+EGxp = foreach EGx generate flatten(E), (IsEmpty(G)? null : 0) as SEGx;
+
+EGy = cogroup E by y, G by x;
+EGyp = foreach EGy generate flatten(E), (IsEmpty(G)? null : 0) as SEGy;
+
+EBx = cogroup E by x, B by x;
+EBxp = foreach EBx generate flatten(E), (IsEmpty(B)? null : 0) as SEBx;
+
+EBy = cogroup E by y, B by x;
+EByp = foreach EBy generate flatten(E), (IsEmpty(B)? null : 0) as SEBy;
+
+
+X = cogroup ERxp by (x,y), ERyp by (x,y), 
+            EGxp by (x,y), EGyp by (x,y), 
+            EBxp by (x,y), EByp by (x,y);
+            
+Y = foreach X generate group,
+              flatten(ERxp.SERx),flatten(ERyp.SERy),
+              flatten(EGxp.SEGx),flatten(EGyp.SEGy),
+              flatten(EBxp.SEBx),flatten(EByp.SEBy);              
+              
+Z = filter Y by (
+                (SERx is not null AND SERy is not null) OR
+                (SEBx is not null AND SEBy is not null) OR
+                (SEGx is not null AND SEGy is not null) OR
+                );
+
+Store Z into '/output/query3-pig';
+
+
+

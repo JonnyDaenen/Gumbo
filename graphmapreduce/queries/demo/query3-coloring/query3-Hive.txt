@@ -1,0 +1,85 @@
+
+
+create table E (x int, y int)
+row format delimited fields terminated by ','
+location '/data/Edges';
+create table R (x int) location '/data/DirR/';
+create table G (x int) location '/data/DirG/';
+create table B (x int) location '/data/DirB/';
+
+create table outtable (x int, y int)
+row format delimited fields terminated by ','
+location '/output/query3-hive';
+
+ERx = cogroup E by x, R by x;
+ERxp = foreach ERx generate flatten(E), (IsEmpty(R)? null : 0) as SERx;
+
+ERy = cogroup E by y, R by x;
+ERyp = foreach ERy generate flatten(E), (IsEmpty(R)? null : 0) as SERy;
+
+EGx = cogroup E by x, G by x;
+EGxp = foreach EGx generate flatten(E), (IsEmpty(G)? null : 0) as SEGx;
+
+EGy = cogroup E by y, G by x;
+EGyp = foreach EGy generate flatten(E), (IsEmpty(G)? null : 0) as SEGy;
+
+EBx = cogroup E by x, B by x;
+EBxp = foreach EBx generate flatten(E), (IsEmpty(B)? null : 0) as SEBx;
+
+EBy = cogroup E by y, B by x;
+EByp = foreach EBy generate flatten(E), (IsEmpty(B)? null : 0) as SEBy;
+
+
+create view ERxp as
+select x, y, case when rvertex.x IS null then false else true as SERx
+from E edge left outer join R rvertex
+on edge.x = rvertex.x;
+
+create view ERyp as
+select x, y, case when rvertex.x IS null then false else true as SERy
+from E edge left outer join R rvertex
+on edge.y = rvertex.x;
+
+create view EGxp as
+select x, y, case when gvertex.x IS null then false else true as SEGx
+from E edge left outer join G gvertex
+on edge.x = gvertex.x;
+
+create view EGyp as
+select x, y, case when gvertex.x IS null then false else true as SEGy
+from E edge left outer join G gvertex
+on edge.y = gvertex.x;
+
+create view EBxp as
+select x, y, case when bvertex.x IS null then false else true as SEBx
+from E edge left outer join B bvertex
+on edge.x = bvertex.x;
+
+create view EByp as
+select x, y, case when bvertex.x IS null then false else true as SEBy
+from E edge left outer join B bvertex
+on edge.y = bvertex.x;
+
+
+insert overwrite table outtable
+select ERxp.x, ERxp.y
+from ERxp
+left outer join ERyp
+on (ERxp.x = ERyp.x and ERxp.y = ERyp.y) 
+left outer join EGxp
+on (ERxp.x = EGxp.x and ERxp.y = EGxp.y) 
+left outer join EGyp
+on (ERxp.x = EGyp.x and ERxp.y = EGyp.y) 
+left outer join EBxp
+on (ERxp.x = EBxp.x and ERxp.y = EBxp.y) 
+left outer join EByp
+on (ERxp.x = EByp.x and ERxp.y = EByp.y) 
+where ((SERx = true and SERy = true) or
+       (SEGx = true and SEGy = true) or
+       (SEBx = true and SEBy = true) or
+       );
+
+
+
+
+
