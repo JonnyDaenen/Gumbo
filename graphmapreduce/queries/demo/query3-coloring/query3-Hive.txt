@@ -11,24 +11,6 @@ create table outtable (x int, y int)
 row format delimited fields terminated by ','
 location '/output/query3-hive';
 
-ERx = cogroup E by x, R by x;
-ERxp = foreach ERx generate flatten(E), (IsEmpty(R)? null : 0) as SERx;
-
-ERy = cogroup E by y, R by x;
-ERyp = foreach ERy generate flatten(E), (IsEmpty(R)? null : 0) as SERy;
-
-EGx = cogroup E by x, G by x;
-EGxp = foreach EGx generate flatten(E), (IsEmpty(G)? null : 0) as SEGx;
-
-EGy = cogroup E by y, G by x;
-EGyp = foreach EGy generate flatten(E), (IsEmpty(G)? null : 0) as SEGy;
-
-EBx = cogroup E by x, B by x;
-EBxp = foreach EBx generate flatten(E), (IsEmpty(B)? null : 0) as SEBx;
-
-EBy = cogroup E by y, B by x;
-EByp = foreach EBy generate flatten(E), (IsEmpty(B)? null : 0) as SEBy;
-
 
 create view ERxp as
 select x, y, case when rvertex.x IS null then false else true as SERx

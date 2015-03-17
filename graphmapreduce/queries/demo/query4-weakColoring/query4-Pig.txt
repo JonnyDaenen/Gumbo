@@ -100,7 +100,7 @@ Z = filter RB1 by (SERBx is null AND
 
 Zout = for each Z generate x;
                    
-                   
+Store Zout into '/output/query4-pig';          
                    
                    
                    
