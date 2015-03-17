@@ -4,6 +4,7 @@ import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.filemapper.RelationFileMappingException;
 import gumbo.engine.hadoop.HadoopEngine;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.gui.gumbogui.*;
 import gumbo.input.GumboQuery;
 import gumbo.structures.data.RelationSchema;
@@ -31,9 +32,15 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 
-public class GumboMain extends JFrame {
+public class GumboMain extends Configured implements Tool {
 	
 	/* Eclipse tells me that this program does not have serialVersionUID
 	 * So I ask Eclipse to generate one.
@@ -73,15 +80,21 @@ public class GumboMain extends JFrame {
 
 	HadoopEngine hadoopEngine;
 	
+	public static void main(String[] args) throws Exception {
+
+		mainGumbo();
+		
+	}
 
 
-	public static void main(String[] args) {
+	public static void mainGumbo() throws Exception {
 		
 		editorIQ = new JEditorPane();
 		editorIQ.setEditable(true);
 		editorIQ.setFont(new Font("Courier New",0,19));
 		
-		editorIQ.setText("Out1(x) : E(x,y) & (!F(y) & G(x,z)); \n"
+		editorIQ.setText("Out0(x) : G(x,z); \n"
+				+ "Out1(x) : E(x,y) & (!F(y) & Out0(x)); \n"
 				+ "Out2(x) : E(x,y) & !Out1(y); \n"
 				+ "Out3(x) : E(x,y) & (Out1(y) & !Out2(x)); \n"
 				+ "Out4(x,y) : E(x,y) & (!Out1(x));");
@@ -164,6 +177,12 @@ public class GumboMain extends JFrame {
 				
 				textConsole.setText("");
 				textConsole.append("Evaluating the input query with Hadoop....\n");
+				
+				Configuration conf = getConf(); 
+				
+				HadoopExecutorSettings settings = new HadoopExecutorSettings(conf);
+				settings.loadDefaults();
+				settings.turnOffOptimizations();
 				
 			}
 		});
@@ -284,7 +303,13 @@ public class GumboMain extends JFrame {
 	       	}
 	    });
 		
-		
+	}
+
+
+	@Override
+	public int run(String[] args) throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 
