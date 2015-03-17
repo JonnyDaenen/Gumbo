@@ -3,6 +3,7 @@
  */
 package tests;
 
+import java.util.Arrays;
 import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
@@ -90,6 +91,7 @@ public class GraphVizTester extends Configured implements Tool {
 		
 		GraphViz gv = new GraphViz();
 
+//		System.out.println(Arrays.toString(gv.getGraph( dotcode, "png" )));
 	    gv.writeGraphToFile( gv.getGraph( dotcode, "png" ), "debug/query.png" );
 
 		return 0;

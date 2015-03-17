@@ -194,7 +194,10 @@ public class GraphViz
 			FileOutputStream fos = new FileOutputStream(to);
 			fos.write(img);
 			fos.close();
-		} catch (java.io.IOException ioe) { return -1; }
+//			System.out.println("file written");
+		} catch (java.io.IOException ioe) { 
+			ioe.printStackTrace();
+			return -1; }
 		return 1;
 	}
 
