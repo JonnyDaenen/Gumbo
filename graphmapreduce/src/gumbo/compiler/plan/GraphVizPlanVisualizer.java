@@ -3,6 +3,7 @@
  */
 package gumbo.compiler.plan;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -196,6 +197,17 @@ public class GraphVizPlanVisualizer implements PlanVisualizer {
 	
 	public void setDetailsOn(boolean detailsOn) {
 		this.detailsOn = detailsOn;
+	}
+
+	/**
+	 * @param plan
+	 * @param string
+	 */
+	public void savePlan(GumboPlan plan, String file) {
+		String dotCode = visualize(plan);
+		GraphViz gv = new GraphViz();
+		File f = new File(file);
+		gv.writeGraphToFile(gv.getGraph(dotCode, "png"), f);
 	}
 
 }

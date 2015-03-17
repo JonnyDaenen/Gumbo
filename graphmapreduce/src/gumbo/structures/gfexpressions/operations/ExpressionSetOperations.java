@@ -358,8 +358,8 @@ public class ExpressionSetOperations implements Externalizable {
 	public Set<Path> getGuardPaths() {
 		HashSet<Path> result = new HashSet<Path>();
 
-		for (GFAtomicExpression guarded : getGuardsAll()) {
-			Set<Path> paths = fileMapping.getPaths(guarded.getRelationSchema());
+		for (GFAtomicExpression guard : getGuardsAll()) {
+			Set<Path> paths = fileMapping.getPaths(guard.getRelationSchema());
 			result.addAll(paths);
 		}
 

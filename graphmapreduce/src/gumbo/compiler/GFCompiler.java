@@ -81,7 +81,7 @@ public class GFCompiler {
 			String timeStamp = "/"+new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 			LOG.info("Adding suffix to scratch and output paths: "+ timeStamp);
 			query.setOutput(query.getOutput().suffix(timeStamp));
-			query.setScratch(query.getOutput().suffix(timeStamp));
+			query.setScratch(query.getScratch().suffix(timeStamp));
 			
 			// decompose expressions into basic ones
 			LOG.info("Decomposing GFEs into basic GFEs (BGFEs)...");
@@ -98,18 +98,18 @@ public class GFCompiler {
 			// CULinker 
 			LOG.info("Linking Calculation Units (CUs)...");
 			CalculationUnitGroup dag = linker.createDAG(cus);
-			LOG.info("Input relations: " + dag.size());
-			LOG.info("Output relations: " + dag.size());
-			LOG.info("Intermediate relations: " + dag.size());
+//			LOG.info("Input relations: " + dag.size());
+//			LOG.info("Output relations: " + dag.size());
+//			LOG.info("Intermediate relations: " + dag.size());
 			LOG.debug(dag);
 
 			// intitial file mappings 
 			LOG.info("Creating initial file mapping...");
 			FileManager fm = filemapper.createFileMapping(query.getInputs(), query.getOutput(), query.getScratch(), dag);
-			LOG.info("Input files: " + fm);
-			LOG.info("Output files: " + fm);
-			LOG.info("Intermediate files: " + fm);
-			LOG.debug(fm);
+			LOG.info("file mapping:\n" + fm);
+//			LOG.info("Output files: " + fm);
+//			LOG.info("Intermediate files: " + fm);
+//			LOG.debug(fm);
 
 			// partition
 			LOG.info("Partitioning...");

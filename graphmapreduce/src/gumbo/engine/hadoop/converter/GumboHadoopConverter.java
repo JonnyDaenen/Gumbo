@@ -155,6 +155,9 @@ public class GumboHadoopConverter {
 			// extract file mapping where input paths are made specific
 			// TODO also filter out non-related relations
 			RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
+			
+			LOG.info(mapping);
+			
 			// wrapper object for expressions
 			ExpressionSetOperations eso = new ExpressionSetOperations(extractExpressions(cug),mapping); 
 
