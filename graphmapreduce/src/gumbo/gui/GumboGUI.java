@@ -41,7 +41,11 @@ import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 import org.apache.commons.configuration.DefaultConfigurationBuilder.ConfigurationDeclaration;
 import org.apache.commons.logging.Log;
@@ -101,19 +105,20 @@ public class GumboGUI extends Configured implements Tool {
 	}
 
 
-	private void setup() {
+	private void createAndShowGUI() {
 
 		// query input
 		inputEditor = new JEditorPane();
 		inputEditor.setEditable(true);
-//		inputEditor.setFont(new Font("Courier New",0,14));
+		//		inputEditor.setFont(new Font("Courier New",0,14));
 		inputEditor.setFont(new Font("monospaced", Font.PLAIN, 14));
+
 
 
 		// input paths
 		inputPathsText = new JEditorPane();
 		inputPathsText.setEditable(true);
-//		inputPathsText.setFont(new Font("Courier New",0,14));	
+		//		inputPathsText.setFont(new Font("Courier New",0,14));	
 		inputPathsText.setFont(new Font("monospaced", Font.PLAIN, 14));
 
 		// output path
@@ -159,8 +164,13 @@ public class GumboGUI extends Configured implements Tool {
 		PanelBA panelBA = new PanelBA(panelB, panelA);
 		PanelDC panelDC = new PanelDC(panelD, panelC,panelCs);
 		PanelDCBA panelDCBA = new PanelDCBA(panelDC, panelBA);
+		
+		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.addTab("Query", panelDCBA);
+		tabbedPane.addTab("Plan", new JPanel());
+		tabbedPane.addTab("Metrics", new JPanel());
 
-		GumboMainFrame mainwindow = new GumboMainFrame(panelDCBA);
+		GumboMainFrame mainwindow = new GumboMainFrame(tabbedPane);
 
 
 		// add actions
@@ -285,120 +295,146 @@ public class GumboGUI extends Configured implements Tool {
 
 			public void actionPerformed(ActionEvent e) {
 
-				try {
-					// TODO why not write to stdout?
-					textConsole.setText("");      	
+				disableButtons();
+				// TODO why not write to stdout?
+				textConsole.setText("");   
 
-					Set<GFExpression> inputQuery = new HashSet<>();
-					Path output;
-					Path scratch;
-					RelationFileMapping inputs = new RelationFileMapping();
+				SwingWorker worker = new SwingWorker<Integer,Void>() {
 
-					String sout = outPathText.getText();
-					if (sout.length() == 0) {
-						throw new Exception("The output directory is empty");
-					} else {
-						textConsole.append("The output directory is:" + sout);
-						textConsole.append("\n");
-						output = new Path(sout);
-					}
+					@Override
+					protected Integer doInBackground() throws Exception {
 
-					String sscratch = scratchPathText.getText();
-					if (sscratch.length() == 0) {
-						throw new Exception("The scratch directory is empty");
-					} else {
-						textConsole.append("The scratch directory is:" + sscratch);
-						textConsole.append("\n");
-						scratch = new Path(sscratch);
-					}
+						try {
+							Set<GFExpression> inputQuery = new HashSet<>();
+							Path output;
+							Path scratch;
+							RelationFileMapping inputs = new RelationFileMapping();
 
+							String sout = outPathText.getText();
+							if (sout.length() == 0) {
+								throw new Exception("The output directory is empty");
+							} else {
+								textConsole.append("The output directory is:" + sout);
+								textConsole.append("\n");
+								output = new Path(sout);
+							}
 
-					textConsole.append("Compiling the input queries...\n");
-
-					//System.out.println("Testing, testing !!!!");
-
-					GFInfixSerializer parser = new GFInfixSerializer();
-
-
-					inputQuery = parser.GetGFExpression(inputEditor.getText().trim());
+							String sscratch = scratchPathText.getText();
+							if (sscratch.length() == 0) {
+								throw new Exception("The scratch directory is empty");
+							} else {
+								textConsole.append("The scratch directory is:" + sscratch);
+								textConsole.append("\n");
+								scratch = new Path(sscratch);
+							}
 
 
-					//textConsole.setText("");
-					textConsole.append("The following queries compiled:\n");
+							textConsole.append("Compiling the input queries...\n");
 
-					for (GFExpression gf : inputQuery) {
-						textConsole.append(gf.toString()+"\n");
+							//System.out.println("Testing, testing !!!!");
 
-					}
+							GFInfixSerializer parser = new GFInfixSerializer();
 
 
+							inputQuery = parser.GetGFExpression(inputEditor.getText().trim());
 
-					textConsole.append("Parsing the input directories...\n");
+
+							//textConsole.setText("");
+							textConsole.append("The following queries compiled:\n");
+
+							for (GFExpression gf : inputQuery) {
+								textConsole.append(gf.toString()+"\n");
+
+							}
 
 
-					String s = inputPathsText.getText().trim();
-					String [] sin = s.split(";");
 
-					String [] dummy;
-					for(int i = 0; i< sin.length; i++){
-						System.out.println("part:" + sin[i]);
+							textConsole.append("Parsing the input directories...\n");
 
-						dummy = sin[i].split("-");
-						if (dummy.length != 2)
-							throw new Exception("Error in line "+i+" in INPUT DIRECTORIES\nExpecting <Relation>,<Arity> - <Path>,<Type>" );
 
-						// schema 
-						String[] rsParts = dummy[0].split(",");
-						if (rsParts.length != 2)
-							throw new Exception("Error in line "+i+" in INPUT DIRECTORIES\nExpecting <Relation>,<Arity> - <Path>,<Type>" );
+							String s = inputPathsText.getText().trim();
+							String [] sin = s.split(";");
 
-						// path
-						String[] paths = dummy[1].split(",");
-						if (paths.length != 2)
-							throw new Exception("Error in line "+i+" in INPUT DIRECTORIES\nExpecting <Relation>,<Arity> - <Path>,<Type>" );
+							String [] dummy;
+							for(int i = 0; i< sin.length; i++){
+								System.out.println("part:" + sin[i]);
 
-						// type
-						InputFormat type = InputFormat.REL;
-						if (paths[1].trim().toLowerCase().equals("csv")) {
-							type = InputFormat.CSV;
+								dummy = sin[i].split("-");
+								if (dummy.length != 2)
+									throw new Exception("Error in line "+i+" in INPUT DIRECTORIES\nExpecting <Relation>,<Arity> - <Path>,<Type>" );
+
+								// schema 
+								String[] rsParts = dummy[0].split(",");
+								if (rsParts.length != 2)
+									throw new Exception("Error in line "+i+" in INPUT DIRECTORIES\nExpecting <Relation>,<Arity> - <Path>,<Type>" );
+
+								// path
+								String[] paths = dummy[1].split(",");
+								if (paths.length != 2)
+									throw new Exception("Error in line "+i+" in INPUT DIRECTORIES\nExpecting <Relation>,<Arity> - <Path>,<Type>" );
+
+								// type
+								InputFormat type = InputFormat.REL;
+								if (paths[1].trim().toLowerCase().equals("csv")) {
+									type = InputFormat.CSV;
+								}
+
+								inputs.addPath(new RelationSchema(rsParts[0].trim(),Integer.parseInt(rsParts[1].trim())), new Path(paths[0].trim()), type);
+
+							}
+
+							gumboQuery = new GumboQuery("Gumbo query",inputQuery, inputs, output,scratch); // TODO add date to name
+
+							// create plan
+							GFCompiler compiler = new GFCompiler();
+							plan = compiler.createPlan(gumboQuery);
+							System.out.println(plan);
+
+							// visualize plan
+							GraphVizPlanVisualizer visualizer = new GraphVizPlanVisualizer();
+							visualizer.savePlan(plan, "output/query.png");
+
+							// update plan tab
+
+						} catch (Exception e1) {
+							System.out.println(e1.getMessage());
+							e1.printStackTrace();
+						} finally {
+
+
 						}
 
-						inputs.addPath(new RelationSchema(rsParts[0].trim(),Integer.parseInt(rsParts[1].trim())), new Path(paths[0].trim()), type);
-
+						Thread.sleep(10000);
+						return 0;
 					}
 
+					/* (non-Javadoc)
+					 * @see javax.swing.SwingWorker#done()
+					 */
+					@Override
+					protected void done() {
+						super.done();
+						enableButtons();
+					}
 
+				};
 
-
-					gumboQuery = new GumboQuery("Gumbo query",inputQuery, inputs, output,scratch); // TODO add date to name
-
-
-
-
-					// create plan
-					GFCompiler compiler = new GFCompiler();
-					plan = compiler.createPlan(gumboQuery);
-					System.out.println(plan);
-
-					// visualize plan
-					GraphVizPlanVisualizer visualizer = new GraphVizPlanVisualizer();
-					visualizer.savePlan(plan, "output/query.png");
-
-					// update plan tab
-
-
-				} catch (Exception e1) {
-					System.out.println(e1.getMessage());
-					e1.printStackTrace();
-				}
-
-
-
-
-
+				worker.execute();
 			}
 		});
 
+	}
+
+	public void enableButtons() {
+		buttonQC.setEnabled(true);
+		buttonFH.setEnabled(true);
+		buttonFS.setEnabled(true);
+	}
+
+	public void disableButtons() {
+		buttonQC.setEnabled(false);
+		buttonFH.setEnabled(false);
+		buttonFS.setEnabled(false);
 	}
 
 
@@ -417,7 +453,11 @@ public class GumboGUI extends Configured implements Tool {
 	 */
 	@Override
 	public int run(String[] args) throws Exception {
-		setup();
+		SwingUtilities.invokeLater(new Runnable() {
+		    public void run() {
+				createAndShowGUI();
+		    }
+		});
 		return 0;
 	}
 
