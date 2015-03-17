@@ -20,6 +20,7 @@ import gumbo.gui.gumbogui.PanelC;
 import gumbo.gui.gumbogui.PanelD;
 import gumbo.gui.gumbogui.PanelDC;
 import gumbo.gui.gumbogui.PanelDCBA;
+import gumbo.gui.gumbogui.PlanViewer;
 import gumbo.input.GumboQuery;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExpression;
@@ -46,6 +47,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.commons.configuration.DefaultConfigurationBuilder.ConfigurationDeclaration;
 import org.apache.commons.logging.Log;
@@ -98,6 +101,8 @@ public class GumboGUI extends Configured implements Tool {
 
 
 	private GumboPlan plan;
+
+	private PlanViewer planView;
 
 
 
@@ -165,9 +170,11 @@ public class GumboGUI extends Configured implements Tool {
 		PanelDC panelDC = new PanelDC(panelD, panelC,panelCs);
 		PanelDCBA panelDCBA = new PanelDCBA(panelDC, panelBA);
 		
+		planView = new PlanViewer();
+		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Query", panelDCBA);
-		tabbedPane.addTab("Plan", new JPanel());
+		tabbedPane.addTab("Plan", planView);
 		tabbedPane.addTab("Metrics", new JPanel());
 
 		GumboMainFrame mainwindow = new GumboMainFrame(tabbedPane);
@@ -404,7 +411,7 @@ public class GumboGUI extends Configured implements Tool {
 
 						}
 
-						Thread.sleep(10000);
+//						Thread.sleep(10000);
 						return 0;
 					}
 
@@ -414,6 +421,7 @@ public class GumboGUI extends Configured implements Tool {
 					@Override
 					protected void done() {
 						super.done();
+						planView.reloadImage();
 						enableButtons();
 					}
 
@@ -453,6 +461,14 @@ public class GumboGUI extends Configured implements Tool {
 	 */
 	@Override
 	public int run(String[] args) throws Exception {
+		try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException classNotFoundException) {
+        } catch (InstantiationException instantiationException) {
+        } catch (IllegalAccessException illegalAccessException) {
+        } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
+        }
+
 		SwingUtilities.invokeLater(new Runnable() {
 		    public void run() {
 				createAndShowGUI();
