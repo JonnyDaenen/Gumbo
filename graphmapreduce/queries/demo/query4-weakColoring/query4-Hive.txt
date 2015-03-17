@@ -81,10 +81,6 @@ on (EGxp.x = ERyp.x and EGxp.y = ERyp.y)
 where (SEGx = true and SERy = true);
 
 
-Out4(x) : E(x,y) & (!RB(x) & !RG(x) & 
-                    !BR(x) & !BG(x) &
-                    !GB(x) & !GR(x)
-                   );
                    
 create view ERB as
 select x, y, case when vertex.x IS null then false else true as SERBx
@@ -122,20 +118,14 @@ select ERB.x
 from ERB 
 left outer join ERG
 on (ERB.x = ERG.x and ERB.y = ERG.y) 
-
 left outer join EBG
 on (ERB.x = EBG.x and ERB.y = EBG.y) 
-
 left outer join EBR
 on (ERB.x = EBR.x and ERB.y = EBR.y) 
-
 left outer join EGR
 on (ERB.x = EGR.x and ERB.y = EGR.y) 
-
 left outer join EGB
 on (ERB.x = EGB.x and ERB.y = EGB.y) 
-
-
 where (SERGx = false and SERBx = false and
        SEGBx = false and SEGRx = false and
        SEBGx = false and SEBRx = false and

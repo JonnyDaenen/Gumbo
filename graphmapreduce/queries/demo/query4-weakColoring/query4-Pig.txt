@@ -33,7 +33,7 @@ EByp = foreach EBy generate flatten(E), (IsEmpty(B)? null : 0) as SEBy;
 RB0 = cogroup ERxp by (x,y), EByp by (x,y); 
 RB1 = foreach RB0 generate group, flatten(ERxp.SERx),flatten(EByp.SEBy);              
 RB2 = filter RB1 by (SERx is not null AND SEBy is not null); 
-RB = for each RB2 generate x;
+RB = foreach RB2 generate x;
 
 RG0 = cogroup ERxp by (x,y), EGyp by (x,y); 
 RG1 = foreach RG0 generate group, flatten(ERxp.SERx),flatten(EGyp.SEGy);              
