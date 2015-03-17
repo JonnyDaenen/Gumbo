@@ -106,13 +106,15 @@ public class GumboGUI extends Configured implements Tool {
 		// query input
 		inputEditor = new JEditorPane();
 		inputEditor.setEditable(true);
-		inputEditor.setFont(new Font("Courier New",0,14));
+//		inputEditor.setFont(new Font("Courier New",0,14));
+		inputEditor.setFont(new Font("monospaced", Font.PLAIN, 14));
 
 
 		// input paths
 		inputPathsText = new JEditorPane();
 		inputPathsText.setEditable(true);
-		inputPathsText.setFont(new Font("Courier New",0,14));	
+//		inputPathsText.setFont(new Font("Courier New",0,14));	
+		inputPathsText.setFont(new Font("monospaced", Font.PLAIN, 14));
 
 		// output path
 		//		outPathChooser = new JFileChooser();
