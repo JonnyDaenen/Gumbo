@@ -1,14 +1,14 @@
-Definition: 
-On input graph G=(V,E), 
-a coloring c: V -> {R,G,B} is a weak coloring, if
-for every vertex u with out-degree > 0, 
-there is an edge (u,v) such that c(v) != c(u).
+%Definition: 
+%On input graph G=(V,E), 
+%a coloring c: V -> {R,G,B} is a weak coloring, if
+%for every vertex u with out-degree > 0, 
+%there is an edge (u,v) such that c(v) != c(u).
 
-Comment on query:
-On a database E,R,G,B,
-where E is a set of edges, R,G,B are sets of vertices denoting the coloring of the vertices,
-the query Out4(x) collects all the vertices x that witness the fact that
-{R,G,B} is not a weak coloring.
+%Comment on query:
+%On a database E,R,G,B,
+%where E is a set of edges, R,G,B are sets of vertices denoting the coloring of the vertices,
+%the query Out4(x) collects all the vertices x that witness the fact that
+%{R,G,B} is not a weak coloring.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 

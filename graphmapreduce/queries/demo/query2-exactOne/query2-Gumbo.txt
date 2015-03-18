@@ -1,7 +1,7 @@
-Comment on query:
-On a database R (of arity 4) and S (of arity 1),
-the query Out2(w,x,y,z) collects all the R-tuple (w,x,y,z) where
-exactly one of w,x,y,z is in S.
+%Comment on query:
+%On a database R (of arity 4) and S (of arity 1),
+%the query Out2(w,x,y,z) collects all the R-tuple (w,x,y,z) where
+%exactly one of w,x,y,z is in S.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
