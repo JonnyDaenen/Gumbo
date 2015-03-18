@@ -159,11 +159,13 @@ public class GumboGUI extends Configured implements Tool {
 		// console
 		textConsole = new JTextArea();
 		textConsole.setEditable(false);
-		textConsole.setFont(new Font("Courier New",1,12));
-
+		textConsole.setFont(new Font("monospaced",Font.PLAIN,12));
+		
 		// TODO check output redirection?
 		outPipe = new JTextAreaOutputStream(textConsole);
 		System.setOut (new PrintStream (outPipe));
+
+		
 
 		// buttons
 		buttonQC = new JButton("Query Compiler");		
@@ -242,6 +244,7 @@ public class GumboGUI extends Configured implements Tool {
 
 		System.out.println("Ready for action!");
 		LOG.info("ready for action");
+		
 
 	}
 
