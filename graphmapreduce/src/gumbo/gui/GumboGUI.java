@@ -51,6 +51,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
@@ -79,17 +80,18 @@ public class GumboGUI extends Configured implements Tool {
 	// defaults
 	private String defaultOutPath = "/users/jonny/output";
 	private String defaultScratchPath = "/users/jonny/scratch";
-	
+
 
 	String[] partitioners = { "Unit", "Optimal", "Height", "Depth" };
 
 	// GUI variables
 	JComboBox<String> partitionerList;
 	JComboBox<String> demoList;
-	
+
 	private JEditorPane inputEditor;
 
 	private JEditorPane inputPathsText;
+	private JEditorPane metricsText;
 
 	private TextField outPathText;
 	private JButton defaultOutPathButton;
@@ -122,10 +124,10 @@ public class GumboGUI extends Configured implements Tool {
 
 
 	private void createAndShowGUI() {
-		
+
 		// create demo list
 		createDemoList();
-		
+
 		// query input
 		inputEditor = new JEditorPane();
 		inputEditor.setEditable(true);
@@ -169,17 +171,18 @@ public class GumboGUI extends Configured implements Tool {
 		buttonFH = new JButton("GUMBO-Hadoop");
 		buttonFS = new JButton("GUMBO-Spark");
 		cbLevel = new JCheckBox("with schedule");
-		
+
 		disableExecuteButtons();
-		
+
 		// compiler options
 		partitionerList = new JComboBox(partitioners);
 		partitionerList.setSelectedIndex(0);
-		
+
 		// TODO add plan details option
-		
+
 		// execution options
 		// FUTURE add
+		
 
 
 		// add demo data
@@ -194,13 +197,28 @@ public class GumboGUI extends Configured implements Tool {
 		PanelBA panelBA = new PanelBA(panelB, panelA);
 		PanelDC panelDC = new PanelDC(panelD, panelC,panelCs);
 		PanelDCBA panelDCBA = new PanelDCBA(panelDC, panelBA);
+
 		
+		// plan
 		planView = new PlanViewer();
+
+		// metrics
+		metricsText = new JEditorPane();
+		metricsText.setEditable(false);
+		//Put the editor pane in a scroll pane.
+		JScrollPane editorScrollPane = new JScrollPane(metricsText);
+		editorScrollPane.setVerticalScrollBarPolicy(
+		                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+//		editorScrollPane.setPreferredSize(new Dimension(250, 145));
+		editorScrollPane.setMinimumSize(new Dimension(10, 10));
 		
+		resetMetrics();
+		
+		// tabs for different panels
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Query", panelDCBA);
 		tabbedPane.addTab("Plan", planView);
-		tabbedPane.addTab("Metrics", new JPanel());
+		tabbedPane.addTab("Metrics", editorScrollPane);
 
 		GumboMainFrame mainwindow = new GumboMainFrame(tabbedPane);
 
@@ -228,6 +246,13 @@ public class GumboGUI extends Configured implements Tool {
 	}
 
 
+
+	private void resetMetrics() {
+		updateMetrics("Run a query to view the metrics...");
+		
+	}
+
+
 	/**
 	 * 
 	 */
@@ -250,44 +275,44 @@ public class GumboGUI extends Configured implements Tool {
 
 
 	private void addActions() {
-		
+
 		/* set partitioner */
 
 		partitionerList.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 			}
-			
+
 		});
-		
+
 		/* load demo files */
 		demoList.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String dir = (String) demoList.getSelectedItem();
 				File demodir = new File("./queries/demo/"+dir);
-				
+
 				for (File fileEntry : demodir.listFiles()) {
-			        if (fileEntry.isFile()) {
-			        	
-			        	// load query
-			        	if (fileEntry.getName().endsWith("-Gumbo.txt")) {
-			        		inputEditor.setText(loadFile(fileEntry));
-			        	}
+					if (fileEntry.isFile()) {
+
+						// load query
+						if (fileEntry.getName().endsWith("-Gumbo.txt")) {
+							inputEditor.setText(loadFile(fileEntry));
+						}
 
 						// load input
-			        	if (fileEntry.getName().endsWith("-Dir.txt")) {
-			        		inputPathsText.setText(loadFile(fileEntry));
-			        	}
-			        }
-			    }
-				
-				
-				
-				
+						if (fileEntry.getName().endsWith("-Dir.txt")) {
+							inputPathsText.setText(loadFile(fileEntry));
+						}
+					}
+				}
+
+
+
+
 			}
 		});
 
@@ -332,21 +357,52 @@ public class GumboGUI extends Configured implements Tool {
 
 				textConsole.setText("");
 				textConsole.append("Evaluating the input query with Hadoop....\n");
-				// TODO run hadoop
 
-				HadoopEngine engine = new HadoopEngine();
-				try {
-					disableButtons();
-					// TODO add defaults to config
-					// TODO recompile plan
-					engine.executePlan(plan,getConf());
-				} catch (ExecutionException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} 
-				finally {
-					enableCompilerButton();
-				}
+				SwingWorker<Integer, Void> worker = new SwingWorker<Integer,Void>() {
+
+					@Override
+					protected Integer doInBackground() throws Exception {
+
+
+						HadoopEngine engine = new HadoopEngine();
+						try {
+							// TODO add defaults to config
+							// TODO recompile plan?
+							engine.executePlan(plan,getConf());
+							final String stats = engine.getCounters();
+
+							SwingUtilities.invokeAndWait(new Runnable() {
+
+								@Override
+								public void run() {
+									updateMetrics(stats);
+								}
+
+							});
+
+						} catch (ExecutionException e1) {
+							updateMetrics("No metrics available; reason: last execution failed.");
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} 
+						return 0;
+					}
+
+
+					@Override
+					protected void done() {
+						super.done();
+
+						// TODO place statistics in textfield
+						enableCompilerButton();
+					}
+
+				};
+
+				disableButtons();
+				worker.execute();
+
+
 
 			}
 		});
@@ -374,6 +430,7 @@ public class GumboGUI extends Configured implements Tool {
 				disableButtons();
 				// TODO why not write to stdout?
 				textConsole.setText("");   
+				resetMetrics();
 
 				SwingWorker worker = new SwingWorker<Integer,Void>() {
 
@@ -433,7 +490,6 @@ public class GumboGUI extends Configured implements Tool {
 
 							String [] dummy;
 							for(int i = 0; i< sin.length; i++){
-								System.out.println("part:" + sin[i]);
 
 								dummy = sin[i].split("-");
 								if (dummy.length != 2)
@@ -464,13 +520,13 @@ public class GumboGUI extends Configured implements Tool {
 							// create plan
 							GFCompiler compiler = new GFCompiler(getPartitioner());
 							plan = compiler.createPlan(gumboQuery);
-//							System.out.println(plan);
+							//							System.out.println(plan);
 
 							// visualize plan
 							GraphVizPlanVisualizer visualizer = new GraphVizPlanVisualizer();
 							visualizer.savePlan(plan, "output/query.png");
 
-							
+
 
 						} catch (Exception e1) {
 							System.out.println(e1.getMessage());
@@ -480,7 +536,7 @@ public class GumboGUI extends Configured implements Tool {
 
 						}
 
-//						Thread.sleep(10000);
+						//						Thread.sleep(10000);
 						return 0;
 					}
 
@@ -504,26 +560,26 @@ public class GumboGUI extends Configured implements Tool {
 		});
 
 	}
-	
+
 	public void createDemoList() {
 		JComboBox<String> demolist = new JComboBox<>();
 		File folder = new File("queries/demo");
 		for (File fileEntry : folder.listFiles()) {
-	        if (fileEntry.isDirectory()) {
-	        	demolist.addItem(fileEntry.getName());
-	        }
-	    }
-		
+			if (fileEntry.isDirectory()) {
+				demolist.addItem(fileEntry.getName());
+			}
+		}
+
 		this.demoList = demolist;
 	}
-	
+
 	public String loadFile(File f) {
 
 		List<String> lines;
 		String output = "";
 		try {
 			lines = Files.readAllLines(f.toPath(),StandardCharsets.UTF_8);
-			
+
 			for (String line : lines) {
 				output += line + System.lineSeparator();
 			}
@@ -539,7 +595,7 @@ public class GumboGUI extends Configured implements Tool {
 		buttonFH.setEnabled(true);
 		buttonFS.setEnabled(true);
 	}
-	
+
 	public void enableCompilerButton() {
 		buttonQC.setEnabled(true);
 	}
@@ -549,7 +605,7 @@ public class GumboGUI extends Configured implements Tool {
 		buttonFH.setEnabled(false);
 		buttonFS.setEnabled(false);
 	}
-	
+
 	public void disableExecuteButtons() {
 		buttonFH.setEnabled(false);
 		buttonFS.setEnabled(false);
@@ -564,10 +620,10 @@ public class GumboGUI extends Configured implements Tool {
 		//		System.exit(res);
 
 	}
-	
+
 	public CalculationPartitioner getPartitioner() {
 		String item = (String) partitionerList.getSelectedItem();
-		
+
 		// CLEAN this tis hardcoded stuff :)
 		switch(item) {
 		case "Unit":
@@ -582,7 +638,10 @@ public class GumboGUI extends Configured implements Tool {
 			return new UnitPartitioner();
 		}
 	}
-	
+
+	public void updateMetrics(String metrics) {
+		metricsText.setText(metrics);
+	}
 
 
 	/* (non-Javadoc)
@@ -591,17 +650,17 @@ public class GumboGUI extends Configured implements Tool {
 	@Override
 	public int run(String[] args) throws Exception {
 		try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException classNotFoundException) {
-        } catch (InstantiationException instantiationException) {
-        } catch (IllegalAccessException illegalAccessException) {
-        } catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
-        }
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException classNotFoundException) {
+		} catch (InstantiationException instantiationException) {
+		} catch (IllegalAccessException illegalAccessException) {
+		} catch (UnsupportedLookAndFeelException unsupportedLookAndFeelException) {
+		}
 
 		SwingUtilities.invokeLater(new Runnable() {
-		    public void run() {
+			public void run() {
 				createAndShowGUI();
-		    }
+			}
 		});
 		return 0;
 	}

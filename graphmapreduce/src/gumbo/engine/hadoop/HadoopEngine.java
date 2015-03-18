@@ -37,6 +37,7 @@ public class HadoopEngine {
 
 	private static final long REFRESH_WAIT = 500; // FUTURE increase to 5000ms
 	private static final Log LOG = LogFactory.getLog(HadoopEngine.class);
+	private String stats;
 
 
 	public HadoopEngine() {
@@ -81,6 +82,7 @@ public class HadoopEngine {
 	private boolean executeJobs(GumboPlan plan, GumboHadoopConverter jobConverter) throws ExecutionException {
 
 		boolean success = false;
+		stats = "";
 		long start = System.nanoTime();
 
 		try {
@@ -157,18 +159,102 @@ public class HadoopEngine {
 			
 
 			System.out.println("Running time: " + (stop-start)/1000000 + "ms");
-			printCounters(jc);
-			printJobDAG(jc);
+			
+			stats = collectCounters(jc);
+//			printCounters(jc);
+//			printJobDAG(jc);
 
 
 			jc.stop();
-		} catch (ConversionException | IOException | InterruptedException e) {
+		} catch (ConversionException  | InterruptedException | IOException e) {
 			LOG.error("Exception during Gumbo plan execution: " + e.getMessage());
 			throw new ExecutionException("Execution failed: " + e.getMessage(), e);
 		}
 
 
 		return success;
+
+	}
+	
+	public String getCounters() {
+		return stats;
+	}
+	
+	private String collectCounters(JobControl jc) throws IOException {
+
+		//		if (jc.getSuccessfulJobList().size() == 0)
+		//			return;
+
+		// initialize overall counters
+		Counters overallCounters = new Counters();
+		StringBuilder sb = new StringBuilder(20000);
+
+		for (ControlledJob job : jc.getSuccessfulJobList()) {
+			sb.append("Counters for job: " + job.getJobName());
+			sb.append(System.lineSeparator());
+			sb.append("--------------------------------------------------------------------------------");
+			sb.append(System.lineSeparator());
+			Counters counters = job.getJob().getCounters();
+
+
+			for (String groupName : counters.getGroupNames()) {
+
+				if (!groupName.contains("."))
+					continue;
+
+				CounterGroup group = counters.getGroup(groupName);
+
+				sb.append(group.getDisplayName());
+				sb.append(System.lineSeparator());
+				sb.append(groupName);
+				sb.append(System.lineSeparator());
+
+				// aggregate counters
+				CounterGroup overallGroup = overallCounters.getGroup(group.getName());
+				//				CounterGroup overallGroup = overallCounters.addGroup(group.getName(), group.getDisplayName());
+
+
+				for (Counter counter : group.getUnderlyingGroup()) {
+
+					sb.append("\t" + counter.getDisplayName() + "=" + counter.getValue());
+					sb.append(System.lineSeparator());
+
+					// aggregate counters
+					Counter overallCounter = overallGroup.findCounter(counter.getName(), true);
+					//					Counter overallCounter = overallGroup.addCounter(counter.getName(), counter.getDisplayName(), 0);
+					overallCounter.increment(counter.getValue());
+
+				}
+
+			}
+
+		}
+
+
+		Counters counters = overallCounters;
+
+
+		sb.append(System.lineSeparator());
+		sb.append("Overall Counters");
+		sb.append(System.lineSeparator());
+		sb.append("--------------------------------------------------------------------------------");
+		sb.append(System.lineSeparator());
+		for (String groupName : counters.getGroupNames()) {
+
+			if (!groupName.contains("org.apache.hadoop.mapreduce"))
+				continue;
+
+			CounterGroup group = counters.getGroup(groupName);
+			sb.append(group.getDisplayName());
+			sb.append(System.lineSeparator());
+
+			for (Counter counter : group.getUnderlyingGroup()) {
+				sb.append("\t" + counter.getDisplayName() + "=" + counter.getValue() );
+				sb.append(System.lineSeparator());
+			}
+		}
+
+		return sb.toString();
 
 	}
 
