@@ -10,13 +10,13 @@ import java.util.Set;
 
 import org.apache.hadoop.fs.Path;
 
-import tests.GraphViz;
 import gumbo.compiler.GumboPlan;
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.structures.data.RelationSchema;
+import gumbo.utils.GraphViz;
 
 /**
  * @author Jonny Daenen

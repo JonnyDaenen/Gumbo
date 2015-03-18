@@ -25,6 +25,7 @@ import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.engine.spark.SparkEngine;
 import gumbo.input.GumboFileParser;
 import gumbo.input.GumboQuery;
+import gumbo.utils.GraphViz;
 
 /**
  * Copy of Gumbo application to test Spark.

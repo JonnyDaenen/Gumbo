@@ -1,4 +1,4 @@
-package tests;
+package gumbo.utils;
 
 // GraphViz.java - a simple API to call dot from Java programs
 

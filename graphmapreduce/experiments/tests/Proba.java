@@ -1,5 +1,7 @@
 package tests;
 
+import gumbo.utils.GraphViz;
+
 import java.io.File;
 
 public class Proba

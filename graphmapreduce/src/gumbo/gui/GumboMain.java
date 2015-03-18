@@ -136,7 +136,7 @@ public class GumboMain extends Configured implements Tool {
 		buttonFS = new JButton("GUMBO-Spark");
 		cbLevel = new JCheckBox("with schedule");
 		
-		PanelD panelD = new PanelD(buttonQC,buttonSche,buttonFH,buttonFS,cbLevel);
+		PanelD panelD = new PanelD(buttonQC,buttonSche,buttonFH,buttonFS,cbLevel,null);
 		
 		PanelBA panelBA = new PanelBA(panelB, panelA);
 		PanelDC panelDC = new PanelDC(panelD, panelC,panelCs);
@@ -178,7 +178,7 @@ public class GumboMain extends Configured implements Tool {
 				textConsole.setText("");
 				textConsole.append("Evaluating the input query with Hadoop....\n");
 				
-				Configuration conf = getConf(); 
+				Configuration conf = null; //getConf(); 
 				
 				HadoopExecutorSettings settings = new HadoopExecutorSettings(conf);
 				settings.loadDefaults();

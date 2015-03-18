@@ -5,6 +5,7 @@ package gumbo.gui.gumbogui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Image;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -21,11 +22,13 @@ public class PlanViewer extends JPanel {
 
 	JScrollPane scrollPane;
 	ImageIcon image;
+	ScrollablePicture pic;
 	
 	public PlanViewer() {
 		super(new BorderLayout());
 		image = new ImageIcon("output/query.png");
-		scrollPane = new JScrollPane(new ScrollablePicture(image,10));
+		pic = new ScrollablePicture(image,10);
+		scrollPane = new JScrollPane(pic);
 		add( scrollPane , BorderLayout.CENTER );
 	}
 
@@ -33,7 +36,17 @@ public class PlanViewer extends JPanel {
 		
 		// flush the file, as it is buffered
 		image.getImage().flush();
+		Image newImage = getToolkit().createImage("output/query.png");
+		image.setImage(newImage);
+//		pic.revalidate();
+//		pic.repaint();
+		
 //		scrollPane.setViewportView(new ScrollablePicture(image,10));
+//		scrollPane.setViewportView(pic);
+//		scrollPane.revalidate();
+//		scrollPane.repaint();
+		
+		revalidate();
 		repaint();
 	}
 	

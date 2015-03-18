@@ -3,12 +3,15 @@
  */
 package gumbo.gui;
 
-import gumbo.Gumbo;
 import gumbo.compiler.GFCompiler;
-import gumbo.compiler.GFCompilerException;
 import gumbo.compiler.GumboPlan;
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.compiler.partitioner.CalculationPartitioner;
+import gumbo.compiler.partitioner.DepthPartitioner;
+import gumbo.compiler.partitioner.HeightPartitioner;
+import gumbo.compiler.partitioner.OptimalPartitioner;
+import gumbo.compiler.partitioner.UnitPartitioner;
 import gumbo.compiler.plan.GraphVizPlanVisualizer;
 import gumbo.engine.ExecutionException;
 import gumbo.engine.hadoop.HadoopEngine;
@@ -32,13 +35,13 @@ import java.awt.TextField;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -50,7 +53,6 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.apache.commons.configuration.DefaultConfigurationBuilder.ConfigurationDeclaration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -58,8 +60,6 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-
-import tests.GraphViz;
 
 /**
  * 
@@ -74,8 +74,13 @@ public class GumboGUI extends Configured implements Tool {
 	// defaults
 	private String defaultOutPath = "/users/jonny/output";
 	private String defaultScratchPath = "/users/jonny/scratch";
+	
+
+	String[] partitioners = { "Unit", "Optimal", "Height", "Depth" };
 
 	// GUI variables
+	JComboBox<String> partitionerList;
+	
 	private JEditorPane inputEditor;
 
 	private JEditorPane inputPathsText;
@@ -111,6 +116,8 @@ public class GumboGUI extends Configured implements Tool {
 
 
 	private void createAndShowGUI() {
+		
+		// query loader
 
 		// query input
 		inputEditor = new JEditorPane();
@@ -155,6 +162,15 @@ public class GumboGUI extends Configured implements Tool {
 		buttonFH = new JButton("GUMBO-Hadoop");
 		buttonFS = new JButton("GUMBO-Spark");
 		cbLevel = new JCheckBox("with schedule");
+		
+		// compiler options
+		partitionerList = new JComboBox(partitioners);
+		partitionerList.setSelectedIndex(1);
+		
+		// TODO add plan details option
+		
+		// execution options
+		// FUTURE add
 
 
 		// add demo data
@@ -165,7 +181,7 @@ public class GumboGUI extends Configured implements Tool {
 		PanelB panelB = new PanelB(inputPathsText,textConsole);
 		PanelC panelC = new PanelC("Output directory: ", outPathText,defaultOutPathButton);
 		PanelC panelCs = new PanelC("Scratch directory: ", scratchPathText,defaultScratchPathButton);
-		PanelD panelD = new PanelD(buttonQC,buttonSche,buttonFH,buttonFS,cbLevel);
+		PanelD panelD = new PanelD(buttonQC,buttonSche,buttonFH,buttonFS,cbLevel, partitionerList);
 		PanelBA panelBA = new PanelBA(panelB, panelA);
 		PanelDC panelDC = new PanelDC(panelD, panelC,panelCs);
 		PanelDCBA panelDCBA = new PanelDCBA(panelDC, panelBA);
@@ -225,6 +241,17 @@ public class GumboGUI extends Configured implements Tool {
 
 
 	private void addActions() {
+		
+		/* set partitioner */
+
+		partitionerList.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+			
+		});
 
 		/* output default */
 		defaultOutPathButton.addActionListener(new ActionListener() {
@@ -271,6 +298,7 @@ public class GumboGUI extends Configured implements Tool {
 
 				HadoopEngine engine = new HadoopEngine();
 				try {
+					disableButtons();
 					// TODO add defaults to config
 					// TODO recompile plan
 					engine.executePlan(plan,getConf());
@@ -278,6 +306,9 @@ public class GumboGUI extends Configured implements Tool {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} 
+				finally {
+					enableCompilerButton();
+				}
 
 			}
 		});
@@ -393,7 +424,7 @@ public class GumboGUI extends Configured implements Tool {
 							gumboQuery = new GumboQuery("Gumbo query",inputQuery, inputs, output,scratch); // TODO add date to name
 
 							// create plan
-							GFCompiler compiler = new GFCompiler();
+							GFCompiler compiler = new GFCompiler(getPartitioner());
 							plan = compiler.createPlan(gumboQuery);
 							System.out.println(plan);
 
@@ -401,7 +432,7 @@ public class GumboGUI extends Configured implements Tool {
 							GraphVizPlanVisualizer visualizer = new GraphVizPlanVisualizer();
 							visualizer.savePlan(plan, "output/query.png");
 
-							// update plan tab
+							
 
 						} catch (Exception e1) {
 							System.out.println(e1.getMessage());
@@ -421,6 +452,7 @@ public class GumboGUI extends Configured implements Tool {
 					@Override
 					protected void done() {
 						super.done();
+						// update plan tab
 						planView.reloadImage();
 						enableButtons();
 					}
@@ -438,9 +470,18 @@ public class GumboGUI extends Configured implements Tool {
 		buttonFH.setEnabled(true);
 		buttonFS.setEnabled(true);
 	}
+	
+	public void enableCompilerButton() {
+		buttonQC.setEnabled(true);
+	}
 
 	public void disableButtons() {
 		buttonQC.setEnabled(false);
+		buttonFH.setEnabled(false);
+		buttonFS.setEnabled(false);
+	}
+	
+	public void disableExecuteButtons() {
 		buttonFH.setEnabled(false);
 		buttonFS.setEnabled(false);
 	}
@@ -454,6 +495,25 @@ public class GumboGUI extends Configured implements Tool {
 		//		System.exit(res);
 
 	}
+	
+	public CalculationPartitioner getPartitioner() {
+		String item = (String) partitionerList.getSelectedItem();
+		
+		// CLEAN this tis hardcoded stuff :)
+		switch(item) {
+		case "Unit":
+			return new UnitPartitioner();
+		case "Optimal":
+			return new OptimalPartitioner();
+		case "Height":
+			return new HeightPartitioner();
+		case "Depth":
+			return new DepthPartitioner();
+		default:
+			return new UnitPartitioner();
+		}
+	}
+	
 
 
 	/* (non-Javadoc)
