@@ -35,8 +35,13 @@ import java.awt.TextField;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.JButton;
@@ -80,6 +85,7 @@ public class GumboGUI extends Configured implements Tool {
 
 	// GUI variables
 	JComboBox<String> partitionerList;
+	JComboBox<String> demoList;
 	
 	private JEditorPane inputEditor;
 
@@ -117,8 +123,9 @@ public class GumboGUI extends Configured implements Tool {
 
 	private void createAndShowGUI() {
 		
-		// query loader
-
+		// create demo list
+		createDemoList();
+		
 		// query input
 		inputEditor = new JEditorPane();
 		inputEditor.setEditable(true);
@@ -181,7 +188,7 @@ public class GumboGUI extends Configured implements Tool {
 		PanelB panelB = new PanelB(inputPathsText,textConsole);
 		PanelC panelC = new PanelC("Output directory: ", outPathText,defaultOutPathButton);
 		PanelC panelCs = new PanelC("Scratch directory: ", scratchPathText,defaultScratchPathButton);
-		PanelD panelD = new PanelD(buttonQC,buttonSche,buttonFH,buttonFS,cbLevel, partitionerList);
+		PanelD panelD = new PanelD(buttonQC,buttonSche,buttonFH,buttonFS,cbLevel, partitionerList, demoList);
 		PanelBA panelBA = new PanelBA(panelB, panelA);
 		PanelDC panelDC = new PanelDC(panelD, panelC,panelCs);
 		PanelDCBA panelDCBA = new PanelDCBA(panelDC, panelBA);
@@ -251,6 +258,35 @@ public class GumboGUI extends Configured implements Tool {
 				
 			}
 			
+		});
+		
+		/* load demo files */
+		demoList.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String dir = (String) demoList.getSelectedItem();
+				File demodir = new File("./queries/demo/"+dir);
+				
+				for (File fileEntry : demodir.listFiles()) {
+			        if (fileEntry.isFile()) {
+			        	
+			        	// load query
+			        	if (fileEntry.getName().endsWith("-Gumbo.txt")) {
+			        		inputEditor.setText(loadFile(fileEntry));
+			        	}
+
+						// load input
+			        	if (fileEntry.getName().endsWith("-Dir.txt")) {
+			        		inputPathsText.setText(loadFile(fileEntry));
+			        	}
+			        }
+			    }
+				
+				
+				
+				
+			}
 		});
 
 		/* output default */
@@ -463,6 +499,35 @@ public class GumboGUI extends Configured implements Tool {
 			}
 		});
 
+	}
+	
+	public void createDemoList() {
+		JComboBox<String> demolist = new JComboBox<>();
+		File folder = new File("queries/demo");
+		for (File fileEntry : folder.listFiles()) {
+	        if (fileEntry.isDirectory()) {
+	        	demolist.addItem(fileEntry.getName());
+	        }
+	    }
+		
+		this.demoList = demolist;
+	}
+	
+	public String loadFile(File f) {
+
+		List<String> lines;
+		String output = "";
+		try {
+			lines = Files.readAllLines(f.toPath(),StandardCharsets.UTF_8);
+			
+			for (String line : lines) {
+				output += line + System.lineSeparator();
+			}
+		} catch (IOException e) {
+			System.out.println("Could not read demo file!");
+			e.printStackTrace();
+		}
+		return output;
 	}
 
 	public void enableButtons() {

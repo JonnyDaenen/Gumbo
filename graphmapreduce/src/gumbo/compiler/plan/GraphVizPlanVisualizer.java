@@ -92,7 +92,7 @@ public class GraphVizPlanVisualizer implements PlanVisualizer {
 				if(detailsOn) {
 					// links to inputs
 					for (RelationSchema rs : cu.getInputRelations()) {
-						gv.addEdge(nodeID, getID(rs.getName()), "", "color=\"#000000F0\",constraint=false"); // constraint = false means that they are not used in layout determination
+						gv.addEdge(nodeID, getID(rs.getName()), "", "color=\"#00000020\",constraint=false"); // constraint = false means that they are not used in layout determination
 					}
 				}
 				currentID = nodeID;

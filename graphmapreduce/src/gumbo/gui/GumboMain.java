@@ -30,6 +30,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
 import org.apache.hadoop.conf.Configuration;
@@ -136,7 +137,7 @@ public class GumboMain extends Configured implements Tool {
 		buttonFS = new JButton("GUMBO-Spark");
 		cbLevel = new JCheckBox("with schedule");
 		
-		PanelD panelD = new PanelD(buttonQC,buttonSche,buttonFH,buttonFS,cbLevel,null);
+		PanelD panelD = new PanelD(buttonQC,buttonSche,buttonFH,buttonFS,cbLevel,new JLabel(),new JLabel());
 		
 		PanelBA panelBA = new PanelBA(panelB, panelA);
 		PanelDC panelDC = new PanelDC(panelD, panelC,panelCs);
