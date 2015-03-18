@@ -36,12 +36,15 @@ public class GFInfixSerializer {
 		return e.generateString();
 	}
 	
-	private final String queryDef = new String(":");
-	private final String endQueryDef = new String(";");
+	private final String queryDef = ":";
+	private final String endQueryDef = ";";
+	private String commentSymbol = "%";
 	
 	public Set<GFExpression> GetGFExpression(String s) throws DeserializeException {
 		
 //		GFPrefixSerializer prefixParser = new GFPrefixSerializer();
+		
+		s = clearCommentLines(s);
 		
 		String [] sArray = s.split(endQueryDef);
 		HashSet<String> sSet = new HashSet<String>(Arrays.asList(sArray));
@@ -72,7 +75,26 @@ public class GFInfixSerializer {
 		return sp;
 	}
 	
-    private String InfixToPrefix(String s) throws DeserializeException {
+    /**
+	 * @param s
+	 * @return
+	 */
+	private String clearCommentLines(String s) {
+		String [] lines = s.split("\n");
+		String output = "";
+		// in each line
+		for (String line : lines) {
+			// remove everything after comment symbol
+			int pos = line.indexOf(commentSymbol);
+			if (pos >= 0)
+				line = line.substring(0, pos);
+			output += line;
+		}
+		
+		return output;
+	}
+
+	private String InfixToPrefix(String s) throws DeserializeException {
     	Stack<String> mystack = new Stack<String>();
     	int index = 0;
     	int maxIndex = s.length()-1;
