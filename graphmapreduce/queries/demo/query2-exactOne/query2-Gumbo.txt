@@ -12,4 +12,5 @@ Out2(w,x,y,z) : R(w,x,y,z) & (
                               (S(w) & !S(x) & S(y) & S(z)) |
                               (S(w) & S(x) & !S(y) & S(z)) |
                               (S(w) & S(x) & S(y) & !S(z))
+
                               ); 
