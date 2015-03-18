@@ -13,7 +13,7 @@ WalkExact3(x) collects all the x from which there is a walk of length = 3, but n
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Walk1(x) : E(x,y);
+Walk1(x) : E(x,y) & (E(x,y));
 Walk2(x) : E(x,y) & (Walk1(y));
 
 WalkExact1(x) : E(x,y) & (!Walk2(x) & !Walk1(y));
