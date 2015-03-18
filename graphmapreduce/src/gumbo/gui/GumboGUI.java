@@ -110,7 +110,7 @@ public class GumboGUI extends Configured implements Tool {
 
 	private static JCheckBox cbLevel;
 
-
+	JTabbedPane tabbedPane;
 	private GumboPlan plan;
 
 	private PlanViewer planView;
@@ -170,9 +170,11 @@ public class GumboGUI extends Configured implements Tool {
 		buttonFS = new JButton("GUMBO-Spark");
 		cbLevel = new JCheckBox("with schedule");
 		
+		disableExecuteButtons();
+		
 		// compiler options
 		partitionerList = new JComboBox(partitioners);
-		partitionerList.setSelectedIndex(1);
+		partitionerList.setSelectedIndex(0);
 		
 		// TODO add plan details option
 		
@@ -195,7 +197,7 @@ public class GumboGUI extends Configured implements Tool {
 		
 		planView = new PlanViewer();
 		
-		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Query", panelDCBA);
 		tabbedPane.addTab("Plan", planView);
 		tabbedPane.addTab("Metrics", new JPanel());
@@ -457,12 +459,12 @@ public class GumboGUI extends Configured implements Tool {
 
 							}
 
-							gumboQuery = new GumboQuery("Gumbo query",inputQuery, inputs, output,scratch); // TODO add date to name
+							gumboQuery = new GumboQuery("Gumbo_"+demoList.getSelectedItem(),inputQuery, inputs, output,scratch); // TODO add date to name
 
 							// create plan
 							GFCompiler compiler = new GFCompiler(getPartitioner());
 							plan = compiler.createPlan(gumboQuery);
-							System.out.println(plan);
+//							System.out.println(plan);
 
 							// visualize plan
 							GraphVizPlanVisualizer visualizer = new GraphVizPlanVisualizer();
@@ -490,6 +492,8 @@ public class GumboGUI extends Configured implements Tool {
 						super.done();
 						// update plan tab
 						planView.reloadImage();
+						tabbedPane.revalidate();
+						tabbedPane.repaint();
 						enableButtons();
 					}
 

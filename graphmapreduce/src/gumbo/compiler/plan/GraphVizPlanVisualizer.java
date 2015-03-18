@@ -61,7 +61,7 @@ public class GraphVizPlanVisualizer implements PlanVisualizer {
 
 		gv.end_graph();
 
-		System.out.println(gv.getDotSource());
+//		System.out.println(gv.getDotSource());
 
 		return gv.getDotSource();
 	}

@@ -38,7 +38,7 @@ public class PlanViewer extends JPanel {
 		image.getImage().flush();
 		Image newImage = getToolkit().createImage("output/query.png");
 		image.setImage(newImage);
-//		pic.revalidate();
+		pic.revalidate();
 //		pic.repaint();
 		
 //		scrollPane.setViewportView(new ScrollablePicture(image,10));
@@ -46,8 +46,8 @@ public class PlanViewer extends JPanel {
 //		scrollPane.revalidate();
 //		scrollPane.repaint();
 		
-		revalidate();
-		repaint();
+//		revalidate();
+//		repaint();
 	}
 	
 	
