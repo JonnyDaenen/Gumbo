@@ -1,81 +1,73 @@
 
 
 
-create table E (x int, y int)
-row format delimited fields terminated by ','
-location '/data/Edges';
-create table R (x int) location '/data/DirR/';
-create table G (x int) location '/data/DirG/';
-create table B (x int) location '/data/DirB/';
-
-create table outtable (x int, y int)
-row format delimited fields terminated by ','
-location '/output/query4-hive';
-
-
 create view ERxp as
-select x, y, case when rvertex.x IS null then false else true as SERx
+select edge.x as x, edge.y as y, case when rvertex.x IS null then false else true end as SERx
 from E edge left outer join R rvertex
 on edge.x = rvertex.x;
 
 create view ERyp as
-select x, y, case when rvertex.x IS null then false else true as SERy
+select edge.x as x, edge.y as y, case when rvertex.x IS null then false else true end as SERy
 from E edge left outer join R rvertex
 on edge.y = rvertex.x;
 
+
 create view EGxp as
-select x, y, case when gvertex.x IS null then false else true as SEGx
+select edge.x as x, edge.y as y, case when gvertex.x IS null then false else true end as SEGx
 from E edge left outer join G gvertex
 on edge.x = gvertex.x;
 
+
 create view EGyp as
-select x, y, case when gvertex.x IS null then false else true as SEGy
+select edge.x as x, edge.y as y, case when gvertex.x IS null then false else true end as SEGy
 from E edge left outer join G gvertex
 on edge.y = gvertex.x;
 
+
 create view EBxp as
-select x, y, case when bvertex.x IS null then false else true as SEBx
+select edge.x as x, edge.y as y, case when bvertex.x IS null then false else true end as SEBx
 from E edge left outer join B bvertex
 on edge.x = bvertex.x;
 
+
 create view EByp as
-select x, y, case when bvertex.x IS null then false else true as SEBy
+select edge.x as x, edge.y as y, case when bvertex.x IS null then false else true end as SEBy
 from E edge left outer join B bvertex
 on edge.y = bvertex.x;
 
 
 create view RB as
-select ERxp.x
+select ERxp.x as x
 from ERxp left outer join EByp
 on (ERxp.x = EByp.x and ERxp.y = EByp.y) 
 where (SERx = true and SEBy = true);
 
 create view RG as
-select ERxp.x
+select ERxp.x as x
 from ERxp left outer join EGyp
 on (ERxp.x = EGyp.x and ERxp.y = EGyp.y) 
 where (SERx = true and SEGy = true);
 
 create view BR as
-select EBxp.x
+select EBxp.x as x
 from EBxp left outer join ERyp
 on (EBxp.x = ERyp.x and EBxp.y = ERyp.y) 
 where (SEBx = true and SERy = true);
 
 create view BG as
-select EBxp.x
+select EBxp.x as x
 from EBxp left outer join EGyp
 on (EBxp.x = EGyp.x and EBxp.y = EGyp.y) 
 where (SEBx = true and SEGy = true);
 
 create view GB as
-select EGxp.x
+select EGxp.x as x
 from EGxp left outer join EByp
 on (EGxp.x = EByp.x and EGxp.y = EByp.y) 
 where (SEGx = true and SEBy = true);
 
 create view GR as
-select EGxp.x
+select EGxp.x as x
 from EGxp left outer join ERyp
 on (EGxp.x = ERyp.x and EGxp.y = ERyp.y) 
 where (SEGx = true and SERy = true);
@@ -83,37 +75,37 @@ where (SEGx = true and SERy = true);
 
                    
 create view ERB as
-select x, y, case when vertex.x IS null then false else true as SERBx
+select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SERBx
 from E edge left outer join RB vertex
 on edge.x = vertex.x;                   
 
 create view ERG as
-select x, y, case when vertex.x IS null then false else true as SERGx
+select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SERGx
 from E edge left outer join RG vertex
 on edge.x = vertex.x;                   
 
 create view EBR as
-select x, y, case when vertex.x IS null then false else true as SEBRx
+select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SEBRx
 from E edge left outer join BR vertex
 on edge.x = vertex.x;                   
 
 create view EBG as
-select x, y, case when vertex.x IS null then false else true as SEBGx
+select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SEBGx
 from E edge left outer join BG vertex
 on edge.x = vertex.x;                   
 
 create view EGB as
-select x, y, case when vertex.x IS null then false else true as SEGBx
+select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SEGBx
 from E edge left outer join GB vertex
 on edge.x = vertex.x;                   
 
 create view EGR as
-select x, y, case when vertex.x IS null then false else true as SEGRx
+select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SEGRx
 from E edge left outer join GR vertex
 on edge.x = vertex.x;   
 
 
-insert overwrite table outtable
+insert overwrite table query4
 select ERB.x
 from ERB 
 left outer join ERG
@@ -128,15 +120,8 @@ left outer join EGB
 on (ERB.x = EGB.x and ERB.y = EGB.y) 
 where (SERGx = false and SERBx = false and
        SEGBx = false and SEGRx = false and
-       SEBGx = false and SEBRx = false and
+       SEBGx = false and SEBRx = false
        );
-
-
-
-
-
-
-
 
 
 
