@@ -41,7 +41,8 @@ public class SparkEngine implements GFEngine {
 	 */
 	private void initialize() {
 		// TODO this local stuff needs to be changed:
-		SparkConf sparkConf = new SparkConf().setMaster("local[1]").setAppName("Gumbo");
+//		SparkConf sparkConf = new SparkConf().setMaster("local[1]").setAppName("Gumbo");
+		SparkConf sparkConf = new SparkConf().setAppName("Gumbo");
 		sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
 //		sparkConf.set("spark.kryo.registrator", "org.kitesdk.examples.spark.AvroKyroRegistrator");
 //		sparkConf.registerKryoClasses(
