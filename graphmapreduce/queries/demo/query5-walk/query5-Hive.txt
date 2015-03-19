@@ -1,93 +1,153 @@
 
+drop table if exists query4;
+drop view if exists ERxp;
+drop view if exists ERyp;
+drop view if exists EGxp;
+drop view if exists EGyp;
+drop view if exists EBxp;
+drop view if exists EByp;
+drop view if exists RB;
+drop view if exists RG;
+drop view if exists BR;
+drop view if exists BG;
+drop view if exists GR;
+drop view if exists GB;
+drop view if exists ERB;
+drop view if exists ERG;
+drop view if exists EBR;
+drop view if exists EBG;
+drop view if exists EGR;
+drop view if exists EGB;
 
 
-create table E (x int, y int)
+
+
+create table query4 (x int)
 row format delimited fields terminated by ','
-location '/data/Edges';
-
-create view Walk1 as
-select edge.x as x 
-from E edge;
-
-create view Walk2 as
-select edge.x as x
-from E edge left outer join Walk1 p
-on edge.y = p.x;
+location '/output/demo/hive/query4';
 
 
-WalkExact1(x) : E(x,y) & (!Walk2(x) & !Walk1(y));
+create view ERxp as
+select edge.x as x, edge.y as y, case when rvertex.x IS null then false else true end as SERx
+from E edge left outer join R rvertex
+on edge.x = rvertex.x;
+
+create view ERyp as
+select edge.x as x, edge.y as y, case when rvertex.x IS null then false else true end as SERy
+from E edge left outer join R rvertex
+on edge.y = rvertex.x;
 
 
-create view EW2 as
-select x, y, case when vertex.x IS null then false else true as SEW2x
-from E edge left outer join Walk2 vertex
-on edge.x = vertex.x;
-
-create view EW1 as
-select x, y, case when vertex.x IS null then false else true as SEW1x
-from E edge left outer join Walk1 vertex
-on edge.y = vertex.x;
-
-create view WExact1 select EW2.x as x
-from EW2 left outer join EW1
-on (EW2.x = EW1.x and EW2.y = EW1.y) 
-where (SEW2x = false and SEW1x = false);
-
-create view Walk3 as
-select edge.x as x
-from E edge left outer join Walk2 p
-on edge.y = p.x;
+create view EGxp as
+select edge.x as x, edge.y as y, case when gvertex.x IS null then false else true end as SEGx
+from E edge left outer join G gvertex
+on edge.x = gvertex.x;
 
 
-
-create view EW3 as
-select x, y, case when vertex.x IS null then false else true as SEW3x
-from E edge left outer join Walk3 vertex
-on edge.x = vertex.x;
-
-create view EWExact1 as
-select x, y, case when vertex.x IS null then false else true as SEWExact1x
-from E edge left outer join WalkExact1 vertex
-on edge.y = vertex.x;
-
-create view WExact2 as 
-select EW3.x
-from EW3 left outer join EWExact1
-on (EW3.x = EWExact1.x and EW3.y = EWExact1.y) 
-where (SEW3x = false and SEWExact1x = true);
+create view EGyp as
+select edge.x as x, edge.y as y, case when gvertex.x IS null then false else true end as SEGy
+from E edge left outer join G gvertex
+on edge.y = gvertex.x;
 
 
+create view EBxp as
+select edge.x as x, edge.y as y, case when bvertex.x IS null then false else true end as SEBx
+from E edge left outer join B bvertex
+on edge.x = bvertex.x;
 
 
+create view EByp as
+select edge.x as x, edge.y as y, case when bvertex.x IS null then false else true end as SEBy
+from E edge left outer join B bvertex
+on edge.y = bvertex.x;
 
 
-Walk4(x) : E(x,y) & (Walk3(y));
+create view RB as
+select ERxp.x as x
+from ERxp left outer join EByp
+on (ERxp.x = EByp.x and ERxp.y = EByp.y) 
+where (SERx = true and SEBy = true);
 
-create view Walk4 as
-select edge.x as x
-from E edge left outer join Walk3 p
-on edge.y = p.x;
+create view RG as
+select ERxp.x as x
+from ERxp left outer join EGyp
+on (ERxp.x = EGyp.x and ERxp.y = EGyp.y) 
+where (SERx = true and SEGy = true);
 
-WalkExact3(x) : E(x,y) & (!Walk4(x) & WalkExact2(y));
+create view BR as
+select EBxp.x as x
+from EBxp left outer join ERyp
+on (EBxp.x = ERyp.x and EBxp.y = ERyp.y) 
+where (SEBx = true and SERy = true);
+
+create view BG as
+select EBxp.x as x
+from EBxp left outer join EGyp
+on (EBxp.x = EGyp.x and EBxp.y = EGyp.y) 
+where (SEBx = true and SEGy = true);
+
+create view GB as
+select EGxp.x as x
+from EGxp left outer join EByp
+on (EGxp.x = EByp.x and EGxp.y = EByp.y) 
+where (SEGx = true and SEBy = true);
+
+create view GR as
+select EGxp.x as x
+from EGxp left outer join ERyp
+on (EGxp.x = ERyp.x and EGxp.y = ERyp.y) 
+where (SEGx = true and SERy = true);
 
 
-create view EW4 as
-select x, y, case when vertex.x IS null then false else true as SEW4x
-from E edge left outer join Walk4 vertex
-on edge.x = vertex.x;
+                   
+create view ERB as
+select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SERBx
+from E edge left outer join RB vertex
+on edge.x = vertex.x;                   
 
-create view EWExact2 as
-select x, y, case when vertex.x IS null then false else true as SEWExact2x
-from E edge left outer join WalkExact2 vertex
-on edge.y = vertex.x;
+create view ERG as
+select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SERGx
+from E edge left outer join RG vertex
+on edge.x = vertex.x;                   
 
-create view WExact3 as 
-select EW4.x
-from EW4 left outer join EWExact2
-on (EW4.x = EWExact2.x and EW4.y = EWExact2.y) 
-where (SEW4x = false and SEWExact2x = true);
+create view EBR as
+select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SEBRx
+from E edge left outer join BR vertex
+on edge.x = vertex.x;                   
+
+create view EBG as
+select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SEBGx
+from E edge left outer join BG vertex
+on edge.x = vertex.x;                   
+
+create view EGB as
+select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SEGBx
+from E edge left outer join GB vertex
+on edge.x = vertex.x;                   
+
+create view EGR as
+select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SEGRx
+from E edge left outer join GR vertex
+on edge.x = vertex.x;   
 
 
+insert overwrite table query4
+select ERB.x
+from ERB 
+left outer join ERG
+on (ERB.x = ERG.x and ERB.y = ERG.y) 
+left outer join EBG
+on (ERB.x = EBG.x and ERB.y = EBG.y) 
+left outer join EBR
+on (ERB.x = EBR.x and ERB.y = EBR.y) 
+left outer join EGR
+on (ERB.x = EGR.x and ERB.y = EGR.y) 
+left outer join EGB
+on (ERB.x = EGB.x and ERB.y = EGB.y) 
+where (SERGx = false and SERBx = false and
+       SEGBx = false and SEGRx = false and
+       SEBGx = false and SEBRx = false
+       );
 
 
 
