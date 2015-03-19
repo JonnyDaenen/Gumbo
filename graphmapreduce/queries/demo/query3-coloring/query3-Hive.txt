@@ -1,49 +1,52 @@
+drop table if exists query3;
+drop view if exists ERxp;
+drop view if exists ERyp;
+drop view if exists EGxp;
+drop view if exists EGyp;
+drop view if exists EBxp;
+drop view if exists EByp;
 
 
-create table E (x int, y int)
+create table query3 (x int, y int)
 row format delimited fields terminated by ','
-location '/data/Edges';
-create table R (x int) location '/data/DirR/';
-create table G (x int) location '/data/DirG/';
-create table B (x int) location '/data/DirB/';
-
-create table outtable (x int, y int)
-row format delimited fields terminated by ','
-location '/output/query3-hive';
-
+location '/output/demo/hive/query3';
 
 create view ERxp as
-select x, y, case when rvertex.x IS null then false else true as SERx
+select edge.x as x, edge.y as y, case when rvertex.x IS null then false else true end as SERx
 from E edge left outer join R rvertex
 on edge.x = rvertex.x;
 
 create view ERyp as
-select x, y, case when rvertex.x IS null then false else true as SERy
+select edge.x as x, edge.y as y, case when rvertex.x IS null then false else true end as SERy
 from E edge left outer join R rvertex
 on edge.y = rvertex.x;
 
+
 create view EGxp as
-select x, y, case when gvertex.x IS null then false else true as SEGx
+select edge.x as x, edge.y as y, case when gvertex.x IS null then false else true end as SEGx
 from E edge left outer join G gvertex
 on edge.x = gvertex.x;
 
+
 create view EGyp as
-select x, y, case when gvertex.x IS null then false else true as SEGy
+select edge.x as x, edge.y as y, case when gvertex.x IS null then false else true end as SEGy
 from E edge left outer join G gvertex
 on edge.y = gvertex.x;
 
+
 create view EBxp as
-select x, y, case when bvertex.x IS null then false else true as SEBx
+select edge.x as x, edge.y as y, case when bvertex.x IS null then false else true end as SEBx
 from E edge left outer join B bvertex
 on edge.x = bvertex.x;
 
+
 create view EByp as
-select x, y, case when bvertex.x IS null then false else true as SEBy
+select edge.x as x, edge.y as y, case when bvertex.x IS null then false else true end as SEBy
 from E edge left outer join B bvertex
 on edge.y = bvertex.x;
 
 
-insert overwrite table outtable
+insert overwrite table query3
 select ERxp.x, ERxp.y
 from ERxp
 left outer join ERyp
@@ -58,10 +61,5 @@ left outer join EByp
 on (ERxp.x = EByp.x and ERxp.y = EByp.y) 
 where ((SERx = true and SERy = true) or
        (SEGx = true and SEGy = true) or
-       (SEBx = true and SEBy = true) or
+       (SEBx = true and SEBy = true)
        );
-
-
-
-
-
