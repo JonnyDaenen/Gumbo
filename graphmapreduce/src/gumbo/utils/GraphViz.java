@@ -81,8 +81,13 @@ public class GraphViz
 	/**
 	 * Where is your dot program located? It will be called externally.
 	 */
-	private static String DOT = "/usr/local/bin/dot";	// Mac OS X
-	//   private static String DOT = "/usr/bin/dot";	// Linux
+	private static String DOT = null;
+	private static String [] dotLocations = {
+		"/usr/bin/dot",	// Linux
+		"/usr/local/bin/dot",	// Mac OS X      
+		"c:/Program Files/Graphviz2.26.3/bin/dot.exe"	// Windows
+	};
+//	   private static String DOT = "/usr/bin/dot";	// Linux
 	//   private static String DOT = "c:/Program Files/Graphviz2.26.3/bin/dot.exe";	// Windows
 
 	/**
@@ -100,6 +105,8 @@ public class GraphViz
 	 * a graph.
 	 */
 	public GraphViz() {
+		findDotLocation();
+		
 	}
 
 	/**
@@ -375,6 +382,21 @@ public class GraphViz
 		}
 
 		this.graph = sb;
+	}
+	
+	protected static void findDotLocation() {
+		if (DOT != null)
+			return;
+		
+		// check possible locations one by one
+		for (String location : dotLocations) {
+			File f = new File(location);
+			if (f.exists()) {
+				DOT = f.getAbsolutePath();
+				return;
+			}
+		}
+		DOT = "dot";
 	}
 
 
