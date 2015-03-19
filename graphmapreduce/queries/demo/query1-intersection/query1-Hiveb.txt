@@ -1,15 +1,13 @@
 
 
+drop view if exists conj1;
+drop view if exists conj2;
+drop view if exists conj3;
+drop table if exists query1b;
 
-
-create table Rdata4 (x1 int, x2 int, x3 int, x4 int)
+create table query1b (x1 int, x2 int, x3 int, x4 int)
 row format delimited fields terminated by ','
-location '/data/dirR4';
-create table Sdata (x int) location '/data/DirS/';
-
-create table outtable (x1 int, x2 int, x3 int, x4 int)
-row format delimited fields terminated by ','
-location '/output/hive4b';
+location '/output/demo/hive/query1b';
 
 create view conj1 as
 select x1, x2, x3, x4, case when s.x IS null then false end as Sx1
@@ -35,7 +33,7 @@ from Rdata4 r left outer join Sdata s
 on r.x4 = s.x
 where s.x IS null;
 
-insert overwrite table outtable
+insert overwrite table query1b
 select conj1.x1, conj1.x2, conj1.x3, conj1.x4
 from conj1 
 left outer join conj2

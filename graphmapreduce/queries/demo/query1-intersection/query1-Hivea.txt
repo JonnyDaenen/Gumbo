@@ -1,15 +1,13 @@
 
 
+drop view if exists conj1;
+drop view if exists conj2;
+drop view if exists conj3;
+drop table if exists query1a;
 
-
-create table Rdata4 (x1 int, x2 int, x3 int, x4 int)
+create table query1a (x1 int, x2 int, x3 int, x4 int)
 row format delimited fields terminated by ','
-location '/data/dirR4';
-create table Sdata (x int) location '/data/DirS/';
-
-create table outtable (x1 int, x2 int, x3 int, x4 int)
-row format delimited fields terminated by ','
-location '/output/hive4a';
+location '/output/demo/hive/query1a';
 
 create view conj1 as
 select r.x1, r.x2, r.x3, r.x4 from Rdata4 r left outer join Sdata s
@@ -26,10 +24,9 @@ select r.x1, r.x2, r.x3, r.x4 from conj2 r left outer join Sdata s
 on r.x3 = s.x
 where s.x IS null;
 
-insert overwrite table outtable
+insert overwrite table query1a
 select r.x1, r.x2, r.x3, r.x4 from conj3 r left outer join Sdata s
 on r.x4 = s.x
 where s.x IS null;
-
 
 
