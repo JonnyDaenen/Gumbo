@@ -80,10 +80,11 @@ public class GumboGUI extends Configured implements Tool {
 	private static final Log LOG = LogFactory.getLog(GumboGUI.class);
 
 	// defaults
-	private String defaultOutPath = "/users/jonny/output"; // /user/cloudera/output
-	
-	private String defaultScratchPath = "/users/jonny/scratch"; // /user/cloudera/scratch
+//	private String defaultOutPath = "/users/jonny/output";
+//	private String defaultScratchPath = "/users/jonny/scratch";
 
+	private String defaultOutPath = "/user/cloudera/output";
+	private String defaultScratchPath = "/user/cloudera/scratch";
 
 	String[] partitioners = { "Unit", "Optimal", "Height", "Depth" };
 
