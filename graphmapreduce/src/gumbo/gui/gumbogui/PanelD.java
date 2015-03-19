@@ -19,15 +19,15 @@ public class PanelD extends JPanel {
 
 	public PanelD(JButton bQC, JButton bS, JButton bFH, JButton bFS, JCheckBox cbL, JComponent extra, JComponent demoList) {
 		super();
-		setLayout(new GridLayout(2,5,20,-3));
+		setLayout(new GridLayout(2,6,20,-3));
 		
 //		setLayout(new FlowLayout());
 		//setPreferredSize(new Dimension(1200, 30));
 		
 		add(bQC);
-		//add(bS);
+//		add(bS);
 		add(bFH);
-//		add(bFS);	
+		add(bFS);	
 		add(extra);	
 		add(demoList);	
 		add(new JLabel(""));

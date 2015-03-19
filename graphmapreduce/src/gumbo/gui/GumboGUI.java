@@ -14,7 +14,9 @@ import gumbo.compiler.partitioner.OptimalPartitioner;
 import gumbo.compiler.partitioner.UnitPartitioner;
 import gumbo.compiler.plan.GraphVizPlanVisualizer;
 import gumbo.engine.ExecutionException;
+import gumbo.engine.GFEngine;
 import gumbo.engine.hadoop.HadoopEngine;
+import gumbo.engine.spark.SparkEngine;
 import gumbo.gui.gumbogui.GumboMainFrame;
 import gumbo.gui.gumbogui.PanelA;
 import gumbo.gui.gumbogui.PanelB;
@@ -160,12 +162,12 @@ public class GumboGUI extends Configured implements Tool {
 		textConsole = new JTextArea();
 		textConsole.setEditable(false);
 		textConsole.setFont(new Font("monospaced",Font.PLAIN,12));
-		
+
 		// TODO check output redirection?
 		outPipe = new JTextAreaOutputStream(textConsole);
 		System.setOut (new PrintStream (outPipe));
 
-		
+
 
 		// buttons
 		buttonQC = new JButton("Query Compiler");		
@@ -184,7 +186,7 @@ public class GumboGUI extends Configured implements Tool {
 
 		// execution options
 		// FUTURE add
-		
+
 
 
 		// add demo data
@@ -200,7 +202,7 @@ public class GumboGUI extends Configured implements Tool {
 		PanelDC panelDC = new PanelDC(panelD, panelC,panelCs);
 		PanelDCBA panelDCBA = new PanelDCBA(panelDC, panelBA);
 
-		
+
 		// plan
 		planView = new PlanViewer();
 
@@ -210,12 +212,12 @@ public class GumboGUI extends Configured implements Tool {
 		//Put the editor pane in a scroll pane.
 		JScrollPane editorScrollPane = new JScrollPane(metricsText);
 		editorScrollPane.setVerticalScrollBarPolicy(
-		                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-//		editorScrollPane.setPreferredSize(new Dimension(250, 145));
+				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		//		editorScrollPane.setPreferredSize(new Dimension(250, 145));
 		editorScrollPane.setMinimumSize(new Dimension(10, 10));
-		
+
 		resetMetrics();
-		
+
 		// tabs for different panels
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Query", panelDCBA);
@@ -244,7 +246,7 @@ public class GumboGUI extends Configured implements Tool {
 
 		System.out.println("Ready for action!");
 		LOG.info("ready for action");
-		
+
 
 	}
 
@@ -252,7 +254,7 @@ public class GumboGUI extends Configured implements Tool {
 
 	private void resetMetrics() {
 		updateMetrics("Run a query to view the metrics...");
-		
+
 	}
 
 
@@ -361,46 +363,7 @@ public class GumboGUI extends Configured implements Tool {
 				textConsole.setText("");
 				textConsole.append("Evaluating the input query with Hadoop....\n");
 
-				SwingWorker<Integer, Void> worker = new SwingWorker<Integer,Void>() {
-
-					@Override
-					protected Integer doInBackground() throws Exception {
-
-
-						HadoopEngine engine = new HadoopEngine();
-						try {
-							// TODO add defaults to config
-							// TODO recompile plan?
-							engine.executePlan(plan,getConf());
-							final String stats = engine.getCounters();
-
-							SwingUtilities.invokeAndWait(new Runnable() {
-
-								@Override
-								public void run() {
-									updateMetrics(stats);
-								}
-
-							});
-
-						} catch (ExecutionException e1) {
-							updateMetrics("No metrics available; reason: last execution failed.");
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						} 
-						return 0;
-					}
-
-
-					@Override
-					protected void done() {
-						super.done();
-
-						// TODO place statistics in textfield
-						enableCompilerButton();
-					}
-
-				};
+				SwingWorker<Integer, Void> worker = new EngineWorker(true);
 
 				disableButtons();
 				worker.execute();
@@ -416,8 +379,12 @@ public class GumboGUI extends Configured implements Tool {
 			public void actionPerformed(ActionEvent e) {
 
 				textConsole.setText("");
-				textConsole.append("Evaluating the input query with Spark....\n");
-				// TODO run spark
+				textConsole.append("Evaluating the input query with Spark on Hadoop....\n");
+
+				SwingWorker<Integer, Void> worker = new EngineWorker(false);
+
+				disableButtons();
+				worker.execute();
 			}
 		});
 
@@ -668,4 +635,64 @@ public class GumboGUI extends Configured implements Tool {
 		return 0;
 	}
 
+
+	protected class EngineWorker extends SwingWorker<Integer,Void> {
+
+
+
+		private boolean hadoop;
+
+
+		public EngineWorker(boolean hadoop) {
+			this.hadoop = hadoop;
+		}
+
+		@Override
+		protected Integer doInBackground() throws Exception {
+
+
+		
+			
+			
+
+			try {
+				if (hadoop) {
+					HadoopEngine engine = new HadoopEngine();
+				// TODO add defaults to config
+				// TODO recompile plan?
+				engine.executePlan(plan,getConf());
+				final String stats = engine.getCounters();
+
+				SwingUtilities.invokeAndWait(new Runnable() {
+
+					@Override
+					public void run() {
+						updateMetrics(stats);
+					}
+
+				});
+				
+				} else {
+					SparkEngine engine = new SparkEngine();
+					engine.executePlan(plan, getConf());
+				}
+
+			} catch (ExecutionException e1) {
+				updateMetrics("No metrics available; reason: last execution failed.");
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} 
+			return 0;
+		}
+
+
+		@Override
+		protected void done() {
+			super.done();
+
+			// TODO place statistics in textfield
+			enableCompilerButton();
+		}
+
+	};
 }
