@@ -3,19 +3,11 @@
 drop view if exists conj1;
 drop view if exists conj2;
 drop view if exists conj3;
+drop view if exists conj4;
 drop table if exists query1a;
 
-drop view if exists conj1;
-drop view if exists conj2;
-drop view if exists conj3;
-drop view if exists conj4;
 drop table if exists query1b;
 
-
-drop view if exists conj1;
-drop view if exists conj2;
-drop view if exists conj3;
-drop view if exists conj4;
 drop table if exists query2;
 
 drop table if exists query3;
@@ -28,12 +20,7 @@ drop view if exists EByp;
 
 
 drop table if exists query4;
-drop view if exists ERxp;
-drop view if exists ERyp;
-drop view if exists EGxp;
-drop view if exists EGyp;
-drop view if exists EBxp;
-drop view if exists EByp;
+
 drop view if exists RB;
 drop view if exists RG;
 drop view if exists BR;
