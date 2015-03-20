@@ -2,8 +2,9 @@
 
 
 
-R = load '/data/dirR4' using PigStorage(',') as (x1,x2,x3,x4);
-S = load '/data/dirS' using PigStorage(',') as (x);
+R = load '/user/hive/warehouse/rdata4' 
+    using PigStorage(',') as (x1:int,x2:int,x3:int,x4:int);
+S = load '/user/hive/warehouse/sdata' using PigStorage(',') as (x:int);
 
 X1 = cogroup R by x1, S by x;
 Y1 = filter X1 by IsEmpty(S);
@@ -21,6 +22,5 @@ X4 = cogroup Z3 by x4, S by x;
 Y4 = filter X4 by IsEmpty(S);
 Z4 = foreach Y4 generate flatten(Z3);
 
-store Z4 into '/output/pig4a';
-
+store Z4 into '/output/demo/pig/query1a';
 

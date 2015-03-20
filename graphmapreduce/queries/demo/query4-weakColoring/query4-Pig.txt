@@ -5,10 +5,10 @@
 
 
 
-E = load '/data/Edges' using PigStorage(',') as (x,y);
-R = load '/data/dirR' using PigStorage(',') as (x);
-G = load '/data/dirG' using PigStorage(',') as (x);
-B = load '/data/dirB' using PigStorage(',') as (x);
+E = load '/user/hive/warehouse/E' using PigStorage(',') as (x:int,y:int);
+R = load '/user/hive/warehouse/R' using PigStorage(',') as (x:int);
+G = load '/user/hive/warehouse/G' using PigStorage(',') as (x:int);
+B = load '/user/hive/warehouse/B' using PigStorage(',') as (x:int);
                   
                   
 ERx = cogroup E by x, R by x;
@@ -100,7 +100,7 @@ Z = filter RB1 by (SERBx is null AND
 
 Zout = for each Z generate x;
                    
-Store Zout into '/output/query4-pig';          
+Store Zout into '/output/demo/pig/query4';          
                    
                    
                    

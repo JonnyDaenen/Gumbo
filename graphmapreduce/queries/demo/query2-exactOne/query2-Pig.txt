@@ -1,8 +1,9 @@
 
 
 
-R = load '/data/dirR4' using PigStorage(',') as (x1,x2,x3,x4);
-S = load '/data/dirS' using PigStorage(',') as (x);
+R = load '/user/hive/warehouse/rdata4' 
+    using PigStorage(',') as (x1:int,x2:int,x3:int,x4:int);
+S = load '/user/hive/warehouse/sdata' using PigStorage(',') as (x:int);
 
 A1 = cogroup R by x1, S by x;
 B1 = foreach A1 generate flatten(R), (IsEmpty(S)? null : 0) as Sx1;
@@ -21,9 +22,10 @@ X = cogroup B1 by (x1,x2,x3,x4), B2 by (x1,x2,x3,x4),
 Y = foreach X generate group,
               flatten(B1.Sx1),flatten(B2.Sx2),flatten(B3.Sx3),flatten(B4.Sx4);
 
-Z = filter Y by ((Sx1 is not null AND Sx2 is null AND Sx3 is null AND Sx4 is null) OR
-                 (Sx1 is null AND Sx2 is not null AND Sx3 is null AND Sx4 is null) OR
-                 (Sx1 is null AND Sx2 is null AND Sx3 is not null AND Sx4 is null) OR
-                 (Sx1 is null AND Sx2 is null AND Sx3 is null AND Sx4 is not null));
+Z = filter Y by ((Sx1 is null AND Sx2 is not null AND Sx3 is not null AND Sx4 is not null) OR
+                 (Sx1 is not null AND Sx2 is null AND Sx3 is not null AND Sx4 is not null) OR
+                 (Sx1 is not null AND Sx2 is not null AND Sx3 is null AND Sx4 is not null) OR
+                 (Sx1 is not null AND Sx2 is not null AND Sx3 is not null AND Sx4 is null));
 
-Store Z into '/output/query2-pig';
+Store Z into '/output/demo/pig/query2';
+
