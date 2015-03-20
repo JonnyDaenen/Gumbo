@@ -29,6 +29,14 @@ public class SparkEngine implements GFEngine {
 	private static final Log LOG = LogFactory.getLog(SparkEngine.class);
 	private static final long REFRESH_WAIT = 500; // FUTURE increase to 5000ms
 	JavaSparkContext ctx;
+	
+	
+	public SparkEngine() {
+	}
+	
+	public SparkEngine(JavaSparkContext ctx) {
+		this.ctx = ctx;
+	}
 
 	@Override
 	public void execute(GumboPlan plan) throws ExecutionException {
@@ -111,6 +119,8 @@ public class SparkEngine implements GFEngine {
 		} catch (Exception e) {
 			LOG.error("Spark engine was interrupted: " + e.getMessage());
 			throw new ExecutionException("Spark engine interrupted.", e);
+		} finally {
+			ctx.close();
 		}
 
 
