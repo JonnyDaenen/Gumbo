@@ -65,6 +65,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
@@ -113,6 +114,10 @@ public class GumboGUI extends Configured implements Tool {
 	private JButton buttonSche;
 	private JButton buttonFH;
 	private JButton buttonFS;
+	
+
+	private JButton buttonOutputRemove;
+	private JButton buttonScratchRemove;
 
 	private static JCheckBox cbLevel;
 
@@ -177,6 +182,10 @@ public class GumboGUI extends Configured implements Tool {
 		buttonFH = new JButton("GUMBO-Hadoop");
 		buttonFS = new JButton("GUMBO-Spark");
 		cbLevel = new JCheckBox("with schedule");
+		
+
+		buttonOutputRemove = new JButton("Delete Output");
+		buttonScratchRemove = new JButton("Delete Scratch");
 
 		disableExecuteButtons();
 
@@ -197,8 +206,8 @@ public class GumboGUI extends Configured implements Tool {
 		// assemble
 		PanelA panelA = new PanelA(inputEditor);
 		PanelB panelB = new PanelB(inputPathsText,textConsole);
-		PanelC panelC = new PanelC("Output directory: ", outPathText,defaultOutPathButton);
-		PanelC panelCs = new PanelC("Scratch directory: ", scratchPathText,defaultScratchPathButton);
+		PanelC panelC = new PanelC("Output directory: ", outPathText,defaultOutPathButton, buttonOutputRemove);
+		PanelC panelCs = new PanelC("Scratch directory: ", scratchPathText,defaultScratchPathButton, buttonScratchRemove);
 		PanelD panelD = new PanelD(buttonQC,buttonSche,buttonFH,buttonFS,cbLevel, partitionerList, demoList);
 		PanelBA panelBA = new PanelBA(panelB, panelA);
 		PanelDC panelDC = new PanelDC(panelD, panelC,panelCs);
@@ -353,6 +362,59 @@ public class GumboGUI extends Configured implements Tool {
 				//					scratchPathText.setText(s.toString());
 				//				}
 
+			}
+		});
+		
+		
+		/* delete scratch */
+		buttonScratchRemove.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+
+				textConsole.setText("");
+
+				SwingWorker<Object, Object> worker = new SwingWorker<Object, Object>(){
+
+					@Override
+					protected Object doInBackground() throws Exception {
+						disableButtons();
+						removeScratchDir();
+						return null;
+					}
+					@Override
+					protected void done() {
+						super.done();
+						enableCompilerButton();
+					}
+				};
+
+				worker.execute();
+			}
+		});
+		
+		/* delete output */
+		buttonOutputRemove.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+
+				textConsole.setText("");
+
+				SwingWorker<Object, Object> worker = new SwingWorker<Object, Object>(){
+
+					@Override
+					protected Object doInBackground() throws Exception {
+						disableButtons();
+						removeOutputDir();
+						return null;
+					}
+					@Override
+					protected void done() {
+						super.done();
+						enableCompilerButton();
+					}
+				};
+
+				worker.execute();
 			}
 		});
 
@@ -697,4 +759,31 @@ public class GumboGUI extends Configured implements Tool {
 		}
 
 	};
+	
+	
+	protected void removeOutputDir() {
+		FileSystem fs;
+		try {
+			LOG.info("Removing output dir: "+this.defaultOutPath);
+			fs = FileSystem.get(getConf());
+			fs.delete(new Path(this.defaultOutPath), true); // delete folder recursively
+			LOG.info("Output dir removed.");
+		} catch (IOException e) {
+			LOG.error("Failed to delete output dir");
+			e.printStackTrace();
+		}
+	}
+	
+	protected void removeScratchDir() {
+		FileSystem fs;
+		try {
+			LOG.info("Removing scratch dir: "+this.defaultScratchPath);
+			fs = FileSystem.get(getConf());
+			fs.delete(new Path(this.defaultScratchPath), true); // delete folder recursively 
+			LOG.info("Scratch dir removed.");
+		} catch (IOException e) {
+			LOG.error("Failed to delete scratch dir");
+			e.printStackTrace();
+		}
+	}
 }

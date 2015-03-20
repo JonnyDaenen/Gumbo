@@ -126,9 +126,9 @@ public class GumboMain extends Configured implements Tool {
 		scratchPathText.setEditable(true);
 		browseScratchPathButton = new JButton("Browse");
 		
-		PanelC panelC = new PanelC("Output directory: ", outPathText,browseOutPathButton);
+		PanelC panelC = new PanelC("Output directory: ", outPathText,browseOutPathButton,browseOutPathButton);
 			
-		PanelC panelCs = new PanelC("Scratch directory: ", scratchPathText,browseScratchPathButton);
+		PanelC panelCs = new PanelC("Scratch directory: ", scratchPathText,browseScratchPathButton,browseScratchPathButton);
 		
 		
 		buttonQC = new JButton("Query Compiler");		

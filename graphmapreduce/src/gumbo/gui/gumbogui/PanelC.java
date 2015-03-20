@@ -15,12 +15,13 @@ public class PanelC extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public PanelC(String s, TextField op, JButton ob){
+	public PanelC(String s, TextField op, JButton ob, JButton deleteButton){
 		JLabel lab2 = new JLabel(s);
 		
 		add(lab2);
 		add(op);
 		add(ob);
+		add(deleteButton);
 	}
 	
 	
