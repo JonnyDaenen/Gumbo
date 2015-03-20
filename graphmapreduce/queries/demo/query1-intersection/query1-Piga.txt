@@ -1,10 +1,7 @@
 
-
-
-
-R = load '/user/hive/warehouse/rdata4' 
+R = load '/user/cloudera/input/query1/R' 
     using PigStorage(',') as (x1:int,x2:int,x3:int,x4:int);
-S = load '/user/hive/warehouse/sdata' using PigStorage(',') as (x:int);
+S = load '/user/cloudera/input/query1/S' using PigStorage(',') as (x:int);
 
 X1 = cogroup R by x1, S by x;
 Y1 = filter X1 by IsEmpty(S);
@@ -23,4 +20,3 @@ Y4 = filter X4 by IsEmpty(S);
 Z4 = foreach Y4 generate flatten(Z3);
 
 store Z4 into '/output/demo/pig/query1a';
-

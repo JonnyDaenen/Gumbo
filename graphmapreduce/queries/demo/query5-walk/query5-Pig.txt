@@ -2,8 +2,8 @@
 
 
 
+E = load '/user/cloudera/input/query5/E' using PigStorage(',') as (x:int,y:int);
 
-E = load '/user/hive/warehouse/E' using PigStorage(',') as (x:int,y:int);
 
 Walk1 = foreach E generate x;
 

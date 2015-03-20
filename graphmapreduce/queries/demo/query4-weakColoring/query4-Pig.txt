@@ -2,13 +2,11 @@
 
 
 
+E = load '/user/cloudera/input/query4/E' using PigStorage(',') as (x:int,y:int);
+R = load '/user/cloudera/input/query4/R' using PigStorage(',') as (x:int);
+G = load '/user/cloudera/input/query4/G' using PigStorage(',') as (x:int);
+B = load '/user/cloudera/input/query4/B' using PigStorage(',') as (x:int);
 
-
-
-E = load '/user/hive/warehouse/E' using PigStorage(',') as (x:int,y:int);
-R = load '/user/hive/warehouse/R' using PigStorage(',') as (x:int);
-G = load '/user/hive/warehouse/G' using PigStorage(',') as (x:int);
-B = load '/user/hive/warehouse/B' using PigStorage(',') as (x:int);
                   
                   
 ERx = cogroup E by x, R by x;
