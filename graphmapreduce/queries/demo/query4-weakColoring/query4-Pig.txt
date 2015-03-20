@@ -73,7 +73,7 @@ EBGx = cogroup E by x, BG by x;
 EBGxp = foreach EBGx generate flatten(E), (IsEmpty(BG)? null : 0) as SEBGx;
 
 EGRx = cogroup E by x, GR by x;
-EGRxp = foreach EBRx generate flatten(E), (IsEmpty(GR)? null : 0) as SEGRx;
+EGRxp = foreach EGRx generate flatten(E), (IsEmpty(GR)? null : 0) as SEGRx;
 
 EGBx = cogroup E by x, GB by x;
 EGBxp = foreach EGBx generate flatten(E), (IsEmpty(GB)? null : 0) as SEGBx;
@@ -89,7 +89,7 @@ Y = foreach X generate group, flatten(ERBxp.SERBx),
                               flatten(EGBxp.SEGBx),
                               flatten(EGRxp.SEGRx);
 
-Z = filter RB1 by (SERBx is null AND 
+Z = filter Y by (SERBx is null AND 
                    SERGx is null AND
                    SEBRx is null AND 
                    SEBGx is null AND 
