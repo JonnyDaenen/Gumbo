@@ -53,7 +53,7 @@ GB1 = foreach GB0 generate group, flatten(EGxp.SEGx),flatten(EByp.SEBy);
 GB2 = filter GB1 by (SEGx is not null AND SEBy is not null); 
 GB = foreach GB2 generate x;
 
-GR0 = cogroup EGxp by (x,y), ERp by (x,y); 
+GR0 = cogroup EGxp by (x,y), ERyp by (x,y); 
 GR1 = foreach GR0 generate group, flatten(EGxp.SEGx),flatten(ERyp.SERy);              
 GR2 = filter GR1 by (SEGx is not null AND SERy is not null); 
 GR = foreach GR2 generate x;
