@@ -766,7 +766,7 @@ public class GumboGUI extends Configured implements Tool {
 		try {
 			LOG.info("Removing output dir: "+this.defaultOutPath);
 			fs = FileSystem.get(getConf());
-			fs.delete(new Path(this.defaultOutPath), true); // delete folder recursively
+			fs.delete(new Path(this.outPathText.getText()), true); // delete folder recursively
 			LOG.info("Output dir removed.");
 		} catch (IOException e) {
 			LOG.error("Failed to delete output dir");
@@ -779,7 +779,7 @@ public class GumboGUI extends Configured implements Tool {
 		try {
 			LOG.info("Removing scratch dir: "+this.defaultScratchPath);
 			fs = FileSystem.get(getConf());
-			fs.delete(new Path(this.defaultScratchPath), true); // delete folder recursively 
+			fs.delete(new Path(this.scratchPathText.getText()), true); // delete folder recursively 
 			LOG.info("Scratch dir removed.");
 		} catch (IOException e) {
 			LOG.error("Failed to delete scratch dir");
