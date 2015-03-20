@@ -19,4 +19,4 @@ X4 = cogroup Z3 by x4, S by x;
 Y4 = filter X4 by IsEmpty(S);
 Z4 = foreach Y4 generate flatten(Z3);
 
-store Z4 into '/output/demo/pig/query1a';
+store Z4 into '/user/cloudera/output/demo/pig/query1a';

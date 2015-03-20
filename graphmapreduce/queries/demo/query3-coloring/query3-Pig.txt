@@ -40,7 +40,7 @@ Z = filter Y by (
                 (SEGx is not null AND SEGy is not null) OR
                 );
 
-Store Z into '/output/demo/pig/query3';
+Store Z into '/user/cloudera/output/demo/pig/query3';
 
 
 

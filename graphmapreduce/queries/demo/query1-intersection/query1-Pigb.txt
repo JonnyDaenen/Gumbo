@@ -25,4 +25,4 @@ Y = foreach X generate group,
 
 Z = filter Y by (Sx1 is null AND Sx2 is null AND Sx3 is null AND Sx4 is null);
 
-Store Z into '/output/demo/pig/query1b';
+Store Z into '/user/cloudera/output/demo/pig/query1b';
