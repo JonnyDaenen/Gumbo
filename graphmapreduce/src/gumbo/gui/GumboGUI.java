@@ -69,6 +69,8 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaSparkContext;
 
 /**
  * 
@@ -705,6 +707,7 @@ public class GumboGUI extends Configured implements Tool {
 
 
 		private boolean hadoop;
+		private JavaSparkContext sparkContext;
 
 
 		public EngineWorker(boolean hadoop) {
@@ -737,7 +740,18 @@ public class GumboGUI extends Configured implements Tool {
 				});
 				
 				} else {
-					SparkEngine engine = new SparkEngine();
+					if (sparkContext == null) {
+					SparkConf sparkConf = new SparkConf().setAppName("Gumbo_Spark");
+					sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
+//					sparkConf.set("spark.kryo.registrator", "org.kitesdk.examples.spark.AvroKyroRegistrator");
+//					sparkConf.registerKryoClasses(
+//							gumbo.structures.gfexpressions.operations.ExpressionSetOperations.class
+//							);
+					// SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
+					sparkContext = new JavaSparkContext(sparkConf);
+					}
+					
+					SparkEngine engine = new SparkEngine(sparkContext);
 					engine.executePlan(plan, getConf());
 				}
 

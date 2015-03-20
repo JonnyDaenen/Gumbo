@@ -48,6 +48,9 @@ public class SparkEngine implements GFEngine {
 	 * 
 	 */
 	private void initialize() {
+		
+		if (ctx != null)
+			return;
 		// TODO this local stuff needs to be changed:
 //		SparkConf sparkConf = new SparkConf().setMaster("local[1]").setAppName("Gumbo");
 		SparkConf sparkConf = new SparkConf().setAppName("Gumbo_Spark");
@@ -119,10 +122,7 @@ public class SparkEngine implements GFEngine {
 		} catch (Exception e) {
 			LOG.error("Spark engine was interrupted: " + e.getMessage());
 			throw new ExecutionException("Spark engine interrupted.", e);
-		} finally {
-			ctx.close();
 		}
-
 
 	}
 
