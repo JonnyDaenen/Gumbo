@@ -1,26 +1,5 @@
 
 
-drop table if exists query4;
-drop view if exists ERxp;
-drop view if exists ERyp;
-drop view if exists EGxp;
-drop view if exists EGyp;
-drop view if exists EBxp;
-drop view if exists EByp;
-drop view if exists RB;
-drop view if exists RG;
-drop view if exists BR;
-drop view if exists BG;
-drop view if exists GR;
-drop view if exists GB;
-drop view if exists ERB;
-drop view if exists ERG;
-drop view if exists EBR;
-drop view if exists EBG;
-drop view if exists EGR;
-drop view if exists EGB;
-
-
 
 
 create table query4 (x int)

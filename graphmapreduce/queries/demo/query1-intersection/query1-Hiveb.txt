@@ -1,9 +1,5 @@
 
 
-drop view if exists conj1;
-drop view if exists conj2;
-drop view if exists conj3;
-drop table if exists query1b;
 
 create table query1b (x1 int, x2 int, x3 int, x4 int)
 row format delimited fields terminated by ','

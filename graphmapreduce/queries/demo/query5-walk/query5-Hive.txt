@@ -1,77 +1,33 @@
 
 
 
-
-drop table if exists Walk1;
 create table Walk1 (x int)
 row format delimited fields terminated by ','
-location '/user/cloudera/output/demo/hive/query5Walk1';
+location '/user/cloudera/output/demo/hive/query5/Walk1';
 
-
-drop table if exists Walk2;
 create table Walk2 (x int)
 row format delimited fields terminated by ','
-location '/user/cloudera/output/demo/hive/query5Walk2';
+location '/user/cloudera/output/demo/hive/query5/Walk2';
 
-drop table if exists EW2;
-create table EW2 (x int, y int, SEW2x boolean)
-row format delimited fields terminated by ','
-location '/user/cloudera/output/demo/hive/query5EW2';
-
-drop table if exists EW1;
-create table EW1 (x int, y int, SEW1x boolean)
-row format delimited fields terminated by ','
-location '/user/cloudera/output/demo/hive/query5EW1';
-
-drop table if exists WExact1;
-create table WExact1 (x int)
-row format delimited fields terminated by ','
-location '/user/cloudera/output/demo/hive/query5WExact1';
-
-drop table if exists EW3;
-create table EW3 (x int, y int, SEW3x boolean)
-row format delimited fields terminated by ','
-location '/user/cloudera/output/demo/hive/query5EW3';
-
-drop table if exists Walk3;
 create table Walk3 (x int)
 row format delimited fields terminated by ','
-location '/user/cloudera/output/demo/hive/query5Walk3';
+location '/user/cloudera/output/demo/hive/query5/Walk3';
 
-
-drop table if exists EWExact1;
-create table EWExact1 (x int, y int, SEWExact1x boolean)
-row format delimited fields terminated by ','
-location '/user/cloudera/output/demo/hive/query5EWExact1';
-
-
-drop table if exists WExact2;
-create table WExact2 (x int)
-row format delimited fields terminated by ','
-location '/user/cloudera/output/demo/hive/query5WExact2';
-
-
-drop table if exists Walk4;
 create table Walk4 (x int)
 row format delimited fields terminated by ','
-location '/user/cloudera/output/demo/hive/query5Walk4';
+location '/user/cloudera/output/demo/hive/query5/Walk4';
 
-
-drop table if exists EWExact2;
-create table EWExact2 (x int, y int, SEWExact2x boolean)
+create table WExact1 (x int)
 row format delimited fields terminated by ','
-location '/user/cloudera/output/demo/hive/query5EWExact2';
+location '/user/cloudera/output/demo/hive/query5/WExact1';
 
-drop table if exists WExact3;
+create table WExact2 (x int)
+row format delimited fields terminated by ','
+location '/user/cloudera/output/demo/hive/query5/WExact2';
+
 create table WExact3 (x int)
 row format delimited fields terminated by ','
-location '/user/cloudera/output/demo/hive/query5WExact3';
-
-drop table if exists EW4;
-create table EW4 (x int, y int, SEW4x boolean)
-row format delimited fields terminated by ','
-location '/user/cloudera/output/demo/hive/query5EW4';
-
+location '/user/cloudera/output/demo/hive/query5/WExact3';
 
 
 
@@ -86,12 +42,16 @@ from E edge left outer join Walk1 p
 on edge.y = p.x
 where p.x is not null;
 
-insert overwrite table EW2
+
+
+create view EW2 as
 select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SEW2x
 from E edge left outer join Walk2 vertex
 on edge.x = vertex.x;
 
-insert overwrite table EW1
+
+
+create view EW1 as
 select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SEW1x
 from E edge left outer join Walk1 vertex
 on edge.y = vertex.x;
@@ -108,12 +68,14 @@ from E edge left outer join Walk2 p
 on edge.y = p.x
 where p.x is not null;
 
-insert overwrite table EW3
+
+create view EW3 as
 select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SEW3x
 from E edge left outer join Walk3 vertex
 on edge.x = vertex.x;
 
-insert overwrite table EWExact1
+
+create view EWExact1 as
 select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SEWExact1x
 from E edge left outer join WExact1 vertex
 on edge.y = vertex.x;
@@ -132,13 +94,14 @@ from E edge left outer join Walk3 p
 on edge.y = p.x
 where p.x is not null;
 
-insert overwrite table EW4
+
+create view EW4 as
 select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SEW4x
 from E edge left outer join Walk4 vertex
 on edge.x = vertex.x;
 
 
-insert overwrite table EWExact2
+create view EWExact2 as
 select edge.x as x, edge.y as y, case when vertex.x IS null then false else true end as SEWExact2x
 from E edge left outer join WExact2 vertex
 on edge.y = vertex.x;
