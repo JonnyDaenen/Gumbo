@@ -125,7 +125,7 @@ public class GumboSparkConverter {
 			LOG.info("Map1: finished map1 on guard");
 
 			// assemble guarded input dataset
-			LOG.info("I/O: loading guard");
+			LOG.info("I/O: loading guarded");
 			JavaRDD<String> guardedInput = getGuardedInput(eso);
 //			guardedInput.saveAsTextFile("debug/5");
 
@@ -294,7 +294,7 @@ public class GumboSparkConverter {
 	 */
 	private JavaRDD<String> getGuardedInput(ExpressionSetOperations eso) {
 
-		JavaRDD<String> totalInput = ctx.emptyRDD();
+		JavaRDD<String> totalInput = null; // ctx.emptyRDD();
 
 		// get guarded CSV files
 		Set<GFAtomicExpression> guardeds = eso.getGuardedsAll();
@@ -319,7 +319,10 @@ public class GumboSparkConverter {
 					}
 
 					// put it together with previous data
-					totalInput = totalInput.union(newData);
+					if (totalInput == null)
+						totalInput = newData;
+					else
+						totalInput = totalInput.union(newData);
 
 					consideredPaths.add(path);
 				}
