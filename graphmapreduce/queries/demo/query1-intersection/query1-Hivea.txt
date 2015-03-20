@@ -7,7 +7,7 @@ drop table if exists query1a;
 
 create table query1a (x1 int, x2 int, x3 int, x4 int)
 row format delimited fields terminated by ','
-location '/output/demo/hive/query1a';
+location '/user/cloudera/output/demo/hive/query1a';
 
 create view conj1 as
 select r.x1, r.x2, r.x3, r.x4 from Rdata4 r left outer join Sdata s

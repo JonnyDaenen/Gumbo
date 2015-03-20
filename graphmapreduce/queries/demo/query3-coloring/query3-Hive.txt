@@ -9,7 +9,7 @@ drop view if exists EByp;
 
 create table query3 (x int, y int)
 row format delimited fields terminated by ','
-location '/output/demo/hive/query3';
+location '/user/cloudera/output/demo/hive/query3';
 
 create view ERxp as
 select edge.x as x, edge.y as y, case when rvertex.x IS null then false else true end as SERx

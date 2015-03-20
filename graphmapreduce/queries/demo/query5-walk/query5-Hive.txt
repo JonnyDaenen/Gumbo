@@ -5,72 +5,72 @@
 drop table if exists Walk1;
 create table Walk1 (x int)
 row format delimited fields terminated by ','
-location '/output/demo/hive/query5Walk1';
+location '/user/cloudera/output/demo/hive/query5Walk1';
 
 
 drop table if exists Walk2;
 create table Walk2 (x int)
 row format delimited fields terminated by ','
-location '/output/demo/hive/query5Walk2';
+location '/user/cloudera/output/demo/hive/query5Walk2';
 
 drop table if exists EW2;
 create table EW2 (x int, y int, SEW2x boolean)
 row format delimited fields terminated by ','
-location '/output/demo/hive/query5EW2';
+location '/user/cloudera/output/demo/hive/query5EW2';
 
 drop table if exists EW1;
 create table EW1 (x int, y int, SEW1x boolean)
 row format delimited fields terminated by ','
-location '/output/demo/hive/query5EW1';
+location '/user/cloudera/output/demo/hive/query5EW1';
 
 drop table if exists WExact1;
 create table WExact1 (x int)
 row format delimited fields terminated by ','
-location '/output/demo/hive/query5WExact1';
+location '/user/cloudera/output/demo/hive/query5WExact1';
 
 drop table if exists EW3;
 create table EW3 (x int, y int, SEW3x boolean)
 row format delimited fields terminated by ','
-location '/output/demo/hive/query5EW3';
+location '/user/cloudera/output/demo/hive/query5EW3';
 
 drop table if exists Walk3;
 create table Walk3 (x int)
 row format delimited fields terminated by ','
-location '/output/demo/hive/query5Walk3';
+location '/user/cloudera/output/demo/hive/query5Walk3';
 
 
 drop table if exists EWExact1;
 create table EWExact1 (x int, y int, SEWExact1x boolean)
 row format delimited fields terminated by ','
-location '/output/demo/hive/query5EWExact1';
+location '/user/cloudera/output/demo/hive/query5EWExact1';
 
 
 drop table if exists WExact2;
 create table WExact2 (x int)
 row format delimited fields terminated by ','
-location '/output/demo/hive/query5WExact2';
+location '/user/cloudera/output/demo/hive/query5WExact2';
 
 
 drop table if exists Walk4;
 create table Walk4 (x int)
 row format delimited fields terminated by ','
-location '/output/demo/hive/query5Walk4';
+location '/user/cloudera/output/demo/hive/query5Walk4';
 
 
 drop table if exists EWExact2;
 create table EWExact2 (x int, y int, SEWExact2x boolean)
 row format delimited fields terminated by ','
-location '/output/demo/hive/query5EWExact2';
+location '/user/cloudera/output/demo/hive/query5EWExact2';
 
 drop table if exists WExact3;
 create table WExact3 (x int)
 row format delimited fields terminated by ','
-location '/output/demo/hive/query5WExact3';
+location '/user/cloudera/output/demo/hive/query5WExact3';
 
 drop table if exists EW4;
 create table EW4 (x int, y int, SEW4x boolean)
 row format delimited fields terminated by ','
-location '/output/demo/hive/query5EW4';
+location '/user/cloudera/output/demo/hive/query5EW4';
 
 
 

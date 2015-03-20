@@ -25,7 +25,7 @@ drop view if exists EGB;
 
 create table query4 (x int)
 row format delimited fields terminated by ','
-location '/output/demo/hive/query4';
+location '/user/cloudera/output/demo/hive/query4';
 
 
 create view ERxp as
