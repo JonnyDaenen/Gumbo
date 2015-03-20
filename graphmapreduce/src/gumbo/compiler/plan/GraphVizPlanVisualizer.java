@@ -208,6 +208,7 @@ public class GraphVizPlanVisualizer implements PlanVisualizer {
 		GraphViz gv = new GraphViz();
 		File f = new File(file);
 		gv.writeGraphToFile(gv.getGraph(dotCode, "png"), f);
+//		gv.writeGraphToFile(gv.getGraph(dotCode, "pdf"), new File("plan.pdf")); //  remove
 	}
 
 }
