@@ -14,7 +14,6 @@ import gumbo.compiler.partitioner.OptimalPartitioner;
 import gumbo.compiler.partitioner.UnitPartitioner;
 import gumbo.compiler.plan.GraphVizPlanVisualizer;
 import gumbo.engine.ExecutionException;
-import gumbo.engine.GFEngine;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.spark.SparkEngine;
 import gumbo.gui.gumbogui.GumboMainFrame;
@@ -52,7 +51,6 @@ import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -83,8 +81,8 @@ public class GumboGUI extends Configured implements Tool {
 	private static final Log LOG = LogFactory.getLog(GumboGUI.class);
 
 	// defaults
-//	private String defaultOutPath = "/users/jonny/output";
-//	private String defaultScratchPath = "/users/jonny/scratch";
+	//	private String defaultOutPath = "/users/jonny/output";
+	//	private String defaultScratchPath = "/users/jonny/scratch";
 
 	private String defaultOutPath = "/user/cloudera/output";
 	private String defaultScratchPath = "/user/cloudera/scratch";
@@ -116,7 +114,7 @@ public class GumboGUI extends Configured implements Tool {
 	private JButton buttonSche;
 	private JButton buttonFH;
 	private JButton buttonFS;
-	
+
 
 	private JButton buttonOutputRemove;
 	private JButton buttonScratchRemove;
@@ -184,7 +182,7 @@ public class GumboGUI extends Configured implements Tool {
 		buttonFH = new JButton("GUMBO-Hadoop");
 		buttonFS = new JButton("GUMBO-Spark");
 		cbLevel = new JCheckBox("with schedule");
-		
+
 
 		buttonOutputRemove = new JButton("Delete Output");
 		buttonScratchRemove = new JButton("Delete Scratch");
@@ -366,8 +364,8 @@ public class GumboGUI extends Configured implements Tool {
 
 			}
 		});
-		
-		
+
+
 		/* delete scratch */
 		buttonScratchRemove.addActionListener(new ActionListener() {
 
@@ -393,7 +391,7 @@ public class GumboGUI extends Configured implements Tool {
 				worker.execute();
 			}
 		});
-		
+
 		/* delete output */
 		buttonOutputRemove.addActionListener(new ActionListener() {
 
@@ -718,39 +716,39 @@ public class GumboGUI extends Configured implements Tool {
 		protected Integer doInBackground() throws Exception {
 
 
-		
-			
-			
+
+
+
 
 			try {
 				if (hadoop) {
 					HadoopEngine engine = new HadoopEngine();
-				// TODO add defaults to config
-				// TODO recompile plan?
-				engine.executePlan(plan,getConf());
-				final String stats = engine.getCounters();
+					// TODO add defaults to config
+					// TODO recompile plan?
+					engine.executePlan(plan,getConf());
+					final String stats = engine.getCounters();
 
-				SwingUtilities.invokeAndWait(new Runnable() {
+					SwingUtilities.invokeAndWait(new Runnable() {
 
-					@Override
-					public void run() {
-						updateMetrics(stats);
-					}
+						@Override
+						public void run() {
+							updateMetrics(stats);
+						}
 
-				});
-				
+					});
+
 				} else {
 					if (sparkContext == null) {
-					SparkConf sparkConf = new SparkConf().setAppName("Gumbo_Spark");
-					sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
-//					sparkConf.set("spark.kryo.registrator", "org.kitesdk.examples.spark.AvroKyroRegistrator");
-//					sparkConf.registerKryoClasses(
-//							gumbo.structures.gfexpressions.operations.ExpressionSetOperations.class
-//							);
-					// SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
-					sparkContext = new JavaSparkContext(sparkConf);
+						SparkConf sparkConf = new SparkConf().setAppName("Gumbo_Spark");
+						sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
+						//					sparkConf.set("spark.kryo.registrator", "org.kitesdk.examples.spark.AvroKyroRegistrator");
+						//					sparkConf.registerKryoClasses(
+						//							gumbo.structures.gfexpressions.operations.ExpressionSetOperations.class
+						//							);
+						// SparkConf sparkConf = new SparkConf().setAppName("Fronjo");
+						sparkContext = new JavaSparkContext(sparkConf);
 					}
-					
+
 					SparkEngine engine = new SparkEngine(sparkContext);
 					engine.executePlan(plan, getConf());
 				}
@@ -773,8 +771,8 @@ public class GumboGUI extends Configured implements Tool {
 		}
 
 	};
-	
-	
+
+
 	protected void removeOutputDir() {
 		FileSystem fs;
 		try {
@@ -787,7 +785,7 @@ public class GumboGUI extends Configured implements Tool {
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void removeScratchDir() {
 		FileSystem fs;
 		try {

@@ -122,6 +122,9 @@ public class SparkEngine implements GFEngine {
 		} catch (Exception e) {
 			LOG.error("Spark engine was interrupted: " + e.getMessage());
 			throw new ExecutionException("Spark engine interrupted.", e);
+		} finally {
+			ctx.stop();
+			ctx.close();
 		}
 
 	}
