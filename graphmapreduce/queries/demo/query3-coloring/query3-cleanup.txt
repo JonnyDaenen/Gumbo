@@ -1,0 +1,9 @@
+
+
+drop table if exists query3;
+drop view if exists ERxp;
+drop view if exists ERyp;
+drop view if exists EGxp;
+drop view if exists EGyp;
+drop view if exists EBxp;
+drop view if exists EByp;
