@@ -36,27 +36,27 @@ RB = foreach RB2 generate x;
 RG0 = cogroup ERxp by (x,y), EGyp by (x,y); 
 RG1 = foreach RG0 generate group, flatten(ERxp.SERx),flatten(EGyp.SEGy);              
 RG2 = filter RG1 by (SERx is not null AND SEGy is not null); 
-RG = for each RG2 generate x;
+RG = foreach RG2 generate x;
 
 BR0 = cogroup EBxp by (x,y), ERyp by (x,y); 
 BR1 = foreach BR0 generate group, flatten(EBxp.SEBx),flatten(ERyp.SERy);              
 BR2 = filter BR1 by (SEBx is not null AND SERy is not null); 
-BR = for each BR2 generate x;
+BR = foreach BR2 generate x;
 
 BG0 = cogroup EBxp by (x,y), EGyp by (x,y); 
 BG1 = foreach BG0 generate group, flatten(EBxp.SEBx),flatten(EGyp.SEGy);              
 BG2 = filter BG1 by (SEBx is not null AND SEGy is not null); 
-BG = for each BG2 generate x;
+BG = foreach BG2 generate x;
 
 GB0 = cogroup EGxp by (x,y), EByp by (x,y); 
 GB1 = foreach GB0 generate group, flatten(EGxp.SEGx),flatten(EByp.SEBy);              
 GB2 = filter GB1 by (SEGx is not null AND SEBy is not null); 
-GB = for each GB2 generate x;
+GB = foreach GB2 generate x;
 
 GR0 = cogroup EGxp by (x,y), ERp by (x,y); 
 GR1 = foreach GR0 generate group, flatten(EGxp.SEGx),flatten(ERyp.SERy);              
 GR2 = filter GR1 by (SEGx is not null AND SERy is not null); 
-GR = for each GR2 generate x;
+GR = foreach GR2 generate x;
 
 
 
@@ -96,7 +96,7 @@ Z = filter RB1 by (SERBx is null AND
                    SEGRx is null AND 
                    SEGBx is null); 
 
-Zout = for each Z generate x;
+Zout = foreach Z generate x;
                    
 Store Zout into '/user/cloudera/output/demo/pig/query4';          
                    

@@ -37,7 +37,7 @@ Y = foreach X generate group,
 Z = filter Y by (
                 (SERx is not null AND SERy is not null) OR
                 (SEBx is not null AND SEBy is not null) OR
-                (SEGx is not null AND SEGy is not null) OR
+                (SEGx is not null AND SEGy is not null)
                 );
 
 Store Z into '/user/cloudera/output/demo/pig/query3';
