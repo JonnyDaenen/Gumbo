@@ -581,7 +581,7 @@ public class GumboGUI extends Configured implements Tool {
 								output = new Path(sout);
 							}
 
-							String sscratch = inputIO.getInputField().getText();
+							String sscratch = inputIO.getScratchField().getText();
 							if (sscratch.length() == 0) {
 								throw new Exception("The scratch directory is empty");
 							} else {
