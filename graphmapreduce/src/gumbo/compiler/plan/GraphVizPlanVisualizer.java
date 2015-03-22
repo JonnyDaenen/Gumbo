@@ -27,7 +27,8 @@ public class GraphVizPlanVisualizer implements PlanVisualizer {
 	private Map<Object, String> nodeids;
 	private int counter;
 
-	protected boolean detailsOn = true;
+	protected boolean edgeDetailsOn = true;
+	protected boolean queryDetailsOn = true;
 
 
 	private String inputNode = "";
@@ -89,7 +90,7 @@ public class GraphVizPlanVisualizer implements PlanVisualizer {
 				String nodeID = getID(cu.getOutputSchema().getName());
 				gv.addNode(nodeID, getNodeLabel(cu));
 
-				if(detailsOn) {
+				if(edgeDetailsOn) {
 					// links to inputs
 					for (RelationSchema rs : cu.getInputRelations()) {
 						gv.addEdge(nodeID, getID(rs.getName()), "", "color=\"#00000020\",constraint=false"); // constraint = false means that they are not used in layout determination
@@ -129,7 +130,7 @@ public class GraphVizPlanVisualizer implements PlanVisualizer {
 	private String getNodeLabel(CalculationUnit cu) {
 		String output = cu.getOutputSchema().getName();
 
-		if (detailsOn) {
+		if (queryDetailsOn) {
 			output += "\\n";
 			//		output += "<BR>";
 			//		output += "<FONT COLOR=\"#999999\">test"; 
@@ -195,9 +196,15 @@ public class GraphVizPlanVisualizer implements PlanVisualizer {
 		}
 	}
 	
-	public void setDetailsOn(boolean detailsOn) {
-		this.detailsOn = detailsOn;
+	public void setEdgeDetailsEnabled(boolean on) {
+		this.edgeDetailsOn = on;
 	}
+	
+	public void setQueryDetailsEnabled(boolean on) {
+		this.queryDetailsOn = on;
+	}
+	
+
 
 	/**
 	 * @param plan

@@ -29,6 +29,7 @@ public class PlanViewer extends JPanel {
 		image = new ImageIcon("output/query.png");
 		pic = new ScrollablePicture(image,10);
 		scrollPane = new JScrollPane(pic);
+		setBorder(null);
 		add( scrollPane , BorderLayout.CENTER );
 	}
 

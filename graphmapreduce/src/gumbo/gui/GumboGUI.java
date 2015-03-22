@@ -17,22 +17,18 @@ import gumbo.engine.ExecutionException;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.spark.SparkEngine;
 import gumbo.gui.gumbogui.GumboMainFrame;
-import gumbo.gui.gumbogui.PanelA;
-import gumbo.gui.gumbogui.PanelB;
-import gumbo.gui.gumbogui.PanelBA;
-import gumbo.gui.gumbogui.PanelC;
-import gumbo.gui.gumbogui.PanelD;
-import gumbo.gui.gumbogui.PanelDC;
-import gumbo.gui.gumbogui.PanelDCBA;
 import gumbo.gui.gumbogui.PlanViewer;
+import gumbo.gui.panels.ConsolePanel;
+import gumbo.gui.panels.QueryInputDetails;
+import gumbo.gui.panels.QueryInputField;
+import gumbo.gui.panels.SettingsPanel;
 import gumbo.input.GumboQuery;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.io.GFInfixSerializer;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.TextField;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,15 +41,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
@@ -84,47 +78,26 @@ public class GumboGUI extends Configured implements Tool {
 	//	private String defaultOutPath = "/users/jonny/output";
 	//	private String defaultScratchPath = "/users/jonny/scratch";
 
-	private String defaultOutPath = "/user/cloudera/output";
-	private String defaultScratchPath = "/user/cloudera/scratch";
 
-	String[] partitioners = { "Unit", "Optimal", "Height", "Depth" };
 
 	// GUI variables
-	JComboBox<String> partitionerList;
-	JComboBox<String> demoList;
 
-	private JEditorPane inputEditor;
-
-	private JEditorPane inputPathsText;
-	private JEditorPane metricsText;
-
-	private TextField outPathText;
-	private JButton defaultOutPathButton;
-
-	private TextField scratchPathText;
-	private JButton defaultScratchPathButton;
-
-	private JFileChooser outPathChooser;
-
-	private JTextArea textConsole;
-
-	private JTextAreaOutputStream outPipe;
-
-	private JButton buttonQC;
-	private JButton buttonSche;
-	private JButton buttonFH;
-	private JButton buttonFS;
+	private QueryInputField inputQuery;
+	private QueryInputDetails inputIO;
+	private SettingsPanel settings;
+	private ConsolePanel console;
 
 
-	private JButton buttonOutputRemove;
-	private JButton buttonScratchRemove;
 
-	private static JCheckBox cbLevel;
-
-	JTabbedPane tabbedPane;
 	private GumboPlan plan;
 
 	private PlanViewer planView;
+
+	private JEditorPane metricsText;
+
+	private JTabbedPane tabbedPane;
+
+	private JComboBox<String> demoList;
 
 
 
@@ -134,92 +107,46 @@ public class GumboGUI extends Configured implements Tool {
 
 	private void createAndShowGUI() {
 
-		// create demo list
-		createDemoList();
-
-		// query input
-		inputEditor = new JEditorPane();
-		inputEditor.setEditable(true);
-		//		inputEditor.setFont(new Font("Courier New",0,14));
-		inputEditor.setFont(new Font("monospaced", Font.PLAIN, 14));
+	
 
 
+		
 
-		// input paths
-		inputPathsText = new JEditorPane();
-		inputPathsText.setEditable(true);
-		//		inputPathsText.setFont(new Font("Courier New",0,14));	
-		inputPathsText.setFont(new Font("monospaced", Font.PLAIN, 14));
-
-		// output path
-		//		outPathChooser = new JFileChooser();
-		//		outPathChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		//		outPathChooser.setDialogTitle("Select target directory");
-
-		outPathText = new TextField(97);
-		outPathText.setEditable(true);
-		defaultOutPathButton = new JButton("Load default");
-
-		// scratch path
-		scratchPathText = new TextField(97);
-		scratchPathText.setEditable(true);
-		defaultScratchPathButton = new JButton("Load default");
-
-		// console
-		textConsole = new JTextArea();
-		textConsole.setEditable(false);
-		textConsole.setFont(new Font("monospaced",Font.PLAIN,12));
+		// create 4 panels
+		inputQuery = new QueryInputField();
+		inputIO = new QueryInputDetails();
+		settings = new SettingsPanel();
+		console = new ConsolePanel();
 
 		// TODO check output redirection?
-		outPipe = new JTextAreaOutputStream(textConsole);
+		JTextAreaOutputStream outPipe = new JTextAreaOutputStream(console.getConsoleField());
 		System.setOut (new PrintStream (outPipe));
 
+		// create splits
+		JSplitPane topsplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,inputQuery,inputIO);
+		JSplitPane bottomsplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,settings, console);
+		JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topsplit, bottomsplit);
+		// no borders
+		topsplit.setBorder(null);
+		bottomsplit.setBorder(null);
+		split.setBorder(null);
 
 
-		// buttons
-		buttonQC = new JButton("Query Compiler");		
-		buttonSche = new JButton("Job constructor");
-		buttonFH = new JButton("GUMBO-Hadoop");
-		buttonFS = new JButton("GUMBO-Spark");
-		cbLevel = new JCheckBox("with schedule");
+		// create demo list
+		createDemoList();
+		// add demo button
+		JPanel queryOverall = new JPanel(new BorderLayout());
+		queryOverall.add(split,BorderLayout.CENTER);
+		queryOverall.add(demoList,BorderLayout.NORTH);
 
 
-		buttonOutputRemove = new JButton("Delete Output");
-		buttonScratchRemove = new JButton("Delete Scratch");
-
-		disableExecuteButtons();
-
-		// compiler options
-		partitionerList = new JComboBox(partitioners);
-		partitionerList.setSelectedIndex(0);
-
-		// TODO add plan details option
-
-		// execution options
-		// FUTURE add
-
-
-
-		// add demo data
-		loadData();
-
-		// assemble
-		PanelA panelA = new PanelA(inputEditor);
-		PanelB panelB = new PanelB(inputPathsText,textConsole);
-		PanelC panelC = new PanelC("Output directory: ", outPathText,defaultOutPathButton, buttonOutputRemove);
-		PanelC panelCs = new PanelC("Scratch directory: ", scratchPathText,defaultScratchPathButton, buttonScratchRemove);
-		PanelD panelD = new PanelD(buttonQC,buttonSche,buttonFH,buttonFS,cbLevel, partitionerList, demoList);
-		PanelBA panelBA = new PanelBA(panelB, panelA);
-		PanelDC panelDC = new PanelDC(panelD, panelC,panelCs);
-		PanelDCBA panelDCBA = new PanelDCBA(panelDC, panelBA);
-
-
-		// plan
+		// plan tab
 		planView = new PlanViewer();
 
-		// metrics
+		// metrics tab
 		metricsText = new JEditorPane();
 		metricsText.setEditable(false);
+		metricsText.setBorder(null);
 		//Put the editor pane in a scroll pane.
 		JScrollPane editorScrollPane = new JScrollPane(metricsText);
 		editorScrollPane.setVerticalScrollBarPolicy(
@@ -231,7 +158,7 @@ public class GumboGUI extends Configured implements Tool {
 
 		// tabs for different panels
 		tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Query", panelDCBA);
+		tabbedPane.addTab("Query", queryOverall);
 		tabbedPane.addTab("Plan", planView);
 		tabbedPane.addTab("Metrics", editorScrollPane);
 
@@ -239,7 +166,7 @@ public class GumboGUI extends Configured implements Tool {
 
 
 		// add actions
-		addActions();
+				addActions();
 
 		// scale & show
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -255,8 +182,19 @@ public class GumboGUI extends Configured implements Tool {
 		mainwindow.setSize(newwidth, newheight);
 		mainwindow.setVisible(true);
 
-		System.out.println("Ready for action!");
-		LOG.info("ready for action");
+		// set splitters AFTER they are rendered on screen!
+		topsplit.setDividerLocation(0.7);
+		bottomsplit.setDividerLocation(0.3);
+		split.setDividerLocation(0.5);
+		
+
+		// buttons
+		disableExecuteButtons();
+		// add demo data
+		loadData();		
+
+
+		LOG.info("Ready for action!");
 
 
 	}
@@ -273,327 +211,18 @@ public class GumboGUI extends Configured implements Tool {
 	 * 
 	 */
 	private void loadData() {
-		inputEditor.setText("Out1(x) : E(x,y) & (!F(y) & G(x,z)); \n"
-				+ "Out2(x) : E(x,y) & !Out1(y); \n"
-				+ "Out3(x) : E(x,y) & (Out1(y) & !Out2(x)); \n"
-				+ "Out4(x,y) : E(x,y) & (!Out1(x));");
 
-		inputEditor.setText("Out(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10) : "
+		inputQuery.getQueryField().setText("Out(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10) : "
 				+ "R(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10) & "
 				+ "(!S(x1) & !S(x2) & !S(x3) & !S(x4) & !S(x5) & !S(x6) & !S(x7) & !S(x8) & !S(x9) & !S(x10))");
-		inputPathsText.setText("R,10 - input/experiments/EXP_008/R, CSV;\n"
+		inputIO.getInputField().setText("R,10 - input/experiments/EXP_008/R, CSV;\n"
 				+ "S,1 - input/experiments/EXP_008/S, CSV;");
-		outPathText.setText(defaultOutPath);
-		scratchPathText.setText(defaultScratchPath);
 
 
 	}
 
 
-	private void addActions() {
 
-		/* set partitioner */
-
-		partitionerList.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-			}
-
-		});
-
-		/* load demo files */
-		demoList.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String dir = (String) demoList.getSelectedItem();
-				File demodir = new File("./queries/demo/"+dir);
-
-				for (File fileEntry : demodir.listFiles()) {
-					if (fileEntry.isFile()) {
-
-						// load query
-						if (fileEntry.getName().endsWith("-Gumbo.txt")) {
-							inputEditor.setText(loadFile(fileEntry));
-						}
-
-						// load input
-						if (fileEntry.getName().endsWith("-Dir.txt")) {
-							inputPathsText.setText(loadFile(fileEntry));
-						}
-					}
-				}
-
-
-
-
-			}
-		});
-
-		/* output default */
-		defaultOutPathButton.addActionListener(new ActionListener() {
-
-
-			public void actionPerformed(ActionEvent e) {
-				outPathText.setText(defaultOutPath);
-
-				//				File s;
-				//				int returnVal = outPathChooser.showOpenDialog(null);
-				//				if(returnVal == JFileChooser.APPROVE_OPTION) {
-				//					s = outPathChooser.getSelectedFile();
-				//					outPathText.setText(s.toString());
-				//				}
-
-			}
-		});
-
-
-		/* scratch filechooser */
-		defaultScratchPathButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				scratchPathText.setText(defaultScratchPath);
-				//				File s;
-				//				int returnVal = outPathChooser.showOpenDialog(null);
-				//				if(returnVal == JFileChooser.APPROVE_OPTION) {
-				//					s = outPathChooser.getSelectedFile();
-				//					scratchPathText.setText(s.toString());
-				//				}
-
-			}
-		});
-
-
-		/* delete scratch */
-		buttonScratchRemove.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-
-				textConsole.setText("");
-
-				SwingWorker<Object, Object> worker = new SwingWorker<Object, Object>(){
-
-					@Override
-					protected Object doInBackground() throws Exception {
-						disableButtons();
-						removeScratchDir();
-						return null;
-					}
-					@Override
-					protected void done() {
-						super.done();
-						enableCompilerButton();
-					}
-				};
-
-				worker.execute();
-			}
-		});
-
-		/* delete output */
-		buttonOutputRemove.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-
-				textConsole.setText("");
-
-				SwingWorker<Object, Object> worker = new SwingWorker<Object, Object>(){
-
-					@Override
-					protected Object doInBackground() throws Exception {
-						disableButtons();
-						removeOutputDir();
-						return null;
-					}
-					@Override
-					protected void done() {
-						super.done();
-						enableCompilerButton();
-					}
-				};
-
-				worker.execute();
-			}
-		});
-
-
-		/* hadoop run */
-		buttonFH.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-
-				textConsole.setText("");
-				textConsole.append("Evaluating the input query with Hadoop....\n");
-
-				SwingWorker<Integer, Void> worker = new EngineWorker(true);
-
-				disableButtons();
-				worker.execute();
-
-
-
-			}
-		});
-
-
-		/* spark run */
-		buttonFS.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				textConsole.setText("");
-				textConsole.append("Evaluating the input query with Spark on Hadoop....\n");
-
-				SwingWorker<Integer, Void> worker = new EngineWorker(false);
-
-				disableButtons();
-				worker.execute();
-			}
-		});
-
-
-
-
-		/* compiler button */
-		buttonQC.addActionListener(new ActionListener() {
-			private GumboQuery gumboQuery;
-
-			public void actionPerformed(ActionEvent e) {
-
-				disableButtons();
-				// TODO why not write to stdout?
-				textConsole.setText("");   
-				resetMetrics();
-
-				SwingWorker worker = new SwingWorker<Integer,Void>() {
-
-					@Override
-					protected Integer doInBackground() throws Exception {
-
-						try {
-							Set<GFExpression> inputQuery = new HashSet<>();
-							Path output;
-							Path scratch;
-							RelationFileMapping inputs = new RelationFileMapping();
-
-							String sout = outPathText.getText();
-							if (sout.length() == 0) {
-								throw new Exception("The output directory is empty");
-							} else {
-								textConsole.append("The output directory is:" + sout);
-								textConsole.append("\n");
-								output = new Path(sout);
-							}
-
-							String sscratch = scratchPathText.getText();
-							if (sscratch.length() == 0) {
-								throw new Exception("The scratch directory is empty");
-							} else {
-								textConsole.append("The scratch directory is:" + sscratch);
-								textConsole.append("\n");
-								scratch = new Path(sscratch);
-							}
-
-
-							textConsole.append("Compiling the input queries...\n");
-
-							//System.out.println("Testing, testing !!!!");
-
-							GFInfixSerializer parser = new GFInfixSerializer();
-
-
-							inputQuery = parser.GetGFExpression(inputEditor.getText().trim());
-
-
-							//textConsole.setText("");
-							textConsole.append("The following queries compiled:\n");
-
-							for (GFExpression gf : inputQuery) {
-								textConsole.append(gf.toString()+"\n");
-
-							}
-
-
-
-							textConsole.append("Parsing the input directories...\n");
-
-
-							String s = inputPathsText.getText().trim();
-							String [] sin = s.split(";");
-
-							String [] dummy;
-							for(int i = 0; i< sin.length; i++){
-
-								dummy = sin[i].split("-");
-								if (dummy.length != 2)
-									throw new Exception("Error in line "+i+" in INPUT DIRECTORIES\nExpecting <Relation>,<Arity> - <Path>,<Type>" );
-
-								// schema 
-								String[] rsParts = dummy[0].split(",");
-								if (rsParts.length != 2)
-									throw new Exception("Error in line "+i+" in INPUT DIRECTORIES\nExpecting <Relation>,<Arity> - <Path>,<Type>" );
-
-								// path
-								String[] paths = dummy[1].split(",");
-								if (paths.length != 2)
-									throw new Exception("Error in line "+i+" in INPUT DIRECTORIES\nExpecting <Relation>,<Arity> - <Path>,<Type>" );
-
-								// type
-								InputFormat type = InputFormat.REL;
-								if (paths[1].trim().toLowerCase().equals("csv")) {
-									type = InputFormat.CSV;
-								}
-
-								inputs.addPath(new RelationSchema(rsParts[0].trim(),Integer.parseInt(rsParts[1].trim())), new Path(paths[0].trim()), type);
-
-							}
-
-							gumboQuery = new GumboQuery("Gumbo_"+demoList.getSelectedItem(),inputQuery, inputs, output,scratch); // TODO add date to name
-
-							// create plan
-							GFCompiler compiler = new GFCompiler(getPartitioner());
-							plan = compiler.createPlan(gumboQuery);
-							//							System.out.println(plan);
-
-							// visualize plan
-							GraphVizPlanVisualizer visualizer = new GraphVizPlanVisualizer();
-							visualizer.savePlan(plan, "output/query.png");
-
-
-
-						} catch (Exception e1) {
-							System.out.println(e1.getMessage());
-							e1.printStackTrace();
-						} finally {
-
-
-						}
-
-						//						Thread.sleep(10000);
-						return 0;
-					}
-
-					/* (non-Javadoc)
-					 * @see javax.swing.SwingWorker#done()
-					 */
-					@Override
-					protected void done() {
-						super.done();
-						// update plan tab
-						planView.reloadImage();
-						tabbedPane.revalidate();
-						tabbedPane.repaint();
-						enableButtons();
-					}
-
-				};
-
-				worker.execute();
-			}
-		});
-
-	}
 
 	public void createDemoList() {
 		JComboBox<String> demolist = new JComboBox<>();
@@ -603,7 +232,6 @@ public class GumboGUI extends Configured implements Tool {
 				demolist.addItem(fileEntry.getName());
 			}
 		}
-
 		this.demoList = demolist;
 	}
 
@@ -625,41 +253,42 @@ public class GumboGUI extends Configured implements Tool {
 	}
 
 	public void enableButtons() {
-		buttonQC.setEnabled(true);
-		buttonFH.setEnabled(true);
-		buttonFS.setEnabled(true);
+		settings.getCompileButton().setEnabled(true);
+		settings.getHadoopButton().setEnabled(true);
+		settings.getSparkButton().setEnabled(true);
 	}
 
 	public void enableCompilerButton() {
-		buttonQC.setEnabled(true);
+		settings.getCompileButton().setEnabled(true);
 	}
 
 	public void disableButtons() {
-		buttonQC.setEnabled(false);
-		buttonFH.setEnabled(false);
-		buttonFS.setEnabled(false);
+
+		settings.getCompileButton().setEnabled(false);
+		settings.getHadoopButton().setEnabled(false);
+		settings.getSparkButton().setEnabled(false);
 	}
 
 	public void disableExecuteButtons() {
-		buttonFH.setEnabled(false);
-		buttonFS.setEnabled(false);
+		settings.getHadoopButton().setEnabled(false);
+		settings.getSparkButton().setEnabled(false);
 	}
 
 
 	public static void main(String[] args) throws Exception {
 
 		// Let ToolRunner handle generic command-line options 
-		int res = ToolRunner.run(new Configuration(), new GumboGUI(), args);
+		ToolRunner.run(new Configuration(), new GumboGUI(), args);
 
 		//		System.exit(res);
 
 	}
 
 	public CalculationPartitioner getPartitioner() {
-		String item = (String) partitionerList.getSelectedItem();
+		String item = (String) settings.getPartitionerList().getSelectedItem();
 
 		// CLEAN this tis hardcoded stuff :)
-		switch(item) {
+	switch(item) {
 		case "Unit":
 			return new UnitPartitioner();
 		case "Optimal":
@@ -772,13 +401,13 @@ public class GumboGUI extends Configured implements Tool {
 
 	};
 
-
-	protected void removeOutputDir() {
+	
+	protected void removeDir(String dir){
 		FileSystem fs;
 		try {
-			LOG.info("Removing output dir: "+this.defaultOutPath);
+			LOG.info("Removing output dir: "+dir);
 			fs = FileSystem.get(getConf());
-			fs.delete(new Path(this.outPathText.getText()), true); // delete folder recursively
+			fs.delete(new Path(dir), true); // delete folder recursively
 			LOG.info("Output dir removed.");
 		} catch (IOException e) {
 			LOG.error("Failed to delete output dir");
@@ -786,16 +415,279 @@ public class GumboGUI extends Configured implements Tool {
 		}
 	}
 
+	protected void removeOutputDir() {
+		removeDir(this.inputIO.getOutputField().getText());
+	}
+
 	protected void removeScratchDir() {
-		FileSystem fs;
-		try {
-			LOG.info("Removing scratch dir: "+this.defaultScratchPath);
-			fs = FileSystem.get(getConf());
-			fs.delete(new Path(this.scratchPathText.getText()), true); // delete folder recursively 
-			LOG.info("Scratch dir removed.");
-		} catch (IOException e) {
-			LOG.error("Failed to delete scratch dir");
-			e.printStackTrace();
-		}
+		removeDir(this.inputIO.getScratchField().getText());
+	}
+	
+	
+
+
+
+	private void addActions() {
+
+
+		/* load demo files */
+		demoList.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String dir = (String) demoList.getSelectedItem();
+				File demodir = new File("./queries/demo/"+dir);
+
+				for (File fileEntry : demodir.listFiles()) {
+					if (fileEntry.isFile()) {
+
+						// load query
+						if (fileEntry.getName().endsWith("-Gumbo.txt")) {
+							inputQuery.getQueryField().setText(loadFile(fileEntry));
+						}
+
+						// load input
+						if (fileEntry.getName().endsWith("-Dir.txt")) {
+							inputIO.getInputField().setText(loadFile(fileEntry));
+						}
+					}
+				}
+
+
+
+
+			}
+		});
+
+
+
+
+		/* delete scratch */
+		inputIO.getScratchDeleteButton().addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+
+				console.getConsoleField().setText("");
+
+				SwingWorker<Object, Object> worker = new SwingWorker<Object, Object>(){
+
+					@Override
+					protected Object doInBackground() throws Exception {
+						disableButtons();
+						removeScratchDir();
+						return null;
+					}
+					@Override
+					protected void done() {
+						super.done();
+						enableCompilerButton();
+					}
+				};
+
+				worker.execute();
+			}
+		});
+
+		/* delete output */
+		inputIO.getOutputDeleteButton().addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+
+				console.getConsoleField().setText("");
+
+				SwingWorker<Object, Object> worker = new SwingWorker<Object, Object>(){
+
+					@Override
+					protected Object doInBackground() throws Exception {
+						disableButtons();
+						removeOutputDir();
+						return null;
+					}
+					@Override
+					protected void done() {
+						super.done();
+						enableCompilerButton();
+					}
+				};
+
+				worker.execute();
+			}
+		});
+
+
+		/* hadoop run */
+		settings.getHadoopButton().addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+
+				console.getConsoleField().setText("");
+				LOG.info("Evaluating the input query with Hadoop....\n");
+
+				SwingWorker<Integer, Void> worker = new EngineWorker(true);
+
+				disableButtons();
+				worker.execute();
+
+
+
+			}
+		});
+
+
+		/* spark run */
+		settings.getSparkButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				console.getConsoleField().setText("");
+				LOG.info("Evaluating the input query with Spark on Hadoop....\n");
+
+				SwingWorker<Integer, Void> worker = new EngineWorker(false);
+
+				disableButtons();
+				worker.execute();
+			}
+		});
+
+
+
+
+		/* compiler button */
+		settings.getCompileButton().addActionListener(new ActionListener() {
+			private GumboQuery gumboQuery;
+
+			public void actionPerformed(ActionEvent e) {
+
+				disableButtons();
+				// TODO why not write to stdout?
+				console.getConsoleField().setText("");   
+				resetMetrics();
+
+				SwingWorker<Integer, Void> worker = new SwingWorker<Integer,Void>() {
+
+					@Override
+					protected Integer doInBackground() throws Exception {
+
+						try {
+							Set<GFExpression> inputQuery = new HashSet<>();
+							Path output;
+							Path scratch;
+							RelationFileMapping inputs = new RelationFileMapping();
+
+							String sout = inputIO.getOutputField().getText();
+							if (sout.length() == 0) {
+								throw new Exception("The output directory is empty");
+							} else {
+								LOG.info("The output directory is:" + sout);
+								output = new Path(sout);
+							}
+
+							String sscratch = inputIO.getInputField().getText();
+							if (sscratch.length() == 0) {
+								throw new Exception("The scratch directory is empty");
+							} else {
+								LOG.info("The scratch directory is:" + sscratch);
+								scratch = new Path(sscratch);
+							}
+
+
+							LOG.info("Compiling the input queries...");
+
+							//System.out.println("Testing, testing !!!!");
+
+							GFInfixSerializer parser = new GFInfixSerializer();
+
+
+							inputQuery = parser.GetGFExpression(GumboGUI.this.inputQuery.getQueryField().getText().trim());
+
+
+							//textConsole.setText("");
+							LOG.info("The following queries compiled:");
+
+							for (GFExpression gf : inputQuery) {
+								LOG.info(gf.toString());
+
+							}
+
+
+
+							LOG.info("Parsing the input directories...\n");
+
+
+							String s = inputIO.getInputField().getText().trim();
+							String [] sin = s.split(";");
+
+							String [] dummy;
+							for(int i = 0; i< sin.length; i++){
+
+								dummy = sin[i].split("-");
+								if (dummy.length != 2)
+									throw new Exception("Error in line "+i+" in INPUT DIRECTORIES\nExpecting <Relation>,<Arity> - <Path>,<Type>" );
+
+								// schema 
+								String[] rsParts = dummy[0].split(",");
+								if (rsParts.length != 2)
+									throw new Exception("Error in line "+i+" in INPUT DIRECTORIES\nExpecting <Relation>,<Arity> - <Path>,<Type>" );
+
+								// path
+								String[] paths = dummy[1].split(",");
+								if (paths.length != 2)
+									throw new Exception("Error in line "+i+" in INPUT DIRECTORIES\nExpecting <Relation>,<Arity> - <Path>,<Type>" );
+
+								// type
+								InputFormat type = InputFormat.REL;
+								if (paths[1].trim().toLowerCase().equals("csv")) {
+									type = InputFormat.CSV;
+								}
+
+								inputs.addPath(new RelationSchema(rsParts[0].trim(),Integer.parseInt(rsParts[1].trim())), new Path(paths[0].trim()), type);
+
+							}
+
+							gumboQuery = new GumboQuery("Gumbo_"+demoList.getSelectedItem(),inputQuery, inputs, output,scratch); // TODO add date to name
+
+							// create plan
+							GFCompiler compiler = new GFCompiler(getPartitioner());
+							plan = compiler.createPlan(gumboQuery);
+							//							System.out.println(plan);
+
+							// visualize plan
+							GraphVizPlanVisualizer visualizer = new GraphVizPlanVisualizer();
+							visualizer.setEdgeDetailsEnabled(settings.getEdgeDetailsEnabled());
+							visualizer.setQueryDetailsEnabled(settings.getQueryDetailsEnabled());
+							visualizer.savePlan(plan, "output/query.png");
+
+
+
+						} catch (Exception e1) {
+							System.out.println(e1.getMessage());
+							e1.printStackTrace();
+						} finally {
+
+
+						}
+
+						//						Thread.sleep(10000);
+						return 0;
+					}
+
+					/* (non-Javadoc)
+					 * @see javax.swing.SwingWorker#done()
+					 */
+					@Override
+					protected void done() {
+						super.done();
+						// update plan tab
+						planView.reloadImage();
+						tabbedPane.revalidate();
+						tabbedPane.repaint();
+						enableButtons();
+					}
+
+				};
+
+				worker.execute();
+			}
+		});
+
 	}
 }
