@@ -72,7 +72,7 @@ public class GumboScriptFileParser {
 		try {
 			gq = visitor.visit(tree);
 		} catch (Exception e) {
-			throw new GumboParseException("Error parsing file: " + filename);
+			throw new GumboParseException("Error parsing file: " + filename, e);
 		}
 		
 		return gq;

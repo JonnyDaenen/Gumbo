@@ -1,10 +1,7 @@
 package gumbo.input.parser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.antlr.v4.runtime.tree.TerminalNode;
 import org.apache.hadoop.fs.Path;
 
 import gumbo.compiler.filemapper.InputFormat;
@@ -12,7 +9,6 @@ import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.input.parser.GumboParser.InputCsvContext;
 import gumbo.input.parser.GumboParser.InputRelContext;
 import gumbo.structures.data.RelationSchema;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
 
 /**
  * Visitor class for the input rules in the gumbo grammar
@@ -23,14 +19,14 @@ import gumbo.structures.gfexpressions.GFAtomicExpression;
 public class GumboInputVisitor extends GumboBaseVisitor<String> {
 	
 	private RelationFileMapping _rm;
-	private Map<String, GFAtomicExpression> _inputRelations;
+	private ArrayList<String> _inputRelations;
 	
 	/**
 	 * Constructor method
 	 */
 	public GumboInputVisitor() {
 		_rm = new RelationFileMapping();
-		_inputRelations = new HashMap<String, GFAtomicExpression>();
+		_inputRelations = new ArrayList<String>();
 	}
 
 	/**
@@ -40,20 +36,13 @@ public class GumboInputVisitor extends GumboBaseVisitor<String> {
 	public String visitInputCsv(InputCsvContext ctx) {
 		
 		String relname = ctx.relname().getText();
-		int arity = ctx.schema().ID().size();
+		int arity = Integer.parseInt(ctx.relarity().INT().getText());
 		RelationSchema schema = new RelationSchema(relname, arity);
 		
 		Path path = new Path(ctx.file().anystring().getText());
 		
 		_rm.addPath(schema, path, InputFormat.CSV);
-		
-		ArrayList<String> vars = new ArrayList<String>();
-		for (TerminalNode var : ctx.schema().ID()) {
-			vars.add(var.getText());
-		}
-		String[] varArray = new String[vars.size()];
-		varArray = vars.toArray(varArray);
-		_inputRelations.put(relname, new GFAtomicExpression(relname, varArray));
+		_inputRelations.add(relname);
 		
 		return relname;
 	}
@@ -64,20 +53,13 @@ public class GumboInputVisitor extends GumboBaseVisitor<String> {
 	@Override
 	public String visitInputRel(InputRelContext ctx) {
 		String relname = ctx.relname().getText();
-		int arity = ctx.schema().ID().size();
+		int arity = Integer.parseInt(ctx.relarity().INT().getText());
 		RelationSchema schema = new RelationSchema(relname, arity);
 		
 		Path path = new Path(ctx.file().anystring().getText());
 		
 		_rm.addPath(schema, path, InputFormat.REL);
-		
-		ArrayList<String> vars = new ArrayList<String>();
-		for (TerminalNode var : ctx.schema().ID()) {
-			vars.add(var.getText());
-		}
-		String[] varArray = new String[vars.size()];
-		varArray = vars.toArray(varArray);
-		_inputRelations.put(relname, new GFAtomicExpression(relname, varArray));
+		_inputRelations.add(relname);
 		
 		return relname;
 	}
@@ -90,7 +72,7 @@ public class GumboInputVisitor extends GumboBaseVisitor<String> {
 		return _rm;
 	}
 	
-	public Map<String, GFAtomicExpression> getInputRelations() {
+	public ArrayList<String> getInputRelations() {
 		return _inputRelations;
 	}
 	

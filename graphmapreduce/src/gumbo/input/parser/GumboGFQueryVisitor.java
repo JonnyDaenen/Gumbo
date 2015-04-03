@@ -33,13 +33,13 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 
 	private final static String TEMP_RELNAME = "Temp";
 	private int _currentID;
-	private Map<String, GFAtomicExpression> _relations;
+	private ArrayList<String> _relations;
 	
-	public GumboGFQueryVisitor(Map<String, GFAtomicExpression> inputrelations) {
+	public GumboGFQueryVisitor(ArrayList<String> inputrelations) {
 		_currentID = 0;
 		
-		_relations = new HashMap<String, GFAtomicExpression>();
-		_relations.putAll(inputrelations);
+		_relations = new ArrayList<String>();
+		_relations.addAll(inputrelations);
 	}	
 	
 	@Override
@@ -62,9 +62,10 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 		
 		// output relation
 		String outputName = TEMP_RELNAME + _currentID;
-		_currentID++;		
+		_currentID++;	
+		
 		ArrayList<String> vars = new ArrayList<String>();
-		for (TerminalNode var : ctx.schema().ID()) {
+		for (TerminalNode var : ctx.schema(0).ID()) {
 			vars.add(var.getText());
 		}
 		String[] outputVars = new String[vars.size()];
@@ -73,12 +74,15 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 		
 		// guard
 		String guardName = ctx.relname().getText();
-		GFAtomicExpression guard = null;
-		try {
-			guard = new GFAtomicExpression(_relations.get(guardName));
-		} catch (NullPointerException e) {
+		if (!_relations.contains(guardName))
 			throw new ParseCancellationException("Unknown relation name on line " + ctx.relname().getStart().getLine() + ".");
+		vars.clear();
+		for (TerminalNode var : ctx.schema(1).ID()) {
+			vars.add(var.getText());
 		}
+		String[] guardVars = new String[vars.size()];
+		guardVars = vars.toArray(guardVars);
+		GFAtomicExpression guard = new GFAtomicExpression(guardName, guardVars);
 		
 		// child expression
 		GFExpression child = this.visit(ctx.expr());

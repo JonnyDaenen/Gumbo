@@ -1,6 +1,7 @@
 package gumbo.input.parser;
 
 // Generated from Gumbo.g4 by ANTLR 4.5
+import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -37,6 +38,12 @@ public interface GumboVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitRelname(GumboParser.RelnameContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GumboParser#relarity}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRelarity(GumboParser.RelarityContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GumboParser#file}.
 	 * @param ctx the parse tree

@@ -1,19 +1,10 @@
-SET OUTPUT DIR 'output/nested';
-SET SCRATCH DIR 'scratch/nested';
+SET OUTPUT DIR 'output/grammartest';
+SET SCRATCH DIR 'scratch/grammartest';
 
-R = LOAD CSV 'input/experiments/EXP_008/R' AS (x1, x2, x3, x4, x5, x6, x7, x8, x9, x10);
-S = LOAD CSV 'input/experiments/EXP_008/S' AS (x1);
+E = LOAD CSV 'E.txt' ARITY 2;
+F = LOAD CSV 'F.txt' ARITY 1;
 
-//First = SELECT (x1) 
-//	  FROM R
-//	  WHERE NOT (x1) IN S;
-	  
-//Second = SELECT (x1, x2, x3, x4, x5, x6, x7, x8, x9, x10) 
-//	  	 FROM R
-//	  	 WHERE NOT (x2) IN First;
-	    
-Second = SELECT (x1, x2, x3, x4, x5, x6, x7, x8, x9, x10) 
-	  	 FROM R
-	  	 WHERE NOT (x2) IN (SELECT (x1) 
-	  						FROM R
-	  						WHERE NOT (x1) IN S);
+Out = SELECT (x)
+	  FROM E
+	  SATISFYING (x, y)
+	  WHERE (y) in (SELECT (x) FROM E SATISFYING (x, y) WHERE NOT (y) IN F)
