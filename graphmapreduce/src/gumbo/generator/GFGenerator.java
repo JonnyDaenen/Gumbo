@@ -158,6 +158,55 @@ public class GFGenerator {
 		
 		return expr;
 	}
+	
+	/**
+	 * Method that creates queries that select all tuples for which exactly one of the variables appears in the given guarded relations
+	 * e.g.: R(x1, x2) & ((S(x1) & !S(x2)) | ((!S(x1) & S(x2))
+	 * 
+	 * @throws GFGeneratorException
+	 */
+	public void addUniqueQuery() throws GFGeneratorException {
+		if (!unaryGuardedCheck())
+			throw new GFGeneratorException("Please provide atleast one unary guarded relation for this type of query.");
+		
+		RelationSchema guard = _guards.get(0); 
+		String[] guardFields = guard.getFields();
+				
+		GFAtomicExpression guardexpr = new GFAtomicExpression(guard.getName(), guardFields.clone());
+		GFAtomicExpression outputexpr = createOutputExpression(guard);
+		GFExpression childexpr = null;
+		int guardedId = 0;
+		
+		for (int i = 0; i < guard.getNumFields(); i++) {
+			GFExpression andexpr = null; 
+			for (int j = 0; j < guard.getNumFields(); j++) {
+				RelationSchema guarded = null;
+				while (guarded == null || guarded.getNumFields() != 1) {
+					guarded = _guardeds.get(guardedId);
+					guardedId = (guardedId + 1) % _guardeds.size();
+				}
+				
+				String field = guardFields[j];
+				GFExpression atom = new GFAtomicExpression(guarded.getName(), field);
+				if (i != j)
+					atom = new GFNotExpression(atom);
+				
+				andexpr = createSubExpressionOfType(QueryType.AND, andexpr, atom);
+			}
+			childexpr = createSubExpressionOfType(QueryType.OR, childexpr, andexpr);
+		}
+		
+		_queries.add(new GFExistentialExpression(guardexpr, childexpr, outputexpr));
+	}
+
+	private boolean unaryGuardedCheck() {
+		for (RelationSchema guarded : _guardeds) {
+			if (guarded.getNumFields() == 1)
+				return true;
+		}
+		
+		return false;
+	}
 
 	private GFAtomicExpression createOutputExpression(RelationSchema guard) {
 		String[] fields = guard.getFields().clone();
@@ -182,14 +231,22 @@ public class GFGenerator {
 	// for testing purposes only
 	public static void main(String[] args) {
 		try {
-			GFGenerator generator = new GFGenerator();
-			generator.addGuardRelation("R", 10, "input/experiments/EXP_008/R", InputFormat.CSV);
-			generator.addGuardedRelation("S", 1, "input/experiments/EXP_008/S", InputFormat.CSV);
-			generator.addQuery(QueryType.AND, 10);
-			generator.addQuery(QueryType.NEGATED_OR, 4);
+			GFGenerator generator1 = new GFGenerator();
+			generator1.addGuardRelation("R", 10, "input/experiments/EXP_008/R", InputFormat.CSV);
+			generator1.addGuardedRelation("S", 1, "input/experiments/EXP_008/S", InputFormat.CSV);
+			generator1.addQuery(QueryType.AND, 10);
+			generator1.addQuery(QueryType.NEGATED_OR, 4);
+			GumboQuery query1 = generator1.generate("GeneratorTest");
+			System.out.println(query1);
 			
-			GumboQuery gq = generator.generate("GeneratorTest");
-			System.out.println(gq);
+			GFGenerator generator2 = new GFGenerator();
+			generator2.addGuardRelation("R", 3, "input/experiments/EXP_008/R", InputFormat.CSV);
+			generator2.addGuardedRelation("S", 1, "input/experiments/EXP_008/S", InputFormat.CSV);
+			generator2.addGuardedRelation("T", 1, "input/experiments/EXP_008/T", InputFormat.CSV);
+			generator2.addGuardedRelation("U", 1, "input/experiments/EXP_008/U", InputFormat.CSV);
+			generator2.addUniqueQuery(); 
+			GumboQuery query2 = generator2.generate("UniqueQuery");
+			System.out.println(query2);
 		} catch (GFGeneratorException e) {
 			e.printStackTrace();
 		}

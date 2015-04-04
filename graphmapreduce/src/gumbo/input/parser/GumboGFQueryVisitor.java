@@ -1,8 +1,6 @@
 package gumbo.input.parser;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.TerminalNode;
