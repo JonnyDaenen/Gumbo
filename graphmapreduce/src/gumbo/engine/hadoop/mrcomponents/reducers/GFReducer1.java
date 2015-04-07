@@ -5,6 +5,7 @@ package gumbo.engine.hadoop.mrcomponents.reducers;
 
 import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
@@ -85,6 +86,7 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
 		Set<Pair<String, Integer>> buffer = new HashSet<>();
+		
 
 		// LOG.warn(key + ": ");
 
@@ -122,9 +124,10 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 					//					if (print)
 					//						LOG.error("Red1 Out: " + out1 + " " + out2);
 				}
-				// else we collect the data
-				else {
+				// else we buffer the data of the optimization if off
+				else if (!settings.getBooleanProperty(AbstractExecutorSettings.round1FiniteMemoryOptimizationOn)){
 					buffer.add(split);
+					context.getCounter(GumboRed1Counter.RED1_BUFFEREDITEMS).increment(1);
 				}
 
 				// if this is the key, we mark it

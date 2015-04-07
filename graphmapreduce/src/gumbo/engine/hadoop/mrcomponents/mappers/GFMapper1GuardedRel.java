@@ -58,6 +58,11 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 		value.set(value.toString().trim());
 		Tuple t = new Tuple(value.toString());
 		// System.out.println(t);
+		
+		
+		if (settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn)) {
+			value.set(value.toString()+proofSymbol); // FIXME reducer must ignore symbol if opt is on!
+		}
 
 		// guarded existance output
 		for (GFAtomicExpression guarded : eso.getGuardedsAll()) {

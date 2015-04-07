@@ -10,6 +10,9 @@ import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.engine.general.FileMappingExtractor;
+import gumbo.engine.hadoop.mrcomponents.comparators.Round1GroupComparator;
+import gumbo.engine.hadoop.mrcomponents.comparators.Round1Partitioner;
+import gumbo.engine.hadoop.mrcomponents.comparators.Round1SortComparator;
 import gumbo.engine.hadoop.mrcomponents.input.GuardInputFormat;
 import gumbo.engine.hadoop.mrcomponents.input.GuardTextInputFormat;
 import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardCsv;
@@ -24,6 +27,7 @@ import gumbo.engine.hadoop.mrcomponents.reducers.GFReducer1;
 import gumbo.engine.hadoop.mrcomponents.reducers.GFReducer2;
 import gumbo.engine.hadoop.mrcomponents.reducers.GFReducer2Text;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
@@ -155,9 +159,9 @@ public class GumboHadoopConverter {
 			// extract file mapping where input paths are made specific
 			// TODO also filter out non-related relations
 			RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
-			
+
 			LOG.info(mapping);
-			
+
 			// wrapper object for expressions
 			ExpressionSetOperations eso = new ExpressionSetOperations(extractExpressions(cug),mapping); 
 
@@ -226,6 +230,13 @@ public class GumboHadoopConverter {
 			hadoopJob.setOutputKeyClass(Text.class);
 			hadoopJob.setOutputValueClass(IntWritable.class);
 
+			// finite memory by sorting
+			if (settings.getBooleanProperty(AbstractExecutorSettings.round1FiniteMemoryOptimizationOn)) {
+				hadoopJob.setGroupingComparatorClass(Round1GroupComparator.class);
+				hadoopJob.setSortComparatorClass(Round1SortComparator.class);
+				hadoopJob.setPartitionerClass(Round1Partitioner.class);
+			}
+
 
 			return new ControlledJob(hadoopJob, null);
 
@@ -293,7 +304,7 @@ public class GumboHadoopConverter {
 			RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
 			// wrapper object for expressions
 			ExpressionSetOperations eso = new ExpressionSetOperations(extractExpressions(cug),mapping); 
-			
+
 
 			// pass arguments via configuration
 			Configuration conf = hadoopJob.getConfiguration();

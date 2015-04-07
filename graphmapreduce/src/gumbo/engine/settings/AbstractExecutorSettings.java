@@ -33,6 +33,7 @@ public abstract class AbstractExecutorSettings {
 	public static final String guardTuplePointerOptimizationOn = "gumbo.engine.guardTuplePointerOptimizationOn";
 	public static final String guardAsGuardedReReadOptimizationOn = "gumbo.engine.guardAsGuardedReReadOptimizationOn"; // TODO this is currently implemented, but needs to become a toggle
 
+	public static final String round1FiniteMemoryOptimizationOn = "gumbo.engine.round1FiniteMemoryOptimizationOn"; // TODO implement 
 
 
 	/**
@@ -44,6 +45,7 @@ public abstract class AbstractExecutorSettings {
 		setBooleanProperty(guardKeepaliveOptimizationOn, true);
 		setBooleanProperty(guardTuplePointerOptimizationOn, true);
 		setBooleanProperty(guardAsGuardedReReadOptimizationOn, true); 
+		setBooleanProperty(round1FiniteMemoryOptimizationOn, true); 
 		setProperty(PROOF_SYMBOL, "#");
 
 	}
@@ -54,6 +56,7 @@ public abstract class AbstractExecutorSettings {
 		setBooleanProperty(guardKeepaliveOptimizationOn, false);
 		setBooleanProperty(guardTuplePointerOptimizationOn, false);
 		setBooleanProperty(guardAsGuardedReReadOptimizationOn, false); 
+		setBooleanProperty(round1FiniteMemoryOptimizationOn, false); 
 
 	}
 	
@@ -63,6 +66,7 @@ public abstract class AbstractExecutorSettings {
 		setBooleanProperty(guardKeepaliveOptimizationOn, true);
 		setBooleanProperty(guardTuplePointerOptimizationOn, true);
 		setBooleanProperty(guardAsGuardedReReadOptimizationOn, true);
+		setBooleanProperty(round1FiniteMemoryOptimizationOn, true);
 
 	}
 	
@@ -74,6 +78,8 @@ public abstract class AbstractExecutorSettings {
 		keys.add(guardKeepaliveOptimizationOn);
 		keys.add(guardTuplePointerOptimizationOn);
 		keys.add(guardAsGuardedReReadOptimizationOn);
+		keys.add(round1FiniteMemoryOptimizationOn);
+		// CLEAN use reflection
 		return keys;
 	}
 

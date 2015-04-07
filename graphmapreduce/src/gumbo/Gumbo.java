@@ -45,7 +45,8 @@ public class Gumbo extends Configured implements Tool {
 		
 		HadoopExecutorSettings settings = new HadoopExecutorSettings(conf);
 		settings.loadDefaults();
-		settings.turnOffOptimizations();
+		settings.turnOnOptimizations();
+//		settings.setBooleanProperty(settings.round1Sort, false);
 		
 		for (Entry<String, String> entry: conf) {
 			if(entry.getKey().contains("gumbo")) {
@@ -70,8 +71,8 @@ public class Gumbo extends Configured implements Tool {
 		}
 		
 		// parse file
-		//GumboFileParser parser = new GumboFileParser();
-		GumboScriptFileParser parser = new GumboScriptFileParser();
+		GumboFileParser parser = new GumboFileParser();
+//		GumboScriptFileParser parser = new GumboScriptFileParser();
 		GumboQuery query = parser.parse(filename);
 		
 		LOG.info(query);
@@ -83,6 +84,8 @@ public class Gumbo extends Configured implements Tool {
 
 		HadoopEngine engine = new HadoopEngine();
 		engine.executePlan(plan,conf);
+		
+		System.out.println(engine.getCounters());
 
 		return 0;
 	}
