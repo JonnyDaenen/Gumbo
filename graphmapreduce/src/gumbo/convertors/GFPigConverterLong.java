@@ -151,9 +151,8 @@ public class GFPigConverterLong extends GFPigConverter {
 	 */
 	private String getLiteralGroupSchema(String name, RelationFileMapping rfm) throws GFConversionException {
 		String schema = null;
-		
 		for (RelationSchema rs : rfm.getSchemas()) {
-			if (rs.getName() == name) {
+			if (rs.getName().equals(name)) {
 				schema = rs.toString().substring(name.length());
 				break;
 			}

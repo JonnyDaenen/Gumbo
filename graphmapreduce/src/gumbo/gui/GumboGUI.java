@@ -19,6 +19,7 @@ import gumbo.engine.spark.SparkEngine;
 import gumbo.gui.gumbogui.GumboMainFrame;
 import gumbo.gui.gumbogui.PlanViewer;
 import gumbo.gui.panels.ConsolePanel;
+import gumbo.gui.panels.PigPanel;
 import gumbo.gui.panels.QueryInputDetails;
 import gumbo.gui.panels.QueryInputField;
 import gumbo.gui.panels.SettingsPanel;
@@ -87,7 +88,7 @@ public class GumboGUI extends Configured implements Tool {
 	private SettingsPanel settings;
 	private ConsolePanel console;
 
-
+	private PigPanel pig;
 
 	private GumboPlan plan;
 
@@ -117,7 +118,7 @@ public class GumboGUI extends Configured implements Tool {
 		inputIO = new QueryInputDetails();
 		settings = new SettingsPanel();
 		console = new ConsolePanel();
-
+		
 		// TODO check output redirection?
 		JTextAreaOutputStream outPipe = new JTextAreaOutputStream(console.getConsoleField());
 		System.setOut (new PrintStream (outPipe));
@@ -155,12 +156,16 @@ public class GumboGUI extends Configured implements Tool {
 		editorScrollPane.setMinimumSize(new Dimension(10, 10));
 
 		resetMetrics();
+		
+		// pig tab
+		pig = new PigPanel();
 
 		// tabs for different panels
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Query", queryOverall);
 		tabbedPane.addTab("Plan", planView);
 		tabbedPane.addTab("Metrics", editorScrollPane);
+		tabbedPane.addTab("Pig", pig);
 
 		GumboMainFrame mainwindow = new GumboMainFrame(tabbedPane);
 
@@ -644,6 +649,7 @@ public class GumboGUI extends Configured implements Tool {
 							}
 
 							gumboQuery = new GumboQuery("Gumbo_"+demoList.getSelectedItem(),inputQuery, inputs, output,scratch); // TODO add date to name
+							pig.setQuery(gumboQuery);
 
 							// create plan
 							GFCompiler compiler = new GFCompiler(getPartitioner());

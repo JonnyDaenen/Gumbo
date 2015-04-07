@@ -78,7 +78,8 @@ public class GFPigConverterWide extends GFPigConverter implements GFVisitor<Stri
 		} catch (GFVisitorException e) {
 			throw new GFConversionException("Error while visiting GFExpression!", e);
 		}
-		query += outname + " = FILTER " + outname + "_Y BY " + boolexpr + ";" + System.lineSeparator();
+		query += outname + "_Z = FILTER " + outname + "_Y BY " + boolexpr + ";" + System.lineSeparator();
+		query += outname + " = FOREACH " + outname + "_Z GENERATE flatten(group);" + System.lineSeparator();
 		query += System.lineSeparator();
 				
 		return query;
@@ -105,7 +106,7 @@ public class GFPigConverterWide extends GFPigConverter implements GFVisitor<Stri
 		String schema = null;
 		
 		for (RelationSchema rs : rfm.getSchemas()) {
-			if (rs.getName() == name) {
+			if (rs.getName().equals(name)) {
 				schema = rs.toString().substring(name.length());
 				break;
 			}
