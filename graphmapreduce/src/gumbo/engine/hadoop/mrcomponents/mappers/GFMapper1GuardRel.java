@@ -76,7 +76,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 
 			boolean outputGuard = false;
 			boolean guardIsGuarded = false;
-			
+
 
 			// check guards + atom (keep-alive)
 			for (GFAtomicExpression guard : eso.getGuardsAll()) {
@@ -103,7 +103,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 						if (guarded.getRelationSchema().equals(guard.getRelationSchema())) {
 							guardIsGuarded = true;
 						}
-						
+
 						GFAtomProjection p = eso.getProjections(guard, guarded);
 						Tuple tprime = p.project(t);
 
@@ -136,21 +136,26 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 
 			// only output keep-alive if it matched a guard
 			if (!settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn) && outputGuard) {
-				context.write(value, value);
-				context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE).increment(1);
-				context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()*2);
-				//				 LOG.warn("Guard: " + value.toString() + " " + value.toString());
+					context.write(value, value);
+					context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE).increment(1);
+					context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()*2);
+					//				 LOG.warn("Guard: " + value.toString() + " " + value.toString());
 			}
-			
+
 			// output a proof of existence if the guard is also guarded
 			if (guardIsGuarded) {
-//				LOG.error("guard output POE");
-				out1.set(t.toString());
+				//				LOG.error("guard output POE");
+				String proofSymbol = "";
+				if (settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn)) {
+					proofSymbol = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL);
+				}
+				out1.set(t.toString() + proofSymbol);
 				out2.set(settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL));
 				context.write(out1, out2);
+				// TODO count
 			}
-			
-			
+
+
 
 		} catch (SecurityException | TupleIDError | NonMatchingTupleException | GFOperationInitException e) {
 			LOG.error(e.getMessage());
@@ -160,7 +165,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 
 	}
 
-	
+
 
 
 }

@@ -87,6 +87,7 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 
 		Set<Pair<String, Integer>> buffer = new HashSet<>();
 		
+		System.out.println(key);
 
 		// LOG.warn(key + ": ");
 
@@ -124,14 +125,22 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 					//					if (print)
 					//						LOG.error("Red1 Out: " + out1 + " " + out2);
 				}
-				// else we buffer the data of the optimization if off
+				// else we buffer the data
+				// if the optimization is off
 				else if (!settings.getBooleanProperty(AbstractExecutorSettings.round1FiniteMemoryOptimizationOn)){
 					buffer.add(split);
 					context.getCounter(GumboRed1Counter.RED1_BUFFEREDITEMS).increment(1);
+				// if optimization is on, we know that if the key is not there, we can skip the rest
+				} else {
+					System.out.println("BUFFER COLLISION: " + t);
+					context.getCounter(GumboRed1Counter.RED1_PREMATURE_ABORTS).increment(1);
+					// skip loop
+					 break;
 				}
 
 				// if this is the key, we mark it
 			} else if (!keyFound) {
+				System.out.println("key found: " + t);
 				keyFound = true;
 			}
 		}
@@ -149,7 +158,7 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 	}
 
 	/**
-	 * Splits Stirng into 2 parts. String is supposed to be separated with ';'.
+	 * Splits String into 2 parts. String is supposed to be separated with ';'.
 	 * When no ';' is present, the numeric value is -1. 
 	 * @param t
 	 */

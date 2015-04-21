@@ -61,7 +61,11 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 		
 		
 		if (settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn)) {
-			value.set(value.toString()+proofSymbol); // FIXME reducer must ignore symbol if opt is on!
+			value.set(value.toString()+proofSymbol);
+			System.out.println("SENDING HASHES");
+		} else {
+			System.out.println("NOT SENDING HASHES");
+			
 		}
 
 		// guarded existance output
@@ -75,7 +79,7 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 					context.getCounter(GumboMap1Counter.PROOF_OF_EXISTENCE).increment(1);
 					context.getCounter(GumboMap1Counter.PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()+1);
 				} else {
-					context.write(value, value);
+					context.write(value, value); // FIXME remove value #
 					context.getCounter(GumboMap1Counter.PROOF_OF_EXISTENCE).increment(1);
 					context.getCounter(GumboMap1Counter.PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()*2);
 				}

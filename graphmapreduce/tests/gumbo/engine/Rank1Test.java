@@ -67,16 +67,18 @@ public class Rank1Test {
 		Collection<Object[]> confs = new HashSet<Object[]>();
 
 		Configuration on = new Configuration();
+		(new HadoopExecutorSettings(on)).loadDefaults();
 		(new HadoopExecutorSettings(on)).turnOnOptimizations();
 
 		Configuration off = new Configuration();
+		(new HadoopExecutorSettings(off)).loadDefaults();
 		(new HadoopExecutorSettings(off)).turnOffOptimizations();
 
 		Object [] onconf = {on, "optOn"};
 		Object [] offconf = {off, "optOff"};
 
 		confs.add(onconf);
-		confs.add(offconf);
+//		confs.add(offconf);
 
 		return confs;
 

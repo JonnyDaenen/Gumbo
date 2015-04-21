@@ -28,10 +28,16 @@ public class Round1SortComparator extends WritableComparator {
 		KeyPairWrapper first = new KeyPairWrapper(((Text)a).toString());
 		KeyPairWrapper second = new KeyPairWrapper(((Text)b).toString());
 		
+		// sort on first field
 		int diff = first.first.compareTo(second.first);
-		if ( diff == 0) {
+		// sort on second field
+		if (diff == 0) {
 			diff = first.second.compareTo(second.second);
 		} 
+
+		System.out.println(a + " - " + b + diff);
+		System.out.println(first + " - " + second + diff);
+		
 			
 		
 		
