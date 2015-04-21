@@ -7,6 +7,7 @@ import gumbo.compiler.GFCompiler;
 import gumbo.compiler.GumboPlan;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.input.GumboFileParser;
 import gumbo.input.GumboQuery;
 import gumbo.input.parser.GumboScriptFileParser;
@@ -40,20 +41,20 @@ public class Gumbo extends Configured implements Tool {
 
 
 	public int run(String[] args) throws Exception {
-		// Configuration processed by ToolRunner
-		Configuration conf = getConf(); 
-		
-		HadoopExecutorSettings settings = new HadoopExecutorSettings(conf);
+
+		// load Configuration processed by ToolRunner
+		HadoopExecutorSettings settings = new HadoopExecutorSettings();
 		settings.loadDefaults();
-		settings.turnOnOptimizations();
-//		settings.setBooleanProperty(settings.round1Sort, false);
+		settings.loadConfig(getConf());
+//		settings.setBooleanProperty(AbstractExecutorSettings.round1FiniteMemoryOptimizationOn, false);
 		
-		for (Entry<String, String> entry: conf) {
-			if(entry.getKey().contains("gumbo")) {
-			System.out.printf("%s=%s\n", entry.getKey(), entry.getValue());
+		
+		for (Entry<String, String> entry: settings.getConf()) {
+			if ( entry.getKey().contains("gumbo")) {
+				System.out.printf("%s=%s\n", entry.getKey(), entry.getValue());
 			}
 		}
-
+		
 		// get file argument
 		// FUTURE make more advanced
 		String filename = null;
@@ -83,7 +84,7 @@ public class Gumbo extends Configured implements Tool {
 		System.out.println(plan);
 
 		HadoopEngine engine = new HadoopEngine();
-		engine.executePlan(plan,conf);
+		engine.executePlan(plan,settings.getConf());
 		
 		System.out.println(engine.getCounters());
 

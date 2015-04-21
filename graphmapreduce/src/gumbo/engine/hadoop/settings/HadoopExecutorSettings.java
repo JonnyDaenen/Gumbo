@@ -3,6 +3,9 @@
  */
 package gumbo.engine.hadoop.settings;
 
+import java.util.Iterator;
+import java.util.Map.Entry;
+
 import gumbo.engine.settings.AbstractExecutorSettings;
 
 import org.apache.commons.logging.Log;
@@ -22,6 +25,11 @@ public class HadoopExecutorSettings extends AbstractExecutorSettings{
 	private static final Log LOG = LogFactory.getLog(HadoopExecutorSettings.class);
 	private Configuration conf;
 	
+	
+	public HadoopExecutorSettings() {
+		this.conf = new Configuration();
+	}
+	
 	public HadoopExecutorSettings(Configuration conf) {
 		this.conf = conf;
 	}
@@ -36,11 +44,24 @@ public class HadoopExecutorSettings extends AbstractExecutorSettings{
 
 	@Override
 	public void setProperty(String key, String value) {
-		conf.set(key, value);	
+//		System.out.println(key);
+		conf.set(key, value);
 	}
 
 	public Configuration getConf() {
 		return conf;
+	}
+	
+	/**
+	 * copies the configuration in the current settings.
+	 * Settings that are already present are overwritten.
+	 * @param conf the configuration to load
+	 */
+	public void loadConfig(Configuration conf) {
+		
+		for (Entry<String, String> a : conf) {
+			setProperty(a.getKey(), a.getValue());
+		}
 	}
 
 

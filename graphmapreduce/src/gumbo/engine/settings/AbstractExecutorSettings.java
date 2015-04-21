@@ -47,7 +47,6 @@ public abstract class AbstractExecutorSettings {
 		setBooleanProperty(guardAsGuardedReReadOptimizationOn, true); 
 		setBooleanProperty(round1FiniteMemoryOptimizationOn, true); 
 		setProperty(PROOF_SYMBOL, "#");
-
 	}
 	
 	public void turnOffOptimizations() {
@@ -57,7 +56,6 @@ public abstract class AbstractExecutorSettings {
 		setBooleanProperty(guardTuplePointerOptimizationOn, false);
 		setBooleanProperty(guardAsGuardedReReadOptimizationOn, false); 
 		setBooleanProperty(round1FiniteMemoryOptimizationOn, false); 
-
 	}
 	
 	public void turnOnOptimizations() {
