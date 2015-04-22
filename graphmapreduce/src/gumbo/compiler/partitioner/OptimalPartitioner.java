@@ -26,7 +26,7 @@ public class OptimalPartitioner implements CalculationPartitioner {
 
 		// create array of calculations
 		CalculationUnit[] calculations = set.getCalculations().toArray(new CalculationUnit[set.size()]);
-		System.out.println(Arrays.toString(calculations));
+//		System.out.println(Arrays.toString(calculations));
 
 		return findBestLevelAssignment(set, calculations, new int [calculations.length], 0, 0, calculations.length-1, null);
 	}

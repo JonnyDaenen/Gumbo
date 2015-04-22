@@ -87,7 +87,6 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 
 		Set<Pair<String, Integer>> buffer = new HashSet<>();
 		
-		System.out.println(key);
 
 		// LOG.warn(key + ": ");
 

@@ -62,11 +62,8 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 		
 		if (settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn)) {
 			value.set(value.toString()+proofSymbol);
-			System.out.println("SENDING HASHES");
-		} else {
-			System.out.println("NOT SENDING HASHES");
-			
-		}
+//			System.out.println("SENDING HASHES");
+		} 
 
 		// guarded existance output
 		for (GFAtomicExpression guarded : eso.getGuardedsAll()) {

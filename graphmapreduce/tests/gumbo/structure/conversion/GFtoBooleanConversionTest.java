@@ -81,7 +81,7 @@ public class GFtoBooleanConversionTest {
 		bec.setValue(mapping.getVariable(gfae1), true);
 		bec.setValue(mapping.getVariable(gfae3), false);
 		
-		System.out.println(be);
+//		System.out.println(be);
 		try {
 			boolean n = be.evaluate(bec);
 			assertFalse(n);
@@ -114,7 +114,7 @@ public class GFtoBooleanConversionTest {
 		
 		bec.setValue(mapping.getVariable(gfae1), true);
 		
-		System.out.println(be);
+//		System.out.println(be);
 		try {
 			assertTrue(be.evaluate(bec));
 		} catch (VariableNotFoundException e) {

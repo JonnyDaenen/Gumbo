@@ -62,7 +62,7 @@ public class GFInfixSerializer {
 		    }*/
 		    		    
 		    if (dummyArray.length != 2) {
-		    	System.out.println("Expect exactly one " + queryDef + " on defining the query "+ss);
+//		    	System.out.println("Expect exactly one " + queryDef + " on defining the query "+ss);
 		    	throw new DeserializeException("Expect exactly one " + queryDef + " on defining the query "+ss);		    	
 		    }
 		    

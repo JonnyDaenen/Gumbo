@@ -120,7 +120,7 @@ public class GumboFileParser {
 			// parse queries one by one
 			// CLEAN is there an advantage in assembling a set first?
 			for (String queryString : queries) {
-				System.out.println(queryString);
+//				System.out.println(queryString);
 				GFExpression query = parser.deserialize(queryString);
 				querieset.add(query);
 

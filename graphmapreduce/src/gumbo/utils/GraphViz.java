@@ -236,6 +236,7 @@ public class GraphViz
 			// Close it if we need to
 			if( in != null ) in.close();
 
+			// CLEAN remove print statements
 			if (img.delete() == false) 
 				System.err.println("Warning: " + img.getAbsolutePath() + " could not be deleted!");
 		}

@@ -35,8 +35,8 @@ public class Round1SortComparator extends WritableComparator {
 			diff = first.second.compareTo(second.second);
 		} 
 
-		System.out.println(a + " - " + b + diff);
-		System.out.println(first + " - " + second + diff);
+//		System.out.println(a + " - " + b + diff);
+//		System.out.println(first + " - " + second + diff);
 		
 			
 		

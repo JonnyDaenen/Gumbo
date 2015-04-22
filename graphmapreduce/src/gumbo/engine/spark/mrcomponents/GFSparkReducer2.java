@@ -66,7 +66,7 @@ boolean print = false;
 			} else {
 				// non-tuples are id's
 				int id = Integer.parseInt(value);
-				System.out.println(id);
+//				System.out.println(id);
 				print = true;
 
 				// adjust context
