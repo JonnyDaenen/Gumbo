@@ -10,6 +10,7 @@ import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.engine.general.FileMappingExtractor;
+import gumbo.engine.hadoop.mrcomponents.combiners.GFCombinerGuarded;
 import gumbo.engine.hadoop.mrcomponents.comparators.Round1GroupComparator;
 import gumbo.engine.hadoop.mrcomponents.comparators.Round1Partitioner;
 import gumbo.engine.hadoop.mrcomponents.comparators.Round1SortComparator;
@@ -217,6 +218,11 @@ public class GumboHadoopConverter {
 			hadoopJob.setMapOutputKeyClass(Text.class);
 			hadoopJob.setMapOutputValueClass(Text.class);
 
+			/* COMBINER */
+			
+			if (settings.getBooleanProperty(AbstractExecutorSettings.guardedCombinerOptimizationOn)) {
+				hadoopJob.setCombinerClass(GFCombinerGuarded.class);
+			}
 
 			/* REDUCER */
 
