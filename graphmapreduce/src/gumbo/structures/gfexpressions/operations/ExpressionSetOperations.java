@@ -63,6 +63,7 @@ public class ExpressionSetOperations implements Externalizable {
 	protected HashMap<GFExistentialExpression, GFAtomProjection> projections;
 
 	protected HashMap<Pair<GFAtomicExpression, GFAtomicExpression>, GFAtomProjection> guardHasProjection;
+	protected HashMap<GFAtomicExpression, HashMap<GFAtomicExpression, GFAtomProjection>> guardHasProjection2;
 	protected HashMap<GFAtomicExpression, Set<GFAtomicExpression>> guardHasGuard;
 
 	protected Set<GFAtomicExpression> guardsAll;
@@ -80,6 +81,7 @@ public class ExpressionSetOperations implements Externalizable {
 		projections = new HashMap<>();
 
 		guardHasProjection = new HashMap<>();
+		guardHasProjection2 = new HashMap<>();
 		guardHasGuard = new HashMap<>();
 
 		guardsAll = new HashSet<>();
@@ -182,6 +184,16 @@ public class ExpressionSetOperations implements Externalizable {
 			GFAtomProjection r = new GFAtomProjection(guard, guarded);
 
 			guardHasProjection.put(p, r); 
+			
+			// improvement
+			HashMap<GFAtomicExpression, GFAtomProjection> map = null;
+			if (guardHasProjection2.containsKey(guarded)) {
+				map = guardHasProjection2.get(guarded);
+			} else {
+				map = new HashMap<GFAtomicExpression, GFAtomProjection>();
+				guardHasProjection2.put(guarded, map);
+			}
+			map.put(guard, r);	
 
 		}
 
@@ -231,14 +243,25 @@ public class ExpressionSetOperations implements Externalizable {
 	 */
 	public GFAtomProjection getProjections(GFAtomicExpression guard, GFAtomicExpression guarded)
 			throws GFOperationInitException {
-		comparisonObject.fst = guard;
-		comparisonObject.snd = guarded;
-		GFAtomProjection r = guardHasProjection.get(comparisonObject);
-
-		if (r == null)
+//		comparisonObject.fst = guard;
+//		comparisonObject.snd = guarded;
+//		GFAtomProjection r = guardHasProjection.get(comparisonObject);
+//
+//		if (r == null)
+//			throw new GFOperationInitException("No projections found for: " + guard + " " + guarded);
+//
+//		return r;
+		
+		HashMap<GFAtomicExpression, GFAtomProjection> map = guardHasProjection2.get(guarded);
+		if (map == null)
 			throw new GFOperationInitException("No projections found for: " + guard + " " + guarded);
 
-		return r;
+		GFAtomProjection item = map.get(guard);
+		
+		if (item == null)
+			throw new GFOperationInitException("No projections found for: " + guard + " " + guarded);
+
+		return item;
 	}
 
 	/**
