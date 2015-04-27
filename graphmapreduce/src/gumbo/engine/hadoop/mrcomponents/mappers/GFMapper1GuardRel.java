@@ -65,19 +65,22 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 
 
 		// trim is necessary to remove extra whitespace
-		value.set(value.toString().trim());
+//		value.set(value.toString().trim());
+
+		
 
 		try {
 
-
-
-			Tuple t = new Tuple(value);
+			// transform data
+			Tuple t = new Tuple(value.getBytes());
+			String replyAddress;
 
 			// replace value with pointer when optimization is on
 			if (guardTuplePointerOptimizationOn) {
-				value.set(pathids.getTupleID(context, key.get())); // key indicates offset in TextInputFormat
-			}
-			// System.out.println(t);
+				replyAddress = pathids.getTupleID(context, key.get()); // key indicates offset in TextInputFormat
+			} else
+				replyAddress = t.toString();
+				
 
 
 			boolean outputGuard = false;
@@ -94,8 +97,8 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 
 					// output guard
 					if (!guardKeepaliveOptimizationOn) {
-						out1.set(value.toString() + ";" + guardID);
-						context.write(value, out1);
+						out1.set(replyAddress + ";" + guardID);
+						context.write(value, out1); // TODO is this ok for pointers?
 						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST).increment(1);
 						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_BYTES).increment(out1.getLength() + value.getLength());
 					}
@@ -123,7 +126,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 						out1.set(tprime.toString());
 
 						// value: request message with response code and atom
-						out2.set(value + ";" + guardedID);
+						out2.set(replyAddress + ";" + guardedID);
 
 						context.write(out1, out2);
 						context.getCounter(GumboMap1Counter.REQUEST).increment(1);
@@ -140,7 +143,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 
 			// only output keep-alive if it matched a guard
 			if (!guardKeepaliveOptimizationOn && outputGuard) {
-				context.write(value, value);
+				context.write(value, value); // TODO pointers/POE?
 				context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE).increment(1);
 				context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()*2);
 				//				 LOG.warn("Guard: " + value.toString() + " " + value.toString());

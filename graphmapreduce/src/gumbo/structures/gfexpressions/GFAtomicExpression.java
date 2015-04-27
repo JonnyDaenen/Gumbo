@@ -18,6 +18,8 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 	String relation;
 	String[] variables;
 
+	RelationSchema schemaCache = null;
+
 	boolean cached;
 	List<Pair<Integer, Integer>> checks;
 
@@ -141,21 +143,21 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 
 		// number of fields must be equal
 		if (size() != t.size()) {
-//			System.out.println("size: " + toString() + " " + t.toString());
+			//			System.out.println("size: " + toString() + " " + t.toString());
 			return false;
 		}
 
 		// name must be equal
 		if (!relation.equals(t.getName())) {
 
-//			System.out.println("name: " + toString() + " " + t.toString());
+			//			System.out.println("name: " + toString() + " " + t.toString());
 			return false;
 		}
 
 		if (!cached) {
-			
+
 			boolean success = true;
-			
+
 			// compare field names
 			for (int i = 0; i < size(); i++) {
 				// next fields
@@ -178,7 +180,7 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 			cached = true;
 			return success;
 		} else {
-			
+
 			for (Pair<Integer, Integer> p : checks) {
 				if (!t.get(p.fst).equals(t.get(p.snd))) {
 					return false;
@@ -216,7 +218,10 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 	 * @return the relation schema of this atom (column names are arbitrary).
 	 */
 	public RelationSchema getRelationSchema() {
-		return new RelationSchema(this.relation, this.variables.length);
+		if (schemaCache == null)
+			schemaCache = new RelationSchema(this.relation, this.variables.length);
+		return schemaCache;
+
 	}
 
 	/**
@@ -271,19 +276,19 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 	 */
 	@Override
 	public int compareTo(Object o) {
-		
+
 		if (o == null) 
 			throw new NullPointerException();
-		
+
 		if (! (o instanceof GFAtomicExpression))
 			throw new ClassCastException();
-		
+
 		GFAtomicExpression other = (GFAtomicExpression) o;
-		
+
 		String s1 = this.generateString();
 		String s2 = other.generateString();
-		
-		
+
+
 		return s1.compareTo(s2);
 	}
 

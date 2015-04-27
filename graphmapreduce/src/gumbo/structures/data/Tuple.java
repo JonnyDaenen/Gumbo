@@ -20,7 +20,7 @@ public class Tuple {
 
 	String name;
 	String[] data;
-	String representation;
+	String representationCache;
 
 	/**
 	 * Creates a new tuple based on a given String. When the string is
@@ -34,7 +34,7 @@ public class Tuple {
 	 */
 	public Tuple(String s) {
 
-		representation = s;
+		representationCache = s;
 
 //		initialize(s.getBytes());
 		// // old2
@@ -98,6 +98,10 @@ public class Tuple {
 		this.data = data;
 	}
 
+	public Tuple(byte [] b) {
+		initialize(b);
+		
+	}
 	/**
 	 * @param value
 	 */
@@ -137,6 +141,8 @@ public class Tuple {
 				list.add(sb.toString());
 				sb.setLength(0);
 				break; // Text can contain extra garbage
+			} else if (c == ' ') { // skip spaces
+				continue;
 			} else {
 				sb.append(c);
 			}
@@ -148,7 +154,7 @@ public class Tuple {
 
 	public String generateString() {
 
-		if (representation == null) {
+		if (representationCache == null) {
 			StringBuilder sb = new StringBuilder(data.length * 5);
 
 			for (int i = 0; i < data.length; i++) {
@@ -160,10 +166,10 @@ public class Tuple {
 			sb.insert(0, '(');
 			sb.insert(0, name);
 
-			representation = sb.toString();
+			representationCache = sb.toString();
 		}
 
-		return representation;
+		return representationCache;
 
 	}
 
@@ -229,12 +235,12 @@ public class Tuple {
 	@Override
 	public String toString() {
 
-		if (representation != null) {
-			return representation;
+		if (representationCache != null) {
+			return representationCache;
 		}
 
-		representation = generateString();
-		return representation;
+		representationCache = generateString();
+		return representationCache;
 
 		//
 		// String out = "";
