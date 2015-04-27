@@ -10,7 +10,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import javax.xml.bind.DatatypeConverter;
+
 import org.apache.commons.codec.binary.Base64;
+
+import com.sun.xml.bind.DatatypeConverterImpl;
 
 /**
  * @author jonny
@@ -31,8 +35,6 @@ public class LongBase64Converter {
 		b = ByteBuffer.allocate(8);
 	}
 	
-	
-	
 	public byte[] long2byte(long l) throws IOException
 	{
 		
@@ -43,10 +45,27 @@ public class LongBase64Converter {
 //		dos.flush();
 //		byte[] result=baos.toByteArray();  
 //		baos.reset();
-		return Base64.encodeBase64(longToByteArray(l));
+		byte [] bytes = longToByteArray(l);
+//		DatatypeConverterImpl._printBase64Binary(bytes, 0, 8, charbytes, 0);;
+//		
+//		for (int i = 0; i < 12; i++)
+//			long64bytes[i] = (byte) charbytes[i];
+//		
+//		return long64bytes;
+		
+		return DatatypeConverter.printBase64Binary(bytes).getBytes();
+//		return Base64.encodeBase64(longToByteArray(l));
 	}
 	
 	public byte[] longToByteArray(long value) {
+//		int x = 65;
+//		for (int i = 0; i < 8; i++) {
+//			longbytes[i] = (byte)(value >> x);
+//			x -= 8;
+//		}
+//		
+//		return longbytes;
+				
 	    return new byte[] {
 	        (byte) (value >> 56),
 	        (byte) (value >> 48),
@@ -59,6 +78,37 @@ public class LongBase64Converter {
 	    };
 	}
 	
+	public byte [] newconvert(long l){
+		byte[] result = new byte[11];
+		for (int i = 0; i < 11; i++) {
+			if (l == 0)
+				result[i] = '0';
+			else {
+				result[i] = convert6bit((l % 64));
+				l = l >> 6;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * @param l
+	 * @return
+	 */
+	private byte convert6bit(long l) {
+		if ( l < 26 )
+			l = 'A' + l;
+		else if ( l < 52)
+			l = 'a' + l - 26;
+		else if ( l < 62)
+			l = '0' + l - 52;
+		else if (l == 62)
+			l = '+';
+		else
+			l = '/';
+			
+		return (byte)l;
+	}
 	
 
 

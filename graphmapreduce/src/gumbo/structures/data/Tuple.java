@@ -155,16 +155,20 @@ public class Tuple {
 	public String generateString() {
 
 		if (representationCache == null) {
-			StringBuilder sb = new StringBuilder(data.length * 5);
+			StringBuilder sb = new StringBuilder(data.length * 10);
 
+
+			sb.append(name);
+			sb.append('(');
+			
 			for (int i = 0; i < data.length; i++) {
 				sb.append(data[i]);
 				sb.append(',');
 			}
 			sb.deleteCharAt(sb.length() - 1);
 			sb.append(')');
-			sb.insert(0, '(');
-			sb.insert(0, name);
+//			sb.insert(0, '(');
+//			sb.insert(0, name);
 
 			representationCache = sb.toString();
 		}
@@ -235,12 +239,7 @@ public class Tuple {
 	@Override
 	public String toString() {
 
-		if (representationCache != null) {
-			return representationCache;
-		}
-
-		representationCache = generateString();
-		return representationCache;
+		return generateString();
 
 		//
 		// String out = "";
