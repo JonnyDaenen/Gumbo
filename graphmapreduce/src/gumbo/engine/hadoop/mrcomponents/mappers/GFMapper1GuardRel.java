@@ -17,6 +17,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Counter;
 
 /**
  * Also outputs the atoms when a guard is projected onto them.
@@ -40,6 +41,21 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 	boolean guardKeepaliveOptimizationOn;
 	boolean round1FiniteMemoryOptimizationOn;
 
+	protected Counter KAR;
+	protected Counter KARB;
+	
+
+	protected Counter R;
+	protected Counter RB;
+	protected Counter RVB;
+	protected Counter RKB;
+	
+
+	protected Counter KAPOE;
+	protected Counter KAPOEB;
+
+	private StringBuffer buffer;
+
 
 	/**
 	 * @see gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1Identity#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -54,6 +70,23 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
 	
 		proofText = new Text(settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL));
+		
+		KAR = context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST);
+		KARB = context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_BYTES);
+		
+		
+
+		
+		R = context.getCounter(GumboMap1Counter.REQUEST);
+		RB = context.getCounter(GumboMap1Counter.REQUEST_BYTES);
+		RVB = context.getCounter(GumboMap1Counter.REQUEST_KEY_BYTES);
+		RKB = context.getCounter(GumboMap1Counter.REQUEST_VALUE_BYTES);
+		
+
+		KAPOE = context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE);
+		KAPOEB = context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE_BYTES);
+		
+		buffer = new StringBuffer(128);
 	}
 
 	/**
@@ -99,11 +132,15 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 
 					// output guard
 					if (!guardKeepaliveOptimizationOn) {
-						String valueString = replyAddress + ";" + guardID;
-						out1.set(valueString.getBytes());
+						buffer.setLength(0);
+						buffer.append(replyAddress);
+						buffer.append(';');
+						buffer.append(guardID);
+//						String valueString = replyAddress + ";" + guardID;
+						out1.set(buffer.toString().getBytes());
 						context.write(value, out1); // TODO is this ok for pointers?
-						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST).increment(1);
-						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_BYTES).increment(out1.getLength() + value.getLength());
+						KAR.increment(1);
+						KARB.increment(out1.getLength() + value.getLength());
 					}
 					// LOG.warn(value.toString() + " " + out1.toString());
 					outputGuard = true;
@@ -129,14 +166,18 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 						out1.set(tprime.toString().getBytes());
 
 						// value: request message with response code and atom
-						String valueString = replyAddress + ";" + guardedID;
-						out2.set(valueString.getBytes());
+//						String valueString = replyAddress + ";" + guardedID;
+						buffer.setLength(0);
+						buffer.append(replyAddress);
+						buffer.append(';');
+						buffer.append(guardedID);
+						out2.set(buffer.toString().getBytes());
 
 						context.write(out1, out2);
-						context.getCounter(GumboMap1Counter.REQUEST).increment(1);
-						context.getCounter(GumboMap1Counter.REQUEST_BYTES).increment(out1.getLength() + out2.getLength());
-						context.getCounter(GumboMap1Counter.REQUEST_KEY_BYTES).increment(out1.getLength());
-						context.getCounter(GumboMap1Counter.REQUEST_VALUE_BYTES).increment(out2.getLength());
+						R.increment(1);
+						RB.increment(out1.getLength() + out2.getLength());
+						RKB.increment(out1.getLength());
+						RVB.increment(out2.getLength());
 
 						//							LOG.warn("Guard: " + out1 + out2);
 						//						}
@@ -148,8 +189,8 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 			// only output keep-alive if it matched a guard
 			if (!guardKeepaliveOptimizationOn && outputGuard) {
 				context.write(value, value); // TODO pointers/POE?
-				context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE).increment(1);
-				context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()*2);
+				KAPOE.increment(1);
+				KAPOEB.increment(value.getLength()*2);
 				//				 LOG.warn("Guard: " + value.toString() + " " + value.toString());
 			}
 
