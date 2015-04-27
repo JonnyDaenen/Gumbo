@@ -132,12 +132,8 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 
 					// output guard
 					if (!guardKeepaliveOptimizationOn) {
-						buffer.setLength(0);
-						buffer.append(replyAddress);
-						buffer.append(';');
-						buffer.append(guardID);
-//						String valueString = replyAddress + ";" + guardID;
-						out1.set(buffer.toString().getBytes());
+						String valueString = replyAddress + ";" + guardID;
+						out1.set(valueString.getBytes());
 						context.write(value, out1); // TODO is this ok for pointers?
 						KAR.increment(1);
 						KARB.increment(out1.getLength() + value.getLength());
@@ -166,12 +162,8 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 						out1.set(tprime.toString().getBytes());
 
 						// value: request message with response code and atom
-//						String valueString = replyAddress + ";" + guardedID;
-						buffer.setLength(0);
-						buffer.append(replyAddress);
-						buffer.append(';');
-						buffer.append(guardedID);
-						out2.set(buffer.toString().getBytes());
+						String valueString = replyAddress + ";" + guardedID;
+						out2.set(valueString.getBytes());
 
 						context.write(out1, out2);
 						R.increment(1);
