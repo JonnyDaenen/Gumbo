@@ -131,7 +131,7 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 					context.getCounter(GumboRed1Counter.RED1_BUFFEREDITEMS).increment(1);
 				// if optimization is on, we know that if the key is not there, we can skip the rest
 				} else {
-					System.out.println("BUFFER COLLISION: " + t);
+//					System.out.println("BUFFER COLLISION: " + t);
 					context.getCounter(GumboRed1Counter.RED1_PREMATURE_ABORTS).increment(1);
 					// skip loop
 					 break;
@@ -139,7 +139,7 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 
 				// if this is the key, we mark it
 			} else if (!keyFound) {
-				System.out.println("key found: " + t);
+//				System.out.println("key found: " + t);
 				keyFound = true;
 			}
 		}

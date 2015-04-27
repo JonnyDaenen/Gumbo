@@ -28,6 +28,8 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 
 	ExpressionSetOperations eso;
 	HadoopExecutorSettings settings;
+	
+	Text t;
 
 
 	/**
@@ -56,6 +58,7 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}
 		
+		t = new Text();
 	}
 
 	/**
@@ -75,7 +78,8 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 //		
 //		LOG.error("File Name Processing "+filePath);
 //		
-		context.write(new Text(key.toString()), value);
+		t.set(key.toString());
+		context.write(t, value);
 	}
 
 }

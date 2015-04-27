@@ -34,6 +34,11 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 	Text out2 = new Text();
 	TupleIDCreator pathids; // OPTIMIZE extract this and perform outside of mapper
 
+	/* settings cache */
+	boolean guardTuplePointerOptimizationOn;
+	boolean guardKeepaliveOptimizationOn;
+	boolean round1FiniteMemoryOptimizationOn;
+
 
 	/**
 	 * @see gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1Identity#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -42,6 +47,11 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
 		pathids = new TupleIDCreator(eso.getFileMapping());
+
+		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn);
+		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn);
+		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
+	
 	}
 
 	/**
@@ -53,11 +63,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 	@Override
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
-		boolean print = false;
-		if (print && value.toString().contains(",1000,")) {
-			LOG.error("Mapper1: " + value);
-			print = true;
-		}
+
 		// trim is necessary to remove extra whitespace
 		value.set(value.toString().trim());
 
@@ -68,7 +74,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 			Tuple t = new Tuple(value);
 
 			// replace value with pointer when optimization is on
-			if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
+			if (guardTuplePointerOptimizationOn) {
 				value.set(pathids.getTupleID(context, key.get())); // key indicates offset in TextInputFormat
 			}
 			// System.out.println(t);
@@ -87,7 +93,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 					int guardID = eso.getAtomId(guard);
 
 					// output guard
-					if (!settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn)) {
+					if (!guardKeepaliveOptimizationOn) {
 						out1.set(value.toString() + ";" + guardID);
 						context.write(value, out1);
 						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST).increment(1);
@@ -124,9 +130,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 						context.getCounter(GumboMap1Counter.REQUEST_BYTES).increment(out1.getLength() + out2.getLength());
 						context.getCounter(GumboMap1Counter.REQUEST_KEY_BYTES).increment(out1.getLength());
 						context.getCounter(GumboMap1Counter.REQUEST_VALUE_BYTES).increment(out2.getLength());
-						if (print) {
-							LOG.error("Mapper1 output: " + out1 + " " + out2);
-						}
+
 						//							LOG.warn("Guard: " + out1 + out2);
 						//						}
 
@@ -135,18 +139,18 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 			}
 
 			// only output keep-alive if it matched a guard
-			if (!settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn) && outputGuard) {
-					context.write(value, value);
-					context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE).increment(1);
-					context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()*2);
-					//				 LOG.warn("Guard: " + value.toString() + " " + value.toString());
+			if (!guardKeepaliveOptimizationOn && outputGuard) {
+				context.write(value, value);
+				context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE).increment(1);
+				context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE_BYTES).increment(value.getLength()*2);
+				//				 LOG.warn("Guard: " + value.toString() + " " + value.toString());
 			}
 
 			// output a proof of existence if the guard is also guarded
 			if (guardIsGuarded) {
 				//				LOG.error("guard output POE");
 				String proofSymbol = "";
-				if (settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn)) {
+				if (round1FiniteMemoryOptimizationOn) {
 					proofSymbol = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL);
 				}
 				out1.set(t.toString() + proofSymbol);
