@@ -12,7 +12,7 @@ package gumbo.structures.gfexpressions.io;
 public class Pair<type1,type2> {
 	public type1 fst;
 	public type2 snd;
-	
+
 
 	public Pair(type1 fst, type2 snd) {
 		this.fst = fst;
@@ -25,19 +25,19 @@ public class Pair<type1,type2> {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof Pair<?,?>))
+		if(obj instanceof Pair<?,?>) {
+			Pair<?, ?> otherPair = (Pair<?,?>) obj;
+			return snd.equals(otherPair.snd) && fst.equals(otherPair.fst);
+		} else
 			return false;
-		
-		Pair<?, ?> otherPair = (Pair<?,?>) obj;
-	
-		return fst.equals(otherPair.fst) && snd.equals(otherPair.snd);
+
 	}
-	
+
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
-		return fst.hashCode() + snd.hashCode();
+		return fst.hashCode() ^ snd.hashCode();
 	}
 }

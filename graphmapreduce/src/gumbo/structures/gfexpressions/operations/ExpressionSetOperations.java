@@ -71,6 +71,8 @@ public class ExpressionSetOperations implements Externalizable {
 
 	protected GFAtomicExpression[] atoms;
 
+	protected HashMap<GFAtomicExpression, Integer> atomdIDs;
+
 
 	private ExpressionSetOperations() {
 		guardeds = new HashMap<>();
@@ -83,6 +85,8 @@ public class ExpressionSetOperations implements Externalizable {
 		guardsAll = new HashSet<>();
 		guardedsAll = new HashSet<>();
 		ggpairsAll = new HashSet<>();
+		
+		atomdIDs = new HashMap<>();
 	}
 
 
@@ -188,6 +192,10 @@ public class ExpressionSetOperations implements Externalizable {
 		atoms = allAtoms.toArray(new GFAtomicExpression[0]);
 		Arrays.sort(atoms);
 		LOG.info("ATOM IDS:" + Arrays.toString(atoms));
+		atomdIDs.clear();
+		for (int i = 0; i < atoms.length; i++) {
+			atomdIDs.put(atoms[i], i);
+		}
 
 	}
 
@@ -209,6 +217,8 @@ public class ExpressionSetOperations implements Externalizable {
 		return r;
 	}
 
+	private Pair<GFAtomicExpression, GFAtomicExpression> comparisonObject = new Pair<>(null,null);
+	
 	/**
 	 * Returns a projection to transform a guard tuple into a guarded tuple.
 	 * 
@@ -221,8 +231,9 @@ public class ExpressionSetOperations implements Externalizable {
 	 */
 	public GFAtomProjection getProjections(GFAtomicExpression guard, GFAtomicExpression guarded)
 			throws GFOperationInitException {
-
-		GFAtomProjection r = guardHasProjection.get(new Pair<>(guard, guarded));
+		comparisonObject.fst = guard;
+		comparisonObject.snd = guarded;
+		GFAtomProjection r = guardHasProjection.get(comparisonObject);
 
 		if (r == null)
 			throw new GFOperationInitException("No projections found for: " + guard + " " + guarded);
@@ -391,13 +402,18 @@ public class ExpressionSetOperations implements Externalizable {
 	 */
 	public int getAtomId(GFAtomicExpression atom) throws GFOperationInitException {
 
+		// this seems to be faster than the hashset.. 
 		for (int i = 0; i < atoms.length; i++) {
 			if (atoms[i].equals(atom)) {
 				return i;
 			}
 		}
-		
-		throw new GFOperationInitException("Atom with not found: " + atom);
+//		Integer result = atomdIDs.get(atom);
+//		
+//		if (result == null)
+			throw new GFOperationInitException("Atom with not found: " + atom);
+			
+//		return result;
 	}
 
 	/**

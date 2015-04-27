@@ -32,6 +32,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 
 	Text out1 = new Text();
 	Text out2 = new Text();
+	Text proofText;
 	TupleIDCreator pathids; // OPTIMIZE extract this and perform outside of mapper
 
 	/* settings cache */
@@ -52,6 +53,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn);
 		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
 	
+		proofText = new Text(settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL));
 	}
 
 	/**
@@ -97,7 +99,8 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 
 					// output guard
 					if (!guardKeepaliveOptimizationOn) {
-						out1.set(replyAddress + ";" + guardID);
+						String valueString = replyAddress + ";" + guardID;
+						out1.set(valueString.getBytes());
 						context.write(value, out1); // TODO is this ok for pointers?
 						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST).increment(1);
 						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_BYTES).increment(out1.getLength() + value.getLength());
@@ -123,10 +126,11 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 						// TODO isn't this always the case?
 						//						if (guarded.matches(tprime)) {
 						// key: the value we are looking for 
-						out1.set(tprime.toString());
+						out1.set(tprime.toString().getBytes());
 
 						// value: request message with response code and atom
-						out2.set(replyAddress + ";" + guardedID);
+						String valueString = replyAddress + ";" + guardedID;
+						out2.set(valueString.getBytes());
 
 						context.write(out1, out2);
 						context.getCounter(GumboMap1Counter.REQUEST).increment(1);
@@ -156,9 +160,8 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 				if (round1FiniteMemoryOptimizationOn) {
 					proofSymbol = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL);
 				}
-				out1.set(t.toString() + proofSymbol);
-				out2.set(settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL));
-				context.write(out1, out2);
+				out1.set((t.toString() + proofSymbol).getBytes());
+				context.write(out1, proofText);
 				// TODO count
 			}
 

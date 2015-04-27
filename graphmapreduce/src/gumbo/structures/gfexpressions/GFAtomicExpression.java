@@ -102,7 +102,7 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 
 	@Override
 	public int hashCode() {
-		return relation.hashCode() + variables.length;
+		return relation.hashCode() ^ variables.length;
 	}
 
 	@Override
