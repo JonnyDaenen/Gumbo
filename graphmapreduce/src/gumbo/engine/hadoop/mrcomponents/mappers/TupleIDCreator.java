@@ -26,6 +26,10 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
  */
 public class TupleIDCreator {
 	
+	InputSplit prevSplit = null;
+	long prevPathID = 0;
+	
+	StringBuffer sb;
 
 	public class TupleIDError extends Exception {
 		private static final long serialVersionUID = 1L;
@@ -45,6 +49,7 @@ public class TupleIDCreator {
 		this.rm = rm;
 		longConverter = new LongBase64Converter();
 		createIds();
+		sb = new StringBuffer(20);
 	}
 
 	/**
@@ -88,29 +93,49 @@ public class TupleIDCreator {
 		
 		try {
 			
-			// OPTIMIZE I think this takes some time...
-			InputSplit is = context.getInputSplit();
-			Method method;
-			method = is.getClass().getMethod("getInputSplit");
-
-			method.setAccessible(true);
-			FileSplit fileSplit = (FileSplit) method.invoke(is);
-			Path filePath = fileSplit.getPath();
-
-//			FileStatus fs = filePath.getFileSystem(null).getFileStatus(filePath);
-
-
-			// filePath must be absolute
-			long pathID = getPathID(filePath);
 			
-//			OPTIMIZE try this:
-//			String filename= ((FileSplit)context.getInputSplit()).getPath().getName();
+			InputSplit is = context.getInputSplit();
+			
+			long pathID;
+			
+			// simple caching
+			if (prevSplit == is) {
+//				System.out.println("IS caching match");
+				pathID = prevPathID;
+			} else {
+//				System.out.println("IS caching mismatch");
+				Method method;
+				method = is.getClass().getMethod("getInputSplit");
+
+				method.setAccessible(true);
+				FileSplit fileSplit = (FileSplit) method.invoke(is);
+				Path filePath = fileSplit.getPath();
+
+//				FileStatus fs = filePath.getFileSystem(null).getFileStatus(filePath);
+
+
+				// filePath must be absolute
+				pathID = getPathID(filePath);
+				
+//				OPTIMIZE try this:
+//				String filename= ((FileSplit)context.getInputSplit()).getPath().getName();
+
+				prevSplit = is;
+				prevPathID = pathID;
+			}
+			
+			
 			
 			byte [] offsetEnc = longConverter.long2byte(offset);
 //			byte [] pathIdEnc = longConverter.long2byte(pathID);
 //			System.out.println(" filename: " + filePath + " match:" +match + " fileid:" + pathID +  "Offset: " + offset + " id: " + new String(offsetEnc) + "-" + pathID);
 
-			return "" + new String(offsetEnc) + "-" + pathID;
+			sb.setLength(0);
+			sb.append(new String(offsetEnc)); // OPTIMIZE ?
+			sb.append("-");
+			sb.append(pathID);
+			return sb.toString();
+			
 		} catch (Exception e) {
 			throw new TupleIDError("Unable to determine tuple id. ", e);
 		}
