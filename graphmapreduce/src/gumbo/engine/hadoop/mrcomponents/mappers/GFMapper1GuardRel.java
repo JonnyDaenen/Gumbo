@@ -56,7 +56,6 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 	protected Counter KAPOE;
 	protected Counter KAPOEB;
 
-	private StringBuffer buffer;
 
 
 	/**
@@ -88,7 +87,6 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 		KAPOE = context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE);
 		KAPOEB = context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE_BYTES);
 		
-		buffer = new StringBuffer(128);
 	}
 
 	/**
@@ -166,7 +164,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 						// TODO isn't this always the case?
 						//						if (guarded.matches(tprime)) {
 						// key: the value we are looking for 
-						out1.set(tprime.toString().getBytes());
+						out1.set(tprime.generateString().getBytes());
 
 						// value: request message with response code and atom
 //						String valueString = replyAddress + ";" + guardedID;

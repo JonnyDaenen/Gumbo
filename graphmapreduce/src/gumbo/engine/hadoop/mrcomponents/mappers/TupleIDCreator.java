@@ -29,7 +29,7 @@ public class TupleIDCreator {
 	InputSplit prevSplit = null;
 	long prevPathID = 0;
 	
-	StringBuffer sb;
+	StringBuilder sb;
 
 	public class TupleIDError extends Exception {
 		private static final long serialVersionUID = 1L;
@@ -49,7 +49,7 @@ public class TupleIDCreator {
 		this.rm = rm;
 		longConverter = new LongBase64Converter();
 		createIds();
-		sb = new StringBuffer(20);
+		sb = new StringBuilder(20);
 	}
 
 	/**

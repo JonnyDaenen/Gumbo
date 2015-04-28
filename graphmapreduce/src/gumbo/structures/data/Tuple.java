@@ -160,12 +160,12 @@ public class Tuple {
 
 			sb.append(name);
 			sb.append('(');
-			
-			for (int i = 0; i < data.length; i++) {
+			int i;
+			for (i = 0; i < data.length-1; i++) {
 				sb.append(data[i]);
 				sb.append(',');
 			}
-			sb.deleteCharAt(sb.length() - 1);
+			sb.append(data[i]);
 			sb.append(')');
 //			sb.insert(0, '(');
 //			sb.insert(0, name);
