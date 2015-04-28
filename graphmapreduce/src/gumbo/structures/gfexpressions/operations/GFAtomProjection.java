@@ -17,7 +17,6 @@ public class GFAtomProjection {
 
 	GFAtomicExpression source;
 	GFAtomicExpression target;
-	Map<Integer, Integer> mapping; 
 	
 
 	int [] arrayMapping; 
@@ -36,7 +35,6 @@ public class GFAtomProjection {
 		this.target = target;
 
 		// initialize mapping
-		mapping = new HashMap<Integer, Integer>(source.getNumVariables());
 		arrayMapping = new int[target.getNumVariables()];
 		initialize();
 	}
@@ -58,7 +56,6 @@ public class GFAtomProjection {
 	 */
 	private void initialize() {
 		
-		mapping.clear();
 		
 		String[] sourceVars = source.getVars();
 		String[] targetVars = target.getVars();
@@ -77,7 +74,6 @@ public class GFAtomProjection {
 				if (targetVars[i].equals(sourceVars[j])) {
 					
 					// add it
-					mapping.put(i, j);
 					arrayMapping[i] = j;
 
 					// other matches will have the same value
@@ -89,34 +85,6 @@ public class GFAtomProjection {
 		}
 	}
 
-	/**
-	 * Empties the current mapping and loads the given one (by copying all
-	 * entries). The mapping is from target (guarded) to source (guard). 
-	 * 
-	 * @param newmap the new mapping
-	 */
-	@Deprecated
-	public void loadMapping(Map<Integer, Integer> newmap) {
-		// TODO add bound control
-		this.mapping.clear();
-		for (int key : newmap.keySet())
-			this.mapping.put(key, newmap.get(key));
-	}
-
-	/**
-	 * Connect a position in the target relation to a position in the source
-	 * relation.
-	 * 
-	 * @param source
-	 *            position in the target relation
-	 * @param target
-	 *            position in the source relation
-	 */
-	public void addMapping(int source, int target) {
-		// TODO add bound control
-		this.mapping.put(target, source);
-
-	}
 
 	/**
 	 * Converts a tuple from the source relation to a tuple in the target
@@ -141,6 +109,31 @@ public class GFAtomProjection {
 
 		// create a new tuple from the generated String
 		return new Tuple(target.getName(), s);
+
+	}
+	
+	public String projectString(Tuple t) throws NonMatchingTupleException {
+		
+		StringBuilder sb = new StringBuilder(target.getName().length()+t.generateString().length());
+
+		
+		// head
+		sb.append(target.getName());
+		sb.append('(');
+		
+		// middle
+		int i;
+		int fields = target.getNumFields()-1;
+		for (i = 0; i < fields; i++) {
+			sb.append(t.get(arrayMapping[i]));
+			sb.append(',');
+		}
+		sb.append(t.get(arrayMapping[i]));
+		
+		// tail
+		sb.append(')');
+		
+		return sb.toString();
 
 	}
 

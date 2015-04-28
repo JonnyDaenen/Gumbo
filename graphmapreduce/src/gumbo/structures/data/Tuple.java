@@ -21,6 +21,7 @@ public class Tuple {
 	String name;
 	String[] data;
 	String representationCache;
+	
 
 	/**
 	 * Creates a new tuple based on a given String. When the string is
@@ -155,7 +156,13 @@ public class Tuple {
 	public String generateString() {
 
 		if (representationCache == null) {
-			StringBuilder sb = new StringBuilder(data.length * 10);
+			int numChars = 0;
+			for (String d : data)
+				numChars += d.length();
+			numChars += name.length() + data.length + 2; // name,  comma's and brackets
+			
+			
+			StringBuilder sb = new StringBuilder(numChars);
 
 
 			sb.append(name);

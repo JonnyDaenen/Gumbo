@@ -36,6 +36,8 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 	Text out1 = new Text();
 	Text out2 = new Text();
 	Text proofText;
+	byte [] commaBytes = {';'};
+	byte [] proofBytes = {';'};
 	TupleIDCreator pathids; // OPTIMIZE extract this and perform outside of mapper
 
 	/* settings cache */
@@ -71,6 +73,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
 	
 		proofText = new Text(settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL));
+		proofBytes = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL).getBytes();
 		
 		KAR = context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST);
 		KARB = context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_BYTES);
@@ -155,7 +158,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 						}
 
 //						GFAtomProjection p = eso.getProjections(guard, guarded);
-						Tuple tprime = p.project(t);
+//						Tuple tprime = p.project(t);
 
 
 //						int guardedID = eso.getAtomId(guarded);
@@ -164,12 +167,11 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 						// TODO isn't this always the case?
 						//						if (guarded.matches(tprime)) {
 						// key: the value we are looking for 
-						out1.set(tprime.generateString().getBytes());
+						out1.set(p.projectString(t).getBytes());
 
 						// value: request message with response code and atom
 //						String valueString = replyAddress + ";" + guardedID;
 						byte [] replyBytes = replyAddress.getBytes();
-						byte [] commaBytes = {';'};
 						byte [] IDBytes = guardedID.toString().getBytes();
 						out2.clear();
 						out2.append(replyBytes,0,replyBytes.length);
@@ -201,11 +203,17 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 			// output a proof of existence if the guard is also guarded
 			if (guardIsGuarded) {
 				//				LOG.error("guard output POE");
-				String proofSymbol = "";
+
+				
+				byte[] replyBytes = t.toString().getBytes();
+				out1.clear();
+				out1.append(replyBytes,0,replyBytes.length);
 				if (round1FiniteMemoryOptimizationOn) {
-					proofSymbol = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL);
+//					proofSymbol = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL);
+					out1.append(proofBytes,0,proofBytes.length);
 				}
-				out1.set((t.toString() + proofSymbol).getBytes());
+				
+//				out1.set((t.toString() + proofSymbol).getBytes());
 				context.write(out1, proofText);
 				// TODO count
 			}
