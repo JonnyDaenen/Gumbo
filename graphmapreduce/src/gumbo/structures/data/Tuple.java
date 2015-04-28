@@ -102,9 +102,8 @@ public class Tuple {
 		initialize(b);
 		
 	}
-	/**
-	 * @param value
-	 */
+	
+	@Deprecated
 	public Tuple(Text value) {
 //		this(value.toString());
 
@@ -149,6 +148,7 @@ public class Tuple {
 			
 			// System.out.print((char)b[i]);
 		}
+		representationCache = new String(b);
 		data = list.toArray(new String [0]);
 	}
 

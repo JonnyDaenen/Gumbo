@@ -18,6 +18,9 @@ public class GFAtomProjection {
 	GFAtomicExpression source;
 	GFAtomicExpression target;
 	Map<Integer, Integer> mapping; 
+	
+
+	int [] arrayMapping; 
 
 	/**
 	 * Creates a projection to transform a guard tuple to a guarded tuple.
@@ -34,7 +37,7 @@ public class GFAtomProjection {
 
 		// initialize mapping
 		mapping = new HashMap<Integer, Integer>(source.getNumVariables());
-
+		arrayMapping = new int[target.getNumVariables()];
 		initialize();
 	}
 	
@@ -75,6 +78,7 @@ public class GFAtomProjection {
 					
 					// add it
 					mapping.put(i, j);
+					arrayMapping[i] = j;
 
 					// other matches will have the same value
 					// when they belong to the source GF-expression
@@ -133,7 +137,7 @@ public class GFAtomProjection {
 
 		// copy fields one by one
 		for (int i = 0; i < fields; i++)
-			s[i] = t.get(mapping.get(i));
+			s[i] = t.get(arrayMapping[i]);
 
 		// create a new tuple from the generated String
 		return new Tuple(target.getName(), s);
