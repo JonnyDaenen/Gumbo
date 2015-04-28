@@ -7,6 +7,7 @@ import gumbo.engine.hadoop.mrcomponents.mappers.TupleIDCreator.TupleIDError;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
 import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
@@ -142,14 +143,17 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 					outputGuard = true;
 
 					// projections to atoms
-					for (GFAtomicExpression guarded : eso.getGuardeds(guard)) {
+					for (Pair<GFAtomicExpression, GFAtomProjection> both : eso.getGuardedsAndProjections(guard)) {
 
+						GFAtomicExpression guarded = both.fst;
+						GFAtomProjection p = both.snd;
+						
 						// TODO if guarded is same relation, output proof of existence afterwards
 						if (guarded.getRelationSchema().equals(guard.getRelationSchema())) {
 							guardIsGuarded = true;
 						}
 
-						GFAtomProjection p = eso.getProjections(guard, guarded);
+//						GFAtomProjection p = eso.getProjections(guard, guarded);
 						Tuple tprime = p.project(t);
 
 

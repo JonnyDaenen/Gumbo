@@ -46,7 +46,7 @@ public class ExpressionSetOperations implements Externalizable {
 		public GFOperationInitException(String msg) {
 			super(msg);
 		}
-		
+
 		public GFOperationInitException(String msg, Exception e) {
 			super(msg,e);
 		}
@@ -65,6 +65,7 @@ public class ExpressionSetOperations implements Externalizable {
 	protected HashMap<Pair<GFAtomicExpression, GFAtomicExpression>, GFAtomProjection> guardHasProjection;
 	protected HashMap<GFAtomicExpression, HashMap<GFAtomicExpression, GFAtomProjection>> guardHasProjection2;
 	protected HashMap<GFAtomicExpression, Set<GFAtomicExpression>> guardHasGuard;
+	protected HashMap<GFAtomicExpression, Set<Pair<GFAtomicExpression,GFAtomProjection>>> guardHasGuardAndProjection;
 
 	protected Set<GFAtomicExpression> guardsAll;
 	protected Set<GFAtomicExpression> guardedsAll;
@@ -83,11 +84,12 @@ public class ExpressionSetOperations implements Externalizable {
 		guardHasProjection = new HashMap<>();
 		guardHasProjection2 = new HashMap<>();
 		guardHasGuard = new HashMap<>();
+		guardHasGuardAndProjection = new HashMap<>();
 
 		guardsAll = new HashSet<>();
 		guardedsAll = new HashSet<>();
 		ggpairsAll = new HashSet<>();
-		
+
 		atomdIDs = new HashMap<>();
 	}
 
@@ -174,6 +176,28 @@ public class ExpressionSetOperations implements Externalizable {
 			}
 		}
 
+		// map between guards and guardeds + projection
+		for (GFExistentialExpression e : expressionSet) {
+			GFAtomicExpression guard = e.getGuard();
+
+			Set<Pair<GFAtomicExpression, GFAtomProjection>> set;
+			if (guardHasGuardAndProjection.containsKey(guard)) {
+				set = guardHasGuardAndProjection.get(guard);
+			} else {
+				set = new HashSet<>();
+				guardHasGuardAndProjection.put(guard, set);
+			}
+
+			for (GFAtomicExpression c : e.getGuardedRelations()) {
+				GFAtomProjection r = new GFAtomProjection(guard, c);
+				Pair<GFAtomicExpression, GFAtomProjection> pair = new Pair<>(c, r);
+				set.add(pair);
+			}
+		}
+
+
+		
+
 		// map between guards and projections
 		// for each pair the projection is cached
 		for (Pair<GFAtomicExpression, GFAtomicExpression> p : ggpairsAll) {
@@ -184,7 +208,7 @@ public class ExpressionSetOperations implements Externalizable {
 			GFAtomProjection r = new GFAtomProjection(guard, guarded);
 
 			guardHasProjection.put(p, r); 
-			
+
 			// improvement
 			HashMap<GFAtomicExpression, GFAtomProjection> map = null;
 			if (guardHasProjection2.containsKey(guarded)) {
@@ -212,6 +236,24 @@ public class ExpressionSetOperations implements Externalizable {
 	}
 
 	/**
+	 * Returns a set of all guarded atoms and the precaltulated projections onto them that appear below a given guard.
+	 * 
+	 * @param guard the guard
+	 * 
+	 * @return the set of all guarded atoms and precalculated projections guarded by the specified guard 
+	 * 
+	 * @throws GFOperationInitException
+	 */
+	public Set<Pair<GFAtomicExpression,GFAtomProjection>> getGuardedsAndProjections(GFAtomicExpression guard) throws GFOperationInitException {
+		Set<Pair<GFAtomicExpression,GFAtomProjection>> r = guardHasGuardAndProjection.get(guard);
+
+		if (r == null) // TODO empty set? 
+			throw new GFOperationInitException("No guardeds found for: " + guard);
+
+		return r;
+	}
+
+	/**
 	 * Creates a set of all guarded atom that appear below a given guard.
 	 * 
 	 * @param guard the guard
@@ -230,7 +272,7 @@ public class ExpressionSetOperations implements Externalizable {
 	}
 
 	private Pair<GFAtomicExpression, GFAtomicExpression> comparisonObject = new Pair<>(null,null);
-	
+
 	/**
 	 * Returns a projection to transform a guard tuple into a guarded tuple.
 	 * 
@@ -243,21 +285,21 @@ public class ExpressionSetOperations implements Externalizable {
 	 */
 	public GFAtomProjection getProjections(GFAtomicExpression guard, GFAtomicExpression guarded)
 			throws GFOperationInitException {
-//		comparisonObject.fst = guard;
-//		comparisonObject.snd = guarded;
-//		GFAtomProjection r = guardHasProjection.get(comparisonObject);
-//
-//		if (r == null)
-//			throw new GFOperationInitException("No projections found for: " + guard + " " + guarded);
-//
-//		return r;
-		
+		//		comparisonObject.fst = guard;
+		//		comparisonObject.snd = guarded;
+		//		GFAtomProjection r = guardHasProjection.get(comparisonObject);
+		//
+		//		if (r == null)
+		//			throw new GFOperationInitException("No projections found for: " + guard + " " + guarded);
+		//
+		//		return r;
+
 		HashMap<GFAtomicExpression, GFAtomProjection> map = guardHasProjection2.get(guarded);
 		if (map == null)
 			throw new GFOperationInitException("No projections found for: " + guard + " " + guarded);
 
 		GFAtomProjection item = map.get(guard);
-		
+
 		if (item == null)
 			throw new GFOperationInitException("No projections found for: " + guard + " " + guarded);
 
@@ -311,7 +353,7 @@ public class ExpressionSetOperations implements Externalizable {
 	public GFBooleanMapping getBooleanMapping() throws GFOperationInitException {
 		return booleanMapping;
 	}
-	
+
 	/**
 	 * Returns a mapping from guard to output relation
 	 * 
@@ -431,12 +473,12 @@ public class ExpressionSetOperations implements Externalizable {
 				return i;
 			}
 		}
-//		Integer result = atomdIDs.get(atom);
-//		
-//		if (result == null)
-			throw new GFOperationInitException("Atom with not found: " + atom);
-			
-//		return result;
+		//		Integer result = atomdIDs.get(atom);
+		//		
+		//		if (result == null)
+		throw new GFOperationInitException("Atom with not found: " + atom);
+
+		//		return result;
 	}
 
 	/**
@@ -447,7 +489,7 @@ public class ExpressionSetOperations implements Externalizable {
 		paths.retainAll(getGuardedPaths());
 		return paths;
 	}
-	
+
 	/**
 	 * @return the guarded paths that are in csv format
 	 */
@@ -465,7 +507,7 @@ public class ExpressionSetOperations implements Externalizable {
 		paths.retainAll(getGuardPaths());
 		return paths;
 	}
-	
+
 	/**
 	 * @return the guarded paths that are in csv format
 	 */
@@ -483,21 +525,21 @@ public class ExpressionSetOperations implements Externalizable {
 	public Collection<Path> intersectGuardGuardedPaths() {
 		Set<Path> a1 = getGuardedRelPaths();
 		Set<Path> a2 = getGuardRelPaths();
-		
+
 		Set<Path> b1 = getGuardedCsvPaths();
 		Set<Path> b2 = getGuardCsvPaths();
-		
+
 		// union guarded
 		Set<Path> a = new HashSet<>(a1);
 		a.addAll(b1);
-		
+
 		// union guard
 		Set<Path> b = new HashSet<>(a2);
 		b.addAll(b2);
-		
+
 		// intersect
 		a.retainAll(b);
-		
+
 		return a;
 	}
 
@@ -528,10 +570,10 @@ public class ExpressionSetOperations implements Externalizable {
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
 		expressionSet = (Collection<GFExistentialExpression>) in.readObject();
 		fileMapping = (RelationFileMapping) in.readObject();
-		
+
 	}
-	
-	
+
+
 
 
 }
