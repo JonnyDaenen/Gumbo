@@ -12,6 +12,7 @@ import gumbo.structures.conversion.GFtoBooleanConvertor;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.io.Pair;
+import gumbo.structures.gfexpressions.io.Triple;
 
 import java.io.Externalizable;
 import java.io.IOException;
@@ -65,7 +66,7 @@ public class ExpressionSetOperations implements Externalizable {
 	protected HashMap<Pair<GFAtomicExpression, GFAtomicExpression>, GFAtomProjection> guardHasProjection;
 	protected HashMap<GFAtomicExpression, HashMap<GFAtomicExpression, GFAtomProjection>> guardHasProjection2;
 	protected HashMap<GFAtomicExpression, Set<GFAtomicExpression>> guardHasGuard;
-	protected HashMap<GFAtomicExpression, Set<Pair<GFAtomicExpression,GFAtomProjection>>> guardHasGuardAndProjection;
+	protected HashMap<GFAtomicExpression, Set<Triple<GFAtomicExpression,GFAtomProjection,Integer>>> guardHasGuardAndProjection;
 
 	protected Set<GFAtomicExpression> guardsAll;
 	protected Set<GFAtomicExpression> guardedsAll;
@@ -73,7 +74,7 @@ public class ExpressionSetOperations implements Externalizable {
 
 	protected GFAtomicExpression[] atoms;
 
-	protected HashMap<GFAtomicExpression, Integer> atomdIDs;
+	protected HashMap<GFAtomicExpression, Integer> atomIDs;
 
 
 	private ExpressionSetOperations() {
@@ -90,7 +91,7 @@ public class ExpressionSetOperations implements Externalizable {
 		guardedsAll = new HashSet<>();
 		ggpairsAll = new HashSet<>();
 
-		atomdIDs = new HashMap<>();
+		atomIDs = new HashMap<>();
 	}
 
 
@@ -176,27 +177,10 @@ public class ExpressionSetOperations implements Externalizable {
 			}
 		}
 
-		// map between guards and guardeds + projection
-		for (GFExistentialExpression e : expressionSet) {
-			GFAtomicExpression guard = e.getGuard();
-
-			Set<Pair<GFAtomicExpression, GFAtomProjection>> set;
-			if (guardHasGuardAndProjection.containsKey(guard)) {
-				set = guardHasGuardAndProjection.get(guard);
-			} else {
-				set = new HashSet<>();
-				guardHasGuardAndProjection.put(guard, set);
-			}
-
-			for (GFAtomicExpression c : e.getGuardedRelations()) {
-				GFAtomProjection r = new GFAtomProjection(guard, c);
-				Pair<GFAtomicExpression, GFAtomProjection> pair = new Pair<>(c, r);
-				set.add(pair);
-			}
-		}
 
 
-		
+
+
 
 		// map between guards and projections
 		// for each pair the projection is cached
@@ -228,9 +212,28 @@ public class ExpressionSetOperations implements Externalizable {
 		atoms = allAtoms.toArray(new GFAtomicExpression[0]);
 		Arrays.sort(atoms);
 		LOG.info("ATOM IDS:" + Arrays.toString(atoms));
-		atomdIDs.clear();
+		atomIDs.clear();
 		for (int i = 0; i < atoms.length; i++) {
-			atomdIDs.put(atoms[i], i);
+			atomIDs.put(atoms[i], i);
+		}
+
+		// map between guards and guardeds + projection
+		for (GFExistentialExpression e : expressionSet) {
+			GFAtomicExpression guard = e.getGuard();
+
+			Set<Triple<GFAtomicExpression, GFAtomProjection,Integer>> set;
+			if (guardHasGuardAndProjection.containsKey(guard)) {
+				set = guardHasGuardAndProjection.get(guard);
+			} else {
+				set = new HashSet<>();
+				guardHasGuardAndProjection.put(guard, set);
+			}
+
+			for (GFAtomicExpression c : e.getGuardedRelations()) {
+				GFAtomProjection r = new GFAtomProjection(guard, c);
+				Triple<GFAtomicExpression, GFAtomProjection, Integer> pair = new Triple<>(c, r, atomIDs.get(c));
+				set.add(pair);
+			}
 		}
 
 	}
@@ -244,8 +247,8 @@ public class ExpressionSetOperations implements Externalizable {
 	 * 
 	 * @throws GFOperationInitException
 	 */
-	public Set<Pair<GFAtomicExpression,GFAtomProjection>> getGuardedsAndProjections(GFAtomicExpression guard) throws GFOperationInitException {
-		Set<Pair<GFAtomicExpression,GFAtomProjection>> r = guardHasGuardAndProjection.get(guard);
+	public Set<Triple<GFAtomicExpression,GFAtomProjection,Integer>> getGuardedsAndProjections(GFAtomicExpression guard) throws GFOperationInitException {
+		Set<Triple<GFAtomicExpression,GFAtomProjection,Integer>> r = guardHasGuardAndProjection.get(guard);
 
 		if (r == null) // TODO empty set? 
 			throw new GFOperationInitException("No guardeds found for: " + guard);

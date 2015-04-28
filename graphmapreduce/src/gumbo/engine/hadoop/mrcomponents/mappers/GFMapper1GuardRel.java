@@ -8,6 +8,7 @@ import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.io.Pair;
+import gumbo.structures.gfexpressions.io.Triple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
 import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
@@ -135,6 +136,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 					if (!guardKeepaliveOptimizationOn) {
 						String valueString = replyAddress + ";" + guardID;
 						out1.set(valueString.getBytes());
+						
 						context.write(value, out1); // TODO is this ok for pointers?
 						KAR.increment(1);
 						KARB.increment(out1.getLength() + value.getLength());
@@ -143,10 +145,11 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 					outputGuard = true;
 
 					// projections to atoms
-					for (Pair<GFAtomicExpression, GFAtomProjection> both : eso.getGuardedsAndProjections(guard)) {
+					for (Triple<GFAtomicExpression, GFAtomProjection, Integer> guardedInfo : eso.getGuardedsAndProjections(guard)) {
 
-						GFAtomicExpression guarded = both.fst;
-						GFAtomProjection p = both.snd;
+						GFAtomicExpression guarded = guardedInfo.fst;
+						GFAtomProjection p = guardedInfo.snd;
+						Integer guardedID = guardedInfo.trd;
 						
 						// TODO if guarded is same relation, output proof of existence afterwards
 						if (guarded.getRelationSchema().equals(guard.getRelationSchema())) {
@@ -157,7 +160,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 						Tuple tprime = p.project(t);
 
 
-						int guardedID = eso.getAtomId(guarded);
+//						int guardedID = eso.getAtomId(guarded);
 
 						// if the guard projects to this guarded
 						// TODO isn't this always the case?
@@ -166,8 +169,15 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 						out1.set(tprime.toString().getBytes());
 
 						// value: request message with response code and atom
-						String valueString = replyAddress + ";" + guardedID;
-						out2.set(valueString.getBytes());
+//						String valueString = replyAddress + ";" + guardedID;
+						byte [] replyBytes = replyAddress.getBytes();
+						byte [] commaBytes = {';'};
+						byte [] IDBytes = guardedID.toString().getBytes();
+						out2.clear();
+						out2.append(replyBytes,0,replyBytes.length);
+						out2.append(commaBytes,0,commaBytes.length);
+						out2.append(IDBytes,0,IDBytes.length);
+//						out2.set(valueString.getBytes());
 
 						context.write(out1, out2);
 						R.increment(1);
