@@ -19,7 +19,7 @@ public class Round1Partitioner extends Partitioner<Text, Text> {
 	public int getPartition(Text key, Text value, int numPartitions) {
 		KeyPairWrapper wrap = new KeyPairWrapper(key.toString());
 		int hash = wrap.first.hashCode();
-		int partition = hash % numPartitions;
+		int partition = Math.abs(hash) % numPartitions;
 		return partition;
 	}
 
