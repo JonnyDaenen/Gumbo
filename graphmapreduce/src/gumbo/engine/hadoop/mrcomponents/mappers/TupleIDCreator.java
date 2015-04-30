@@ -126,7 +126,7 @@ public class TupleIDCreator {
 			
 			
 			
-			byte [] offsetEnc = longConverter.newconvert(offset);
+			byte [] offsetEnc = longConverter.newconvertNoPrefix(offset);
 //			byte [] pathIdEnc = longConverter.long2byte(pathID);
 //			System.out.println(" filename: " + filePath + " match:" +match + " fileid:" + pathID +  "Offset: " + offset + " id: " + new String(offsetEnc) + "-" + pathID);
 

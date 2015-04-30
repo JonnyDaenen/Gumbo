@@ -9,6 +9,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -78,16 +79,47 @@ public class LongBase64Converter {
 	    };
 	}
 	
+	/**
+	 * Converts a long to base 64 encoding.
+	 * @param l the long to convert
+	 * @return a new byte array containing the encoded long
+	 */
 	public byte [] newconvert(long l){
 		byte[] result = new byte[11];
 		for (int i = 0; i < 11; i++) {
 			if (l == 0)
-				result[i] = '0';
+				result[i] = 'A'; // OPTIMIZE break here, but set at least one byte
 			else {
 				result[i] = convert6bit((l % 64));
 				l = l >> 6;
 			}
 		}
+		return result;
+	}
+	
+
+	private byte[] buffer = new byte[11];
+	/**
+	 * Converts a long to base 64 encoding, with no trailing
+	 * zero ('A') symbols, except when it is equal to zero.
+	 * @param l the long to convert
+	 * @return a new byte array containing the encoded long
+	 */
+	public byte [] newconvertNoPrefix(long l){
+		int i;
+		for (i = 0; i < 11; i++) {
+			if (l == 0 && i > 0) {
+				i++;
+				break;
+			}
+			else {
+				buffer[i] = convert6bit((l % 64));
+				l = l >> 6;
+			}
+		}
+		byte [] result = Arrays.copyOf(buffer, i);
+		
+		
 		return result;
 	}
 
