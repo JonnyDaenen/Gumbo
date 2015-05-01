@@ -1,10 +1,11 @@
-package gumbo.convertors;
+package gumbo.convertors.pig;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.convertors.GFConversionException;
 import gumbo.generator.GFGenerator;
 import gumbo.generator.QueryType;
 import gumbo.input.GumboQuery;
@@ -39,7 +40,7 @@ public class GFPigConverterWide extends GFPigConverter implements GFVisitor<Stri
 		
 		String outname = gfe.getOutputRelation().getName();
 		String guardname = gfe.getGuard().getName();
-		String guardschema = gfe.getGuard().toString().substring(guardname.length());
+		String guardschema = gfe.getGuard().getRelationSchema().toString().substring(guardname.length());
 		List<String> childIds = new ArrayList<>();
 		int counter = 1;
 		
@@ -47,12 +48,19 @@ public class GFPigConverterWide extends GFPigConverter implements GFVisitor<Stri
 
 		for (GFAtomicExpression child : gfe.getGuardedRelations()) {
 			String guardedGroupSchema = getGuardedGroupSchema(child.getName(), rfm);
-			String guardGroupSchema = child.toString().substring(child.getName().length());
-			String childId = removeTokens(child.toString());
+			String guardGroupSchema = getGuardGroupSchema(gfe.getGuard().getRelationSchema(), gfe.getGuard().getVars(), rfm, child.getVars());
+			String childId = generateAlias(child.toString());
 			childIds.add(childId);
+			
+			String alias = null; 
+			if (guardname.equals(child.getName())) {
+				alias = "Guarded";
+				query += alias + " = FOREACH " + child.getName() + " GENERATE *;" + System.lineSeparator();
+			} else 
+				alias = child.getName();
 
-			query += outname + "_A" + counter + " = COGROUP " + guardname + " BY " + guardGroupSchema + ", " + child.getName() + " BY " + guardedGroupSchema + ";" + System.lineSeparator();
-			query += outname + "_B" + counter + " = FOREACH " + outname + "_A" + counter + " GENERATE flatten(" + guardname + "), (IsEmpty(" + child.getName() + ")? false : true) as " + childId + ";" + System.lineSeparator();
+			query += outname + "_A" + counter + " = COGROUP " + guardname + " BY " + guardGroupSchema + ", " + alias + " BY " + guardedGroupSchema + ";" + System.lineSeparator();
+			query += outname + "_B" + counter + " = FOREACH " + outname + "_A" + counter + " GENERATE flatten(" + guardname + "), (IsEmpty(" + alias + ")? false : true) as " + childId + ";" + System.lineSeparator();
 			query += System.lineSeparator();
 			
 			counter++;
@@ -79,19 +87,36 @@ public class GFPigConverterWide extends GFPigConverter implements GFVisitor<Stri
 			throw new GFConversionException("Error while visiting GFExpression!", e);
 		}
 		query += outname + "_Z = FILTER " + outname + "_Y BY " + boolexpr + ";" + System.lineSeparator();
-		query += outname + " = FOREACH " + outname + "_Z GENERATE flatten(group);" + System.lineSeparator();
+		query += outname + "_U = FOREACH " + outname + "_Z GENERATE flatten(group);" + System.lineSeparator();
+		
+		// project on output vars
+		String projection = "";
+		String[] outVars = gfe.getOutputRelation().getVars();
+		String[] guardVars = gfe.getGuard().getVars();
+		for (int i = 0; i < outVars.length; i++) {
+			for (int j = 0; j < guardVars.length; j++) {
+				if (outVars[i].equals(guardVars[j])) {
+					projection += ", $" + j + " as x" + i;
+				}
+			}
+		}
+		projection = gfe.getOutputRelation().getName() + " = FOREACH " + gfe.getOutputRelation().getName() + "_U GENERATE " + projection.substring(2) + ";";
+
+		query += projection + System.lineSeparator();
+		
 		query += System.lineSeparator();
 				
 		return query;
 	}
+
 
 	/**
 	 * Creates an alias for a relation schema by removing the parentheses and commas
 	 * @param string A relation schema
 	 * @return An alias for the given relation schema
 	 */
-	private String removeTokens(String string) {
-		return string.replace("(", "").replace(")", "").replace(",", "");
+	private String generateAlias(String string) {
+		return string.replace("(", "_").replace(")", "").replace(",", "");
 	}
 
 
@@ -108,12 +133,32 @@ public class GFPigConverterWide extends GFPigConverter implements GFVisitor<Stri
 		for (RelationSchema rs : rfm.getSchemas()) {
 			if (rs.getName().equals(name)) {
 				schema = rs.toString().substring(name.length());
-				break;
+				return schema;
 			}
 		}
 		
-		if (schema == null)
-			throw new GFConversionException("No schema found with name: " + name);
+		for (RelationSchema rs : _outSchemas) {
+			if (rs.getName().equals(name)) {
+				schema = rs.toString().substring(name.length());
+				return schema;
+			}
+		}
+		
+		throw new GFConversionException("No schema found with name: " + name);
+	}
+	
+	private String getGuardGroupSchema(RelationSchema guardSchema, String[] guardVars, RelationFileMapping rfm, String[] vars) {
+		String schema = "";
+		
+		for (String var : vars) {
+			for (int i = 0; i < guardVars.length; i++) {
+				if (guardVars[i].equals(var)) {
+					schema += "," + guardSchema.getFields()[i];
+				}
+			}
+		}
+		
+		schema = "(" + schema.substring(1) + ")";
 		
 		return schema;
 	}
@@ -127,7 +172,7 @@ public class GFPigConverterWide extends GFPigConverter implements GFVisitor<Stri
 
 	@Override
 	public String visit(GFAtomicExpression e) throws GFVisitorException {
-		return removeTokens(e.toString());
+		return generateAlias(e.toString());
 	}
 
 

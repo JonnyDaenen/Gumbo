@@ -4,7 +4,7 @@
 package mapreduce.guardedfragment.convertors;
 
 import gumbo.convertors.GFConversionException;
-import gumbo.convertors.GFToPig;
+import gumbo.convertors.pig.GFToPig;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.io.DeserializeException;

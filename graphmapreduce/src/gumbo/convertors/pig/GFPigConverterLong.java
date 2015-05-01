@@ -1,4 +1,4 @@
-package gumbo.convertors;
+package gumbo.convertors.pig;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,6 +7,7 @@ import java.util.Set;
 
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.convertors.GFConversionException;
 import gumbo.generator.GFGenerator;
 import gumbo.generator.QueryType;
 import gumbo.input.GumboQuery;
@@ -28,6 +29,7 @@ import gumbo.structures.gfexpressions.io.Pair;
  *
  */
 public class GFPigConverterLong extends GFPigConverter {
+	
 	
 	/**
 	 * Creates a pig script to evaluate a basic GF expression
@@ -75,9 +77,23 @@ public class GFPigConverterLong extends GFPigConverter {
 			}
 			query += ";" + System.lineSeparator();
 		} else {
-			query += gfe.getOutputRelation().getName() + " = " + unions.get(0) + ";" + System.lineSeparator();
+			query += gfe.getOutputRelation().getName() + "_U"  + " = " + unions.get(0) + ";" + System.lineSeparator();
 		}
 		
+		// project on output vars
+		String projection = "";
+		String[] outVars = gfe.getOutputRelation().getVars();
+		String[] guardVars = gfe.getGuard().getVars();
+		for (int i = 0; i < outVars.length; i++) {
+			for (int j = 0; j < guardVars.length; j++) {
+				if (outVars[i].equals(guardVars[j])) {
+					projection += ", $" + j + " as x" + i;
+				}
+			}
+		}
+		projection = gfe.getOutputRelation().getName() + " = FOREACH " + gfe.getOutputRelation().getName() + "_U GENERATE " + projection.substring(2) + ";";
+		
+		query += projection + System.lineSeparator();
 		query += System.lineSeparator();
 		
 		return query;
@@ -100,10 +116,17 @@ public class GFPigConverterLong extends GFPigConverter {
 			}
 			
 			String literalGroupSchema = getLiteralGroupSchema(ae.getName(), rfm);
-			String lastRelGroupSchema = ae.toString().substring(ae.getName().length());
+			String lastRelGroupSchema = getGuardGroupSchema(guard.getRelationSchema(), guard.getVars(), rfm, ae.getVars());
 			
-			query += outname + "_" + id + "_X" + counter + " = COGROUP " + lastRelName + " BY " + lastRelGroupSchema + ", " + ae.getName() + " BY " + literalGroupSchema + ";" + System.lineSeparator();
-			query += outname + "_" + id + "_Y" + counter + " = FILTER " + outname + "_" + id + "_X" + counter + " BY " + negation + "IsEmpty(" +  ae.getName() + ");" + System.lineSeparator();
+			String alias = null; 
+			if (guard.getName().equals(ae.getName())) {
+				alias = "Guarded";
+				query += alias + " = FOREACH " + ae.getName() + " GENERATE *;" + System.lineSeparator();
+			} else 
+				alias = ae.getName();
+			
+			query += outname + "_" + id + "_X" + counter + " = COGROUP " + lastRelName + " BY " + lastRelGroupSchema + ", " + alias + " BY " + literalGroupSchema + ";" + System.lineSeparator();
+			query += outname + "_" + id + "_Y" + counter + " = FILTER " + outname + "_" + id + "_X" + counter + " BY " + negation + "IsEmpty(" +  alias + ");" + System.lineSeparator();
 			query += outname + "_" + id + "_Z" + counter + " = FOREACH " + outname + "_" + id + "_Y" + counter + " GENERATE flatten(" + lastRelName + ");" + System.lineSeparator();
 			query += System.lineSeparator();
 			
@@ -151,15 +174,36 @@ public class GFPigConverterLong extends GFPigConverter {
 	 */
 	private String getLiteralGroupSchema(String name, RelationFileMapping rfm) throws GFConversionException {
 		String schema = null;
+		
 		for (RelationSchema rs : rfm.getSchemas()) {
 			if (rs.getName().equals(name)) {
 				schema = rs.toString().substring(name.length());
-				break;
+				return schema;
 			}
 		}
 		
-		if (schema == null)
-			throw new GFConversionException("No schema found with name: " + name);
+		for (RelationSchema rs : _outSchemas) {
+			if (rs.getName().equals(name)) {
+				schema = rs.toString().substring(name.length());
+				return schema;
+			}
+		}
+		
+		throw new GFConversionException("No schema found with name: " + name);
+	}
+	
+	private String getGuardGroupSchema(RelationSchema guardSchema, String[] guardVars, RelationFileMapping rfm, String[] vars) {
+		String schema = "";
+		
+		for (String var : vars) {
+			for (int i = 0; i < guardVars.length; i++) {
+				if (guardVars[i].equals(var)) {
+					schema += "," + guardSchema.getFields()[i];
+				}
+			}
+		}
+		
+		schema = "(" + schema.substring(1) + ")";
 		
 		return schema;
 	}

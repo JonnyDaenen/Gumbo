@@ -19,6 +19,7 @@ import gumbo.engine.spark.SparkEngine;
 import gumbo.gui.gumbogui.GumboMainFrame;
 import gumbo.gui.gumbogui.PlanViewer;
 import gumbo.gui.panels.ConsolePanel;
+import gumbo.gui.panels.HivePanel;
 import gumbo.gui.panels.PigPanel;
 import gumbo.gui.panels.QueryInputDetails;
 import gumbo.gui.panels.QueryInputField;
@@ -30,6 +31,7 @@ import gumbo.structures.gfexpressions.io.GFInfixSerializer;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -89,6 +91,7 @@ public class GumboGUI extends Configured implements Tool {
 	private ConsolePanel console;
 
 	private PigPanel pig;
+	private HivePanel hive;
 
 	private GumboPlan plan;
 
@@ -159,13 +162,17 @@ public class GumboGUI extends Configured implements Tool {
 		
 		// pig tab
 		pig = new PigPanel();
+		hive = new HivePanel();
+		JPanel pighive = new JPanel(new GridLayout(2, 1));
+		pighive.add(pig);
+		pighive.add(hive);
 
 		// tabs for different panels
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Query", queryOverall);
 		tabbedPane.addTab("Plan", planView);
 		tabbedPane.addTab("Metrics", editorScrollPane);
-		tabbedPane.addTab("Pig", pig);
+		tabbedPane.addTab("Pig/Hive", pighive);
 
 		GumboMainFrame mainwindow = new GumboMainFrame(tabbedPane);
 
@@ -650,6 +657,7 @@ public class GumboGUI extends Configured implements Tool {
 
 							gumboQuery = new GumboQuery("Gumbo_"+demoList.getSelectedItem(),inputQuery, inputs, output,scratch); // TODO add date to name
 							pig.setQuery(gumboQuery);
+							hive.setQuery(gumboQuery);
 
 							// create plan
 							GFCompiler compiler = new GFCompiler(getPartitioner());

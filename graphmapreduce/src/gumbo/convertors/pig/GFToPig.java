@@ -1,8 +1,9 @@
 /**
  * Created: 25 Aug 2014
  */
-package gumbo.convertors;
+package gumbo.convertors.pig;
 
+import gumbo.convertors.GFConversionException;
 import gumbo.structures.conversion.DNFConverter;
 import gumbo.structures.conversion.DNFConverter.DNFConversionException;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
