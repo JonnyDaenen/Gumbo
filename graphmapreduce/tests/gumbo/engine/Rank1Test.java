@@ -78,7 +78,7 @@ public class Rank1Test {
 		Object [] offconf = {off, "optOff"};
 
 		confs.add(onconf);
-//		confs.add(offconf);
+		confs.add(offconf);
 
 		return confs;
 
