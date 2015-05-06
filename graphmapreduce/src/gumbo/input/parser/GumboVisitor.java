@@ -57,6 +57,18 @@ public interface GumboVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSchema(GumboParser.SchemaContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link GumboParser#selector}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSelector(GumboParser.SelectorContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GumboParser#guardschema}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGuardschema(GumboParser.GuardschemaContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link GumboParser#outputpath}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

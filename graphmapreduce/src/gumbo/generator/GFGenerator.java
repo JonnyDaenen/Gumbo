@@ -231,6 +231,7 @@ public class GFGenerator {
 	// for testing purposes only
 	public static void main(String[] args) {
 		try {
+			
 			GFGenerator generator1 = new GFGenerator();
 			generator1.addGuardRelation("R", 10, "input/experiments/EXP_008/R", InputFormat.CSV);
 			generator1.addGuardedRelation("S", 1, "input/experiments/EXP_008/S", InputFormat.CSV);
@@ -238,6 +239,8 @@ public class GFGenerator {
 			generator1.addQuery(QueryType.NEGATED_OR, 4);
 			GumboQuery query1 = generator1.generate("GeneratorTest");
 			System.out.println(query1);
+			
+			System.out.println("-----------------------");
 			
 			GFGenerator generator2 = new GFGenerator();
 			generator2.addGuardRelation("R", 3, "input/experiments/EXP_008/R", InputFormat.CSV);
@@ -247,6 +250,7 @@ public class GFGenerator {
 			generator2.addUniqueQuery(); 
 			GumboQuery query2 = generator2.generate("UniqueQuery");
 			System.out.println(query2);
+			
 		} catch (GFGeneratorException e) {
 			e.printStackTrace();
 		}

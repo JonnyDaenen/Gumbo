@@ -1,6 +1,7 @@
 package gumbo.input.parser;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -14,6 +15,8 @@ import gumbo.input.parser.GumboParser.OrExprContext;
 import gumbo.input.parser.GumboParser.ParExprContext;
 import gumbo.input.parser.GumboParser.RegularGuardedContext;
 import gumbo.input.parser.GumboParser.SelectContext;
+import gumbo.input.parser.GumboParser.SelectorContext;
+import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFAndExpression;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
@@ -31,12 +34,14 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 
 	private final static String TEMP_RELNAME = "Temp";
 	private int _currentID;
-	private ArrayList<String> _relations;
+	private ArrayList<RelationSchema> _relations;
+	private Stack<ArrayList<String> > _guardVars;
 	
-	public GumboGFQueryVisitor(ArrayList<String> inputrelations) {
+	public GumboGFQueryVisitor(ArrayList<RelationSchema> inputrelations) {
 		_currentID = 0;
 		
-		_relations = new ArrayList<String>();
+		_guardVars = new Stack<>();
+		_relations = new ArrayList<RelationSchema>();
 		_relations.addAll(inputrelations);
 	}	
 	
@@ -48,6 +53,8 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 			throw new ParseCancellationException("Select statement is not a GFExistentialExpression!");
 		
 		GFExistentialExpression e = (GFExistentialExpression) expr;
+		
+		_relations.add(e.getOutputSchema());
 	
 		return new GFExistentialExpression(e.getGuard(), e.getChild(), new GFAtomicExpression(ctx.relname().getText(), e.getOutputRelation().getVars().clone()));
 	}
@@ -57,37 +64,73 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 	 */
 	@Override
 	public GFExpression visitGfquery(GfqueryContext ctx) {
+		ArrayList<String> vars = null;
+		
+		// guard
+		vars = new ArrayList<String>();
+		String guardName = ctx.relname().getText();
+		if (!relationKnown(guardName))
+			throw new ParseCancellationException("Unknown relation name on line " + ctx.relname().getStart().getLine() + ".");
+		if (ctx.guardschema() != null) {
+			for (TerminalNode var : ctx.guardschema().ID()) {
+				vars.add(var.getText());
+			}
+		} else {
+			int arity = getArity(guardName);
+			for (int i = 0; i < arity; i++) {
+				vars.add("x" + i);
+			}
+		}
+		_guardVars.push(vars);
+		String[] guardVars = new String[vars.size()];
+		guardVars = vars.toArray(guardVars);
+		GFAtomicExpression guard = new GFAtomicExpression(guardName, guardVars);
 		
 		// output relation
 		String outputName = TEMP_RELNAME + _currentID;
 		_currentID++;	
-		
-		ArrayList<String> vars = new ArrayList<String>();
-		for (TerminalNode var : ctx.schema(0).ID()) {
-			vars.add(var.getText());
+		vars = new ArrayList<String>();
+		for (SelectorContext var : ctx.schema().selector()) {
+			if (var.getText().contains("$")) {
+				int index = Integer.parseInt(var.getText().substring(1));
+				if (index < 0 || index > guardVars.length - 1)
+					throw new ParseCancellationException("Selector index out of range on line " + ctx.relname().getStart().getLine() + ": index " + index + ".");
+				vars.add(guardVars[index]);
+			} else {
+				vars.add(var.getText());		
+			}
 		}
 		String[] outputVars = new String[vars.size()];
 		outputVars = vars.toArray(outputVars);
 		GFAtomicExpression output = new GFAtomicExpression(outputName, outputVars);
 		
-		// guard
-		String guardName = ctx.relname().getText();
-		if (!_relations.contains(guardName))
-			throw new ParseCancellationException("Unknown relation name on line " + ctx.relname().getStart().getLine() + ".");
-		vars.clear();
-		for (TerminalNode var : ctx.schema(1).ID()) {
-			vars.add(var.getText());
-		}
-		String[] guardVars = new String[vars.size()];
-		guardVars = vars.toArray(guardVars);
-		GFAtomicExpression guard = new GFAtomicExpression(guardName, guardVars);
-		
 		// child expression
 		GFExpression child = this.visit(ctx.expr());
 		
+		_guardVars.pop();
+		
 		return new GFExistentialExpression(guard, child, output);
 	}
+
 	
+	private int getArity(String relname) {
+		for (RelationSchema schema : _relations) {
+			if (schema.getName().equals(relname))
+				return schema.getNumFields();
+		}
+		
+		return 0;
+	}
+
+	private boolean relationKnown(String relname) {
+		for (RelationSchema schema : _relations) {
+			if (schema.getName().equals(relname))
+				return true;
+		}
+		
+		return false;
+	}
+
 	@Override
 	public GFExpression visitNotExpr(NotExprContext ctx) {
 		return new GFNotExpression(this.visit(ctx.expr()));
@@ -117,8 +160,16 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 	public GFExpression visitRegularGuarded(RegularGuardedContext ctx) {
 		String guardedName = ctx.relname().getText();
 		ArrayList<String> vars = new ArrayList<String>();
-		for (TerminalNode var : ctx.schema().ID()) {
-			vars.add(var.getText());
+		ArrayList<String> guardVars = _guardVars.peek();
+		for (SelectorContext var : ctx.schema().selector()) {
+			if (var.getText().contains("$")) {
+				int index = Integer.parseInt(var.getText().substring(1));
+				if (index < 0 || index > guardVars.size() - 1)
+					throw new ParseCancellationException("Selector index out of range on line " + ctx.relname().getStart().getLine() + ".");
+				vars.add(guardVars.get(index));
+			} else {
+				vars.add(var.getText());		
+			}
 		}
 		String[] guardedVars = new String[vars.size()];
 		guardedVars = vars.toArray(guardedVars);
@@ -129,9 +180,7 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 	@Override
 	public GFExpression visitNestedGuarded(NestedGuardedContext ctx) {
 		GFExpression nested = this.visit(ctx.gfquery());
-		
-		
-		
+			
 		return nested;
 	}
 	

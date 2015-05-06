@@ -223,7 +223,7 @@ public class GFHiveConverterLong extends GFHiveConverter {
 			GFGenerator generator = new GFGenerator();
 			generator.addGuardRelation("R", 4, "input/experiments/EXP_008/R", InputFormat.CSV);
 			generator.addGuardedRelation("S", 1, "input/experiments/EXP_008/S", InputFormat.CSV);
-			generator.addQuery(QueryType.NEGATED_AND, 4);
+			generator.addQuery(QueryType.OR, 4);
 			GumboQuery gq = generator.generate("queryname");
 
 			GFHiveConverterLong converter = new GFHiveConverterLong();

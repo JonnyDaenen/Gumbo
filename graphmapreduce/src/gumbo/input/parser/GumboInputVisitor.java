@@ -19,14 +19,14 @@ import gumbo.structures.data.RelationSchema;
 public class GumboInputVisitor extends GumboBaseVisitor<String> {
 	
 	private RelationFileMapping _rm;
-	private ArrayList<String> _inputRelations;
+	private ArrayList<RelationSchema> _inputRelations;
 	
 	/**
 	 * Constructor method
 	 */
 	public GumboInputVisitor() {
 		_rm = new RelationFileMapping();
-		_inputRelations = new ArrayList<String>();
+		_inputRelations = new ArrayList<RelationSchema>();
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class GumboInputVisitor extends GumboBaseVisitor<String> {
 		Path path = new Path(ctx.file().anystring().getText());
 		
 		_rm.addPath(schema, path, InputFormat.CSV);
-		_inputRelations.add(relname);
+		_inputRelations.add(schema);
 		
 		return relname;
 	}
@@ -59,7 +59,7 @@ public class GumboInputVisitor extends GumboBaseVisitor<String> {
 		Path path = new Path(ctx.file().anystring().getText());
 		
 		_rm.addPath(schema, path, InputFormat.REL);
-		_inputRelations.add(relname);
+		_inputRelations.add(schema);
 		
 		return relname;
 	}
@@ -72,7 +72,7 @@ public class GumboInputVisitor extends GumboBaseVisitor<String> {
 		return _rm;
 	}
 	
-	public ArrayList<String> getInputRelations() {
+	public ArrayList<RelationSchema> getInputRelations() {
 		return _inputRelations;
 	}
 	
