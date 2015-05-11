@@ -80,6 +80,20 @@ public class Rank1Test {
 		confs.add(onconf);
 		confs.add(offconf);
 
+		// add solo-opts
+		String [] keys = AbstractExecutorSettings.getAllKeys().toArray(new String [0]);
+		for (String key : keys) {
+			Configuration oneOn = new Configuration();
+			HadoopExecutorSettings hc = new HadoopExecutorSettings(oneOn);
+
+			hc.loadDefaults();
+			hc.turnOffOptimizations();
+			hc.setBooleanProperty(key, true);
+
+			Object [] oneOnTest = {hc.getConf(), key};
+			confs.add(oneOnTest);
+		}
+		
 		return confs;
 
 	}
