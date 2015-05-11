@@ -18,6 +18,7 @@ import gumbo.engine.hadoop.mrcomponents.input.GuardInputFormat;
 import gumbo.engine.hadoop.mrcomponents.input.GuardTextInputFormat;
 import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardCsv;
 import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardRel;
+import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardRelOptimized;
 import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardedCsv;
 import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardedRel;
 import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper2GuardCsv;

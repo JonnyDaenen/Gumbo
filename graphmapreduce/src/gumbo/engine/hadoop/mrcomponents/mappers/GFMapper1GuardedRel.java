@@ -85,6 +85,8 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 //					LOG.error("Mapper1 output: " + value + " " + value);
 //				}
 				//				 LOG.warn("Guard: " + value.toString() + " " + value.toString());
+				
+				// one assert message suffices
 				break;
 			}
 		}
