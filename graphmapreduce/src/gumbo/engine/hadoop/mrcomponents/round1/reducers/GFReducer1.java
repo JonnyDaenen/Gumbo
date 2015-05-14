@@ -1,7 +1,7 @@
 /**
  * Created: 22 Aug 2014
  */
-package gumbo.engine.hadoop.mrcomponents.reducers;
+package gumbo.engine.hadoop.mrcomponents.round1.reducers;
 
 import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;

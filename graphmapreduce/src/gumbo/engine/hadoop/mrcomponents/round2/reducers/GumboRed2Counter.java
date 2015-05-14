@@ -1,7 +1,7 @@
 /**
  * Created: 22 Jan 2015
  */
-package gumbo.engine.hadoop.mrcomponents.reducers;
+package gumbo.engine.hadoop.mrcomponents.round2.reducers;
 
 
 /**

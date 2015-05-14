@@ -1,7 +1,7 @@
 /**
  * Created: 22 Aug 2014
  */
-package gumbo.engine.hadoop.mrcomponents.reducers;
+package gumbo.engine.hadoop.mrcomponents.round2.reducers;
 
 import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
@@ -25,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
@@ -35,7 +36,7 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
  * @author Jonny Daenen
  * 
  */
-public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
+public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 
 
 	public class GuardTupleNotFoundException extends Exception {
@@ -52,7 +53,7 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 	private MultipleOutputs<Text, Text> mos;
 
 
-	private static final Log LOG = LogFactory.getLog(GFReducer2Text.class);
+	private static final Log LOG = LogFactory.getLog(GFReducer2.class);
 
 	boolean receiveIDs = true;
 	private HadoopExecutorSettings settings;
@@ -93,7 +94,7 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 	 *      java.lang.Iterable, org.apache.hadoop.mapreduce.Reducer.Context)
 	 */
 	@Override
-	protected void reduce(Text key, Iterable<Text> values, Context context)
+	protected void reduce(Text key, Iterable<IntWritable> values, Context context)
 			throws IOException, InterruptedException {
 		try {
 
@@ -107,28 +108,15 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 			GFBooleanMapping mapGFtoB = eso.getBooleanMapping();
 			BEvaluationContext booleanContext = new BEvaluationContext();
 
-			for (Text v : values) {
+			for (IntWritable v : values) {
 
 				// if tuple pointer optimization is on
 				// we need to find the actual tuple between the values.
 				if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
-
-					String val = v.toString();
-					// if this is a tuple instead of an id
-					if ( isTuple(val) ) {
-
-						if (keyTuple != null) {
-							context.getCounter(GumboRed2Counter.RED2_COLLISIONS_FOUND).increment(1);
-						}
-						// extract the tuple
-						keyTuple = getTuple(val);
-
-						// skip id processing
-						continue;
-					}
+					// TODO implement...
 				}
 
-				int id = Integer.parseInt(v.toString());
+				int id = v.get();
 
 
 				// skip empty values (only used for propagation)
@@ -150,11 +138,8 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 
 			// if key tuple is not present yet, throw exception
 			if (keyTuple == null) {
-				context.getCounter(GumboRed2Counter.RED2_TUPLE_EXCEPTIONS).increment(1);
-				throw new GuardTupleNotFoundException("There was no guard tuple found for key "+ key.toString());
+				throw new GuardTupleNotFoundException("THere was no guard tuple found for key "+ key.toString());
 			}
-
-			context.getCounter(GumboRed2Counter.RED2_TUPLES_FOUND).increment(1);
 
 			/* evaluate all formulas */
 			for (GFExistentialExpression formula : eso.getExpressionSet()) {
@@ -178,12 +163,6 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 						String outputTuple = p.project(keyTuple).generateString();
 						out1.set(outputTuple);
 						mos.write((Text)null, out1, outfile);
-						context.getCounter(GumboRed2Counter.RED2_OUT_BYTES).increment(out1.getLength());
-						context.getCounter(GumboRed2Counter.RED2_OUT_RECORDS).increment(1);
-					} else {
-
-						context.getCounter(GumboRed2Counter.RED2_EVAL_FALSE).increment(1);
-//						System.out.println("bad!: " + keyTuple);
 					}
 				}
 
@@ -197,28 +176,8 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 		} 
 	}
 
-	/**
-	 * Extracts the guard tuple from a string. The String must have the form "#R(1,2,...,n)" (without quotes).
-	 * @param val
-	 * @return
-	 */
-	private Tuple getTuple(String val) {
-		return new Tuple(val.substring(1));
-	}
-
-	/**
-	 * Checks id the strings contains a guard tuple
-	 * @param val
-	 * @return
-	 */
-	private boolean isTuple(String val) {
-		if (val.length() > 0)
-			return val.charAt(0) == '#'; // TODO put this in settings
-		return false;
-	}
-
 	public String generateFileName(RelationSchema rs) {
-
+		
 		
 		Set<Path> paths = eso.getFileMapping().getPaths(rs);
 		// take first path
@@ -226,8 +185,8 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 			return path.toString() + "/" + rs.getName();
 		}
 		return ""; // FIXME fallback system + duplicate code in other reducer2
-		
-		// cached?
+
+//		// cached?
 //		if (filenames.containsKey(relationSchema)) {
 //			return filenames.get(relationSchema);
 //

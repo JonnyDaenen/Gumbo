@@ -1,7 +1,7 @@
 /**
  * Created: 09 Oct 2014
  */
-package gumbo.engine.hadoop.mrcomponents.combiners;
+package gumbo.engine.hadoop.mrcomponents.round1.combiners;
 
 import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
