@@ -1,7 +1,7 @@
 /**
  * Created on: 07 Apr 2015
  */
-package gumbo.engine.hadoop.mrcomponents.comparators;
+package gumbo.engine.hadoop.mrcomponents.round1.comparators;
 
 /**
  * @author Jonny Daenen

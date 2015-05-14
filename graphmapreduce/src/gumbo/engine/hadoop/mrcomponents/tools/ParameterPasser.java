@@ -1,4 +1,4 @@
-package gumbo.engine.hadoop.mrcomponents;
+package gumbo.engine.hadoop.mrcomponents.tools;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.filemapper.RelationFileMappingException;

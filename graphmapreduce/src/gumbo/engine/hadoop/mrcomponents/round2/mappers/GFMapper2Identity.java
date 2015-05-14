@@ -4,7 +4,7 @@
 package gumbo.engine.hadoop.mrcomponents.round2.mappers;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
+import gumbo.engine.hadoop.mrcomponents.tools.ParameterPasser;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 

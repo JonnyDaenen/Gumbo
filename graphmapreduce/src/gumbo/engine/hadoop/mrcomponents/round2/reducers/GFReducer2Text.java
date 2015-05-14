@@ -3,7 +3,7 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round2.reducers;
 
-import gumbo.engine.hadoop.mrcomponents.ParameterPasser;
+import gumbo.engine.hadoop.mrcomponents.tools.ParameterPasser;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.booleanexpressions.BEvaluationContext;
 import gumbo.structures.booleanexpressions.BExpression;
