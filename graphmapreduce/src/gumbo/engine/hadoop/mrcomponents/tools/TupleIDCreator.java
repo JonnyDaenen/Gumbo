@@ -1,7 +1,7 @@
 /**
  * Created: 23 Jan 2015
  */
-package gumbo.engine.hadoop.mrcomponents.mappers;
+package gumbo.engine.hadoop.mrcomponents.tools;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.utils.LongBase64Converter;
@@ -98,6 +98,7 @@ public class TupleIDCreator {
 			
 			long pathID;
 			
+			// TODO extract this and re-use in other mappers
 			// simple caching
 			if (prevSplit == is) {
 //				System.out.println("IS caching match");

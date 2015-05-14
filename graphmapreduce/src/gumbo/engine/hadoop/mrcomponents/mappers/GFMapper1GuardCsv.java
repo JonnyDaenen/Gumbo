@@ -3,6 +3,7 @@
  */
 package gumbo.engine.hadoop.mrcomponents.mappers;
 
+import gumbo.engine.hadoop.mrcomponents.tools.RelationResolver;
 import gumbo.structures.data.RelationSchema;
 
 import java.io.IOException;
@@ -15,6 +16,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputSplit;
+import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 /**
@@ -26,12 +28,29 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
  */
 public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 
-	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(GFMapper1GuardCsv.class);
 
 	Text out1 = new Text();
 	Text out2 = new Text();
+	
 
+	RelationResolver resolver;
+
+	private StringBuilder stringBuilder;
+
+	@Override
+	protected void setup(Mapper<LongWritable, Text, Text, Text>.Context context)
+			throws IOException, InterruptedException {
+		// TODO Auto-generated method stub
+		super.setup(context);
+		
+		resolver = new RelationResolver(eso);
+		// pre-cache
+		resolver.extractRelationSchema(context);
+
+		stringBuilder = new StringBuilder(128);
+		
+	}
 
 
 
@@ -45,34 +64,29 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
 
-		// find out relation name
-			// TODO optimize
-			
 		try {
 
-			
-			InputSplit is = context.getInputSplit();
-			Method method = is.getClass().getMethod("getInputSplit");
-			
-			method.setAccessible(true);
-			FileSplit fileSplit = (FileSplit) method.invoke(is);
-			Path filePath = fileSplit.getPath();
-			
-//			LOG.error("File Name: "+filePath);
-			
-			RelationSchema rs = eso.getFileMapping().findSchema(filePath);
-			
+			// find out relation name
+			RelationSchema rs = resolver.extractRelationSchema(context);
+
 			// trim is necessary to remove extra whitespace
 			String t1 = value.toString().trim();
 			
-			t1 = rs.getName() + "(" + t1 + ")";
-			value.set(t1);
+			// wrap tuple in relation name
+			stringBuilder.setLength(0);
+			stringBuilder.append(rs.getName());
+			stringBuilder.append('(');
+			stringBuilder.append(t1);
+			stringBuilder.append(')');
+			
+			value.set(stringBuilder.toString());
 			
 			super.map(key, value, context);
 			
-			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				// TODO Auto-generated catch block
+			} catch (Exception e) {
+				LOG.error(e.getMessage());
 				e.printStackTrace();
+				throw new InterruptedException(e.getMessage());
 			}
 
 	}

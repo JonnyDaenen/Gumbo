@@ -5,7 +5,8 @@ import java.io.IOException;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 
-import gumbo.engine.hadoop.mrcomponents.mappers.TupleIDCreator.TupleIDError;
+import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator;
+import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;

@@ -3,7 +3,8 @@
  */
 package gumbo.engine.hadoop.mrcomponents.mappers;
 
-import gumbo.engine.hadoop.mrcomponents.mappers.TupleIDCreator.TupleIDError;
+import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator;
+import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
