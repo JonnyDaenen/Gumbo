@@ -18,7 +18,7 @@ import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class MessageFactory {
+public class Map1GuardMessageFactory {
 
 	Text keyText;
 	Text valueText;
@@ -28,11 +28,13 @@ public class MessageFactory {
 	private Counter RB;
 	private Counter RVB;
 	private Counter RKB;
-	private Counter KAPOE;
-	private Counter KAPOEB;
+	private Counter ASSERT;
+	private Counter ASSERTBYTES;
 	private boolean guardTuplePointerOptimizationOn;
 	private boolean guardKeepaliveOptimizationOn;
 	private boolean round1FiniteMemoryOptimizationOn;
+	private boolean guardIdOptimizationOn;
+	private boolean guardedIdOptimizationOn;
 	private Mapper<LongWritable, Text, Text, Text>.Context context;
 
 	// components
@@ -46,7 +48,7 @@ public class MessageFactory {
 	String tRef;
 	String proofBytes;
 
-	public MessageFactory(Mapper<LongWritable, Text, Text, Text>.Context context, HadoopExecutorSettings settings, ExpressionSetOperations eso) {
+	public Map1GuardMessageFactory(Mapper<LongWritable, Text, Text, Text>.Context context, HadoopExecutorSettings settings, ExpressionSetOperations eso) {
 		keyText = new Text();
 		valueText = new Text();
 
@@ -61,7 +63,10 @@ public class MessageFactory {
 		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn);
 		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn);
 		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
+		guardIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardIdOptimizationOn);
+		guardedIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardedIdOptimizationOn);
 
+		
 		// ---
 		KAR = context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST);
 		KARB = context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_BYTES);
@@ -72,8 +77,8 @@ public class MessageFactory {
 		RKB = context.getCounter(GumboMap1Counter.REQUEST_VALUE_BYTES);
 
 
-		KAPOE = context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE);
-		KAPOEB = context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE_BYTES);
+		ASSERT = context.getCounter(GumboMap1Counter.KEEP_ALIVE_ASSERT);
+		ASSERTBYTES = context.getCounter(GumboMap1Counter.KEEP_ALIVE_ASSERT_BYTES);
 
 
 		proofBytes = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL);
@@ -110,8 +115,12 @@ public class MessageFactory {
 	 */
 	public void sendGuardKeepAliveRequest(GFAtomicExpression guard) throws IOException, InterruptedException, GFOperationInitException {
 
-		// TODO enable id opt.
-		int guardID = eso.getAtomId(guard);
+		// CLEAN duplicate code, reuse standard request message
+		String guardRef = "";
+		if (guardIdOptimizationOn)
+			guardRef = Integer.toString(eso.getAtomId(guard));
+		else
+			guardRef = guard.toString();
 
 		// output guard
 		if (!guardKeepaliveOptimizationOn) {
@@ -119,7 +128,7 @@ public class MessageFactory {
 
 			valueBuilder.append(tRef);
 			valueBuilder.append(';');
-			valueBuilder.append(guardID);
+			valueBuilder.append(guardRef);
 
 			KAR.increment(1);
 			KARB.increment(keyBuilder.length() + valueBuilder.length());
@@ -155,16 +164,19 @@ public class MessageFactory {
 
 			keyBuilder.append(t.toString());
 
-			// add special 
+			// add special symbol for sort order
 			if (round1FiniteMemoryOptimizationOn)
 				keyBuilder.append(proofBytes);
 
-			// TODO proof representation optimization
+			// proof representation optimization
+			if (guardedIdOptimizationOn)
+				valueBuilder.append(proofBytes);
+			else
+				valueBuilder.append(t.toString());
 
-			valueBuilder.append(proofBytes);
-
-			// TODO count
-			
+			// update counters
+			ASSERT.increment(1);
+			ASSERTBYTES.increment(keyBuilder.length() + valueBuilder.length());
 
 			sendMessage();
 		}
@@ -175,7 +187,12 @@ public class MessageFactory {
 
 		//		GFAtomicExpression guarded = guardedInfo.fst;
 		GFAtomProjection p = guardedInfo.snd;
-		Integer guardedID = guardedInfo.trd;
+		
+		String guardRef = "";
+		if (guardIdOptimizationOn)
+			guardRef = Integer.toString(guardedInfo.trd);
+		else
+			guardRef = guardedInfo.fst.toString();
 
 		keyBuilder.append(p.projectString(t));
 
@@ -184,7 +201,7 @@ public class MessageFactory {
 
 		valueBuilder.append(tRef);
 		valueBuilder.append(';');
-		valueBuilder.append(guardedID.toString());
+		valueBuilder.append(guardRef);
 
 		R.increment(1);
 		RB.increment(keyBuilder.length() + valueBuilder.length());

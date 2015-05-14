@@ -84,8 +84,8 @@ public class GFMapper2GuardTextRel extends GFMapper1Identity {
 					// output guardid
 					out1.set(""+guardID);
 					context.write(value, out1); // OPTIMIZE I think this is not necessary with tuplepointeropt
-					context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_R2).increment(1);
-					context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_R2_BYTES).increment(Integer.SIZE/8 + value.getLength());
+					context.getCounter(GumboMap2Counter.KEEP_ALIVE_REQUEST_R2).increment(1);
+					context.getCounter(GumboMap2Counter.KEEP_ALIVE_REQUEST_R2_BYTES).increment(Integer.SIZE/8 + value.getLength());
 					
 					// output tuple value
 					// only when pointer optimization is on
@@ -96,8 +96,8 @@ public class GFMapper2GuardTextRel extends GFMapper1Identity {
 						if (print){
 							LOG.error("Mapper 2 output: " + value.toString() + ":" + out2.toString());
 						}
-						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_R2).increment(1);
-						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_R2_BYTES).increment(out2.getLength() + value.getLength());
+						context.getCounter(GumboMap2Counter.KEEP_ALIVE_REQUEST_R2).increment(1);
+						context.getCounter(GumboMap2Counter.KEEP_ALIVE_REQUEST_R2_BYTES).increment(out2.getLength() + value.getLength());
 					}
 
 

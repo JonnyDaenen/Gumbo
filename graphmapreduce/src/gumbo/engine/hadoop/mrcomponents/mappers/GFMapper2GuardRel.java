@@ -78,8 +78,8 @@ public class GFMapper2GuardRel extends GFMapper2Identity {
 					// output guardid
 					out1.set(guardID);
 					context.write(value, out1);
-					context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_R2).increment(1);
-					context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_R2_BYTES).increment(Integer.SIZE/8 + value.getLength());
+					context.getCounter(GumboMap2Counter.KEEP_ALIVE_REQUEST_R2).increment(1);
+					context.getCounter(GumboMap2Counter.KEEP_ALIVE_REQUEST_R2_BYTES).increment(Integer.SIZE/8 + value.getLength());
 					
 					// output tuple value
 					// only when pointer optimization is on
@@ -87,8 +87,8 @@ public class GFMapper2GuardRel extends GFMapper2Identity {
 					if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
 						out2.set(t.toString());
 //						context.write(value, out2); // FIXME change output to text... :-(
-						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_R2).increment(1);
-						context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_R2_BYTES).increment(out2.getLength() + value.getLength());
+						context.getCounter(GumboMap2Counter.KEEP_ALIVE_REQUEST_R2).increment(1);
+						context.getCounter(GumboMap2Counter.KEEP_ALIVE_REQUEST_R2_BYTES).increment(out2.getLength() + value.getLength());
 					}
 
 

@@ -33,7 +33,7 @@ public class GFMapper1GuardRelOptimized extends GFMapper1Identity {
 
 	private static final Log LOG = LogFactory.getLog(GFMapper1GuardRelOptimized.class);
 
-	protected MessageFactory msgFactory;
+	protected Map1GuardMessageFactory msgFactory;
 
 
 
@@ -43,7 +43,7 @@ public class GFMapper1GuardRelOptimized extends GFMapper1Identity {
 	@Override
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
-		msgFactory = new MessageFactory(context,settings,eso);		
+		msgFactory = new Map1GuardMessageFactory(context,settings,eso);		
 	}
 
 	/**

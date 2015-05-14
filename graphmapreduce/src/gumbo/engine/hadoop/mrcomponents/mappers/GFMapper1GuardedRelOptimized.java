@@ -3,6 +3,7 @@
  */
 package gumbo.engine.hadoop.mrcomponents.mappers;
 
+import gumbo.engine.hadoop.mrcomponents.mappers.TupleIDCreator.TupleIDError;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
@@ -22,21 +23,19 @@ import org.apache.hadoop.io.Text;
  * 
  */
 
-public class GFMapper1GuardedRel extends GFMapper1Identity {
+public class GFMapper1GuardedRelOptimized extends GFMapper1Identity {
 
 	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(GFMapper1GuardedRel.class);
-	Text proofSymbol;
-	Text output;
-	
+	private static final Log LOG = LogFactory.getLog(GFMapper1GuardedRelOptimized.class);
+	private Map1GuardedMessageFactory msgFactory;
+
 	/**
 	 * @see gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1Identity#setup(org.apache.hadoop.mapreduce.Mapper.Context)
 	 */
 	@Override
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
-		proofSymbol = new Text(settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL));
-		output = new Text();
+		msgFactory = new Map1GuardedMessageFactory(context,settings,eso);		
 	}
 
 	/**
@@ -50,13 +49,10 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 
 
 
-		// CLEAN what with the spaces? -> trim inside?
+		// CLEAN remove spaces? -> trim inside Tuple class?
 		Tuple t = new Tuple(value.toString());
-		
-		
-		if (settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn)) {
-			value.set(value.toString()+proofSymbol);
-		} 
+
+		msgFactory.loadGuardedValue(t);
 
 		// OPTIMIZE search for guarded atom based on name
 		// guarded existance output
@@ -64,18 +60,8 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 
 			// if no guarded expression matches this tuple, it will not be output
 			if (guarded.matches(t)) {
-				// reduce data size by using a constant symbol
-				if (settings.getBooleanProperty(HadoopExecutorSettings.guardedIdOptimizationOn)) {
-					context.write(value, proofSymbol);
-					context.getCounter(GumboMap1Counter.ASSERT).increment(1);
-					context.getCounter(GumboMap1Counter.ASSERT_BYTES).increment(value.getLength()+1);
-				} else {
-					output.set(t.toString());
-					context.write(value, output);
-					context.getCounter(GumboMap1Counter.ASSERT).increment(1);
-					context.getCounter(GumboMap1Counter.ASSERT_BYTES).increment(value.getLength()*2);
-				}
-				
+				msgFactory.sendAssert();
+
 				// one assert message suffices
 				break;
 			}

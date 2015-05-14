@@ -25,17 +25,20 @@ public abstract class AbstractExecutorSettings {
 
 	private static final Log LOG = LogFactory.getLog(AbstractExecutorSettings.class);
 
-	public static final String PROOF_SYMBOL = "PROOF_SYMBOL";
+	public static final String PROOF_SYMBOL = "gumbo.engine.proofsymbol";
 
-	public static final String guardedIdOptimizationOn = "gumbo.engine.guardedIdOptimizationOn"; // TODO this is currently implemented, but needs to become a toggle
-	public static final String guardIdOptimizationOn = "gumbo.engine.guardIdOptimizationOn";
-	public static final String guardKeepaliveOptimizationOn = "gumbo.engine.guardKeepaliveOn";
+	// compression options
+	public static final String guardedIdOptimizationOn = "gumbo.engine.guardedIdOptimizationOn";
+	public static final String guardIdOptimizationOn = "gumbo.engine.guardIdOptimizationOn"; // TODO this is always on now
+	public static final String guardKeepaliveOptimizationOn = "gumbo.engine.guardKeepaliveReductionOn";
 	public static final String guardTuplePointerOptimizationOn = "gumbo.engine.guardTuplePointerOptimizationOn";
-	public static final String guardAsGuardedReReadOptimizationOn = "gumbo.engine.guardAsGuardedReReadOptimizationOn"; // TODO this is currently implemented, but needs to become a toggle
+//	public static final String guardAsGuardedReReadOptimizationOn = "gumbo.engine.guardAsGuardedReReadOptimizationOn"; // TODO this is currently implemented, but needs to become a toggle
 
-	public static final String round1FiniteMemoryOptimizationOn = "gumbo.engine.round1FiniteMemoryOptimizationOn"; // TODO implement 
 	public static final String guardedCombinerOptimizationOn = "gumbo.engine.guardedCombinerOptimizationOn";  
 
+	// speed options
+	public static final String round1FiniteMemoryOptimizationOn = "gumbo.engine.round1FiniteMemoryOptimizationOn"; 
+	
 
 	/**
 	 * Loads the default settings.
@@ -45,7 +48,7 @@ public abstract class AbstractExecutorSettings {
 		setBooleanProperty(guardIdOptimizationOn, true);
 		setBooleanProperty(guardKeepaliveOptimizationOn, true);
 		setBooleanProperty(guardTuplePointerOptimizationOn, true);
-		setBooleanProperty(guardAsGuardedReReadOptimizationOn, true); 
+//		setBooleanProperty(guardAsGuardedReReadOptimizationOn, true); 
 		setBooleanProperty(round1FiniteMemoryOptimizationOn, true); 
 		setBooleanProperty(guardedCombinerOptimizationOn, true); 
 		setProperty(PROOF_SYMBOL, "#");
@@ -56,7 +59,7 @@ public abstract class AbstractExecutorSettings {
 		setBooleanProperty(guardIdOptimizationOn, false);
 		setBooleanProperty(guardKeepaliveOptimizationOn, false);
 		setBooleanProperty(guardTuplePointerOptimizationOn, false);
-		setBooleanProperty(guardAsGuardedReReadOptimizationOn, false); 
+//		setBooleanProperty(guardAsGuardedReReadOptimizationOn, false); 
 		setBooleanProperty(round1FiniteMemoryOptimizationOn, false); 
 		setBooleanProperty(guardedCombinerOptimizationOn, false); 
 	}
@@ -66,7 +69,7 @@ public abstract class AbstractExecutorSettings {
 		setBooleanProperty(guardIdOptimizationOn, true);
 		setBooleanProperty(guardKeepaliveOptimizationOn, true);
 		setBooleanProperty(guardTuplePointerOptimizationOn, true);
-		setBooleanProperty(guardAsGuardedReReadOptimizationOn, true);
+//		setBooleanProperty(guardAsGuardedReReadOptimizationOn, true);
 		setBooleanProperty(round1FiniteMemoryOptimizationOn, true);
 		setBooleanProperty(guardedCombinerOptimizationOn, true);
 
@@ -79,7 +82,7 @@ public abstract class AbstractExecutorSettings {
 		keys.add(guardIdOptimizationOn);
 		keys.add(guardKeepaliveOptimizationOn);
 		keys.add(guardTuplePointerOptimizationOn);
-		keys.add(guardAsGuardedReReadOptimizationOn);
+//		keys.add(guardAsGuardedReReadOptimizationOn);
 		keys.add(round1FiniteMemoryOptimizationOn);
 		keys.add(guardedCombinerOptimizationOn);
 		// CLEAN use reflection

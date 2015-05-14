@@ -24,7 +24,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
  * @author Jonny Daenen
  * 
  */
-public class GFMapper1GuardCsv extends GFMapper1GuardRel {
+public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 
 	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(GFMapper1GuardCsv.class);

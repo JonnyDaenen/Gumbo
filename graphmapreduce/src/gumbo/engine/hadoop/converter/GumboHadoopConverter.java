@@ -21,6 +21,7 @@ import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardRel;
 import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardRelOptimized;
 import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardedCsv;
 import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardedRel;
+import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardedRelOptimized;
 import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper2GuardCsv;
 import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper2GuardRel;
 import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper2GuardTextCsv;
@@ -180,7 +181,7 @@ public class GumboHadoopConverter {
 			for ( Path guardedPath : eso.getGuardedRelPaths()) {
 				LOG.info("Setting M1 guarded path to " + guardedPath + " using mapper " + GFMapper1GuardedRel.class.getName());
 				MultipleInputs.addInputPath(hadoopJob, guardedPath, 
-						TextInputFormat.class, GFMapper1GuardedRel.class);
+						TextInputFormat.class, GFMapper1GuardedRelOptimized.class);
 			}
 
 			// guarded mapper for csv files
@@ -191,20 +192,21 @@ public class GumboHadoopConverter {
 			}
 
 			// WARNING: equal guarded paths are overwritten!
+			// hence they are only processed once
 			Collection<Path> commonPaths = eso.intersectGuardGuardedPaths();
 			if (commonPaths.size() != 0) {
-				LOG.warn("Guarded paths that are guard paths (and will only be processed by guard mapper): " + commonPaths);
+				LOG.warn("Guarded paths that are guard paths (and will only be processed by the corresponding guard mapper): " + commonPaths);
 			}
 
 			// guard mapper for relational files
 			for ( Path guardPath : eso.getGuardRelPaths()) {
 				LOG.info("Setting M1 guard path to " + guardPath + " using mapper " + GFMapper1GuardRel.class.getName());
 				MultipleInputs.addInputPath(hadoopJob, guardPath, 
-						TextInputFormat.class, GFMapper1GuardRel.class);
+						TextInputFormat.class, GFMapper1GuardRelOptimized.class);
 			}
 
 
-			// guard mapper for relational files
+			// guard mapper for csv files
 			for ( Path guardPath : eso.getGuardCsvPaths()) {
 				LOG.info("Setting M1 guard path to " + guardPath + " using mapper " + GFMapper1GuardCsv.class.getName());
 				MultipleInputs.addInputPath(hadoopJob, guardPath, 
@@ -322,7 +324,9 @@ public class GumboHadoopConverter {
 
 			/* MAPPER */
 
-			if (settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn)) {
+			// some optimizations require a special mapper round
+			if (settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn) ||
+					settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
 
 				// add special non-identity mapper to process the guard input again
 

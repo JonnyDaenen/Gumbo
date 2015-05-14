@@ -87,8 +87,8 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 		RKB = context.getCounter(GumboMap1Counter.REQUEST_VALUE_BYTES);
 		
 
-		KAPOE = context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE);
-		KAPOEB = context.getCounter(GumboMap1Counter.KEEP_ALIVE_PROOF_OF_EXISTENCE_BYTES);
+		KAPOE = context.getCounter(GumboMap1Counter.KEEP_ALIVE_ASSERT);
+		KAPOEB = context.getCounter(GumboMap1Counter.KEEP_ALIVE_ASSERT_BYTES);
 		
 	}
 
