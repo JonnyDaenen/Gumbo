@@ -1,7 +1,7 @@
 /**
  * Created: 21 Aug 2014
  */
-package gumbo.engine.hadoop.mrcomponents.mappers.wrappers;
+package gumbo.engine.hadoop.mrcomponents.round1.mappers;
 
 import gumbo.engine.hadoop.mrcomponents.tools.RelationResolver;
 import gumbo.structures.data.RelationSchema;
@@ -20,22 +20,18 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 /**
- * Outputs the atoms when a guard is projected onto them.
- * The input is in csv format, the output is in relational format.
+ * Also outputs the atoms when a guarded atom is projected onto them.
+ * Only allows tuples from 1 relation as input.
  * 
  * @author Jonny Daenen
  * 
  */
-public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 
-	private static final Log LOG = LogFactory.getLog(GFMapper1GuardCsv.class);
+public class GFMapper1GuardedCsv extends GFMapper1GuardedRelOptimized {
 
-	Text out1 = new Text();
-	Text out2 = new Text();
-	
-
-	RelationResolver resolver;
-
+	@SuppressWarnings("unused")
+	private static final Log LOG = LogFactory.getLog(GFMapper1GuardedCsv.class);
+	private RelationResolver resolver;
 	private StringBuilder stringBuilder;
 
 	@Override
@@ -53,7 +49,6 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 	}
 
 
-
 	/**
 	 * @throws InterruptedException
 	 * @throws IOException
@@ -62,7 +57,6 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 	 */
 	@Override
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-
 
 		try {
 
@@ -89,6 +83,9 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 				throw new InterruptedException(e.getMessage());
 			}
 
+
+
 	}
+
 
 }

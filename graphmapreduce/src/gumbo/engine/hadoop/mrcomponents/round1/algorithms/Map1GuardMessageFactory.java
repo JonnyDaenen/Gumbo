@@ -1,10 +1,11 @@
-package gumbo.engine.hadoop.mrcomponents.mappers;
+package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
 import java.io.IOException;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 
+import gumbo.engine.hadoop.mrcomponents.round1.mappers.GumboMap1Counter;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;

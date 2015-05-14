@@ -1,7 +1,7 @@
 /**
  * Created: 21 Aug 2014
  */
-package gumbo.engine.hadoop.mrcomponents.mappers;
+package gumbo.engine.hadoop.mrcomponents.round1.mappers;
 
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
@@ -62,7 +62,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 
 
 	/**
-	 * @see gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1Identity#setup(org.apache.hadoop.mapreduce.Mapper.Context)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1Identity#setup(org.apache.hadoop.mapreduce.Mapper.Context)
 	 */
 	@Override
 	protected void setup(Context context) throws IOException, InterruptedException {

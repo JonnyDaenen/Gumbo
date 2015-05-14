@@ -1,4 +1,4 @@
-package gumbo.engine.hadoop.mrcomponents.mappers;
+package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

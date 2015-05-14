@@ -1,7 +1,7 @@
 /**
  * Created: 21 Aug 2014
  */
-package gumbo.engine.hadoop.mrcomponents.mappers;
+package gumbo.engine.hadoop.mrcomponents.round2.mappers;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.filemapper.RelationFileMappingException;

@@ -1,11 +1,10 @@
 /**
  * Created: 21 Aug 2014
  */
-package gumbo.engine.hadoop.mrcomponents.mappers.wrappers;
+package gumbo.engine.hadoop.mrcomponents.round1.mappers;
 
-import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1Identity;
-import gumbo.engine.hadoop.mrcomponents.mappers.Map1GuardedAlgorithm;
-import gumbo.engine.hadoop.mrcomponents.mappers.Map1GuardedMessageFactory;
+import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedAlgorithm;
+import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
@@ -35,7 +34,7 @@ public class GFMapper1GuardedRelOptimized extends GFMapper1Identity {
 	private Map1GuardedAlgorithm algo;
 
 	/**
-	 * @see gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1Identity#setup(org.apache.hadoop.mapreduce.Mapper.Context)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1Identity#setup(org.apache.hadoop.mapreduce.Mapper.Context)
 	 */
 	@Override
 	protected void setup(Context context) throws IOException, InterruptedException {

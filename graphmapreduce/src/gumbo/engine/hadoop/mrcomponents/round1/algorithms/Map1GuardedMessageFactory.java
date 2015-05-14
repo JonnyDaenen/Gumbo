@@ -1,5 +1,6 @@
-package gumbo.engine.hadoop.mrcomponents.mappers;
+package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
+import gumbo.engine.hadoop.mrcomponents.round1.mappers.GumboMap1Counter;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
