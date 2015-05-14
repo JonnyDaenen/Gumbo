@@ -1,8 +1,11 @@
 /**
  * Created: 21 Aug 2014
  */
-package gumbo.engine.hadoop.mrcomponents.mappers;
+package gumbo.engine.hadoop.mrcomponents.mappers.wrappers;
 
+import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1Identity;
+import gumbo.engine.hadoop.mrcomponents.mappers.Map1GuardedAlgorithm;
+import gumbo.engine.hadoop.mrcomponents.mappers.Map1GuardedMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
@@ -27,7 +30,9 @@ public class GFMapper1GuardedRelOptimized extends GFMapper1Identity {
 
 	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(GFMapper1GuardedRelOptimized.class);
+	
 	private Map1GuardedMessageFactory msgFactory;
+	private Map1GuardedAlgorithm algo;
 
 	/**
 	 * @see gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1Identity#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -35,7 +40,8 @@ public class GFMapper1GuardedRelOptimized extends GFMapper1Identity {
 	@Override
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
-		msgFactory = new Map1GuardedMessageFactory(context,settings,eso);		
+		msgFactory = new Map1GuardedMessageFactory(context,settings,eso);
+		algo = new Map1GuardedAlgorithm(eso, msgFactory);
 	}
 
 	/**
@@ -51,22 +57,7 @@ public class GFMapper1GuardedRelOptimized extends GFMapper1Identity {
 
 		// CLEAN remove spaces? -> trim inside Tuple class?
 		Tuple t = new Tuple(value.toString());
-
-		msgFactory.loadGuardedValue(t);
-
-		// OPTIMIZE search for guarded atom based on name
-		// guarded existance output
-		for (GFAtomicExpression guarded : eso.getGuardedsAll()) {
-
-			// if no guarded expression matches this tuple, it will not be output
-			if (guarded.matches(t)) {
-				msgFactory.sendAssert();
-
-				// one assert message suffices
-				break;
-			}
-		}
-
+		algo.run(t, key.get());
 	}
 
 

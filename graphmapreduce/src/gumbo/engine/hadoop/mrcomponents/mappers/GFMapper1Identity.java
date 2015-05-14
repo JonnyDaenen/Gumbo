@@ -26,8 +26,8 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 
 	private static final Log LOG = LogFactory.getLog(GFMapper1Identity.class);
 
-	ExpressionSetOperations eso;
-	HadoopExecutorSettings settings;
+	protected ExpressionSetOperations eso;
+	protected HadoopExecutorSettings settings;
 	
 	Text t;
 

@@ -93,7 +93,7 @@ public class Gumbo extends Configured implements Tool {
 
 
 	public static void main(String[] args) throws Exception {
-		Thread.sleep(10000);
+//		Thread.sleep(10000);
 		// Let ToolRunner handle generic command-line options 
 		int res = ToolRunner.run(new Configuration(), new Gumbo(), args);
 

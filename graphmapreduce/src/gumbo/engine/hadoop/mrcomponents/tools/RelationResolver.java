@@ -1,6 +1,6 @@
 package gumbo.engine.hadoop.mrcomponents.tools;
 
-import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1GuardCsv;
+import gumbo.engine.hadoop.mrcomponents.mappers.wrappers.GFMapper1GuardCsv;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 

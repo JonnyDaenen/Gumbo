@@ -1,8 +1,11 @@
 /**
  * Created: 21 Aug 2014
  */
-package gumbo.engine.hadoop.mrcomponents.mappers;
+package gumbo.engine.hadoop.mrcomponents.mappers.wrappers;
 
+import gumbo.engine.hadoop.mrcomponents.mappers.GFMapper1Identity;
+import gumbo.engine.hadoop.mrcomponents.mappers.Map1GuardAlgorithm;
+import gumbo.engine.hadoop.mrcomponents.mappers.Map1GuardMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
@@ -34,6 +37,7 @@ public class GFMapper1GuardRelOptimized extends GFMapper1Identity {
 	private static final Log LOG = LogFactory.getLog(GFMapper1GuardRelOptimized.class);
 
 	protected Map1GuardMessageFactory msgFactory;
+	private Map1GuardAlgorithm algo;
 
 
 
@@ -44,6 +48,7 @@ public class GFMapper1GuardRelOptimized extends GFMapper1Identity {
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
 		msgFactory = new Map1GuardMessageFactory(context,settings,eso);		
+		algo = new Map1GuardAlgorithm(eso, msgFactory);
 	}
 
 	/**
@@ -54,56 +59,8 @@ public class GFMapper1GuardRelOptimized extends GFMapper1Identity {
 	 */
 	@Override
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-
-		try {
-
-			// transform data
 			Tuple t = new Tuple(value.getBytes());
-			msgFactory.loadGuardValue(t,key.get());
-				
-			
-			boolean outputAssert = false;
-			boolean guardIsGuarded = false;
-
-			// check guards + atom (keep-alive)
-			for (GFAtomicExpression guard : eso.getGuardsAll()) {
-
-				// if the tuple satisfies the guard expression
-				if (guard.matches(t)) {
-					
-					// output KAL-R for this guard if necessary
-					msgFactory.sendGuardKeepAliveRequest(guard);
-					outputAssert = true;
-
-					// projections to atoms
-					for (Triple<GFAtomicExpression, GFAtomProjection, Integer> guardedInfo : eso.getGuardedsAndProjections(guard)) {
-
-						GFAtomicExpression guarded = guardedInfo.fst;
-						
-						// if guarded is same relation, output special assert afterwards
-						if (guarded.getRelationSchema().equals(guard.getRelationSchema())) {
-							guardIsGuarded = true;
-						}
-
-						msgFactory.sendRequest(guardedInfo);
-					}
-				}
-			}
-
-			// output an assert message if the guard is also guarded (forced)
-			// or if it matched a guard was matched
-			if (guardIsGuarded || outputAssert) {
-				msgFactory.sendGuardedAssert(guardIsGuarded);
-			}
-
-
-
-		} catch ( TupleIDError | NonMatchingTupleException | GFOperationInitException e) {
-			LOG.error(e.getMessage());
-			e.printStackTrace();
-			throw new InterruptedException(e.getMessage());
-		} 
-
+			algo.run(t, key.get());
 	}
 
 
