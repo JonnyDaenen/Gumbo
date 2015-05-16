@@ -139,16 +139,19 @@ public class GFReducer2Optimized extends Reducer<Text, Text, Text, Text> {
 
 			Tuple guardTuple = null;
 			if (!lookingForGuard)
-				guardTuple = new Tuple(key.getBytes());
+				guardTuple = new Tuple(key.getBytes(),key.getLength());
 
 			for (Text v : values) {
 
 				String value = v.toString();
 
 				// record guard tuple if found
-				if (lookingForGuard && msgFactory.isTuple(value)) {
-					guardTuple = msgFactory.getTuple(value);
-					lookingForGuard = false;
+				if (msgFactory.isTuple(value)) {
+					if (lookingForGuard) {
+						guardTuple = msgFactory.getTuple(value);
+						lookingForGuard = false;
+					} else
+						continue;
 				} 
 				// otherwise we keep track of true atoms
 				else {
@@ -166,12 +169,14 @@ public class GFReducer2Optimized extends Reducer<Text, Text, Text, Text> {
 						atom = mapGFtoB.getVariable(dummy);
 					}
 					booleanContext.setValue(atom, true);
-					
 
+					
 				}
 
 
 			}
+
+			
 
 			// if guard tuple is not present yet, throw exception
 			if (lookingForGuard) {
@@ -195,16 +200,16 @@ public class GFReducer2Optimized extends Reducer<Text, Text, Text, Text> {
 					boolean eval = booleanChildExpression.evaluate(booleanContext);
 					
 					if (eval) {
-						
+
 						// calculate output tuple
 						GFAtomProjection p = eso.getOutputProjection(formula);
-						
+
 						// send it
 						TRUE.increment(1);
 						msgFactory.loadValue(p.project(guardTuple));
 						msgFactory.sendOutput();
-						
-						
+
+
 					} else {
 						FALSE.increment(1);
 					}
@@ -223,7 +228,7 @@ public class GFReducer2Optimized extends Reducer<Text, Text, Text, Text> {
 		} 
 	}
 
-	
+
 
 
 }

@@ -99,8 +99,8 @@ public class Tuple {
 		this.data = data;
 	}
 
-	public Tuple(byte [] b) {
-		initialize(b);
+	public Tuple(byte [] b,int length) {
+		initialize(b, length);
 		
 	}
 	
@@ -110,7 +110,7 @@ public class Tuple {
 
 		byte[] b = value.getBytes();
 
-		initialize(b);
+		initialize(b,value.getLength());
 //		System.out.println(name + " " + data[0] + data[1]);
 	}
 
@@ -126,10 +126,10 @@ public class Tuple {
 
 	}
 	
-	private void initialize(byte [] b) {
+	private void initialize(byte [] b, int length) {
 		StringBuilder sb = new StringBuilder(b.length);
 		LinkedList<String> list = new LinkedList<>();
-		for (int i = 0; i < b.length; i++) {
+		for (int i = 0; i < length; i++) {
 			char c = (char) b[i];
 			if (c == '(') {
 				this.name = sb.toString();
@@ -149,7 +149,7 @@ public class Tuple {
 			
 			// System.out.print((char)b[i]);
 		}
-		representationCache = new String(b);
+		representationCache = new String(b,0,length);
 		data = list.toArray(new String [0]);
 	}
 

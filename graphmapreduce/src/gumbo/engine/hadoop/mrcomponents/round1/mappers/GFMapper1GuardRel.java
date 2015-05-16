@@ -111,7 +111,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 		try {
 
 			// transform data
-			Tuple t = new Tuple(value.getBytes());
+			Tuple t = new Tuple(value.getBytes(),value.getLength());
 			String replyAddress;
 
 			// replace value with pointer when optimization is on

@@ -57,7 +57,7 @@ public class GFMapper2GuardRelOptimized extends GFMapper1Identity {
 	 */
 	@Override
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-			Tuple t = new Tuple(value.getBytes());
+			Tuple t = new Tuple(value.getBytes(),value.getLength());
 			algo.run(t, key.get());
 	}
 
