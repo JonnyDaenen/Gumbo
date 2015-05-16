@@ -4,11 +4,9 @@
 package gumbo.gui.gumbogui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 

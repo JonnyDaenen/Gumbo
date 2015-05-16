@@ -7,17 +7,12 @@ import gumbo.engine.hadoop.mrcomponents.tools.RelationResolver;
 import gumbo.structures.data.RelationSchema;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 /**
  * Outputs the atoms when a guard is projected onto them.
@@ -32,7 +27,7 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 
 	Text out1 = new Text();
 	Text out2 = new Text();
-	
+
 
 	RelationResolver resolver;
 
@@ -43,13 +38,17 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 			throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		super.setup(context);
-		
-		resolver = new RelationResolver(eso);
-		// pre-cache
-		resolver.extractRelationSchema(context);
 
-		stringBuilder = new StringBuilder(128);
-		
+		try {
+			resolver = new RelationResolver(eso);
+			// pre-cache
+			resolver.extractRelationSchema(context);
+
+			stringBuilder = new StringBuilder(128);
+		} catch (Exception e) {
+			throw new InterruptedException(e.getMessage());
+		}
+
 	}
 
 
@@ -71,23 +70,23 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 
 			// trim is necessary to remove extra whitespace
 			String t1 = value.toString().trim();
-			
+
 			// wrap tuple in relation name
 			stringBuilder.setLength(0);
 			stringBuilder.append(rs.getName());
 			stringBuilder.append('(');
 			stringBuilder.append(t1);
 			stringBuilder.append(')');
-			
+
 			value.set(stringBuilder.toString());
-			
+
 			super.map(key, value, context);
-			
-			} catch (Exception e) {
-				LOG.error(e.getMessage());
-				e.printStackTrace();
-				throw new InterruptedException(e.getMessage());
-			}
+
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			e.printStackTrace();
+			throw new InterruptedException(e.getMessage());
+		}
 
 	}
 

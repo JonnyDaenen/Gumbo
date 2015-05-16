@@ -1,16 +1,11 @@
 package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.io.Triple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
-import gumbo.structures.gfexpressions.operations.GFAtomProjection;
-import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class Map1GuardedAlgorithm {
 	

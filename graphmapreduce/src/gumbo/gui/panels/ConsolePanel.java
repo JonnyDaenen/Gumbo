@@ -7,11 +7,8 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
-import javax.swing.JEditorPane;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
 /**

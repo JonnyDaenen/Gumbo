@@ -1,13 +1,6 @@
 package gumbo.gui.gumbogui;
 
 
-import gumbo.gui.JTextAreaOutputStream;
-
-import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JEditorPane;
 import javax.swing.JSplitPane;
 
 public class PanelDCBA extends JSplitPane {

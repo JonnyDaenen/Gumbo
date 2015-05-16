@@ -1,9 +1,5 @@
 package gumbo.input.parser;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-
 import gumbo.input.GumboQuery;
 import gumbo.input.parser.GumboParser.InputContext;
 import gumbo.input.parser.GumboParser.OutputpathContext;
@@ -11,6 +7,10 @@ import gumbo.input.parser.GumboParser.ScratchpathContext;
 import gumbo.input.parser.GumboParser.ScriptContext;
 import gumbo.input.parser.GumboParser.SelectContext;
 import gumbo.structures.gfexpressions.GFExpression;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Visitor class for the script rule in the gumbo grammar

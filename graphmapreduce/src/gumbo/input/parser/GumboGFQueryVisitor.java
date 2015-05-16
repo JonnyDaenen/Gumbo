@@ -1,11 +1,5 @@
 package gumbo.input.parser;
 
-import java.util.ArrayList;
-import java.util.Stack;
-
-import org.antlr.v4.runtime.misc.ParseCancellationException;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
 import gumbo.input.parser.GumboParser.AndExprContext;
 import gumbo.input.parser.GumboParser.GfqueryContext;
 import gumbo.input.parser.GumboParser.GuardedExprContext;
@@ -23,6 +17,12 @@ import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.GFNotExpression;
 import gumbo.structures.gfexpressions.GFOrExpression;
+
+import java.util.ArrayList;
+import java.util.Stack;
+
+import org.antlr.v4.runtime.misc.ParseCancellationException;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
  * Visitor class for the gfquery rules in the gumbo grammar

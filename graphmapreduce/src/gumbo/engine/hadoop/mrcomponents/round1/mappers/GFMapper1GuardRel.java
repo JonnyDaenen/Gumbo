@@ -8,7 +8,6 @@ import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.structures.gfexpressions.io.Triple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;

@@ -1,14 +1,18 @@
 package gumbo.gui;
 
-import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.compiler.filemapper.RelationFileMappingException;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.gui.gumbogui.*;
+import gumbo.gui.gumbogui.GumboMainFrame;
+import gumbo.gui.gumbogui.PanelA;
+import gumbo.gui.gumbogui.PanelB;
+import gumbo.gui.gumbogui.PanelBA;
+import gumbo.gui.gumbogui.PanelC;
+import gumbo.gui.gumbogui.PanelD;
+import gumbo.gui.gumbogui.PanelDC;
+import gumbo.gui.gumbogui.PanelDCBA;
 import gumbo.input.GumboQuery;
 import gumbo.structures.data.RelationSchema;
-import gumbo.structures.data.RelationSchemaException;
 import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.io.GFInfixSerializer;
 
@@ -20,8 +24,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,12 +36,9 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
-import org.apache.hadoop.util.ToolRunner;
 
 public class GumboMain extends Configured implements Tool {
 	

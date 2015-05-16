@@ -5,10 +5,7 @@ package gumbo.engine.hadoop.mrcomponents.round1.mappers;
 
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedAlgorithm;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactory;
-import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
 
 import java.io.IOException;
 

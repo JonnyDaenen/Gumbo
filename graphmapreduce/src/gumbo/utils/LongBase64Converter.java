@@ -15,8 +15,6 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.codec.binary.Base64;
 
-import com.sun.xml.bind.DatatypeConverterImpl;
-
 /**
  * @author jonny
  *

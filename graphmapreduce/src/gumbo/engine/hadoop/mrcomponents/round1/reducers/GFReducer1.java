@@ -43,7 +43,6 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 	boolean outputIDs = true;
 	HadoopExecutorSettings settings;
 
-	private StringBuilder sb2;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -61,7 +60,6 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 
 		mos = new MultipleOutputs<>(context);
 		sb = new StringBuilder(128);
-		sb2 = new StringBuilder(128);
 
 		// load parameters
 		try {

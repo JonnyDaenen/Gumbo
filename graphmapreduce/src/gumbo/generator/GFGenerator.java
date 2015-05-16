@@ -1,13 +1,5 @@
 package gumbo.generator;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.apache.hadoop.fs.Path;
-
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.input.GumboQuery;
@@ -19,6 +11,14 @@ import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.GFNotExpression;
 import gumbo.structures.gfexpressions.GFOrExpression;
 import gumbo.structures.gfexpressions.GFXorExpression;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.apache.hadoop.fs.Path;
 
 /**
  * Generator class which can be used to easily generate GF queries

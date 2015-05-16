@@ -1,7 +1,5 @@
 package gumbo.gui.gumbogui;
 
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.TextField;
 
 import javax.swing.JButton;

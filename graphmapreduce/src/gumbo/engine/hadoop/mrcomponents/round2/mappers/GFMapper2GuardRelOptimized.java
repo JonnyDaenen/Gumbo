@@ -3,26 +3,17 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round2.mappers;
 
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardAlgorithm;
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1Identity;
 import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Map2GuardAlgorithm;
 import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Map2GuardMessageFactory;
-import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator;
-import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 
 import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Mapper.Context;
 
 /**
  * Also outputs the atoms when a guard is projected onto them.
@@ -47,6 +38,9 @@ public class GFMapper2GuardRelOptimized extends GFMapper1Identity {
 		super.setup(context);
 		msgFactory = new Map2GuardMessageFactory(context,settings,eso);		
 		algo = new Map2GuardAlgorithm(eso, msgFactory);
+		
+		// dummy
+		LOG.getClass();
 	}
 
 	/**

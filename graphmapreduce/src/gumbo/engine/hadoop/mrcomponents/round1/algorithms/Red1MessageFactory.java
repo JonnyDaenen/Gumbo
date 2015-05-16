@@ -1,16 +1,16 @@
 package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
+import gumbo.engine.hadoop.mrcomponents.round1.reducers.GumboRed1Counter;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.structures.data.Tuple;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
+
 import java.io.IOException;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
-
-import gumbo.engine.hadoop.mrcomponents.round1.reducers.GumboRed1Counter;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.structures.data.Tuple;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 public class Red1MessageFactory {
 
@@ -25,7 +25,6 @@ public class Red1MessageFactory {
 	private Counter OUTR;
 	private Counter OUTB;
 	
-	private Reducer<Text, Text, Text, Text>.Context context;
 
 	// components
 
@@ -38,11 +37,6 @@ public class Red1MessageFactory {
 	public Red1MessageFactory(Reducer<Text, Text, Text, Text>.Context context, HadoopExecutorSettings settings, ExpressionSetOperations eso, String filename) {
 		keyText = new Text();
 		valueText = new Text();
-
-		// ---
-		this.context = context;
-
-		// ---
 
 		// ---
 		OUTR = context.getCounter(GumboRed1Counter.RED1_OUT_RECORDS);

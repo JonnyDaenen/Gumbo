@@ -27,7 +27,6 @@ public class Red2MessageFactory {
 	private Counter OUTR;
 	private Counter OUTB;
 	
-	private Reducer<Text, Text, Text, Text>.Context context;
 
 	// components
 	private ExpressionSetOperations eso;
@@ -43,7 +42,6 @@ public class Red2MessageFactory {
 		valueText = new Text();
 
 		// ---
-		this.context = context;
 		this.eso = eso;
 
 		// ---

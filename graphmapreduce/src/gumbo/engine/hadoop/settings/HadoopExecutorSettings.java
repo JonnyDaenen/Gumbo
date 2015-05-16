@@ -3,10 +3,9 @@
  */
 package gumbo.engine.hadoop.settings;
 
-import java.util.Iterator;
-import java.util.Map.Entry;
-
 import gumbo.engine.settings.AbstractExecutorSettings;
+
+import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

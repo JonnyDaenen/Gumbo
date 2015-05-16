@@ -1,14 +1,14 @@
 package gumbo.input.parser;
 
-import java.util.ArrayList;
-
-import org.apache.hadoop.fs.Path;
-
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.input.parser.GumboParser.InputCsvContext;
 import gumbo.input.parser.GumboParser.InputRelContext;
 import gumbo.structures.data.RelationSchema;
+
+import java.util.ArrayList;
+
+import org.apache.hadoop.fs.Path;
 
 /**
  * Visitor class for the input rules in the gumbo grammar

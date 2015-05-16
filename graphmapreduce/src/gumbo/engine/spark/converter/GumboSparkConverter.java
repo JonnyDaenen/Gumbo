@@ -22,7 +22,6 @@ import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
