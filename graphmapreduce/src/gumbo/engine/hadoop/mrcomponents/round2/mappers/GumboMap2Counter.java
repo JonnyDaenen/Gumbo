@@ -10,9 +10,11 @@ package gumbo.engine.hadoop.mrcomponents.round2.mappers;
  */
 public enum GumboMap2Counter {
 
+	ASSERT_RECORDS,
 	KEEP_ALIVE_REQUEST_R2,
 	KEEP_ALIVE_ASSERT_R2,
 	
+	ASSERT_BYTES,
 	KEEP_ALIVE_REQUEST_R2_BYTES,
-	KEEP_ALIVE_ASSERT_R2_BYTES
+	KEEP_ALIVE_ASSERT_R2_BYTES,
 }

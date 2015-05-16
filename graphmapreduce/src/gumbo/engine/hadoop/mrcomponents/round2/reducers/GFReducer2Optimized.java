@@ -1,12 +1,18 @@
 /**
- * Created: 22 Aug 2014
+ * Created: 16 May 2015
  */
 package gumbo.engine.hadoop.mrcomponents.round2.reducers;
 
+import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Red1MessageFactory;
+import gumbo.engine.hadoop.mrcomponents.round1.reducers.GumboRed1Counter;
+import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Red2MessageFactory;
+import gumbo.engine.hadoop.mrcomponents.round2.reducers.GFReducer2Text.GuardTupleNotFoundException;
 import gumbo.engine.hadoop.mrcomponents.tools.ParameterPasser;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.booleanexpressions.BEvaluationContext;
 import gumbo.structures.booleanexpressions.BExpression;
+import gumbo.structures.booleanexpressions.BVariable;
 import gumbo.structures.booleanexpressions.VariableNotFoundException;
 import gumbo.structures.conversion.GFBooleanMapping;
 import gumbo.structures.data.RelationSchema;
@@ -19,15 +25,17 @@ import gumbo.structures.gfexpressions.operations.GFAtomProjection;
 import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.Reducer.Context;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 /**
@@ -36,7 +44,7 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
  * @author Jonny Daenen
  * 
  */
-public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
+public class GFReducer2Optimized extends Reducer<Text, Text, Text, Text> {
 
 
 	public class GuardTupleNotFoundException extends Exception {
@@ -47,16 +55,24 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 		}
 	}
 
-	Text out1 = new Text();
-	Text out2 = new Text();
-	private ExpressionSetOperations eso;
-	private MultipleOutputs<Text, Text> mos;
 
+	private static final Log LOG = LogFactory.getLog(GFReducer2Optimized.class);
 
-	private static final Log LOG = LogFactory.getLog(GFReducer2.class);
+	boolean guardRefOn;
+	boolean atomIdOn;
 
-	boolean receiveIDs = true;
 	private HadoopExecutorSettings settings;
+	private Red2MessageFactory msgFactory;
+
+	private ExpressionSetOperations eso;
+
+	private Counter EXCEPT;
+
+	private Counter TUPLES;
+
+	private Counter TRUE;
+
+	private Counter FALSE;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -65,28 +81,46 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 	protected void setup(Context context) throws IOException, InterruptedException {
 		// load context
 		super.setup(context);
-		Configuration conf = context.getConfiguration();
-
-		mos = new MultipleOutputs<>(context);
 
 		String s = String.format("Reducer"+this.getClass().getSimpleName()+"-%05d-%d",
 				context.getTaskAttemptID().getTaskID().getId(),
 				context.getTaskAttemptID().getId());
 		LOG.info(s);
 
+
+
 		// load parameters
 		try {
+			Configuration conf = context.getConfiguration();
+
 			ParameterPasser pp = new ParameterPasser(conf);
 			eso = pp.loadESO();
-			settings = pp.loadSettings();
+			HadoopExecutorSettings settings = pp.loadSettings();
+
+			msgFactory = new Red2MessageFactory(context, settings, eso);
+
+
+			// --- opts
+			guardRefOn = settings.getBooleanProperty(AbstractExecutorSettings.guardReferenceOptimizationOn);
+			atomIdOn = settings.getBooleanProperty(AbstractExecutorSettings.atomIdOptimizationOn);
+
+			// counters
+			EXCEPT = context.getCounter(GumboRed2Counter.RED2_TUPLE_EXCEPTIONS);
+			TUPLES = context.getCounter(GumboRed2Counter.RED2_TUPLES_FOUND);
+			TRUE = context.getCounter(GumboRed2Counter.RED2_EVAL_TRUE);
+			FALSE = context.getCounter(GumboRed2Counter.RED2_EVAL_FALSE);
+
 		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			e.printStackTrace();
 			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}
+
 	}
 
 	@Override
 	protected void cleanup(Context context) throws IOException, InterruptedException {
-		mos.close();
+		msgFactory.cleanup();
 	}
 
 	/**
@@ -94,51 +128,57 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 	 *      java.lang.Iterable, org.apache.hadoop.mapreduce.Reducer.Context)
 	 */
 	@Override
-	protected void reduce(Text key, Iterable<IntWritable> values, Context context)
+	protected void reduce(Text key, Iterable<Text> values, Context context)
 			throws IOException, InterruptedException {
 		try {
 
-			Tuple keyTuple = null;
-
-			if (!settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
-				keyTuple = new Tuple(key);
-			}
-
-			/* create boolean value mapping */
 			GFBooleanMapping mapGFtoB = eso.getBooleanMapping();
 			BEvaluationContext booleanContext = new BEvaluationContext();
 
-			for (IntWritable v : values) {
+			boolean lookingForGuard = guardRefOn;
 
-				// if tuple pointer optimization is on
-				// we need to find the actual tuple between the values.
-				if (settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
-					// TODO implement...
+			Tuple guardTuple = null;
+			if (!lookingForGuard)
+				guardTuple = new Tuple(key.getBytes());
+
+			for (Text v : values) {
+
+				String value = v.toString();
+
+				// record guard tuple if found
+				if (lookingForGuard && msgFactory.isTuple(value)) {
+					guardTuple = msgFactory.getTuple(value);
+					lookingForGuard = false;
+				} 
+				// otherwise we keep track of true atoms
+				else {
+					// extract atom reference and set it to true
+					String atomRef = value;
+					BVariable atom;
+
+					if (atomIdOn) {
+						int id = Integer.parseInt(atomRef);
+						GFAtomicExpression atomExp = eso.getAtom(id); 
+						atom = mapGFtoB.getVariable(atomExp);
+					} else {
+						Tuple atomTuple = new Tuple(atomRef);
+						GFAtomicExpression dummy = new GFAtomicExpression(atomTuple.getName(), atomTuple.getAllData());
+						atom = mapGFtoB.getVariable(dummy);
+					}
+					booleanContext.setValue(atom, true);
+					
+
 				}
 
-				int id = v.get();
 
-
-				// skip empty values (only used for propagation)
-				//				if (t.getLength() == 0)
-				//					continue;
-
-				// atoms that are present are "true"
-				// id mode vs string mode
-				if (receiveIDs) {
-					GFAtomicExpression atom = eso.getAtom(id); 
-					booleanContext.setValue(mapGFtoB.getVariable(atom), true);
-				} else {
-					Text t = null; // CLEAN
-					Tuple tuple = new Tuple(t);
-					GFAtomicExpression dummy = new GFAtomicExpression(tuple.getName(), tuple.getAllData());
-					booleanContext.setValue(mapGFtoB.getVariable(dummy), true);
-				}
 			}
 
-			// if key tuple is not present yet, throw exception
-			if (keyTuple == null) {
-				throw new GuardTupleNotFoundException("THere was no guard tuple found for key "+ key.toString());
+			// if guard tuple is not present yet, throw exception
+			if (lookingForGuard) {
+				EXCEPT.increment(1);
+				throw new GuardTupleNotFoundException("There was no guard tuple found for key "+ key.toString());
+			} else {
+				TUPLES.increment(1);
 			}
 
 			/* evaluate all formulas */
@@ -146,61 +186,44 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 
 				// only if applicable
 				GFAtomicExpression guard = formula.getGuard();
-				if (guard.matches(keyTuple)) {
+				if (guard.matches(guardTuple)) {
 
 					// get associated boolean expression
 					BExpression booleanChildExpression = eso.getBooleanChildExpression(formula);
 
 					// evaluate
 					boolean eval = booleanChildExpression.evaluate(booleanContext);
+					
 					if (eval) {
-
-						// determine output
+						
+						// calculate output tuple
 						GFAtomProjection p = eso.getOutputProjection(formula);
-						String outfile = generateFileName(p.getOutputSchema());
-
-						// project the tuple and output it
-						String outputTuple = p.project(keyTuple).generateString();
-						out1.set(outputTuple);
-						mos.write((Text)null, out1, outfile);
+						
+						// send it
+						TRUE.increment(1);
+						msgFactory.loadValue(p.project(guardTuple));
+						msgFactory.sendOutput();
+						
+						
+					} else {
+						FALSE.increment(1);
 					}
-				}
 
+				}
 			}
+
+
+
 
 		} catch (VariableNotFoundException | NonMatchingTupleException | GFOperationInitException | GuardTupleNotFoundException e) {
 			// should not happen
-			LOG.error("Unexpected exception: " + e.getMessage());
+			LOG.error(e.getMessage());
 			e.printStackTrace();
 			throw new InterruptedException(e.getMessage());
 		} 
 	}
 
-	public String generateFileName(RelationSchema rs) {
-		
-		
-		Set<Path> paths = eso.getFileMapping().getPaths(rs);
-		// take first path
-		for (Path path: paths) {
-			return path.toString() + "/" + rs.getName();
-		}
-		return ""; // FIXME fallback system + duplicate code in other reducer2
+	
 
-//		// cached?
-//		if (filenames.containsKey(relationSchema)) {
-//			return filenames.get(relationSchema);
-//
-//		} else {
-//			String rel = relationSchema.getShortDescription();
-//			String name = generateFolder(relationSchema) + "/" + rel;
-//			filenames.put(relationSchema,name);
-//			return name;
-//		}
-
-	}
-
-	public String generateFolder(RelationSchema relationSchema) {
-		return relationSchema.getShortDescription();
-	}
 
 }

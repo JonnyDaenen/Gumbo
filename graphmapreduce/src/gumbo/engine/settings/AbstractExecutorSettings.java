@@ -29,9 +29,9 @@ public abstract class AbstractExecutorSettings {
 
 	// compression options
 	public static final String assertConstantOptimizationOn = "gumbo.engine.assertConstantOptimizationOn";
-	public static final String requestAtomIdOptimizationOn = "gumbo.engine.requestAtomIdOptimizationOn"; // TODO this is always on now
+	public static final String atomIdOptimizationOn = "gumbo.engine.requestAtomIdOptimizationOn"; // TODO this is always on now
 	public static final String guardKeepAliveReductionOn = "gumbo.engine.guardKeepAliveReductionOn";
-	public static final String guardAddressOptimizationOn = "gumbo.engine.guardAddressOptimizationOn";
+	public static final String guardReferenceOptimizationOn = "gumbo.engine.guardAddressOptimizationOn";
 //	public static final String guardAsGuardedReReadOptimizationOn = "gumbo.engine.guardAsGuardedReReadOptimizationOn"; // TODO this is currently implemented, but needs to become a toggle
 
 	public static final String guardedCombinerOptimizationOn = "gumbo.engine.guardedCombinerOptimizationOn";  
@@ -50,9 +50,9 @@ public abstract class AbstractExecutorSettings {
 	
 	public void turnOffOptimizations() {
 		setBooleanProperty(assertConstantOptimizationOn, false);
-		setBooleanProperty(requestAtomIdOptimizationOn, false);
+		setBooleanProperty(atomIdOptimizationOn, false);
 		setBooleanProperty(guardKeepAliveReductionOn, false);
-		setBooleanProperty(guardAddressOptimizationOn, false);
+		setBooleanProperty(guardReferenceOptimizationOn, false);
 //		setBooleanProperty(guardAsGuardedReReadOptimizationOn, false); 
 		setBooleanProperty(round1FiniteMemoryOptimizationOn, false); 
 		setBooleanProperty(guardedCombinerOptimizationOn, false); 
@@ -60,9 +60,9 @@ public abstract class AbstractExecutorSettings {
 	
 	public void turnOnOptimizations() {
 		setBooleanProperty(assertConstantOptimizationOn, true);
-		setBooleanProperty(requestAtomIdOptimizationOn, true);
+		setBooleanProperty(atomIdOptimizationOn, true);
 		setBooleanProperty(guardKeepAliveReductionOn, true);
-		setBooleanProperty(guardAddressOptimizationOn, true);
+		setBooleanProperty(guardReferenceOptimizationOn, true);
 //		setBooleanProperty(guardAsGuardedReReadOptimizationOn, true);
 		setBooleanProperty(round1FiniteMemoryOptimizationOn, true);
 		setBooleanProperty(guardedCombinerOptimizationOn, true);
@@ -73,9 +73,9 @@ public abstract class AbstractExecutorSettings {
 	public static Set<String> getAllKeys() {
 		HashSet<String> keys = new HashSet<>();
 		keys.add(assertConstantOptimizationOn);
-		keys.add(requestAtomIdOptimizationOn);
+		keys.add(atomIdOptimizationOn);
 		keys.add(guardKeepAliveReductionOn);
-		keys.add(guardAddressOptimizationOn);
+		keys.add(guardReferenceOptimizationOn);
 //		keys.add(guardAsGuardedReReadOptimizationOn);
 		keys.add(round1FiniteMemoryOptimizationOn);
 		keys.add(guardedCombinerOptimizationOn);

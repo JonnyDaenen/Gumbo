@@ -5,6 +5,7 @@ package gumbo.engine.hadoop.mrcomponents.round2.mappers;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.filemapper.RelationFileMappingException;
+import gumbo.engine.hadoop.mrcomponents.tools.RelationResolver;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.RelationSchemaException;
 
@@ -20,6 +21,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputSplit;
+import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 /**
@@ -28,34 +30,28 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
  * @author Jonny Daenen
  * 
  */
-public class GFMapper2GuardCsv extends GFMapper2GuardRel {
+public class GFMapper2GuardCsv extends GFMapper2GuardRelOptimized {
 
 	private static final Log LOG = LogFactory.getLog(GFMapper2GuardCsv.class);
-	private RelationFileMapping rm;
-	@Override
-	protected void setup(Context context) throws IOException, InterruptedException {
 
-		
+	RelationResolver resolver;
+
+	private StringBuilder stringBuilder;
+
+	@Override
+	protected void setup(Mapper<LongWritable, Text, Text, Text>.Context context)
+			throws IOException, InterruptedException {
+		// TODO Auto-generated method stub
 		super.setup(context);
 		
-		Configuration conf = context.getConfiguration();
-		
-		// get relation name
-		String relmapping = conf.get("relationfilemapping");
-//		LOG.error(relmapping);
-		try {
-			FileSystem fs = FileSystem.get(conf);
-			rm = new RelationFileMapping(relmapping,fs);
-//			LOG.trace(rm.toString());
+		resolver = new RelationResolver(eso);
+		// pre-cache
+		resolver.extractRelationSchema(context);
 
-		} catch (RelationSchemaException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RelationFileMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		stringBuilder = new StringBuilder(128);
+		
 	}
+
 
 
 	/**
@@ -68,34 +64,29 @@ public class GFMapper2GuardCsv extends GFMapper2GuardRel {
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
 
-		// find out relation name
-			// TODO optimize
-			
 		try {
 
-			
-			InputSplit is = context.getInputSplit();
-			Method method = is.getClass().getMethod("getInputSplit");
-			
-			method.setAccessible(true);
-			FileSplit fileSplit = (FileSplit) method.invoke(is);
-			Path filePath = fileSplit.getPath();
-			
-			LOG.error("File Name: "+filePath);
-			
-			RelationSchema rs = rm.findSchema(filePath);
-			
+			// find out relation name
+			RelationSchema rs = resolver.extractRelationSchema(context);
+
 			// trim is necessary to remove extra whitespace
 			String t1 = value.toString().trim();
 			
-			t1 = rs.getName() + "(" + t1 + ")";
-			value.set(t1);
+			// wrap tuple in relation name
+			stringBuilder.setLength(0);
+			stringBuilder.append(rs.getName());
+			stringBuilder.append('(');
+			stringBuilder.append(t1);
+			stringBuilder.append(')');
+			
+			value.set(stringBuilder.toString());
 			
 			super.map(key, value, context);
 			
-			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				// TODO Auto-generated catch block
+			} catch (Exception e) {
+				LOG.error(e.getMessage());
 				e.printStackTrace();
+				throw new InterruptedException(e.getMessage());
 			}
 
 	}

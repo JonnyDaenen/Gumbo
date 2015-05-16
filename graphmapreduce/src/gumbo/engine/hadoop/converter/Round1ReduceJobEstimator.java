@@ -228,7 +228,7 @@ public class Round1ReduceJobEstimator {
 
 		// optimization corrections
 
-		if (settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
 			// use numtuples * 16 as the guardsize
 			// 16 is approx for 10byte 64-bit long encoding and 6 ascii digits for file id 
 			guardSize2 = numTuples * 16;
@@ -236,7 +236,7 @@ public class Round1ReduceJobEstimator {
 		}
 
 
-		if (settings.getBooleanProperty(HadoopExecutorSettings.requestAtomIdOptimizationOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.atomIdOptimizationOn)) {
 			// guardeds.size() must be replaced with 2, as an approximation for id bytes.
 			totalGuardedAtomSize = guardedAtoms.size() * 2;
 

@@ -39,8 +39,6 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 
 	private static final Log LOG = LogFactory.getLog(GFReducer1Optimized.class);
 
-	StringBuilder sb;
-	private StringBuilder sb2;
 	Set<Pair<String, String>> buffer;
 
 	boolean outputIDs = true;
@@ -77,9 +75,6 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 			HadoopExecutorSettings settings = pp.loadSettings();
 
 			msgFactory = new Red1MessageFactory(context, settings, eso, FILENAME);
-
-			sb = new StringBuilder(128);
-			sb2 = new StringBuilder(128);
 			buffer = new HashSet<>(10);
 
 
@@ -91,6 +86,8 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 			BUFFERED = context.getCounter(GumboRed1Counter.RED1_BUFFEREDITEMS);
 
 		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			e.printStackTrace();
 			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
 		}
 
@@ -132,7 +129,7 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 					msgFactory.sendReply();
 				}
 				// if optimization is on, we know that if the key is not there, we can skip the rest
-				else if (!finiteMemOptOn) {
+				else if (finiteMemOptOn) {
 					ABORTS.increment(1);
 					break;
 				} 
@@ -156,6 +153,11 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 			}
 		}
 
+		// clear the buffer for next round
+		// this is done in the end in case hadoop invokes GC
+		// (not sure whether hadoop does this in between calls)
+		buffer.clear();
+
 	}
 
 	/**
@@ -176,7 +178,7 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 
 		if (pos != -1) {
 			address = new String(bytes, 0, pos);
-			reply = new String(bytes, pos,length-pos);
+			reply = new String(bytes, pos+1,length-pos-1); // 1-offset is to skip ';'
 		} else {
 			address = new String(bytes,0,length);
 			reply = "";

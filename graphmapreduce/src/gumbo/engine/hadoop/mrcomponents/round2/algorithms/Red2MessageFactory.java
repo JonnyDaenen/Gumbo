@@ -1,18 +1,22 @@
-package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
+package gumbo.engine.hadoop.mrcomponents.round2.algorithms;
 
 import java.io.IOException;
+import java.util.Set;
 
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 import gumbo.engine.hadoop.mrcomponents.round1.reducers.GumboRed1Counter;
+import gumbo.engine.hadoop.mrcomponents.round2.reducers.GumboRed2Counter;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
-public class Red1MessageFactory {
+public class Red2MessageFactory {
 
 
 	Text keyText;
@@ -43,7 +47,7 @@ public class Red1MessageFactory {
 	String proofBytes;
 	String filename;
 
-	public Red1MessageFactory(Reducer<Text, Text, Text, Text>.Context context, HadoopExecutorSettings settings, ExpressionSetOperations eso, String filename) {
+	public Red2MessageFactory(Reducer<Text, Text, Text, Text>.Context context, HadoopExecutorSettings settings, ExpressionSetOperations eso) {
 		keyText = new Text();
 		valueText = new Text();
 
@@ -62,43 +66,60 @@ public class Red1MessageFactory {
 
 
 		// ---
-		OUTR = context.getCounter(GumboRed1Counter.RED1_OUT_RECORDS);
-		OUTB = context.getCounter(GumboRed1Counter.RED1_OUT_BYTES);
+		OUTR = context.getCounter(GumboRed2Counter.RED2_OUT_RECORDS);
+		OUTB = context.getCounter(GumboRed2Counter.RED2_OUT_BYTES);
 		
 
 		proofBytes = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL);
 		
 
 		mos = new MultipleOutputs<>(context);
-		this.filename = filename;
 
 
 	}
-
-	public void loadValue(String address, String reply)  {
-		keyText.clear();
+	
+	public void loadValue(Tuple t) {
+		this.filename = generateFileName(t);
 		valueText.clear();
-		
-		keyText.set(address);
-		valueText.set(reply);
-
+		valueText.set(t.toString());
 	}
-
-	public void sendReply() throws InterruptedException, IOException {
+	
+	public void sendOutput() throws InterruptedException, IOException {
 		OUTR.increment(1);
-		OUTB.increment(keyText.getLength()+valueText.getLength());
+		OUTB.increment(valueText.getLength());
 		sendMessage();
-		
 	}
+
 
 
 	protected void sendMessage() throws InterruptedException, IOException{
-		mos.write(keyText, valueText, filename);
+		mos.write((Text)null, valueText, filename);
 	}
 
 
 	public void cleanup() throws IOException, InterruptedException {
 		mos.close();
+	}
+
+
+	protected String generateFileName(Tuple t) {
+		RelationSchema rs = new RelationSchema(t.getName(),t.size());
+		// OPTIMIZE add cache
+		Set<Path> paths = eso.getFileMapping().getPaths(rs);
+		for (Path path: paths) {
+			return path.toString() + "/" + rs.getName();
+		}
+		return ""; // FIXME fallback system + duplicate code in other reducer2
+		
+	}
+
+	public Tuple getTuple(String value) {
+		// OPTIMIZE this may be slow
+		return new Tuple(value.substring(1));
+	}
+
+	public boolean isTuple(String value) {
+		return value.startsWith(proofBytes);
 	}
 
 
