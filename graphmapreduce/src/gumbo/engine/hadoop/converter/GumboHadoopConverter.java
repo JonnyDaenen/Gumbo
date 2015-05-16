@@ -325,8 +325,8 @@ public class GumboHadoopConverter {
 			/* MAPPER */
 
 			// some optimizations require a special mapper round
-			if (settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn) ||
-					settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
+			if (settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn) ||
+					settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
 
 				// add special non-identity mapper to process the guard input again
 
@@ -367,7 +367,7 @@ public class GumboHadoopConverter {
 			// if we use a tuplepointeroptimization
 			// we cannot use the ints for now, as we need to re-send the tuple itself
 			hadoopJob.setMapOutputKeyClass(Text.class);
-			if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
+			if (settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
 				hadoopJob.setMapOutputValueClass(Text.class); // OPTIMIZE make it a combined class
 			} else {
 				hadoopJob.setMapOutputValueClass(IntWritable.class); // FUTURE make it a list? for combiner
@@ -377,7 +377,7 @@ public class GumboHadoopConverter {
 			/* REDUCER */
 
 			// the reducer reads text or int format, depending on the optimization
-			if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
+			if (settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
 				hadoopJob.setReducerClass(GFReducer2Text.class);
 			} else {
 				hadoopJob.setReducerClass(GFReducer2.class);
@@ -424,13 +424,13 @@ public class GumboHadoopConverter {
 	private Class<? extends Mapper> getRound2GuardMapperClass(String string) {
 
 		if (string.equals("csv") ) {
-			if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
+			if (settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
 				return GFMapper2GuardTextCsv.class;
 			} else {
 				return GFMapper2GuardCsv.class;
 			}
 		} else {
-			if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
+			if (settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
 				return GFMapper2GuardTextRel.class;
 			} else {
 				return GFMapper2GuardRel.class;
@@ -450,7 +450,7 @@ public class GumboHadoopConverter {
 	@SuppressWarnings("rawtypes")
 	private Class<? extends InputFormat> getRound2MapInputFormat() {
 		Class<? extends InputFormat> atomInputFormat = GuardInputFormat.class;
-		if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
 			atomInputFormat = GuardTextInputFormat.class;
 		}
 		return atomInputFormat;

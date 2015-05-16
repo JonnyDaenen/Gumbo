@@ -139,7 +139,7 @@ public class Round1ReduceJobEstimator {
 
 
 		// values
-		if (settings.getBooleanProperty(HadoopExecutorSettings.guardedIdOptimizationOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.assertConstantOptimizationOn)) {
 			// value is now a constant
 			for (RelationSchema rs : schemas) {
 
@@ -167,7 +167,7 @@ public class Round1ReduceJobEstimator {
 	private long estimateKeepAlives(RelationSchema guard, Collection<GFAtomicExpression> guardeds, RelationFileMapping rfm) {
 
 		// if optimization is on, no keep-alives are sent
-		if (settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn)) {
 			return 0;
 		}
 
@@ -180,7 +180,7 @@ public class Round1ReduceJobEstimator {
 		guardSize -= numTuples;
 
 		// optimization correction
-		if (settings.getBooleanProperty(HadoopExecutorSettings.guardedIdOptimizationOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.assertConstantOptimizationOn)) {
 			// 2 bytes for an atom id
 			atomSize = 2;
 		}
@@ -228,7 +228,7 @@ public class Round1ReduceJobEstimator {
 
 		// optimization corrections
 
-		if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
 			// use numtuples * 16 as the guardsize
 			// 16 is approx for 10byte 64-bit long encoding and 6 ascii digits for file id 
 			guardSize2 = numTuples * 16;
@@ -236,7 +236,7 @@ public class Round1ReduceJobEstimator {
 		}
 
 
-		if (settings.getBooleanProperty(HadoopExecutorSettings.guardIdOptimizationOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.requestAtomIdOptimizationOn)) {
 			// guardeds.size() must be replaced with 2, as an approximation for id bytes.
 			totalGuardedAtomSize = guardedAtoms.size() * 2;
 

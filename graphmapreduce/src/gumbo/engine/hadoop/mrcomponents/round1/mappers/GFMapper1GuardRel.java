@@ -38,7 +38,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 	Text out2 = new Text();
 	Text proofText;
 	byte [] commaBytes = {';'};
-	byte [] proofBytes = {';'};
+	byte [] proofBytes = {'#'};
 	TupleIDCreator pathids; // OPTIMIZE extract this and perform outside of mapper
 
 	/* settings cache */
@@ -69,8 +69,8 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 		super.setup(context);
 		pathids = new TupleIDCreator(eso.getFileMapping());
 
-		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn);
-		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn);
+		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn);
+		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn);
 		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
 	
 		proofText = new Text(settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL));

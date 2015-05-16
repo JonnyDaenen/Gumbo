@@ -62,11 +62,11 @@ public class Map1GuardMessageFactory {
 		valueBuilder = new StringBuilder(128);
 
 		// ---
-		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn);
-		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepaliveOptimizationOn);
+		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn);
+		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn);
 		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
-		guardIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardIdOptimizationOn);
-		guardedIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardedIdOptimizationOn);
+		guardIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.requestAtomIdOptimizationOn);
+		guardedIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.assertConstantOptimizationOn);
 
 		
 		// ---
@@ -137,7 +137,6 @@ public class Map1GuardMessageFactory {
 			
 			sendMessage();
 		}
-
 	}
 
 
@@ -228,7 +227,7 @@ public class Map1GuardMessageFactory {
 		
 		context.write(keyText, valueText);
 		
-		//System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");
+		System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");
 	}
 
 }

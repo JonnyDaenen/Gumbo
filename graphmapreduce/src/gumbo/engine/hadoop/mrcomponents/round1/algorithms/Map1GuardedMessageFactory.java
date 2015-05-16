@@ -44,7 +44,7 @@ public class Map1GuardedMessageFactory {
 
 		// ---
 		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
-		guardedIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardedIdOptimizationOn);
+		guardedIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.assertConstantOptimizationOn);
 
 		// ---
 
@@ -109,7 +109,7 @@ public class Map1GuardedMessageFactory {
 
 
 	protected void sendMessage(byte[] key, byte[] value) throws IOException, InterruptedException {
-		// OPTIMIZE is it necessary to work directly on the Text objects?
+		// OPTIMIZE is it better to work directly on the Text objects?
 		keyText.clear();
 		valueText.clear();
 		keyText.append(key, 0, key.length);

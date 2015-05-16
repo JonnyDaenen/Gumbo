@@ -69,7 +69,7 @@ public class GFMapper2GuardTextRel extends GFMapper1Identity {
 			// System.out.println(t);
 
 			// replace value with pointer when optimization is on
-			if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
+			if (settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
 				value.set(pathids.getTupleID(context, key.get())); // key indicates offset in TextInputFormat
 				// TODO # symbol in settings
 			}
@@ -92,7 +92,7 @@ public class GFMapper2GuardTextRel extends GFMapper1Identity {
 					// output tuple value
 					// only when pointer optimization is on
 					// to be able to recover the tuple in the reducer
-					if (settings.getBooleanProperty(HadoopExecutorSettings.guardTuplePointerOptimizationOn)) {
+					if (settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
 						out2.set("#"+t.toString());
 						context.write(value, out2);
 						if (print){

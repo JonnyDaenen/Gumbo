@@ -30,8 +30,8 @@ public class Map1GuardedAlgorithm {
 		try {
 		msgFactory.loadGuardedValue(t);
 
-		// OPTIMIZE search for guarded atom based on name
-		// guarded existance output
+		// OPTIMIZE search for guarded atom based on relation name
+		// guarded ASSERT output
 		for (GFAtomicExpression guarded : eso.getGuardedsAll()) {
 
 			// if no guarded expression matches this tuple, it will not be output

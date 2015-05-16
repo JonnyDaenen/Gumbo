@@ -59,7 +59,7 @@ public class Map1GuardAlgorithm {
 			}
 
 			// output an assert message if the guard is also guarded (forced)
-			// or if it matched a guard was matched
+			// or if it matched a guard was matched and a Keep-alive assert is required
 			if (guardIsGuarded || outputAssert) {
 				msgFactory.sendGuardedAssert(guardIsGuarded);
 			}

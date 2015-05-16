@@ -65,7 +65,7 @@ public class GFMapper1GuardedRel extends GFMapper1Identity {
 			// if no guarded expression matches this tuple, it will not be output
 			if (guarded.matches(t)) {
 				// reduce data size by using a constant symbol
-				if (settings.getBooleanProperty(HadoopExecutorSettings.guardedIdOptimizationOn)) {
+				if (settings.getBooleanProperty(HadoopExecutorSettings.assertConstantOptimizationOn)) {
 					context.write(value, proofSymbol);
 					context.getCounter(GumboMap1Counter.ASSERT).increment(1);
 					context.getCounter(GumboMap1Counter.ASSERT_BYTES).increment(value.getLength()+1);

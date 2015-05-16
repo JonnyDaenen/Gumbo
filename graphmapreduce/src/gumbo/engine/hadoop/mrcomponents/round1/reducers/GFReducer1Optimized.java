@@ -27,7 +27,7 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
  * @author Jonny Daenen
  * 
  */
-public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
+public class GFReducer1Optimized extends Reducer<Text, Text, Text, IntWritable> {
 
 	private final static String FILENAME = "tmp_round1_red.txt";
 
@@ -36,7 +36,7 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 	private ExpressionSetOperations eso;
 	protected MultipleOutputs<Text, IntWritable> mos;
 
-	private static final Log LOG = LogFactory.getLog(GFReducer1.class);
+	private static final Log LOG = LogFactory.getLog(GFReducer1Optimized.class);
 
 	StringBuilder sb;
 
@@ -102,17 +102,17 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 			//				LOG.error("Red1: " + key + " " + t);
 
 			// parse input
-			Pair<String, Integer> split = split(t);
+			Pair<String, String> split = split(t);
 
 			// is this not the key (key is only thing that can appear without atom reference)
 			// it does not matter whether it's sent as S(1) or with a constant symbol such as '#'
-			if (split.snd != -1) {
+			if (split.snd.length() > 0) {
 
 
-				// if the key has already been found, we can just output
+				// if the key has already been found, we can output
 				if (keyFound) {
 					out1.set(split.fst);
-					out2.set(split.snd);
+//					out2.set(split.snd); TODO
 					//					System.out.println("Writing: " + out1.toString() + " " + out2.toString() + "" + split.snd);
 					mos.write(out1, out2, FILENAME);
 					context.getCounter(GumboRed1Counter.RED1_OUT_BYTES).increment(out1.getLength() + Integer.SIZE/8);
@@ -123,7 +123,7 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 				// else we buffer the data
 				// if the optimization is off
 				else if (!settings.getBooleanProperty(AbstractExecutorSettings.round1FiniteMemoryOptimizationOn)){
-					buffer.add(split);
+//					buffer.add(split); // TODO
 					context.getCounter(GumboRed1Counter.RED1_BUFFEREDITEMS).increment(1);
 				// if optimization is on, we know that if the key is not there, we can skip the rest
 				} else {
@@ -157,35 +157,16 @@ public class GFReducer1 extends Reducer<Text, Text, Text, IntWritable> {
 	 * When no ';' is present, the numeric value is -1. 
 	 * @param t
 	 */
-	protected Pair<String, Integer> split(Text t) {
+	protected Pair<String, String> split(Text t) {
 		
-		int length = t.getLength();
-		String output = null;
-		int num = -1;
-		sb.setLength(0);
-		boolean numberPart = false;
 
-		byte[] b = t.getBytes();
-		for (int i = 0; i < length; i++) { // FUTURE for unicode this doesn't
-			// work I guess..
-			char c = (char)b[i];
-			// if we find the semicolon
-			if (c == ';') {
-				numberPart = true;
-				num = 0;
-				// assemble number
-			} else if (numberPart && ( '0' <= c && c <= '9')){
-				num *= 10;
-				num +=  c - '0';
+		int pos = t.find(";");
+		
+		byte [] bytes = t.getBytes();
+		String address = new String(bytes, 0, pos);
+		String reply = new String(bytes, pos, bytes.length-pos);
 
-			} else {
-				sb.append((char) b[i]);
-			}
-		}
-
-		output = sb.toString();
-
-		return new Pair<>(output, num);
+		return new Pair<>(address, reply);
 
 	}
 	

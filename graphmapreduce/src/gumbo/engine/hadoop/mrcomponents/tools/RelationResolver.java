@@ -40,7 +40,7 @@ public class RelationResolver {
 
 	protected boolean isCached(Context context) {
 		InputSplit is = context.getInputSplit();
-		LOG.info("cache hit?" + (prevSplit == is));
+//		LOG.info("cache hit?" + (prevSplit == is));
 		return prevSplit == is;
 	}
 
