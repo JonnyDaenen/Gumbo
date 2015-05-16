@@ -21,11 +21,6 @@ public class Red1MessageFactory {
 
 	protected MultipleOutputs<Text, Text> mos;
 
-	private boolean guardTuplePointerOptimizationOn;
-	private boolean guardKeepaliveOptimizationOn;
-	private boolean round1FiniteMemoryOptimizationOn;
-	private boolean guardIdOptimizationOn;
-	private boolean guardedIdOptimizationOn;
 
 	private Counter OUTR;
 	private Counter OUTB;
@@ -33,9 +28,6 @@ public class Red1MessageFactory {
 	private Reducer<Text, Text, Text, Text>.Context context;
 
 	// components
-	private ExpressionSetOperations eso;
-	private StringBuilder keyBuilder;
-	private StringBuilder valueBuilder;
 
 	// data
 	Tuple t;
@@ -49,17 +41,8 @@ public class Red1MessageFactory {
 
 		// ---
 		this.context = context;
-		this.eso = eso;
-		keyBuilder = new StringBuilder(16);
-		valueBuilder = new StringBuilder(128);
 
 		// ---
-		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn);
-		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn);
-		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
-		guardIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.atomIdOptimizationOn);
-		guardedIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.assertConstantOptimizationOn);
-
 
 		// ---
 		OUTR = context.getCounter(GumboRed1Counter.RED1_OUT_RECORDS);

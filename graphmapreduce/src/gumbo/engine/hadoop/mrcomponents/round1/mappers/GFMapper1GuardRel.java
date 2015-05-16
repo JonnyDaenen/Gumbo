@@ -69,8 +69,8 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 		super.setup(context);
 		pathids = new TupleIDCreator(eso.getFileMapping());
 
-		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn);
-		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn);
+		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveOptimizationOn);
+		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveOptimizationOn);
 		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
 	
 		proofText = new Text(settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL));

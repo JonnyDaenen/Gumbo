@@ -1,23 +1,16 @@
 package gumbo.engine.hadoop.mrcomponents.round2.algorithms;
 
-import java.io.IOException;
-
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.Text;
-
-import gumbo.engine.hadoop.mrcomponents.round1.mappers.GumboMap1Counter;
 import gumbo.engine.hadoop.mrcomponents.round2.mappers.GumboMap2Counter;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.io.Triple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
-import gumbo.structures.gfexpressions.operations.GFAtomProjection;
-import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
 
+import java.io.IOException;
+
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Mapper;
 
@@ -29,17 +22,10 @@ public class Map2GuardMessageFactory {
 	private Counter ASSERTBYTES;
 	
 	private boolean guardTuplePointerOptimizationOn;
-	private boolean guardKeepaliveOptimizationOn;
-	private boolean round1FiniteMemoryOptimizationOn;
-	private boolean guardIdOptimizationOn;
-	private boolean shortAssertsOn;
 	private Mapper<LongWritable, Text, Text, Text>.Context context;
 
 	// components
 	private TupleIDCreator pathids;
-	private ExpressionSetOperations eso;
-	private StringBuilder keyBuilder;
-	private StringBuilder valueBuilder;
 
 	// data
 	Tuple t;
@@ -52,18 +38,10 @@ public class Map2GuardMessageFactory {
 
 		// ---
 		this.context = context;
-		this.eso = eso;
 		this.pathids = new TupleIDCreator(eso.getFileMapping());
-		keyBuilder = new StringBuilder(16);
-		valueBuilder = new StringBuilder(128);
 
 		// ---
 		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn);
-		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn);
-		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
-		guardIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.atomIdOptimizationOn);
-		shortAssertsOn = settings.getBooleanProperty(HadoopExecutorSettings.assertConstantOptimizationOn);
-
 		
 		// ---
 		ASSERT = context.getCounter(GumboMap2Counter.ASSERT_RECORDS);

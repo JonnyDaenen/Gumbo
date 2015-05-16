@@ -167,7 +167,7 @@ public class Round1ReduceJobEstimator {
 	private long estimateKeepAlives(RelationSchema guard, Collection<GFAtomicExpression> guardeds, RelationFileMapping rfm) {
 
 		// if optimization is on, no keep-alives are sent
-		if (settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveOptimizationOn)) {
 			return 0;
 		}
 
@@ -236,7 +236,7 @@ public class Round1ReduceJobEstimator {
 		}
 
 
-		if (settings.getBooleanProperty(HadoopExecutorSettings.atomIdOptimizationOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.requestAtomIdOptimizationOn)) {
 			// guardeds.size() must be replaced with 2, as an approximation for id bytes.
 			totalGuardedAtomSize = guardedAtoms.size() * 2;
 

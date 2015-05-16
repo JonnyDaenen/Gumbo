@@ -63,9 +63,9 @@ public class Map1GuardMessageFactory {
 
 		// ---
 		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn);
-		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn);
+		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveOptimizationOn);
 		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
-		guardIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.atomIdOptimizationOn);
+		guardIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.requestAtomIdOptimizationOn);
 		guardedIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.assertConstantOptimizationOn);
 
 		

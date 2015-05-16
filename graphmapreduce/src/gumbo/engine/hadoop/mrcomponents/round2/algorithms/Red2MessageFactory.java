@@ -1,5 +1,11 @@
 package gumbo.engine.hadoop.mrcomponents.round2.algorithms;
 
+import gumbo.engine.hadoop.mrcomponents.round2.reducers.GumboRed2Counter;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.data.Tuple;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
+
 import java.io.IOException;
 import java.util.Set;
 
@@ -8,13 +14,6 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
-
-import gumbo.engine.hadoop.mrcomponents.round1.reducers.GumboRed1Counter;
-import gumbo.engine.hadoop.mrcomponents.round2.reducers.GumboRed2Counter;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.data.Tuple;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 public class Red2MessageFactory {
 
@@ -25,12 +24,6 @@ public class Red2MessageFactory {
 
 	protected MultipleOutputs<Text, Text> mos;
 
-	private boolean guardTuplePointerOptimizationOn;
-	private boolean guardKeepaliveOptimizationOn;
-	private boolean round1FiniteMemoryOptimizationOn;
-	private boolean guardIdOptimizationOn;
-	private boolean guardedIdOptimizationOn;
-
 	private Counter OUTR;
 	private Counter OUTB;
 	
@@ -38,8 +31,6 @@ public class Red2MessageFactory {
 
 	// components
 	private ExpressionSetOperations eso;
-	private StringBuilder keyBuilder;
-	private StringBuilder valueBuilder;
 
 	// data
 	Tuple t;
@@ -54,15 +45,8 @@ public class Red2MessageFactory {
 		// ---
 		this.context = context;
 		this.eso = eso;
-		keyBuilder = new StringBuilder(16);
-		valueBuilder = new StringBuilder(128);
 
 		// ---
-		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn);
-		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn);
-		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
-		guardIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.atomIdOptimizationOn);
-		guardedIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.assertConstantOptimizationOn);
 
 
 		// ---

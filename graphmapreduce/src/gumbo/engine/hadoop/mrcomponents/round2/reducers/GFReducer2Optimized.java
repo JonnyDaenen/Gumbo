@@ -102,7 +102,7 @@ public class GFReducer2Optimized extends Reducer<Text, Text, Text, Text> {
 
 			// --- opts
 			guardRefOn = settings.getBooleanProperty(AbstractExecutorSettings.guardReferenceOptimizationOn);
-			atomIdOn = settings.getBooleanProperty(AbstractExecutorSettings.atomIdOptimizationOn);
+			atomIdOn = settings.getBooleanProperty(AbstractExecutorSettings.requestAtomIdOptimizationOn);
 
 			// counters
 			EXCEPT = context.getCounter(GumboRed2Counter.RED2_TUPLE_EXCEPTIONS);

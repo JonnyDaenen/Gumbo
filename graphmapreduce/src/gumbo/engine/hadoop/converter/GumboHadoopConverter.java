@@ -327,7 +327,7 @@ public class GumboHadoopConverter {
 			/* MAPPER */
 
 			// some optimizations require a special mapper round
-			if (settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn) ||
+			if (settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveOptimizationOn) ||
 					settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
 
 				// add special non-identity mapper to process the guard input again
