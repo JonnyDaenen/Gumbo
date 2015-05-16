@@ -23,6 +23,7 @@ import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardedCsv;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardedRel;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardedRelOptimized;
 import gumbo.engine.hadoop.mrcomponents.round1.reducers.GFReducer1;
+import gumbo.engine.hadoop.mrcomponents.round1.reducers.GFReducer1Optimized;
 import gumbo.engine.hadoop.mrcomponents.round2.mappers.GFMapper2GuardCsv;
 import gumbo.engine.hadoop.mrcomponents.round2.mappers.GFMapper2GuardRel;
 import gumbo.engine.hadoop.mrcomponents.round2.mappers.GFMapper2GuardTextCsv;
@@ -181,7 +182,7 @@ public class GumboHadoopConverter {
 			for ( Path guardedPath : eso.getGuardedRelPaths()) {
 				LOG.info("Setting M1 guarded path to " + guardedPath + " using mapper " + GFMapper1GuardedRel.class.getName());
 				MultipleInputs.addInputPath(hadoopJob, guardedPath, 
-						TextInputFormat.class, GFMapper1GuardedRel.class);
+						TextInputFormat.class, GFMapper1GuardedRelOptimized.class);
 			}
 
 			// guarded mapper for csv files
@@ -202,7 +203,7 @@ public class GumboHadoopConverter {
 			for ( Path guardPath : eso.getGuardRelPaths()) {
 				LOG.info("Setting M1 guard path to " + guardPath + " using mapper " + GFMapper1GuardRel.class.getName());
 				MultipleInputs.addInputPath(hadoopJob, guardPath, 
-						TextInputFormat.class, GFMapper1GuardRel.class);
+						TextInputFormat.class, GFMapper1GuardRelOptimized.class);
 			}
 
 
@@ -222,7 +223,6 @@ public class GumboHadoopConverter {
 			hadoopJob.setMapOutputValueClass(Text.class);
 
 			/* COMBINER */
-			
 			if (settings.getBooleanProperty(AbstractExecutorSettings.guardedCombinerOptimizationOn)) {
 				hadoopJob.setCombinerClass(GFCombinerGuarded.class);
 			}
@@ -230,14 +230,14 @@ public class GumboHadoopConverter {
 			/* REDUCER */
 
 			// determine reducer
-			hadoopJob.setReducerClass(GFReducer1.class); 
-			Round1ReduceJobEstimator redestimator = new Round1ReduceJobEstimator(settings);
+			hadoopJob.setReducerClass(GFReducer1Optimized.class); 
+			Round1ReduceJobEstimator redestimator = new Round1ReduceJobEstimator(settings); // TODO fix estimate
 			hadoopJob.setNumReduceTasks(redestimator.getNumReducers(eso.getExpressionSet(),mapping));
 
 			// set reducer output
 			// hadoopJob.setOutputKeyClass(NullWritable.class);
 			hadoopJob.setOutputKeyClass(Text.class);
-			hadoopJob.setOutputValueClass(IntWritable.class);
+			hadoopJob.setOutputValueClass(Text.class);
 
 			// finite memory by sorting
 			if (settings.getBooleanProperty(AbstractExecutorSettings.round1FiniteMemoryOptimizationOn)) {

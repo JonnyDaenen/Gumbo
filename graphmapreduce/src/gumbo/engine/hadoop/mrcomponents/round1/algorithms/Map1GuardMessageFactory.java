@@ -227,7 +227,7 @@ public class Map1GuardMessageFactory {
 		
 		context.write(keyText, valueText);
 		
-		System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");
+//		System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");
 	}
 
 }
