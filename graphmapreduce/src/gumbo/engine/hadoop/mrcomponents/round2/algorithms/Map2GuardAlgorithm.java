@@ -35,6 +35,8 @@ public class Map2GuardAlgorithm {
 				// if the tuple satisfies the guard expression
 				if (guard.matches(t)) {
 					msgFactory.sendGuardAssert();
+					// one assert is enough
+					break;
 				}			
 			}
 

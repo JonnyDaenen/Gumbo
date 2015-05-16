@@ -32,7 +32,7 @@ public class Map2GuardMessageFactory {
 	private boolean guardKeepaliveOptimizationOn;
 	private boolean round1FiniteMemoryOptimizationOn;
 	private boolean guardIdOptimizationOn;
-	private boolean guardedIdOptimizationOn;
+	private boolean shortAssertsOn;
 	private Mapper<LongWritable, Text, Text, Text>.Context context;
 
 	// components
@@ -62,7 +62,7 @@ public class Map2GuardMessageFactory {
 		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn);
 		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
 		guardIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.atomIdOptimizationOn);
-		guardedIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.assertConstantOptimizationOn);
+		shortAssertsOn = settings.getBooleanProperty(HadoopExecutorSettings.assertConstantOptimizationOn);
 
 		
 		// ---
