@@ -1,0 +1,7 @@
+
+
+drop view if exists conj1;
+drop view if exists conj2;
+drop view if exists conj3;
+drop view if exists conj4;
+drop table if exists query2;

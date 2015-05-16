@@ -1,0 +1,18 @@
+SET OUTPUT DIR 'output/grammartest';
+SET SCRATCH DIR 'scratch/grammartest';
+
+R = LOAD CSV 'input/experiments/EXP_008/R' ARITY 10;
+S = LOAD CSV 'input/experiments/EXP_008/S' ARITY 1;
+
+Out = SELECT x1, x2, x3, x4, x5, x6, x7, x8, x9, x10
+	  FROM R(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
+	  WHERE NOT x1 IN S
+	    AND NOT x2 IN S
+	    AND NOT x3 IN S
+	    AND NOT x4 IN S
+	    AND NOT x5 IN S
+	    AND NOT x6 IN S
+	    AND NOT x7 IN S
+	    AND NOT x8 IN S
+	    AND NOT x9 IN S
+	    AND NOT x10 IN S;

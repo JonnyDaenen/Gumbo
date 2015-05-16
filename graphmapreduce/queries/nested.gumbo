@@ -1,0 +1,10 @@
+SET OUTPUT DIR 'output/grammartest';
+SET SCRATCH DIR 'scratch/grammartest';
+
+E = LOAD CSV 'E.txt' ARITY 2;
+F = LOAD CSV 'F.txt' ARITY 1;
+
+Out = SELECT (x)
+	  FROM E
+	  SATISFYING (x, y)
+	  WHERE (y) in (SELECT (x) FROM E SATISFYING (x, y) WHERE NOT (y) IN F)
