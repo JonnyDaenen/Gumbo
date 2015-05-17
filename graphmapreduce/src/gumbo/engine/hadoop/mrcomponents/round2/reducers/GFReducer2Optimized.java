@@ -3,6 +3,7 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round2.reducers;
 
+import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Red2Algorithm;
 import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Red2MessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.ParameterPasser;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
@@ -15,6 +16,7 @@ import gumbo.structures.conversion.GFBooleanMapping;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
@@ -38,31 +40,10 @@ import org.apache.hadoop.mapreduce.Reducer;
 public class GFReducer2Optimized extends Reducer<Text, Text, Text, Text> {
 
 
-	public class GuardTupleNotFoundException extends Exception {
-		private static final long serialVersionUID = 1L;
-
-		public GuardTupleNotFoundException(String msg) {
-			super(msg);
-		}
-	}
-
 
 	private static final Log LOG = LogFactory.getLog(GFReducer2Optimized.class);
 
-	boolean guardRefOn;
-	boolean atomIdOn;
-
-	private Red2MessageFactory msgFactory;
-
-	private ExpressionSetOperations eso;
-
-	private Counter EXCEPT;
-
-	private Counter TUPLES;
-
-	private Counter TRUE;
-
-	private Counter FALSE;
+	private Red2Algorithm algo;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -84,21 +65,11 @@ public class GFReducer2Optimized extends Reducer<Text, Text, Text, Text> {
 			Configuration conf = context.getConfiguration();
 
 			ParameterPasser pp = new ParameterPasser(conf);
-			eso = pp.loadESO();
+			ExpressionSetOperations eso = pp.loadESO();
 			HadoopExecutorSettings settings = pp.loadSettings();
 
-			msgFactory = new Red2MessageFactory(context, settings, eso);
-
-
-			// --- opts
-			guardRefOn = settings.getBooleanProperty(AbstractExecutorSettings.guardReferenceOptimizationOn);
-			atomIdOn = settings.getBooleanProperty(AbstractExecutorSettings.requestAtomIdOptimizationOn);
-
-			// counters
-			EXCEPT = context.getCounter(GumboRed2Counter.RED2_TUPLE_EXCEPTIONS);
-			TUPLES = context.getCounter(GumboRed2Counter.RED2_TUPLES_FOUND);
-			TRUE = context.getCounter(GumboRed2Counter.RED2_EVAL_TRUE);
-			FALSE = context.getCounter(GumboRed2Counter.RED2_EVAL_FALSE);
+			Red2MessageFactory msgFactory = new Red2MessageFactory(context, settings, eso);
+			algo = new Red2Algorithm(eso, settings, msgFactory);
 
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
@@ -110,7 +81,13 @@ public class GFReducer2Optimized extends Reducer<Text, Text, Text, Text> {
 
 	@Override
 	protected void cleanup(Context context) throws IOException, InterruptedException {
-		msgFactory.cleanup();
+		try{
+			algo.cleanup();
+		} catch(Exception e) {
+			e.printStackTrace();
+			LOG.error(e.getMessage());
+			throw new InterruptedException(e.getMessage());
+		}
 	}
 
 	/**
@@ -120,102 +97,124 @@ public class GFReducer2Optimized extends Reducer<Text, Text, Text, Text> {
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context context)
 			throws IOException, InterruptedException {
+
 		try {
 
-			GFBooleanMapping mapGFtoB = eso.getBooleanMapping();
-			BEvaluationContext booleanContext = new BEvaluationContext();
+			algo.initialize(key.toString());
 
-			boolean lookingForGuard = guardRefOn;
+			// WARNING Text object will be reused by Hadoop!
+			for (Text t : values) {
 
-			Tuple guardTuple = null;
-			if (!lookingForGuard)
-				guardTuple = new Tuple(key.getBytes(),key.getLength());
-
-			for (Text v : values) {
-
-				String value = v.toString();
-
-				// record guard tuple if found
-				if (msgFactory.isTuple(value)) {
-					if (lookingForGuard) {
-						guardTuple = msgFactory.getTuple(value);
-						lookingForGuard = false;
-					} else
-						continue;
-				} 
-				// otherwise we keep track of true atoms
-				else {
-					// extract atom reference and set it to true
-					String atomRef = value;
-					BVariable atom;
-
-					if (atomIdOn) {
-						int id = Integer.parseInt(atomRef);
-						GFAtomicExpression atomExp = eso.getAtom(id); 
-						atom = mapGFtoB.getVariable(atomExp);
-					} else {
-						Tuple atomTuple = new Tuple(atomRef);
-						GFAtomicExpression dummy = new GFAtomicExpression(atomTuple.getName(), atomTuple.getAllData());
-						atom = mapGFtoB.getVariable(dummy);
-					}
-					booleanContext.setValue(atom, true);
-
-					
-				}
-
+				// feed it to algo
+				algo.processTuple(t.toString());
 
 			}
 
-			
+			// indicate end of tuples
+			// and finish calculation
+			algo.finish();
 
-			// if guard tuple is not present yet, throw exception
-			if (lookingForGuard) {
-				EXCEPT.increment(1);
-				throw new GuardTupleNotFoundException("There was no guard tuple found for key "+ key.toString());
-			} else {
-				TUPLES.increment(1);
-			}
-
-			/* evaluate all formulas */
-			for (GFExistentialExpression formula : eso.getExpressionSet()) {
-
-				// only if applicable
-				GFAtomicExpression guard = formula.getGuard();
-				if (guard.matches(guardTuple)) {
-
-					// get associated boolean expression
-					BExpression booleanChildExpression = eso.getBooleanChildExpression(formula);
-
-					// evaluate
-					boolean eval = booleanChildExpression.evaluate(booleanContext);
-					
-					if (eval) {
-
-						// calculate output tuple
-						GFAtomProjection p = eso.getOutputProjection(formula);
-
-						// send it
-						TRUE.increment(1);
-						msgFactory.loadValue(p.project(guardTuple));
-						msgFactory.sendOutput();
-
-
-					} else {
-						FALSE.increment(1);
-					}
-
-				}
-			}
-
-
-
-
-		} catch (VariableNotFoundException | NonMatchingTupleException | GFOperationInitException | GuardTupleNotFoundException e) {
-			// should not happen
-			LOG.error(e.getMessage());
+		} catch(Exception e) {
 			e.printStackTrace();
+			LOG.error(e.getMessage());
 			throw new InterruptedException(e.getMessage());
-		} 
+		}
+		//		try {
+		//
+		//			GFBooleanMapping mapGFtoB = eso.getBooleanMapping();
+		//			BEvaluationContext booleanContext = new BEvaluationContext();
+		//
+		//			boolean lookingForGuard = guardRefOn;
+		//
+		//			Tuple guardTuple = null;
+		//			if (!lookingForGuard)
+		//				guardTuple = new Tuple(key.getBytes(),key.getLength());
+		//
+		//			for (Text v : values) {
+		//
+		//				String value = v.toString();
+		//
+		//				// record guard tuple if found
+		//				if (msgFactory.isTuple(value)) {
+		//					if (lookingForGuard) {
+		//						guardTuple = msgFactory.getTuple(value);
+		//						lookingForGuard = false;
+		//					} else
+		//						continue;
+		//				} 
+		//				// otherwise we keep track of true atoms
+		//				else {
+		//					// extract atom reference and set it to true
+		//					String atomRef = value;
+		//					BVariable atom;
+		//
+		//					if (atomIdOn) {
+		//						int id = Integer.parseInt(atomRef);
+		//						GFAtomicExpression atomExp = eso.getAtom(id); 
+		//						atom = mapGFtoB.getVariable(atomExp);
+		//					} else {
+		//						Tuple atomTuple = new Tuple(atomRef);
+		//						GFAtomicExpression dummy = new GFAtomicExpression(atomTuple.getName(), atomTuple.getAllData());
+		//						atom = mapGFtoB.getVariable(dummy);
+		//					}
+		//					booleanContext.setValue(atom, true);
+		//
+		//					
+		//				}
+		//
+		//
+		//			}
+		//
+		//			
+		//
+		//			// if guard tuple is not present yet, throw exception
+		//			if (lookingForGuard) {
+		//				EXCEPT.increment(1);
+		//				throw new GuardTupleNotFoundException("There was no guard tuple found for key "+ key.toString());
+		//			} else {
+		//				TUPLES.increment(1);
+		//			}
+		//
+		//			/* evaluate all formulas */
+		//			for (GFExistentialExpression formula : eso.getExpressionSet()) {
+		//
+		//				// only if applicable
+		//				GFAtomicExpression guard = formula.getGuard();
+		//				if (guard.matches(guardTuple)) {
+		//
+		//					// get associated boolean expression
+		//					BExpression booleanChildExpression = eso.getBooleanChildExpression(formula);
+		//
+		//					// evaluate
+		//					boolean eval = booleanChildExpression.evaluate(booleanContext);
+		//					
+		//					if (eval) {
+		//
+		//						// calculate output tuple
+		//						GFAtomProjection p = eso.getOutputProjection(formula);
+		//
+		//						// send it
+		//						TRUE.increment(1);
+		//						msgFactory.loadValue(p.project(guardTuple));
+		//						msgFactory.sendOutput();
+		//
+		//
+		//					} else {
+		//						FALSE.increment(1);
+		//					}
+		//
+		//				}
+		//			}
+		//
+		//
+		//
+		//
+		//		} catch (VariableNotFoundException | NonMatchingTupleException | GFOperationInitException | GuardTupleNotFoundException e) {
+		//			// should not happen
+		//			LOG.error(e.getMessage());
+		//			e.printStackTrace();
+		//			throw new InterruptedException(e.getMessage());
+		//		} 
 	}
 
 

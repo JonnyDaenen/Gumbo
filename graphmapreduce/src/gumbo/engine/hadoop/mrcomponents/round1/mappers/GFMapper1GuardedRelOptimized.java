@@ -26,8 +26,7 @@ public class GFMapper1GuardedRelOptimized extends GFMapper1Identity {
 
 	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(GFMapper1GuardedRelOptimized.class);
-	
-	private Map1GuardedMessageFactory msgFactory;
+
 	private Map1GuardedAlgorithm algo;
 
 	/**
@@ -36,7 +35,7 @@ public class GFMapper1GuardedRelOptimized extends GFMapper1Identity {
 	@Override
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
-		msgFactory = new Map1GuardedMessageFactory(context,settings,eso);
+		Map1GuardedMessageFactory msgFactory = new Map1GuardedMessageFactory(context,settings,eso);
 		algo = new Map1GuardedAlgorithm(eso, msgFactory);
 	}
 
@@ -50,10 +49,17 @@ public class GFMapper1GuardedRelOptimized extends GFMapper1Identity {
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
 
-
-		// CLEAN remove spaces? -> trim inside Tuple class?
-		Tuple t = new Tuple(value.toString());
-		algo.run(t, key.get());
+		try {
+			
+			// CLEAN remove spaces? -> trim inside Tuple class?
+			Tuple t = new Tuple(value.getBytes(),value.getLength());
+			algo.run(t, key.get());
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			LOG.error(e.getMessage());
+			throw new InterruptedException(e.getMessage());
+		}
 	}
 
 

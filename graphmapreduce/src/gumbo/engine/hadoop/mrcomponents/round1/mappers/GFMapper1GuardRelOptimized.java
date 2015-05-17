@@ -26,7 +26,6 @@ public class GFMapper1GuardRelOptimized extends GFMapper1Identity {
 
 	private static final Log LOG = LogFactory.getLog(GFMapper1GuardRelOptimized.class);
 
-	protected Map1GuardMessageFactory msgFactory;
 	private Map1GuardAlgorithm algo;
 
 
@@ -37,9 +36,9 @@ public class GFMapper1GuardRelOptimized extends GFMapper1Identity {
 	@Override
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
-		msgFactory = new Map1GuardMessageFactory(context,settings,eso);		
+		Map1GuardMessageFactory msgFactory = new Map1GuardMessageFactory(context,settings,eso);		
 		algo = new Map1GuardAlgorithm(eso, msgFactory);
-		
+
 		// dummy 
 		LOG.getClass();
 	}
@@ -52,8 +51,14 @@ public class GFMapper1GuardRelOptimized extends GFMapper1Identity {
 	 */
 	@Override
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+		try{
 			Tuple t = new Tuple(value.getBytes(), value.getLength());
 			algo.run(t, key.get());
+		} catch(Exception e) {
+			e.printStackTrace();
+			LOG.error(e.getMessage());
+			throw new InterruptedException(e.getMessage());
+		}
 	}
 
 

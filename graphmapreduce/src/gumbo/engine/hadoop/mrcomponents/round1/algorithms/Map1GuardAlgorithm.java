@@ -22,8 +22,9 @@ public class Map1GuardAlgorithm {
 		this.eso = eso;
 	}
 
-	public void run(Tuple t, long offset) throws InterruptedException {
-		try { 
+	public void run(Tuple t, long offset) throws AlgorithmInterruptedException {
+
+		try {
 			msgFactory.loadGuardValue(t,offset);
 
 
@@ -60,15 +61,9 @@ public class Map1GuardAlgorithm {
 			if (guardIsGuarded || outputAssert) {
 				msgFactory.sendGuardedAssert(guardIsGuarded);
 			}
-
-
-
-		} catch ( Exception e) {
-			LOG.error(e.getMessage());
-			e.printStackTrace();
-			throw new InterruptedException(e.getMessage());
-		} 
-
+		} catch(Exception e) {
+			throw new AlgorithmInterruptedException(e);
+		}
 	}
 
 }

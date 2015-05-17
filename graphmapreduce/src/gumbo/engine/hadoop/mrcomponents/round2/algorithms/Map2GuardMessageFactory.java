@@ -1,5 +1,6 @@
 package gumbo.engine.hadoop.mrcomponents.round2.algorithms;
 
+import gumbo.engine.hadoop.mrcomponents.round1.algorithms.MessageFailedException;
 import gumbo.engine.hadoop.mrcomponents.round2.mappers.GumboMap2Counter;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
@@ -20,7 +21,7 @@ public class Map2GuardMessageFactory {
 	Text valueText;
 	private Counter ASSERT;
 	private Counter ASSERTBYTES;
-	
+
 	private boolean guardTuplePointerOptimizationOn;
 	private Mapper<LongWritable, Text, Text, Text>.Context context;
 
@@ -42,7 +43,7 @@ public class Map2GuardMessageFactory {
 
 		// ---
 		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn);
-		
+
 		// ---
 		ASSERT = context.getCounter(GumboMap2Counter.ASSERT_RECORDS);
 		ASSERTBYTES = context.getCounter(GumboMap2Counter.ASSERT_BYTES);
@@ -53,22 +54,26 @@ public class Map2GuardMessageFactory {
 
 	}
 
-	public void loadGuardValue(Tuple t, long offset) throws TupleIDError {
+	public void loadGuardValue(Tuple t, long offset) throws MessageFailedException {
 
-		this.t = t;
-		keyText.clear();
-		valueText.clear();
+		try {
+			this.t = t;
+			keyText.clear();
+			valueText.clear();
 
-		byte[] bytes = t.toString().getBytes();
-		
-		// replace value with pointer when optimization is on
-		if (guardTuplePointerOptimizationOn) {
-			keyText.set(pathids.getTupleID(context, offset)); // key indicates offset in TextInputFormat
-		} else
-			keyText.set(bytes, 0, bytes.length);
-		
-		valueText.set(proofBytes);
-		valueText.append(bytes, 0, bytes.length);
+			byte[] bytes = t.toString().getBytes();
+
+			// replace value with pointer when optimization is on
+			if (guardTuplePointerOptimizationOn) {
+				keyText.set(pathids.getTupleID(context, offset)); // key indicates offset in TextInputFormat
+			} else
+				keyText.set(bytes, 0, bytes.length);
+
+			valueText.set(proofBytes);
+			valueText.append(bytes, 0, bytes.length);
+		} catch(Exception e) {
+			throw new MessageFailedException(e);
+		}
 
 	}
 
@@ -83,19 +88,25 @@ public class Map2GuardMessageFactory {
 	 * @throws InterruptedException 
 	 * @throws IOException 
 	 */
-	public void sendGuardAssert() throws IOException, InterruptedException {
+	public void sendGuardAssert() throws MessageFailedException {
+
 		ASSERT.increment(1);
 		ASSERTBYTES.increment(keyText.getLength() + valueText.getLength());
 		sendMessage();
-		
-	}
-	
 
-	protected void sendMessage() throws IOException, InterruptedException{
-		context.write(keyText, valueText);
+
 	}
 
 
-	
+	protected void sendMessage() throws MessageFailedException{
+		try {
+			context.write(keyText, valueText);
+		} catch(Exception e) {
+			throw new MessageFailedException(e);
+		}
+	}
+
+
+
 
 }

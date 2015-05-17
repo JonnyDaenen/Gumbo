@@ -3,6 +3,7 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round1.reducers;
 
+import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Red1Algorithm;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Red1MessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.ParameterPasser;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
@@ -32,23 +33,12 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 
 	private final static String FILENAME = "round1";
 
-	protected Text out1 = new Text();
-	protected IntWritable out2 = new IntWritable();
-	private ExpressionSetOperations eso;
 
 	private static final Log LOG = LogFactory.getLog(GFReducer1Optimized.class);
 
-	Set<Pair<String, String>> buffer;
 
-	boolean outputIDs = true;
+	private Red1Algorithm algo;
 
-	boolean finiteMemOptOn;
-
-	Counter ABORTS;
-	Counter BUFFERED;
-
-
-	Red1MessageFactory msgFactory;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -70,31 +60,29 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 			Configuration conf = context.getConfiguration();
 
 			ParameterPasser pp = new ParameterPasser(conf);
-			eso = pp.loadESO();
+			ExpressionSetOperations eso = pp.loadESO();
 			HadoopExecutorSettings settings = pp.loadSettings();
 
-			msgFactory = new Red1MessageFactory(context, settings, eso, FILENAME);
-			buffer = new HashSet<>(10);
-
-
-			// --- opts
-			finiteMemOptOn = settings.getBooleanProperty(AbstractExecutorSettings.round1FiniteMemoryOptimizationOn);
-
-			// counters
-			ABORTS = context.getCounter(GumboRed1Counter.RED1_PREMATURE_ABORTS);
-			BUFFERED = context.getCounter(GumboRed1Counter.RED1_BUFFEREDITEMS);
+			Red1MessageFactory msgFactory = new Red1MessageFactory(context, settings, eso, FILENAME);
+			algo = new Red1Algorithm(eso,settings,msgFactory);
 
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			e.printStackTrace();
-			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
+			throw new InterruptedException("Reducer initialisation error: " + e.getMessage());
 		}
 
 	}
 
 	@Override
 	protected void cleanup(Context context) throws IOException, InterruptedException {
-		msgFactory.cleanup();
+		try {
+			algo.cleanup();
+		} catch(Exception e) {
+			e.printStackTrace();
+			LOG.error(e.getMessage());
+			throw new InterruptedException(e.getMessage());
+		}
 	}
 
 	/**
@@ -104,58 +92,82 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
+		try {
+			
+			algo.initialize(key.toString());
 
-		boolean keyFound = false;
+			// WARNING Text object will be reused by Hadoop!
+			for (Text t : values) {
 
-		// WARNING Text object will be reused by Hadoop!
-		for (Text t : values) {
+				// parse input
+				Pair<String, String> split = split(t);
 
-			//			if (print)
-			//				LOG.error("Red1: " + key + " " + t);
+				// feed it to algo
+				algo.processTuple(split);
 
-			// parse input
-			Pair<String, String> split = split(t);
-
-
-			// is this not the key (key is only thing that can appear without atom reference)
-			// it does not matter whether it's sent as S(1) or with a constant symbol such as '#'
-			if (split.snd.length() > 0) {
-
-				msgFactory.loadValue(split.fst, split.snd);
-
-				// if the key has already been found, we can output
-				if (keyFound) {
-					msgFactory.sendReply();
-				}
-				// if optimization is on, we know that if the key is not there, we can skip the rest
-				else if (finiteMemOptOn) {
-					ABORTS.increment(1);
-					break;
-				} 
-				// otherwise, we buffer the data
-				else {
-					buffer.add(split);
-					BUFFERED.increment(1);
-				}
-
-			} // if this is the key, we mark it
-			else if (!keyFound) {
-				keyFound = true;
 			}
-		}
 
-		// output the remaining data
-		if (keyFound) {
-			for (Pair<String, String> p : buffer) {
-				msgFactory.loadValue(p.fst, p.snd);
-				msgFactory.sendReply();
-			}
-		}
+			// indicate end of tuples
+			// and finish calculation
+			algo.finish();
 
-		// clear the buffer for next round
-		// this is done in the end in case hadoop invokes GC
-		// (not sure whether hadoop does this in between calls)
-		buffer.clear();
+		} catch(Exception e) {
+			e.printStackTrace();
+			LOG.error(e.getMessage());
+			throw new InterruptedException(e.getMessage());
+		}
+		
+		//		boolean keyFound = false;
+		//
+		//		// WARNING Text object will be reused by Hadoop!
+		//		for (Text t : values) {
+		//
+		//			//			if (print)
+		//			//				LOG.error("Red1: " + key + " " + t);
+		//
+		//			// parse input
+		//			Pair<String, String> split = split(t);
+		//
+		//
+		//			// is this not the key (key is only thing that can appear without atom reference)
+		//			// it does not matter whether it's sent as S(1) or with a constant symbol such as '#'
+		//			if (split.snd.length() > 0) {
+		//
+		//				msgFactory.loadValue(split.fst, split.snd);
+		//
+		//				// if the key has already been found, we can output
+		//				if (keyFound) {
+		//					msgFactory.sendReply();
+		//				}
+		//				// if optimization is on, we know that if the key is not there, we can skip the rest
+		//				else if (finiteMemOptOn) {
+		//					ABORTS.increment(1);
+		//					break;
+		//				} 
+		//				// otherwise, we buffer the data
+		//				else {
+		//					buffer.add(split);
+		//					BUFFERED.increment(1);
+		//				}
+		//
+		//			} // if this is the key, we mark it
+		//			else if (!keyFound) {
+		//				keyFound = true;
+		//			}
+		//		}
+		//
+		//		// output the remaining data
+		//		if (keyFound) {
+		//			for (Pair<String, String> p : buffer) {
+		//				msgFactory.loadValue(p.fst, p.snd);
+		//				msgFactory.sendReply();
+		//			}
+		//		}
+		//
+		//		// clear the buffer for next round
+		//		// this is done in the end in case hadoop invokes GC
+		//		// (not sure whether hadoop does this in between calls)
+		//		buffer.clear();
 
 	}
 
@@ -182,7 +194,7 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 			address = new String(bytes,0,length);
 			reply = "";
 		}
-		
+
 		return new Pair<>(address, reply);
 
 	}
