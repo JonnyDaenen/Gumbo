@@ -18,10 +18,10 @@ public class Map1GuardedMessageFactory {
 	Text valueText;
 	private Counter ASSERT;
 	private Counter ASSERTBYTES;
-	
+
 	private boolean guardedIdOptimizationOn;
 	private boolean round1FiniteMemoryOptimizationOn;
-	
+
 	private Mapper<LongWritable, Text, Text, Text>.Context context;
 
 	// components
@@ -56,7 +56,7 @@ public class Map1GuardedMessageFactory {
 
 
 		// ---
-		
+
 		// prepare the value with the proof symbol
 		if (guardedIdOptimizationOn)
 			valueBuilder.append(proofBytes);
@@ -67,7 +67,7 @@ public class Map1GuardedMessageFactory {
 		this.t = t;
 		keyBuilder.setLength(0);
 		keyBuilder.append(t.toString());
-		
+
 		// add sort indication to key if necessary
 		if (round1FiniteMemoryOptimizationOn) {
 			keyBuilder.append(proofBytes);
@@ -85,39 +85,44 @@ public class Map1GuardedMessageFactory {
 	 * @throws InterruptedException 
 	 * @throws IOException 
 	 */
-	public void sendAssert() throws IOException, InterruptedException {
+	public void sendAssert() throws MessageFailedException {
 
 		if (!guardedIdOptimizationOn) {
 			valueBuilder.setLength(0);
 			valueBuilder.append(t.toString());
 		}
-		
+
 		// update counters before sending the message
 		ASSERT.increment(1);
 		ASSERTBYTES.increment(keyBuilder.length()+valueBuilder.length());
-		
+
 		sendMessage();
 
-		
+
+
 	}
 
-	
 
-	protected void sendMessage() throws IOException, InterruptedException{
+
+	protected void sendMessage() throws MessageFailedException {
 		sendMessage(keyBuilder.toString().getBytes(),valueBuilder.toString().getBytes());
 	}
 
 
-	protected void sendMessage(byte[] key, byte[] value) throws IOException, InterruptedException {
-		// OPTIMIZE is it better to work directly on the Text objects?
-		keyText.clear();
-		valueText.clear();
-		keyText.append(key, 0, key.length);
-		valueText.append(value, 0, value.length);
-		
-		context.write(keyText, valueText);
-		
-		//System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");
+	protected void sendMessage(byte[] key, byte[] value) throws MessageFailedException {
+		try {
+			// OPTIMIZE is it better to work directly on the Text objects?
+			keyText.clear();
+			valueText.clear();
+			keyText.append(key, 0, key.length);
+			valueText.append(value, 0, value.length);
+
+			context.write(keyText, valueText);
+
+			//System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");
+		} catch(Exception e) {
+			throw new MessageFailedException(e);
+		}
 	}
 
 }

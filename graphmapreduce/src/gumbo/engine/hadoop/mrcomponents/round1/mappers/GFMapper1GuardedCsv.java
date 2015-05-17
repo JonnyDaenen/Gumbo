@@ -7,17 +7,12 @@ import gumbo.engine.hadoop.mrcomponents.tools.RelationResolver;
 import gumbo.structures.data.RelationSchema;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 /**
  * Also outputs the atoms when a guarded atom is projected onto them.
@@ -27,9 +22,8 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
  * 
  */
 
-public class GFMapper1GuardedCsv extends GFMapper1GuardedRel {
+public class GFMapper1GuardedCsv extends GFMapper1GuardedRelOptimized {
 
-	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(GFMapper1GuardedCsv.class);
 	private RelationResolver resolver;
 	private StringBuilder stringBuilder;
@@ -39,13 +33,17 @@ public class GFMapper1GuardedCsv extends GFMapper1GuardedRel {
 			throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		super.setup(context);
-		
-		resolver = new RelationResolver(eso);
-		// pre-cache
-		resolver.extractRelationSchema(context);
 
-		stringBuilder = new StringBuilder(128);
-		
+		try {
+			resolver = new RelationResolver(eso);
+			// pre-cache
+			resolver.extractRelationSchema(context);
+
+			stringBuilder = new StringBuilder(128);
+		} catch (Exception e) {
+			throw new InterruptedException(e.getMessage());
+		}
+
 	}
 
 
@@ -65,23 +63,23 @@ public class GFMapper1GuardedCsv extends GFMapper1GuardedRel {
 
 			// trim is necessary to remove extra whitespace
 			String t1 = value.toString().trim();
-			
+
 			// wrap tuple in relation name
 			stringBuilder.setLength(0);
 			stringBuilder.append(rs.getName());
 			stringBuilder.append('(');
 			stringBuilder.append(t1);
 			stringBuilder.append(')');
-			
+
 			value.set(stringBuilder.toString());
-			
+
 			super.map(key, value, context);
-			
-			} catch (Exception e) {
-				LOG.error(e.getMessage());
-				e.printStackTrace();
-				throw new InterruptedException(e.getMessage());
-			}
+
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			e.printStackTrace();
+			throw new InterruptedException(e.getMessage());
+		}
 
 
 

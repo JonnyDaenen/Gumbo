@@ -1,10 +1,11 @@
 /**
- * Created: 21 Aug 2014
+ * Created: 16 May 2015
  */
-package gumbo.engine.hadoop.mrcomponents.round1.mappers;
+package gumbo.engine.hadoop.mrcomponents.round2.mappers;
 
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardAlgorithm;
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactory;
+import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1Identity;
+import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Map2GuardAlgorithm;
+import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Map2GuardMessageFactory;
 import gumbo.structures.data.Tuple;
 
 import java.io.IOException;
@@ -20,13 +21,11 @@ import org.apache.hadoop.io.Text;
  * @author Jonny Daenen
  * 
  */
-public class GFMapper1GuardRelOptimized extends GFMapper1Identity {
+public class GFMapper2GuardRelOptimized extends GFMapper1Identity {
 
+	private static final Log LOG = LogFactory.getLog(GFMapper2GuardRelOptimized.class);
 
-
-	private static final Log LOG = LogFactory.getLog(GFMapper1GuardRelOptimized.class);
-
-	private Map1GuardAlgorithm algo;
+	private Map2GuardAlgorithm algo;
 
 
 
@@ -36,10 +35,10 @@ public class GFMapper1GuardRelOptimized extends GFMapper1Identity {
 	@Override
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
-		Map1GuardMessageFactory msgFactory = new Map1GuardMessageFactory(context,settings,eso);		
-		algo = new Map1GuardAlgorithm(eso, msgFactory);
+		Map2GuardMessageFactory msgFactory = new Map2GuardMessageFactory(context,settings,eso);		
+		algo = new Map2GuardAlgorithm(eso, msgFactory);
 
-		// dummy 
+		// dummy
 		LOG.getClass();
 	}
 
@@ -51,8 +50,8 @@ public class GFMapper1GuardRelOptimized extends GFMapper1Identity {
 	 */
 	@Override
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-		try{
-			Tuple t = new Tuple(value.getBytes(), value.getLength());
+		try {
+			Tuple t = new Tuple(value.getBytes(),value.getLength());
 			algo.run(t, key.get());
 		} catch(Exception e) {
 			e.printStackTrace();

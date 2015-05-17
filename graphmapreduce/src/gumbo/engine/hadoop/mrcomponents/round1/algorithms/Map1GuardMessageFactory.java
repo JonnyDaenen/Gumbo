@@ -1,10 +1,5 @@
 package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
-import java.io.IOException;
-
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.Text;
-
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GumboMap1Counter;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
@@ -17,6 +12,10 @@ import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOpera
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
 import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
 
+import java.io.IOException;
+
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Mapper;
 
@@ -62,13 +61,13 @@ public class Map1GuardMessageFactory {
 		valueBuilder = new StringBuilder(128);
 
 		// ---
-		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn);
-		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn);
+		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn);
+		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveOptimizationOn);
 		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
 		guardIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.requestAtomIdOptimizationOn);
 		guardedIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.assertConstantOptimizationOn);
 
-		
+
 		// ---
 		KAR = context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST);
 		KARB = context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST_BYTES);
@@ -115,27 +114,31 @@ public class Map1GuardMessageFactory {
 	 * @throws InterruptedException
 	 * @throws GFOperationInitException
 	 */
-	public void sendGuardKeepAliveRequest(GFAtomicExpression guard) throws IOException, InterruptedException, GFOperationInitException {
+	public void sendGuardKeepAliveRequest(GFAtomicExpression guard) throws MessageFailedException {
 
-		// CLEAN duplicate code, reuse standard request message
-		String guardRef = "";
-		if (guardIdOptimizationOn)
-			guardRef = Integer.toString(eso.getAtomId(guard));
-		else
-			guardRef = guard.toString();
+		try {
+			// CLEAN duplicate code, reuse standard request message
+			String guardRef = "";
+			if (guardIdOptimizationOn)
+				guardRef = Integer.toString(eso.getAtomId(guard));
+			else
+				guardRef = guard.toString();
 
-		// output guard
-		if (!guardKeepaliveOptimizationOn) {
-			keyBuilder.append(t.toString());
+			// output guard
+			if (!guardKeepaliveOptimizationOn) {
+				keyBuilder.append(t.toString());
 
-			valueBuilder.append(tRef);
-			valueBuilder.append(';');
-			valueBuilder.append(guardRef);
+				valueBuilder.append(tRef);
+				valueBuilder.append(';');
+				valueBuilder.append(guardRef);
 
-			KAR.increment(1);
-			KARB.increment(keyBuilder.length() + valueBuilder.length());
-			
-			sendMessage();
+				KAR.increment(1);
+				KARB.increment(keyBuilder.length() + valueBuilder.length());
+
+				sendMessage();
+			}
+		} catch(GFOperationInitException e) {
+			throw new MessageFailedException(e);
 		}
 	}
 
@@ -159,7 +162,7 @@ public class Map1GuardMessageFactory {
 	 * @throws InterruptedException 
 	 * @throws IOException 
 	 */
-	public void sendGuardedAssert(boolean force) throws IOException, InterruptedException {
+	public void sendGuardedAssert(boolean force) throws MessageFailedException {
 
 		if (!guardKeepaliveOptimizationOn || force) {
 
@@ -184,50 +187,58 @@ public class Map1GuardMessageFactory {
 
 	}
 
-	public void sendRequest(Triple<GFAtomicExpression, GFAtomProjection, Integer> guardedInfo) throws IOException, InterruptedException, NonMatchingTupleException {
+	public void sendRequest(Triple<GFAtomicExpression, GFAtomProjection, Integer> guardedInfo) throws MessageFailedException {
 
-		//		GFAtomicExpression guarded = guardedInfo.fst;
-		GFAtomProjection p = guardedInfo.snd;
-		
-		String guardRef = "";
-		if (guardIdOptimizationOn)
-			guardRef = Integer.toString(guardedInfo.trd);
-		else
-			guardRef = guardedInfo.fst.toString();
+		try {
+			//		GFAtomicExpression guarded = guardedInfo.fst;
+			GFAtomProjection p = guardedInfo.snd;
 
-		keyBuilder.append(p.projectString(t));
+			String guardRef = "";
+			if (guardIdOptimizationOn)
+				guardRef = Integer.toString(guardedInfo.trd);
+			else
+				guardRef = guardedInfo.fst.toString();
 
-		// value: request message with response code and atom
-		//		String valueString = replyAddress + ";" + guardedID;
+			keyBuilder.append(p.projectString(t));
 
-		valueBuilder.append(tRef);
-		valueBuilder.append(';');
-		valueBuilder.append(guardRef);
+			// value: request message with response code and atom
+			//		String valueString = replyAddress + ";" + guardedID;
 
-		R.increment(1);
-		RB.increment(keyBuilder.length() + valueBuilder.length());
-		RKB.increment(keyBuilder.length());
-		RVB.increment(valueBuilder.length());
+			valueBuilder.append(tRef);
+			valueBuilder.append(';');
+			valueBuilder.append(guardRef);
 
-		sendMessage();
+			R.increment(1);
+			RB.increment(keyBuilder.length() + valueBuilder.length());
+			RKB.increment(keyBuilder.length());
+			RVB.increment(valueBuilder.length());
+
+			sendMessage();
+		} catch(NonMatchingTupleException e) {
+			throw new MessageFailedException(e);
+		}
 	}
 
-	protected void sendMessage() throws IOException, InterruptedException{
+	protected void sendMessage() throws MessageFailedException{
 		sendMessage(keyBuilder.toString().getBytes(),valueBuilder.toString().getBytes());
 		keyBuilder.setLength(0);
 		valueBuilder.setLength(0);
 	}
 
 
-	protected void sendMessage(byte[] key, byte[] value) throws IOException, InterruptedException {
-		keyText.clear();
-		valueText.clear();
-		keyText.append(key, 0, key.length);
-		valueText.append(value, 0, value.length);
-		
-		context.write(keyText, valueText);
-		
-		System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");
+	protected void sendMessage(byte[] key, byte[] value) throws MessageFailedException {
+		try {
+			keyText.clear();
+			valueText.clear();
+			keyText.append(key, 0, key.length);
+			valueText.append(value, 0, value.length);
+
+			context.write(keyText, valueText);
+
+			//		System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");
+		} catch(Exception e) {
+			throw new MessageFailedException(e);
+		}
 	}
 
 }

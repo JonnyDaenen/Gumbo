@@ -1,10 +1,8 @@
 package gumbo.engine.hadoop.mrcomponents.tools;
 
-import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardCsv;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.apache.commons.logging.Log;
@@ -23,6 +21,16 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 public class RelationResolver {
 	
 
+	public class InputResolveException extends Exception {
+
+		private static final long serialVersionUID = 1L;
+		
+		public InputResolveException(Exception e) {
+			super(e);
+		}
+	}
+
+
 	private static final Log LOG = LogFactory.getLog(RelationResolver.class);
 
 	protected InputSplit prevSplit;
@@ -35,6 +43,9 @@ public class RelationResolver {
 		prevSplit = null;
 		cachedPath = null;
 		this.eso = eso;
+		
+		// dummy
+		LOG.getClass();
 	}
 
 
@@ -44,7 +55,7 @@ public class RelationResolver {
 		return prevSplit == is;
 	}
 
-	public Path extractFileName(Context context) {
+	public Path extractFileName(Context context) throws InputResolveException {
 		try {
 
 			// simple caching
@@ -68,15 +79,15 @@ public class RelationResolver {
 			return cachedPath;
 
 		} catch(Exception e) {
-			// TODO throw exception
+			LOG.error(e.getMessage());
 			e.printStackTrace();
-			return null;
+			throw new InputResolveException(e);
 		}
 
 	}
 
 
-	public RelationSchema extractRelationSchema(Context context) {
+	public RelationSchema extractRelationSchema(Context context) throws InputResolveException {
 		if (!isCached(context)) {
 			Path p = extractFileName(context);
 			RelationSchema rs = eso.getFileMapping().findSchema(p);

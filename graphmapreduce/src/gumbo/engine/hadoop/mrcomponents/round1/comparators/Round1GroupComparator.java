@@ -3,7 +3,6 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round1.comparators;
 
-import org.apache.hadoop.io.RawComparator;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
@@ -22,6 +21,7 @@ public class Round1GroupComparator extends WritableComparator {
 	/* (non-Javadoc)
 	 * @see org.apache.hadoop.io.WritableComparator#compare(org.apache.hadoop.io.WritableComparable, org.apache.hadoop.io.WritableComparable)
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public int compare(WritableComparable a, WritableComparable b) {
 		

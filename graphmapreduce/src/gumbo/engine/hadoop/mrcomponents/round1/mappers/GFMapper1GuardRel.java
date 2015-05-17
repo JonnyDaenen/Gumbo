@@ -8,7 +8,6 @@ import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.structures.gfexpressions.io.Triple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
@@ -69,8 +68,8 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 		super.setup(context);
 		pathids = new TupleIDCreator(eso.getFileMapping());
 
-		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn);
-		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn);
+		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveOptimizationOn);
+		guardKeepaliveOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveOptimizationOn);
 		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
 	
 		proofText = new Text(settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL));
@@ -111,7 +110,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 		try {
 
 			// transform data
-			Tuple t = new Tuple(value.getBytes());
+			Tuple t = new Tuple(value.getBytes(),value.getLength());
 			String replyAddress;
 
 			// replace value with pointer when optimization is on

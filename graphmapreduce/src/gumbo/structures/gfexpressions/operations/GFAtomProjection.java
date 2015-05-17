@@ -4,9 +4,6 @@ import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Represents a projection from a atom to another.
  * 

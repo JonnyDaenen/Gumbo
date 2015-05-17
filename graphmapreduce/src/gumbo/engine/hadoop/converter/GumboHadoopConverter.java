@@ -10,7 +10,6 @@ import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.engine.general.FileMappingExtractor;
-import gumbo.engine.hadoop.mrcomponents.input.GuardInputFormat;
 import gumbo.engine.hadoop.mrcomponents.input.GuardTextInputFormat;
 import gumbo.engine.hadoop.mrcomponents.round1.combiners.GFCombinerGuarded;
 import gumbo.engine.hadoop.mrcomponents.round1.comparators.Round1GroupComparator;
@@ -22,13 +21,11 @@ import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardRelOptimize
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardedCsv;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardedRel;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardedRelOptimized;
-import gumbo.engine.hadoop.mrcomponents.round1.reducers.GFReducer1;
+import gumbo.engine.hadoop.mrcomponents.round1.reducers.GFReducer1Optimized;
 import gumbo.engine.hadoop.mrcomponents.round2.mappers.GFMapper2GuardCsv;
 import gumbo.engine.hadoop.mrcomponents.round2.mappers.GFMapper2GuardRel;
-import gumbo.engine.hadoop.mrcomponents.round2.mappers.GFMapper2GuardTextCsv;
-import gumbo.engine.hadoop.mrcomponents.round2.mappers.GFMapper2GuardTextRel;
-import gumbo.engine.hadoop.mrcomponents.round2.reducers.GFReducer2;
-import gumbo.engine.hadoop.mrcomponents.round2.reducers.GFReducer2Text;
+import gumbo.engine.hadoop.mrcomponents.round2.mappers.GFMapper2GuardRelOptimized;
+import gumbo.engine.hadoop.mrcomponents.round2.reducers.GFReducer2Optimized;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.RelationSchema;
@@ -48,7 +45,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputFormat;
@@ -181,7 +177,7 @@ public class GumboHadoopConverter {
 			for ( Path guardedPath : eso.getGuardedRelPaths()) {
 				LOG.info("Setting M1 guarded path to " + guardedPath + " using mapper " + GFMapper1GuardedRel.class.getName());
 				MultipleInputs.addInputPath(hadoopJob, guardedPath, 
-						TextInputFormat.class, GFMapper1GuardedRel.class);
+						TextInputFormat.class, GFMapper1GuardedRelOptimized.class);
 			}
 
 			// guarded mapper for csv files
@@ -202,7 +198,7 @@ public class GumboHadoopConverter {
 			for ( Path guardPath : eso.getGuardRelPaths()) {
 				LOG.info("Setting M1 guard path to " + guardPath + " using mapper " + GFMapper1GuardRel.class.getName());
 				MultipleInputs.addInputPath(hadoopJob, guardPath, 
-						TextInputFormat.class, GFMapper1GuardRel.class);
+						TextInputFormat.class, GFMapper1GuardRelOptimized.class);
 			}
 
 
@@ -222,7 +218,6 @@ public class GumboHadoopConverter {
 			hadoopJob.setMapOutputValueClass(Text.class);
 
 			/* COMBINER */
-			
 			if (settings.getBooleanProperty(AbstractExecutorSettings.guardedCombinerOptimizationOn)) {
 				hadoopJob.setCombinerClass(GFCombinerGuarded.class);
 			}
@@ -230,14 +225,14 @@ public class GumboHadoopConverter {
 			/* REDUCER */
 
 			// determine reducer
-			hadoopJob.setReducerClass(GFReducer1.class); 
-			Round1ReduceJobEstimator redestimator = new Round1ReduceJobEstimator(settings);
+			hadoopJob.setReducerClass(GFReducer1Optimized.class); 
+			Round1ReduceJobEstimator redestimator = new Round1ReduceJobEstimator(settings); // TODO fix estimate
 			hadoopJob.setNumReduceTasks(redestimator.getNumReducers(eso.getExpressionSet(),mapping));
 
 			// set reducer output
 			// hadoopJob.setOutputKeyClass(NullWritable.class);
 			hadoopJob.setOutputKeyClass(Text.class);
-			hadoopJob.setOutputValueClass(IntWritable.class);
+			hadoopJob.setOutputValueClass(Text.class);
 
 			// finite memory by sorting
 			if (settings.getBooleanProperty(AbstractExecutorSettings.round1FiniteMemoryOptimizationOn)) {
@@ -325,8 +320,8 @@ public class GumboHadoopConverter {
 			/* MAPPER */
 
 			// some optimizations require a special mapper round
-			if (settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn) ||
-					settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
+			if (settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveOptimizationOn) ||
+					settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
 
 				// add special non-identity mapper to process the guard input again
 
@@ -367,21 +362,23 @@ public class GumboHadoopConverter {
 			// if we use a tuplepointeroptimization
 			// we cannot use the ints for now, as we need to re-send the tuple itself
 			hadoopJob.setMapOutputKeyClass(Text.class);
-			if (settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
+			if (settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
 				hadoopJob.setMapOutputValueClass(Text.class); // OPTIMIZE make it a combined class
 			} else {
-				hadoopJob.setMapOutputValueClass(IntWritable.class); // FUTURE make it a list? for combiner
+				hadoopJob.setMapOutputValueClass(Text.class); // FUTURE make it a list? for combiner
 			}
 
 
 			/* REDUCER */
 
 			// the reducer reads text or int format, depending on the optimization
-			if (settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
-				hadoopJob.setReducerClass(GFReducer2Text.class);
-			} else {
-				hadoopJob.setReducerClass(GFReducer2.class);
-			}
+//			if (settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
+//				hadoopJob.setReducerClass(GFReducer2Text.class);
+//			} else {
+//				hadoopJob.setReducerClass(GFReducer2.class);
+//			}
+			
+			hadoopJob.setReducerClass(GFReducer2Optimized.class);
 
 			Round2ReduceJobEstimator redestimator = new Round2ReduceJobEstimator(conf);
 			hadoopJob.setNumReduceTasks(redestimator.getNumReducers(eso.getExpressionSet(),mapping));
@@ -424,18 +421,26 @@ public class GumboHadoopConverter {
 	private Class<? extends Mapper> getRound2GuardMapperClass(String string) {
 
 		if (string.equals("csv") ) {
-			if (settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
-				return GFMapper2GuardTextCsv.class;
-			} else {
-				return GFMapper2GuardCsv.class;
-			}
+			return GFMapper2GuardCsv.class;
 		} else {
-			if (settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
-				return GFMapper2GuardTextRel.class;
-			} else {
-				return GFMapper2GuardRel.class;
-			}
+			return GFMapper2GuardRelOptimized.class;
 		}
+		
+		
+		// --- old
+//		if (string.equals("csv") ) {
+//			if (settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
+//				return GFMapper2GuardTextCsv.class;
+//			} else {
+//				return GFMapper2GuardCsv.class;
+//			}
+//		} else {
+//			if (settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
+//				return GFMapper2GuardTextRel.class;
+//			} else {
+//				return GFMapper2GuardRel.class;
+//			}
+//		}
 	}
 
 	/**
@@ -449,11 +454,12 @@ public class GumboHadoopConverter {
 	 */
 	@SuppressWarnings("rawtypes")
 	private Class<? extends InputFormat> getRound2MapInputFormat() {
-		Class<? extends InputFormat> atomInputFormat = GuardInputFormat.class;
-		if (settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
-			atomInputFormat = GuardTextInputFormat.class;
-		}
-		return atomInputFormat;
+		return GuardTextInputFormat.class;
+//		Class<? extends InputFormat> atomInputFormat = GuardInputFormat.class;
+//		if (settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
+//			atomInputFormat = GuardTextInputFormat.class;
+//		}
+//		return atomInputFormat;
 	}
 
 }

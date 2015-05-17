@@ -1,16 +1,13 @@
 package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.io.Triple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
-import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class Map1GuardAlgorithm {
 	
@@ -25,8 +22,9 @@ public class Map1GuardAlgorithm {
 		this.eso = eso;
 	}
 
-	public void run(Tuple t, long offset) throws InterruptedException {
-		try { 
+	public void run(Tuple t, long offset) throws AlgorithmInterruptedException {
+
+		try {
 			msgFactory.loadGuardValue(t,offset);
 
 
@@ -63,15 +61,9 @@ public class Map1GuardAlgorithm {
 			if (guardIsGuarded || outputAssert) {
 				msgFactory.sendGuardedAssert(guardIsGuarded);
 			}
-
-
-
-		} catch ( Exception e) {
-			LOG.error(e.getMessage());
-			e.printStackTrace();
-			throw new InterruptedException(e.getMessage());
-		} 
-
+		} catch(Exception e) {
+			throw new AlgorithmInterruptedException(e);
+		}
 	}
 
 }

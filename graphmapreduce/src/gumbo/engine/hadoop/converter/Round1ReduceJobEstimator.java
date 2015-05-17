@@ -167,7 +167,7 @@ public class Round1ReduceJobEstimator {
 	private long estimateKeepAlives(RelationSchema guard, Collection<GFAtomicExpression> guardeds, RelationFileMapping rfm) {
 
 		// if optimization is on, no keep-alives are sent
-		if (settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveReductionOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.guardKeepAliveOptimizationOn)) {
 			return 0;
 		}
 
@@ -228,7 +228,7 @@ public class Round1ReduceJobEstimator {
 
 		// optimization corrections
 
-		if (settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
+		if (settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
 			// use numtuples * 16 as the guardsize
 			// 16 is approx for 10byte 64-bit long encoding and 6 ascii digits for file id 
 			guardSize2 = numTuples * 16;

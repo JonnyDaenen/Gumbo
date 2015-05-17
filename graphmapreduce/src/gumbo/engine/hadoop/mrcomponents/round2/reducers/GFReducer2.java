@@ -100,7 +100,7 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 
 			Tuple keyTuple = null;
 
-			if (!settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
+			if (!settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
 				keyTuple = new Tuple(key);
 			}
 
@@ -112,7 +112,7 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 
 				// if tuple pointer optimization is on
 				// we need to find the actual tuple between the values.
-				if (settings.getBooleanProperty(HadoopExecutorSettings.guardAddressOptimizationOn)) {
+				if (settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
 					// TODO implement...
 				}
 
