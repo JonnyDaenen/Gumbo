@@ -103,7 +103,8 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 				Pair<String, String> split = split(t);
 
 				// feed it to algo
-				algo.processTuple(split);
+				if(!algo.processTuple(split))
+					break;
 
 			}
 

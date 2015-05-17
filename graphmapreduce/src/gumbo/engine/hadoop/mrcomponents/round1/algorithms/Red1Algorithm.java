@@ -43,6 +43,12 @@ public class Red1Algorithm {
 		buffer = new HashSet<>(10);
 	}
 
+	/**
+	 * 
+	 * @param split
+	 * @return false when all next values of this key can be skipped
+	 * @throws AlgorithmInterruptedException
+	 */
 	public boolean processTuple(Pair<String,String> split) throws AlgorithmInterruptedException {
 
 		try {

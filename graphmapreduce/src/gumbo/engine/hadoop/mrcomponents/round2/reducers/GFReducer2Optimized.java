@@ -106,7 +106,8 @@ public class GFReducer2Optimized extends Reducer<Text, Text, Text, Text> {
 			for (Text t : values) {
 
 				// feed it to algo
-				algo.processTuple(t.toString());
+				if (!algo.processTuple(t.toString()))
+					break;
 
 			}
 

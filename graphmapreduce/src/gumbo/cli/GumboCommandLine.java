@@ -5,7 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import gumbo.convertors.GFConversionException;
-import gumbo.convertors.GFConverter;
+//import gumbo.convertors.GFConverter;
 import gumbo.convertors.hive.GFHiveConverterLong;
 import gumbo.convertors.hive.GFHiveConverterWide;
 import gumbo.convertors.pig.GFPigConverterLong;
@@ -25,6 +25,12 @@ import org.apache.commons.logging.LogFactory;
 
 public class GumboCommandLine {
 	
+	// FIXME heb het even als volgt opgelapt zodat het compileert...
+	public class GFConverter {
+
+	}
+
+
 	private static final Log LOG = LogFactory.getLog(GumboCommandLine.class);
 	
 	private Options _options;
@@ -59,28 +65,29 @@ public class GumboCommandLine {
 	    String lang = cmd.getOptionValue("l", "pig");
 	    String method = cmd.getOptionValue("m", "wide");
 	    
-	    if (lang.equals("pig")) {
-	    	if (method.equals("wide"))
-	    		converter = new GFPigConverterWide();
-	    	else if (method.equals("long"))
-	    		converter = new GFPigConverterLong();
-	    	else {
-	    		LOG.error("Invalid conversion method specified: " + method);
-		    	return;
-	    	}
-	    } else if (lang.equals("hive")) {
-	    	if (method.equals("wide"))
-	    		converter = new GFHiveConverterWide();
-	    	else if (method.equals("long"))
-	    		converter = new GFHiveConverterLong();
-	    	else {
-	    		LOG.error("Invalid conversion method specified: " + method);
-		    	return;
-	    	}
-	    } else {
-	    	LOG.error("Invalid output language specified: " + lang);
-	    	return;
-	    }
+	    // FIXME:
+//	    if (lang.equals("pig")) {
+//	    	if (method.equals("wide"))
+//	    		converter = new GFPigConverterWide(); 
+//	    	else if (method.equals("long"))
+//	    		converter = new GFPigConverterLong(); 
+//	    	else {
+//	    		LOG.error("Invalid conversion method specified: " + method);
+//		    	return;
+//	    	}
+//	    } else if (lang.equals("hive")) {
+//	    	if (method.equals("wide"))
+//	    		converter = new GFHiveConverterWide(); 
+//	    	else if (method.equals("long"))
+//	    		converter = new GFHiveConverterLong(); 
+//	    	else {
+//	    		LOG.error("Invalid conversion method specified: " + method);
+//		    	return;
+//	    	}
+//	    } else {
+//	    	LOG.error("Invalid output language specified: " + lang);
+//	    	return;
+//	    }
 	    
 	    if (!cmd.hasOption("i") || !cmd.hasOption("o")) {
 	    	LOG.error("No input and/or output file specified!");
@@ -97,7 +104,7 @@ public class GumboCommandLine {
 			LOG.info("Lang: " + lang);
 			LOG.info("Method: " + method);
 			LOG.info("Converting script...");
-			String script = converter.convert(query);
+			String script = ""; // FIXME converter.convert(query);
 			
 			LOG.info("Finished converting script!");
 			LOG.info("Writing to output file: " + out);
@@ -109,9 +116,11 @@ public class GumboCommandLine {
 			e.printStackTrace();
 		} catch (GumboParseException e) {
 			e.printStackTrace();
-		} catch (GFConversionException e) {
-			e.printStackTrace();
 		}
+	    // FIXME:
+//		} catch (GFConversionException e) {
+//			e.printStackTrace();
+//		}
 	    	
 	}
 	

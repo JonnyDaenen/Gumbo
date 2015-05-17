@@ -71,6 +71,12 @@ public class Red2Algorithm {
 		}
 	}
 
+	/**
+	 * 
+	 * @param split
+	 * @return false if next values for this key may be skipped
+	 * @throws AlgorithmInterruptedException
+	 */
 	public boolean processTuple(String split) throws AlgorithmInterruptedException {
 
 
