@@ -43,7 +43,8 @@ public abstract class AbstractExecutorSettings {
 	 * Loads the default settings.
 	 */
 	public void loadDefaults() {
-		turnOffOptimizations();
+		turnOnOptimizations();
+		setBooleanProperty(guardedCombinerOptimizationOn, false); 
 		setProperty(PROOF_SYMBOL, "#");
 	}
 	
