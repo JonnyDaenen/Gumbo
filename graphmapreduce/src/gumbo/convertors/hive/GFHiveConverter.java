@@ -11,6 +11,7 @@ import gumbo.compiler.partitioner.CalculationPartitioner;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.compiler.partitioner.UnitPartitioner;
 import gumbo.convertors.GFConversionException;
+import gumbo.convertors.GFConverter;
 import gumbo.input.GumboQuery;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
@@ -29,7 +30,7 @@ import org.apache.hadoop.fs.Path;
  * @author brentchesny
  *
  */
-public abstract class GFHiveConverter {
+public abstract class GFHiveConverter implements GFConverter {
 	
 	protected Vector<RelationSchema> _outSchemas;
 	
