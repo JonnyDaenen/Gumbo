@@ -41,13 +41,13 @@ public class Map1GuardMessageFactory {
 	// components
 	private TupleIDCreator pathids;
 	private ExpressionSetOperations eso;
+	private StringBuilder keyBuilder;
+	private StringBuilder valueBuilder;
 
 	// data
 	Tuple t;
-	byte [] tbytes;
-	byte [] tRef;
-	byte [] proofBytes;
-	byte [] sepBytes = {(byte)';'};
+	String tRef;
+	String proofBytes;
 
 	public Map1GuardMessageFactory(Mapper<LongWritable, Text, Text, Text>.Context context, HadoopExecutorSettings settings, ExpressionSetOperations eso) {
 		keyText = new Text();
@@ -57,6 +57,8 @@ public class Map1GuardMessageFactory {
 		this.context = context;
 		this.eso = eso;
 		this.pathids = new TupleIDCreator(eso.getFileMapping());
+		keyBuilder = new StringBuilder(16);
+		valueBuilder = new StringBuilder(128);
 
 		// ---
 		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn);
@@ -80,8 +82,7 @@ public class Map1GuardMessageFactory {
 		ASSERTBYTES = context.getCounter(GumboMap1Counter.KEEP_ALIVE_ASSERT_BYTES);
 
 
-		proofBytes = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL).getBytes();
-		
+		proofBytes = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL);
 
 
 	}
@@ -89,14 +90,11 @@ public class Map1GuardMessageFactory {
 	public void loadGuardValue(Tuple t, long offset) throws TupleIDError {
 
 		this.t = t;
-		tbytes = t.toString().getBytes();
-		
 		// replace value with pointer when optimization is on
 		if (guardTuplePointerOptimizationOn) {
-			tRef = pathids.getTupleID(context, offset).getBytes(); // key indicates offset in TextInputFormat
+			tRef = pathids.getTupleID(context, offset); // key indicates offset in TextInputFormat
 		} else
-			tRef = tbytes;
-		
+			tRef = t.toString();
 
 	}
 
@@ -120,22 +118,22 @@ public class Map1GuardMessageFactory {
 
 		try {
 			// CLEAN duplicate code, reuse standard request message
-			byte []  guardRef = null;
+			String guardRef = "";
 			if (guardIdOptimizationOn)
-				guardRef = Integer.toString(eso.getAtomId(guard)).getBytes();
+				guardRef = Integer.toString(eso.getAtomId(guard));
 			else
-				guardRef = guard.toString().getBytes();
+				guardRef = guard.toString();
 
 			// output guard
 			if (!guardKeepaliveOptimizationOn) {
-				keyText.set(t.toString());
+				keyBuilder.append(t.toString());
 
-				valueText.append(tRef,0,tRef.length);
-				valueText.append(sepBytes,0,sepBytes.length);
-				valueText.append(guardRef, 0, guardRef.length);
+				valueBuilder.append(tRef);
+				valueBuilder.append(';');
+				valueBuilder.append(guardRef);
 
 				KAR.increment(1);
-				KARB.increment(keyText.getLength() + valueText.getLength());
+				KARB.increment(keyBuilder.length() + valueBuilder.length());
 
 				sendMessage();
 			}
@@ -168,21 +166,21 @@ public class Map1GuardMessageFactory {
 
 		if (!guardKeepaliveOptimizationOn || force) {
 
-			keyText.append(tbytes,0,tbytes.length);
+			keyBuilder.append(t.toString());
 
 			// add special symbol for sort order
 			if (round1FiniteMemoryOptimizationOn)
-				keyText.append(proofBytes,0,proofBytes.length);
+				keyBuilder.append(proofBytes);
 
 			// proof representation optimization
 			if (guardedIdOptimizationOn)
-				valueText.append(proofBytes,0,proofBytes.length);
+				valueBuilder.append(proofBytes);
 			else
-				valueText.append(tbytes,0,tbytes.length);
+				valueBuilder.append(t.toString());
 
 			// update counters
 			ASSERT.increment(1);
-			ASSERTBYTES.increment(keyText.getLength() + valueText.getLength());
+			ASSERTBYTES.increment(keyBuilder.length() + valueBuilder.length());
 
 			sendMessage();
 		}
@@ -195,25 +193,25 @@ public class Map1GuardMessageFactory {
 			//		GFAtomicExpression guarded = guardedInfo.fst;
 			GFAtomProjection p = guardedInfo.snd;
 
-			byte [] guardRef = null;
+			String guardRef = "";
 			if (guardIdOptimizationOn)
-				guardRef = Integer.toString(guardedInfo.trd).getBytes();
+				guardRef = Integer.toString(guardedInfo.trd);
 			else
-				guardRef = guardedInfo.fst.toString().getBytes();
+				guardRef = guardedInfo.fst.toString();
 
-			keyText.set(p.projectString(t));
+			keyBuilder.append(p.projectString(t));
 
 			// value: request message with response code and atom
 			//		String valueString = replyAddress + ";" + guardedID;
 
-			valueText.append(tRef,0,tRef.length);
-			valueText.append(sepBytes,0,sepBytes.length);
-			valueText.append(guardRef,0,guardRef.length);
+			valueBuilder.append(tRef);
+			valueBuilder.append(';');
+			valueBuilder.append(guardRef);
 
 			R.increment(1);
-			RB.increment(keyText.getLength() + valueText.getLength());
-			RKB.increment(keyText.getLength());
-			RVB.increment(valueText.getLength());
+			RB.increment(keyBuilder.length() + valueBuilder.length());
+			RKB.increment(keyBuilder.length());
+			RVB.increment(valueBuilder.length());
 
 			sendMessage();
 		} catch(NonMatchingTupleException e) {
@@ -222,19 +220,25 @@ public class Map1GuardMessageFactory {
 	}
 
 	protected void sendMessage() throws MessageFailedException{
-		try {
+		sendMessage(keyBuilder.toString().getBytes(),valueBuilder.toString().getBytes());
+		keyBuilder.setLength(0);
+		valueBuilder.setLength(0);
+	}
 
-			context.write(keyText, valueText);
-			
+
+	protected void sendMessage(byte[] key, byte[] value) throws MessageFailedException {
+		try {
 			keyText.clear();
 			valueText.clear();
+			keyText.append(key, 0, key.length);
+			valueText.append(value, 0, value.length);
+
+			context.write(keyText, valueText);
 
 			//		System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");
 		} catch(Exception e) {
 			throw new MessageFailedException(e);
 		}
 	}
-
-
 
 }
