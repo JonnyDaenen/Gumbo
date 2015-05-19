@@ -90,13 +90,17 @@ public class Round1SortComparator extends WritableComparator {
 
 	private int compare(CharBuffer cb1, CharBuffer cb2) {
 
-		char lastChar1 = cb1.get(cb1.length()-1);
-		char lastChar2 = cb2.get(cb2.length()-1);
+		int len1 = cb1.length();
+		int len2 = cb2.length();
+		
+		char lastChar1 = cb1.get(len1-1);
+		char lastChar2 = cb2.get(len2-1);
 		
 		
-
-		int len1 = cb1.length() - (lastChar1=='#'?1:0);
-		int len2 = cb2.length() - (lastChar2=='#'?1:0);
+		if (lastChar1 == '#')
+			len1--;
+		if (lastChar2 == '#')
+			len2--;
 		int lim = Math.min(len1, len2);
 
 		int k = 0;
