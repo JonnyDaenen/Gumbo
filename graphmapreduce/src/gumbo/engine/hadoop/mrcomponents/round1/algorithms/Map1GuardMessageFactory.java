@@ -220,10 +220,24 @@ public class Map1GuardMessageFactory {
 	}
 
 	protected void sendMessage() throws MessageFailedException{
-		sendMessage(keyBuilder.toString().getBytes(),valueBuilder.toString().getBytes());
+		sendMessage(getBytesFast(keyBuilder),getBytesFast(valueBuilder));
+//		sendMessage(keyBuilder.toString().getBytes(),valueBuilder.toString().getBytes());
 		keyBuilder.setLength(0);
 		valueBuilder.setLength(0);
 	}
+	
+	private static byte[] getBytesFast(StringBuilder builder) {
+        final int length = builder.length(); 
+        
+        final char buffer[] = new char[length];
+        builder.getChars(0, length, buffer, 0);
+        
+        final byte b[] = new byte[length];
+        for (int j = 0; j < length; j++)
+            b[j] = (byte) buffer[j];
+        
+        return b;
+    }
 
 
 	protected void sendMessage(byte[] key, byte[] value) throws MessageFailedException {
