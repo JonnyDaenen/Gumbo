@@ -127,7 +127,7 @@ public class Tuple {
 	}
 	
 	private void initialize(byte [] b, int length) {
-		StringBuilder sb = new StringBuilder(b.length);
+		StringBuilder sb = new StringBuilder(length);
 		LinkedList<String> list = new LinkedList<>();
 		for (int i = 0; i < length; i++) {
 			char c = (char) b[i];
@@ -142,6 +142,7 @@ public class Tuple {
 				sb.setLength(0);
 				break; // Text can contain extra garbage
 			} else if (c == ' ') { // skip spaces
+				// FIXME this may not work for constants
 				continue;
 			} else {
 				sb.append(c);
@@ -149,7 +150,8 @@ public class Tuple {
 			
 			// System.out.print((char)b[i]);
 		}
-		representationCache = new String(b,0,length);
+			
+		representationCache = new String(b,0,length).trim();
 		data = list.toArray(new String [0]);
 	}
 

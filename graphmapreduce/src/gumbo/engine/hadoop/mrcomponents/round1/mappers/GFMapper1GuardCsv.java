@@ -3,10 +3,16 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round1.mappers;
 
+import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardAlgorithm;
+import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactory;
+import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedAlgorithm;
+import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.RelationResolver;
 import gumbo.structures.data.RelationSchema;
+import gumbo.structures.data.Tuple;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,13 +31,15 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 
 	private static final Log LOG = LogFactory.getLog(GFMapper1GuardCsv.class);
 
-	Text out1 = new Text();
-	Text out2 = new Text();
-
 
 	RelationResolver resolver;
 
 	private StringBuilder stringBuilder;
+	private Text buffer;
+	private byte [] open;
+	private byte [] close;
+
+	private Map1GuardAlgorithm algo;
 
 	@Override
 	protected void setup(Mapper<LongWritable, Text, Text, Text>.Context context)
@@ -44,7 +52,14 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 			// pre-cache
 			resolver.extractRelationSchema(context);
 
+			Map1GuardMessageFactory msgFactory = new Map1GuardMessageFactory(context,settings,eso);
+			algo = new Map1GuardAlgorithm(eso, msgFactory);
+
 			stringBuilder = new StringBuilder(128);
+			buffer = new Text();
+
+			open = "(".getBytes();
+			close = ")".getBytes();
 		} catch (Exception e) {
 			throw new InterruptedException(e.getMessage());
 		}
@@ -67,20 +82,19 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 
 			// find out relation name
 			RelationSchema rs = resolver.extractRelationSchema(context);
+			byte [] namebytes = rs.getName().getBytes();
 
-			// trim is necessary to remove extra whitespace
-			String t1 = value.toString().trim();
 
 			// wrap tuple in relation name
-			stringBuilder.setLength(0);
-			stringBuilder.append(rs.getName());
-			stringBuilder.append('(');
-			stringBuilder.append(t1);
-			stringBuilder.append(')');
+			buffer.clear();
+			buffer.append(namebytes,0,namebytes.length);
+			buffer.append(open,0,open.length);
+			buffer.append(value.getBytes(),0,value.getLength());
+			buffer.append(close,0,close.length);
 
-			value.set(stringBuilder.toString());
+			Tuple t = new Tuple(buffer.getBytes(),buffer.getLength());
+			algo.run(t, key.get());
 
-			super.map(key, value, context);
 
 		} catch (Exception e) {
 			LOG.error(e.getMessage());

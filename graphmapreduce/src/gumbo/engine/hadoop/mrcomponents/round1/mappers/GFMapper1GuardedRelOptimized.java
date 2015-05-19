@@ -51,7 +51,6 @@ public class GFMapper1GuardedRelOptimized extends GFMapper1Identity {
 
 		try {
 			
-			// CLEAN remove spaces? -> trim inside Tuple class?
 			Tuple t = new Tuple(value.getBytes(),value.getLength());
 			algo.run(t, key.get());
 			
