@@ -41,13 +41,15 @@ public class Map1GuardMessageFactory {
 	// components
 	private TupleIDCreator pathids;
 	private ExpressionSetOperations eso;
-	private StringBuilder keyBuilder;
-	private StringBuilder valueBuilder;
+	//	private StringBuilder keyBuilder;
+	//	private StringBuilder valueBuilder;
 
 	// data
 	Tuple t;
-	String tRef;
-	String proofBytes;
+	byte [] tRef;
+	byte [] proofBytes;
+	byte [] tbytes;
+	private byte[] sepBytes;
 
 	public Map1GuardMessageFactory(Mapper<LongWritable, Text, Text, Text>.Context context, HadoopExecutorSettings settings, ExpressionSetOperations eso) {
 		keyText = new Text();
@@ -57,8 +59,8 @@ public class Map1GuardMessageFactory {
 		this.context = context;
 		this.eso = eso;
 		this.pathids = new TupleIDCreator(eso.getFileMapping());
-		keyBuilder = new StringBuilder(16);
-		valueBuilder = new StringBuilder(128);
+		//		keyBuilder = new StringBuilder(32);
+		//		valueBuilder = new StringBuilder(128);
 
 		// ---
 		guardTuplePointerOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn);
@@ -82,19 +84,20 @@ public class Map1GuardMessageFactory {
 		ASSERTBYTES = context.getCounter(GumboMap1Counter.KEEP_ALIVE_ASSERT_BYTES);
 
 
-		proofBytes = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL);
-
+		proofBytes = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL).getBytes();
+		sepBytes = ";".getBytes();
 
 	}
 
 	public void loadGuardValue(Tuple t, long offset) throws TupleIDError {
 
 		this.t = t;
+		tbytes = t.toString().getBytes();
 		// replace value with pointer when optimization is on
 		if (guardTuplePointerOptimizationOn) {
-			tRef = pathids.getTupleID(context, offset); // key indicates offset in TextInputFormat
+			tRef = pathids.getTupleID(context, offset).getBytes(); // key indicates offset in TextInputFormat
 		} else
-			tRef = t.toString();
+			tRef = tbytes;
 
 	}
 
@@ -118,22 +121,22 @@ public class Map1GuardMessageFactory {
 
 		try {
 			// CLEAN duplicate code, reuse standard request message
-			String guardRef = "";
+			byte [] guardRef;
 			if (guardIdOptimizationOn)
-				guardRef = Integer.toString(eso.getAtomId(guard));
+				guardRef = Integer.toString(eso.getAtomId(guard)).getBytes();
 			else
-				guardRef = guard.toString();
+				guardRef = guard.toString().getBytes();
 
 			// output guard
 			if (!guardKeepaliveOptimizationOn) {
-				keyBuilder.append(t.toString());
+				keyText.append(tbytes,0,tbytes.length);
 
-				valueBuilder.append(tRef);
-				valueBuilder.append(';');
-				valueBuilder.append(guardRef);
+				valueText.append(tRef,0,tRef.length);
+				valueText.append(sepBytes,0,sepBytes.length);
+				valueText.append(guardRef,0,guardRef.length);
 
 				KAR.increment(1);
-				KARB.increment(keyBuilder.length() + valueBuilder.length());
+				KARB.increment(keyText.getLength() + valueText.getLength());
 
 				sendMessage();
 			}
@@ -166,21 +169,21 @@ public class Map1GuardMessageFactory {
 
 		if (!guardKeepaliveOptimizationOn || force) {
 
-			keyBuilder.append(t.toString());
+			keyText.append(tbytes,0,tbytes.length);
 
 			// add special symbol for sort order
 			if (round1FiniteMemoryOptimizationOn)
-				keyBuilder.append(proofBytes);
+				keyText.append(proofBytes,0,proofBytes.length);
 
 			// proof representation optimization
 			if (guardedIdOptimizationOn)
-				valueBuilder.append(proofBytes);
+				valueText.append(proofBytes,0,proofBytes.length);
 			else
-				valueBuilder.append(t.toString());
+				valueText.append(tbytes,0,tbytes.length);
 
 			// update counters
 			ASSERT.increment(1);
-			ASSERTBYTES.increment(keyBuilder.length() + valueBuilder.length());
+			ASSERTBYTES.increment(keyText.getLength() + valueText.getLength());
 
 			sendMessage();
 		}
@@ -193,25 +196,26 @@ public class Map1GuardMessageFactory {
 			//		GFAtomicExpression guarded = guardedInfo.fst;
 			GFAtomProjection p = guardedInfo.snd;
 
-			String guardRef = "";
+			byte [] guardRef;
 			if (guardIdOptimizationOn)
-				guardRef = Integer.toString(guardedInfo.trd);
+				guardRef = Integer.toString(guardedInfo.trd).getBytes();
 			else
-				guardRef = guardedInfo.fst.toString();
+				guardRef = guardedInfo.fst.toString().getBytes();
 
-			keyBuilder.append(p.projectString(t));
+			byte[] projectBytes = p.projectString(t).getBytes();
+			keyText.append(projectBytes,0,projectBytes.length);
 
 			// value: request message with response code and atom
 			//		String valueString = replyAddress + ";" + guardedID;
 
-			valueBuilder.append(tRef);
-			valueBuilder.append(';');
-			valueBuilder.append(guardRef);
+			valueText.append(tRef,0,tRef.length);
+			valueText.append(sepBytes,0,sepBytes.length);
+			valueText.append(guardRef,0,guardRef.length);
 
 			R.increment(1);
-			RB.increment(keyBuilder.length() + valueBuilder.length());
-			RKB.increment(keyBuilder.length());
-			RVB.increment(valueBuilder.length());
+			RB.increment(keyText.getLength() + valueText.getLength());
+			RKB.increment(keyText.getLength());
+			RVB.increment(valueText.getLength());
 
 			sendMessage();
 		} catch(NonMatchingTupleException e) {
@@ -220,39 +224,35 @@ public class Map1GuardMessageFactory {
 	}
 
 	protected void sendMessage() throws MessageFailedException{
-		sendMessage(getBytesFast(keyBuilder),getBytesFast(valueBuilder));
-//		sendMessage(keyBuilder.toString().getBytes(),valueBuilder.toString().getBytes());
-		keyBuilder.setLength(0);
-		valueBuilder.setLength(0);
-	}
-	
-	private static byte[] getBytesFast(StringBuilder builder) {
-        final int length = builder.length(); 
-        
-        final char buffer[] = new char[length];
-        builder.getChars(0, length, buffer, 0);
-        
-        final byte b[] = new byte[length];
-        for (int j = 0; j < length; j++)
-            b[j] = (byte) buffer[j];
-        
-        return b;
-    }
-
-
-	protected void sendMessage(byte[] key, byte[] value) throws MessageFailedException {
 		try {
-			keyText.clear();
-			valueText.clear();
-			keyText.append(key, 0, key.length);
-			valueText.append(value, 0, value.length);
 
 			context.write(keyText, valueText);
+
+			keyText.clear();
+			valueText.clear();
 
 			//		System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");
 		} catch(Exception e) {
 			throw new MessageFailedException(e);
 		}
+	}
+
+	private static byte[] getBytesFast(StringBuilder builder) {
+		final int length = builder.length(); 
+
+		final char buffer[] = new char[length];
+		builder.getChars(0, length, buffer, 0);
+
+		final byte b[] = new byte[length];
+		for (int j = 0; j < length; j++)
+			b[j] = (byte) buffer[j];
+
+		return b;
+	}
+
+
+	protected void sendMessage(byte[] key, byte[] value) throws MessageFailedException {
+
 	}
 
 }
