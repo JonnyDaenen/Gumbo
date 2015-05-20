@@ -19,7 +19,7 @@ import org.apache.hadoop.io.WritableComparator;
  *
  */
 public class Round1SortComparator extends WritableComparator {
-	
+
 	Charset charset = StandardCharsets.UTF_8;
 	CharsetDecoder decoder = charset.newDecoder();
 
@@ -34,26 +34,26 @@ public class Round1SortComparator extends WritableComparator {
 	@Override
 	public int compare(WritableComparable a, WritableComparable b) {
 
-		
+
 
 		// use buffer wrapping to avoid allocation
 		try {
 			ByteBuffer bb1 = ByteBuffer.wrap(((Text)a).getBytes(),0,((Text)a).getLength());
 			CharBuffer charbuf1 = decoder.decode(bb1);
-			
+
 			ByteBuffer bb2 = ByteBuffer.wrap(((Text)b).getBytes(),0,((Text)b).getLength());
 			CharBuffer charbuf2 = decoder.decode(bb2);
 
-			
+
 			int val =  compare(charbuf1, charbuf2);
 			return val;
 		} catch (Exception e) {
-			
+
 		}
-		
-		
+
+
 		// fall-back mechanism (old way)
-		
+
 		// convert
 		KeyPairWrapper first = new KeyPairWrapper(((Text)a).toString());
 		KeyPairWrapper second = new KeyPairWrapper(((Text)b).toString());
@@ -64,31 +64,41 @@ public class Round1SortComparator extends WritableComparator {
 		if (diff == 0) {
 			diff = first.second.compareTo(second.second);
 		} 
-		
+
 		return diff;
 	}
 
 
 
-	//	@Override
-	//	public int compare(byte[] b1, int s1, int l1, byte[] b2, int s2, int l2) {
-	//
-	//		System.out.println("one:" + b1[s1]);
-	//		System.out.println("two:" + b2[s2]);
-	//
-	//		return super.compare(b1, s1, l1, b2, s2, l2);
-	//	}
+	@Override
+	public int compare(byte[] b1, int s1, int l1, byte[] b2, int s2, int l2) {
+		try {
+			ByteBuffer bb1 = ByteBuffer.wrap(b1,s1,l1);
+			CharBuffer charbuf1 = decoder.decode(bb1);
+
+			ByteBuffer bb2 = ByteBuffer.wrap(b2,s1,l1);
+			CharBuffer charbuf2 = decoder.decode(bb2);
+
+			int val =  compare(charbuf1, charbuf2);
+			return val;
+		} catch (Exception e) {
+
+		}
+
+		// fallback 
+		return super.compare(b1, s1, l1, b2, s2, l2);
+	}
 
 
 	private int compare(CharBuffer cb1, CharBuffer cb2) {
 
 		int len1 = cb1.length();
 		int len2 = cb2.length();
-		
+
 		char lastChar1 = cb1.get(len1-1);
 		char lastChar2 = cb2.get(len2-1);
-		
-		
+
+
 		if (lastChar1 == '#')
 			len1--;
 		if (lastChar2 == '#')
@@ -108,7 +118,7 @@ public class Round1SortComparator extends WritableComparator {
 
 		if (result == 0)
 			result = (lastChar2=='#'?1:0) - (lastChar1=='#'?1:0); // !! order is important!
-		
+
 		return result;
 	}
 }
