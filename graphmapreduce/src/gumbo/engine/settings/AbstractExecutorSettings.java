@@ -75,7 +75,7 @@ public abstract class AbstractExecutorSettings {
 		
 	    Field[] allFields = AbstractExecutorSettings.class.getDeclaredFields();
 	    for (Field field : allFields) {
-	    	if (field.getName().toLowerCase().contains("optimization")) {
+	    	if (field.getName().toLowerCase().contains("finite")) {
 	    		try {
 					keys.add((String) field.get(null));
 				} catch (Exception e) {

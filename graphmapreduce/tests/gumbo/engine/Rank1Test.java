@@ -77,8 +77,8 @@ public class Rank1Test {
 		Object [] onconf = {on, "optOn"};
 		Object [] offconf = {off, "optOff"};
 
-		confs.add(onconf);
-		confs.add(offconf);
+//		confs.add(onconf);
+//		confs.add(offconf);
 
 		// add solo-opts
 		String [] keys = AbstractExecutorSettings.getAllKeys().toArray(new String [0]);

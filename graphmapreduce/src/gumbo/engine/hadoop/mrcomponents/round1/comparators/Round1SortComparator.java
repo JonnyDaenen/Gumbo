@@ -73,15 +73,14 @@ public class Round1SortComparator extends WritableComparator {
 	@Override
 	public int compare(byte[] b1, int s1, int l1, byte[] b2, int s2, int l2) {
 		try {
-			ByteBuffer bb1 = ByteBuffer.wrap(b1,s1,l1);
+			ByteBuffer bb1 = ByteBuffer.wrap(b1,s1+1,l1-1);
 			CharBuffer charbuf1 = decoder.decode(bb1);
 
-			ByteBuffer bb2 = ByteBuffer.wrap(b2,s2,l2);
+			ByteBuffer bb2 = ByteBuffer.wrap(b2,s2+1,l2-1);
 			CharBuffer charbuf2 = decoder.decode(bb2);
-			
 
-			int val =  compare(charbuf1, charbuf2);
-//			System.out.println(charbuf1 + " " + charbuf2 + " " + val );
+			int val =  compareBuffers(charbuf1, charbuf2);
+//			System.out.println(charbuf1 + " " + charbuf2 + " " + val + " " + charbuf1.length() + " " + l1);
 			return val;
 		} catch (Exception e) {
 
@@ -92,7 +91,7 @@ public class Round1SortComparator extends WritableComparator {
 	}
 
 
-	private int compare(CharBuffer cb1, CharBuffer cb2) {
+	private int compareBuffers(CharBuffer cb1, CharBuffer cb2) {
 
 		int len1 = cb1.length();
 		int len2 = cb2.length();
@@ -106,6 +105,8 @@ public class Round1SortComparator extends WritableComparator {
 		if (lastChar2 == '#')
 			len2--;
 		int lim = Math.min(len1, len2);
+		
+//		System.out.println(lastChar1 + " " + lastChar2 + " " + len1 + " " + len2);
 
 		int k = 0;
 		while (k < lim) {
