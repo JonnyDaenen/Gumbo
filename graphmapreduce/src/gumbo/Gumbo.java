@@ -7,6 +7,7 @@ import gumbo.compiler.GFCompiler;
 import gumbo.compiler.GumboPlan;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.input.GumboFileParser;
 import gumbo.input.GumboQuery;
 
@@ -43,6 +44,11 @@ public class Gumbo extends Configured implements Tool {
 		// load Configuration processed by ToolRunner
 		HadoopExecutorSettings settings = new HadoopExecutorSettings();
 		settings.loadDefaults();
+		
+		if (getConf().getBoolean(AbstractExecutorSettings.turnOffOpts, false))
+			settings.turnOffOptimizations();
+			
+		
 		settings.loadConfig(getConf());
 //		settings.setBooleanProperty(AbstractExecutorSettings.round1FiniteMemoryOptimizationOn, false);
 		

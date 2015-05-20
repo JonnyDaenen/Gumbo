@@ -38,6 +38,8 @@ public abstract class AbstractExecutorSettings {
 	// speed options
 	public static final String round1FiniteMemoryOptimizationOn = "gumbo.engine.round1FiniteMemoryOptimizationOn"; 
 	
+	public static final String turnOffOpts = "gumbo.turnOffOpts";
+	
 
 	/**
 	 * Loads the default settings.
@@ -75,7 +77,7 @@ public abstract class AbstractExecutorSettings {
 		
 	    Field[] allFields = AbstractExecutorSettings.class.getDeclaredFields();
 	    for (Field field : allFields) {
-	    	if (field.getName().toLowerCase().contains("finite")) {
+	    	if (field.getName().toLowerCase().contains("optimization")) {
 	    		try {
 					keys.add((String) field.get(null));
 				} catch (Exception e) {

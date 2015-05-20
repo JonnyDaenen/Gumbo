@@ -1,0 +1,11 @@
+
+// output & scratch
+Scratch -> scratch/gumbov2
+Output -> output/gumbov2
+
+// input
+R,2 <- input/experiments/EXP_010/d1/R, CSV
+S,1 <- input/experiments/EXP_010/d1/S, CSV
+
+// query
+#Out1(x)&R(x,y)S(y);
