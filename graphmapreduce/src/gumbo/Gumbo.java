@@ -57,11 +57,19 @@ public class Gumbo extends Configured implements Tool {
 		// FUTURE make more advanced
 		String filename = null;
 		boolean pickup = false;
+		boolean pickupname = false;
+		String jobname = null;
 		for (String arg : args) {
 			if (arg.equals("-f")) {
 				pickup = true;
 			} else if (pickup) {
 				filename = arg;
+			}
+			
+			else if (arg.equals("-j")) {
+				pickupname = true;
+			} else if (pickupname) {
+				jobname = arg;
 			}
 		}
 		
@@ -72,7 +80,7 @@ public class Gumbo extends Configured implements Tool {
 		// parse file
 		GumboFileParser parser = new GumboFileParser();
 //		GumboScriptFileParser parser = new GumboScriptFileParser();
-		GumboQuery query = parser.parse(filename);
+		GumboQuery query = parser.parse(filename, jobname);
 		
 		LOG.info(query);
 		

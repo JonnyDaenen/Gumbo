@@ -71,7 +71,7 @@ public class GumboSparkTester extends Configured implements Tool {
 		
 		// parse file
 		GumboFileParser parser = new GumboFileParser();
-		GumboQuery query = parser.parse(filename);
+		GumboQuery query = parser.parse(filename,null);
 		
 		LOG.info(query);
 		

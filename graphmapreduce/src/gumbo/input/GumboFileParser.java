@@ -60,10 +60,11 @@ public class GumboFileParser {
 	 * Parses the given file and returns a {@link GumboQuery} which contains all components. 
 	 * 
 	 * @param filename the file to parse
+	 * @param queryname name of the query, if this is null, the filename is used
 	 * @throws MissingQueryComponentException 
 	 * @throws IOException 
 	 */
-	public GumboQuery parse(String filename) throws MissingQueryComponentException, IOException {
+	public GumboQuery parse(String filename, String queryname) throws MissingQueryComponentException, IOException {
 
 		// create object to collect different query components
 		GumboQuery gq = new GumboQuery();
@@ -73,7 +74,11 @@ public class GumboFileParser {
 		List<String> content = Files.readAllLines(file.toPath(), StandardCharsets.US_ASCII);
 		
 		// set query name to file name
-		gq.setName(file.getName());
+		if (queryname == null)
+			gq.setName(file.getName());
+		else
+			gq.setName(queryname);
+			
 
 		// collections of lines
 		String output = null;
