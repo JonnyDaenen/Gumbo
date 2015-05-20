@@ -81,7 +81,7 @@ public class Round1SortComparator extends WritableComparator {
 			
 
 			int val =  compare(charbuf1, charbuf2);
-			System.out.println(charbuf1 + " " + charbuf2 + " " + val );
+//			System.out.println(charbuf1 + " " + charbuf2 + " " + val );
 			return val;
 		} catch (Exception e) {
 
