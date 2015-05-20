@@ -76,10 +76,12 @@ public class Round1SortComparator extends WritableComparator {
 			ByteBuffer bb1 = ByteBuffer.wrap(b1,s1,l1);
 			CharBuffer charbuf1 = decoder.decode(bb1);
 
-			ByteBuffer bb2 = ByteBuffer.wrap(b2,s1,l1);
+			ByteBuffer bb2 = ByteBuffer.wrap(b2,s2,l2);
 			CharBuffer charbuf2 = decoder.decode(bb2);
+			
 
 			int val =  compare(charbuf1, charbuf2);
+			System.out.println(charbuf1 + " " + charbuf2 + " " + val );
 			return val;
 		} catch (Exception e) {
 
