@@ -19,6 +19,9 @@ import org.apache.hadoop.io.WritableComparator;
  *
  */
 public class Round1SortComparator extends WritableComparator {
+	
+	Charset charset = StandardCharsets.UTF_8;
+	CharsetDecoder decoder = charset.newDecoder();
 
 	protected Round1SortComparator() {
 		super(Text.class,null,true);
@@ -31,11 +34,9 @@ public class Round1SortComparator extends WritableComparator {
 	@Override
 	public int compare(WritableComparable a, WritableComparable b) {
 
-		Charset charset = StandardCharsets.UTF_8;
-		CharsetDecoder decoder = charset.newDecoder();
+		
 
-		// No allocation performed, just wraps the StringBuilder.
-		//		CharBuffer buffer = CharBuffer.wrap(stringBuilder);
+		// use buffer wrapping to avoid allocation
 		try {
 			ByteBuffer bb1 = ByteBuffer.wrap(((Text)a).getBytes(),0,((Text)a).getLength());
 			CharBuffer charbuf1 = decoder.decode(bb1);
@@ -47,9 +48,11 @@ public class Round1SortComparator extends WritableComparator {
 			int val =  compare(charbuf1, charbuf2);
 			return val;
 		} catch (Exception e) {
-
+			
 		}
-		// backup mechanism
+		
+		
+		// fall-back mechanism (old way)
 		
 		// convert
 		KeyPairWrapper first = new KeyPairWrapper(((Text)a).toString());
@@ -61,18 +64,7 @@ public class Round1SortComparator extends WritableComparator {
 		if (diff == 0) {
 			diff = first.second.compareTo(second.second);
 		} 
-
-		//		System.out.println(a + " - " + b + diff);
-		//		System.out.println(first + " - " + second + diff);
-
-
-
-
-		//		if ((((Text)a).toString()+((Text)a).toString()).contains("(0")) {
-		//			System.out.println("o one:" + first);
-		//			System.out.println("o two:" + second);
-		//			System.out.println(diff);
-		//		}
+		
 		return diff;
 	}
 
@@ -115,7 +107,8 @@ public class Round1SortComparator extends WritableComparator {
 		int result = len1 - len2;
 
 		if (result == 0)
-			return lastChar1=='#'?1:0 - lastChar2=='#'?1:0;
+			result = (lastChar2=='#'?1:0) - (lastChar1=='#'?1:0); // !! order is important!
+		
 		return result;
 	}
 }
