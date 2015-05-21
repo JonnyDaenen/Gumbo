@@ -2,8 +2,8 @@ package gumbo.input.parser;
 
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.input.parser.GumboParser.InputCsvContext;
-import gumbo.input.parser.GumboParser.InputRelContext;
+import gumbo.input.parser.GumboParser.InputArityContext;
+import gumbo.input.parser.GumboParser.InputSchemaContext;
 import gumbo.structures.data.RelationSchema;
 
 import java.util.ArrayList;
@@ -28,41 +28,44 @@ public class GumboInputVisitor extends GumboBaseVisitor<String> {
 		_rm = new RelationFileMapping();
 		_inputRelations = new ArrayList<RelationSchema>();
 	}
-
-	/**
-	 * @see gumbo.input.parser.GumboBaseVisitor#visitInputCsv(gumbo.input.parser.GumboParser.InputCsvContext)
-	 */
+	
 	@Override
-	public String visitInputCsv(InputCsvContext ctx) {
-		
+	public String visitInputArity(InputArityContext ctx) {
 		String relname = ctx.relname().getText();
 		int arity = Integer.parseInt(ctx.relarity().INT().getText());
 		RelationSchema schema = new RelationSchema(relname, arity);
 		
 		Path path = new Path(ctx.file().anystring().getText());
 		
-		_rm.addPath(schema, path, InputFormat.CSV);
+		InputFormat format = ctx.format() == null || ctx.format().getText().equals("CSV") ? InputFormat.CSV : InputFormat.REL;
+		
+		_rm.addPath(schema, path, format);
 		_inputRelations.add(schema);
 		
 		return relname;
 	}
 	
-	/**
-	 * @see gumbo.input.parser.GumboBaseVisitor#visitInputRel(gumbo.input.parser.GumboParser.InputRelContext)
-	 */
 	@Override
-	public String visitInputRel(InputRelContext ctx) {
+	public String visitInputSchema(InputSchemaContext ctx) {
 		String relname = ctx.relname().getText();
-		int arity = Integer.parseInt(ctx.relarity().INT().getText());
-		RelationSchema schema = new RelationSchema(relname, arity);
+		
+		int arity = ctx.loadschema().ID().size();
+		String[] fields = new String[arity];
+		for (int i = 0; i < arity; i++) {
+			fields[i] = ctx.loadschema().ID().get(i).getText();
+		}
+		RelationSchema schema = new RelationSchema(relname, fields);
 		
 		Path path = new Path(ctx.file().anystring().getText());
 		
-		_rm.addPath(schema, path, InputFormat.REL);
+		InputFormat format = ctx.format() == null || ctx.format().getText().equals("CSV") ? InputFormat.CSV : InputFormat.REL;
+		
+		_rm.addPath(schema, path, format);
 		_inputRelations.add(schema);
 		
 		return relname;
 	}
+
 	
 	/**
 	 * Getter for the relationfilemapping

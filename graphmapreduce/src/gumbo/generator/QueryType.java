@@ -11,5 +11,6 @@ public enum QueryType {
 	XOR,
 	NEGATED_AND,
 	NEGATED_OR,
-	NEGATED_XOR
+	NEGATED_XOR,
+	UNKNOWN
 }

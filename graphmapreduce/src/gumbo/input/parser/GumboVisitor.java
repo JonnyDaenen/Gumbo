@@ -1,6 +1,7 @@
 package gumbo.input.parser;
 
 // Generated from Gumbo.g4 by ANTLR 4.5
+import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -18,19 +19,25 @@ public interface GumboVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitScript(GumboParser.ScriptContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code InputRel}
+	 * Visit a parse tree produced by the {@code InputArity}
 	 * labeled alternative in {@link GumboParser#input}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitInputRel(GumboParser.InputRelContext ctx);
+	T visitInputArity(GumboParser.InputArityContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code InputCsv}
+	 * Visit a parse tree produced by the {@code InputSchema}
 	 * labeled alternative in {@link GumboParser#input}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitInputCsv(GumboParser.InputCsvContext ctx);
+	T visitInputSchema(GumboParser.InputSchemaContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GumboParser#format}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFormat(GumboParser.FormatContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GumboParser#relname}.
 	 * @param ctx the parse tree
@@ -62,11 +69,11 @@ public interface GumboVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSelector(GumboParser.SelectorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link GumboParser#guardschema}.
+	 * Visit a parse tree produced by {@link GumboParser#loadschema}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitGuardschema(GumboParser.GuardschemaContext ctx);
+	T visitLoadschema(GumboParser.LoadschemaContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GumboParser#outputpath}.
 	 * @param ctx the parse tree
@@ -91,6 +98,18 @@ public interface GumboVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitGfquery(GumboParser.GfqueryContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GumboParser#satclause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSatclause(GumboParser.SatclauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GumboParser#assrt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssrt(GumboParser.AssrtContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code AndExpr}
 	 * labeled alternative in {@link GumboParser#expr}.

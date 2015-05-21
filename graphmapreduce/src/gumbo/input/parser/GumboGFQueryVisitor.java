@@ -19,10 +19,10 @@ import gumbo.structures.gfexpressions.GFNotExpression;
 import gumbo.structures.gfexpressions.GFOrExpression;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Stack;
 
 import org.antlr.v4.runtime.misc.ParseCancellationException;
-import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
  * Visitor class for the gfquery rules in the gumbo grammar
@@ -71,19 +71,10 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 		String guardName = ctx.relname().getText();
 		if (!relationKnown(guardName))
 			throw new ParseCancellationException("Unknown relation name on line " + ctx.relname().getStart().getLine() + ".");
-		if (ctx.guardschema() != null) {
-			for (TerminalNode var : ctx.guardschema().ID()) {
-				vars.add(var.getText());
-			}
-		} else {
-			int arity = getArity(guardName);
-			for (int i = 0; i < arity; i++) {
-				vars.add("x" + i);
-			}
-		}
+		
 		_guardVars.push(vars);
-		String[] guardVars = new String[vars.size()];
-		guardVars = vars.toArray(guardVars);
+		String[] guardVars = getRelationSchema(guardName).getFields().clone();
+		_guardVars.push(new ArrayList<>(Arrays.asList(guardVars)));
 		GFAtomicExpression guard = new GFAtomicExpression(guardName, guardVars);
 		
 		// output relation
@@ -113,13 +104,13 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 	}
 
 	
-	private int getArity(String relname) {
+	private RelationSchema getRelationSchema(String relname) {
 		for (RelationSchema schema : _relations) {
 			if (schema.getName().equals(relname))
-				return schema.getNumFields();
+				return schema;
 		}
 		
-		return 0;
+		return null;
 	}
 
 	private boolean relationKnown(String relname) {

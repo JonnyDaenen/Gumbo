@@ -2,6 +2,7 @@ package gumbo.input.parser;
 
 import gumbo.input.GumboQuery;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -49,23 +50,23 @@ public class GumboScriptFileParser {
 	 * @throws IOException 
 	 */
 	public GumboQuery parse(String filename) throws IOException, GumboParseException {
-		
+
 		LOG.info("Parsing query file: " + filename);
-		
+
 		// create inputstream from filename
 		FileInputStream is = new FileInputStream(filename);
 		ANTLRInputStream input = new ANTLRInputStream(is);
-		
+
 		// create lexer
 		GumboLexer lexer = new GumboLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		
+
 		// create parser
 		GumboParser parser = new GumboParser(tokens);
-		
+
 		// create parsetree, root is script rule
 		ParseTree tree = parser.script();
-		
+
 		// use visitor to create the actual gumbo query
 		GumboScriptVisitor visitor = new GumboScriptVisitor();
 		GumboQuery gq = null;
@@ -74,7 +75,36 @@ public class GumboScriptFileParser {
 		} catch (Exception e) {
 			throw new GumboParseException("Error parsing file: " + filename, e);
 		}
-		
+
+		return gq;
+	}
+
+	public GumboQuery parse(String contents, boolean file) throws IOException, GumboParseException {
+
+		LOG.info("Parsing query...");
+
+		// create inputstream from filename
+		ANTLRInputStream input = new ANTLRInputStream(new ByteArrayInputStream(contents.getBytes("UTF-8")));
+
+		// create lexer
+		GumboLexer lexer = new GumboLexer(input);
+		CommonTokenStream tokens = new CommonTokenStream(lexer);
+
+		// create parser
+		GumboParser parser = new GumboParser(tokens);
+
+		// create parsetree, root is script rule
+		ParseTree tree = parser.script();
+
+		// use visitor to create the actual gumbo query
+		GumboScriptVisitor visitor = new GumboScriptVisitor();
+		GumboQuery gq = null;
+		try {
+			gq = visitor.visit(tree);
+		} catch (Exception e) {
+			throw new GumboParseException("Error parsing query!", e);
+		}
+
 		return gq;
 	}
 }

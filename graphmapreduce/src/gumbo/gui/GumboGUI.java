@@ -16,6 +16,9 @@ import gumbo.compiler.plan.GraphVizPlanVisualizer;
 import gumbo.engine.ExecutionException;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.spark.SparkEngine;
+import gumbo.generator.GFGeneratorInput;
+import gumbo.generator.GFGeneratorInputParser;
+import gumbo.gui.dialogs.GeneratorDialog;
 import gumbo.gui.gumbogui.GumboMainFrame;
 import gumbo.gui.gumbogui.PlanViewer;
 import gumbo.gui.panels.ConsolePanel;
@@ -25,6 +28,7 @@ import gumbo.gui.panels.QueryInputDetails;
 import gumbo.gui.panels.QueryInputField;
 import gumbo.gui.panels.SettingsPanel;
 import gumbo.input.GumboQuery;
+import gumbo.input.parser.GumboScriptFileParser;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.io.GFInfixSerializer;
@@ -47,6 +51,9 @@ import java.util.Set;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -111,11 +118,6 @@ public class GumboGUI extends Configured implements Tool {
 
 	private void createAndShowGUI() {
 
-	
-
-
-		
-
 		// create 4 panels
 		inputQuery = new QueryInputField();
 		inputIO = new QueryInputDetails();
@@ -175,10 +177,12 @@ public class GumboGUI extends Configured implements Tool {
 		tabbedPane.addTab("Pig/Hive", pighive);
 
 		GumboMainFrame mainwindow = new GumboMainFrame(tabbedPane);
-
+		
+		// create menu
+		createMenu(mainwindow);
 
 		// add actions
-				addActions();
+		addActions();
 
 		// scale & show
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -211,6 +215,28 @@ public class GumboGUI extends Configured implements Tool {
 
 	}
 
+
+	private void createMenu(final JFrame window) {
+		System.setProperty("apple.laf.useScreenMenuBar", "true");
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu menu = new JMenu("Tools");
+        menuBar.add(menu);
+
+        JMenuItem menuItem = new JMenuItem("Generate Query");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+            	GFGeneratorInputParser parser = new GFGeneratorInputParser();
+            	GFGeneratorInput input = parser.parse(inputIO.getInputField().getText().trim(), false);
+                GeneratorDialog dialog = new GeneratorDialog(window, inputQuery, input, "Generate Query");
+                dialog.start();
+            }
+        });
+        menu.add(menuItem);
+
+        window.setJMenuBar(menuBar);
+	}
 
 
 	private void resetMetrics() {
@@ -265,18 +291,18 @@ public class GumboGUI extends Configured implements Tool {
 	}
 
 	public void enableButtons() {
-		settings.getCompileButton().setEnabled(true);
+		settings.getCompileInfixButton().setEnabled(true);
 		settings.getHadoopButton().setEnabled(true);
 		settings.getSparkButton().setEnabled(true);
 	}
 
 	public void enableCompilerButton() {
-		settings.getCompileButton().setEnabled(true);
+		settings.getCompileInfixButton().setEnabled(true);
 	}
 
 	public void disableButtons() {
 
-		settings.getCompileButton().setEnabled(false);
+		settings.getCompileInfixButton().setEnabled(false);
 		settings.getHadoopButton().setEnabled(false);
 		settings.getSparkButton().setEnabled(false);
 	}
@@ -559,12 +585,63 @@ public class GumboGUI extends Configured implements Tool {
 				worker.execute();
 			}
 		});
+		
+		settings.getCompileGumboSQLButton().addActionListener(new ActionListener() {
+			private GumboQuery gumboQuery;
+	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				disableButtons();
+				// TODO why not write to stdout?
+				console.getConsoleField().setText("");   
+				resetMetrics();
+
+				SwingWorker<Integer, Void> worker = new SwingWorker<Integer,Void>() {
+
+					@Override
+					protected Integer doInBackground() throws Exception {
+						GumboScriptFileParser parser = new GumboScriptFileParser();
+
+						gumboQuery = parser.parse(inputQuery.getQueryField().getText(), false);
+						pig.setQuery(gumboQuery);
+						hive.setQuery(gumboQuery);
+
+						// create plan
+						GFCompiler compiler = new GFCompiler(getPartitioner());
+						plan = compiler.createPlan(gumboQuery);
+						//							System.out.println(plan);
+
+						// visualize plan
+						GraphVizPlanVisualizer visualizer = new GraphVizPlanVisualizer();
+						visualizer.setEdgeDetailsEnabled(settings.getEdgeDetailsEnabled());
+						visualizer.setQueryDetailsEnabled(settings.getQueryDetailsEnabled());
+						visualizer.savePlan(plan, "output/query.png");
+
+						return 0;
+					}
+
+					/* (non-Javadoc)
+					 * @see javax.swing.SwingWorker#done()
+					 */
+					@Override
+					protected void done() {
+						super.done();
+						// update plan tab
+						planView.reloadImage();
+						tabbedPane.revalidate();
+						tabbedPane.repaint();
+						enableButtons();
+					}
+
+				};
+
+				worker.execute();
+			}
+		});
 
 
-
-
-		/* compiler button */
-		settings.getCompileButton().addActionListener(new ActionListener() {
+		/* compiler button (infix) */
+		settings.getCompileInfixButton().addActionListener(new ActionListener() {
 			private GumboQuery gumboQuery;
 
 			public void actionPerformed(ActionEvent e) {

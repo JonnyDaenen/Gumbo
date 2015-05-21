@@ -1,25 +1,14 @@
 package gumbo.input.parser;
 
 // Generated from Gumbo.g4 by ANTLR 4.5
-import java.util.List;
-
-import org.antlr.v4.runtime.FailedPredicateException;
-import org.antlr.v4.runtime.NoViableAltException;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.RuleContext;
-import org.antlr.v4.runtime.RuntimeMetaData;
-import org.antlr.v4.runtime.TokenStream;
-import org.antlr.v4.runtime.Vocabulary;
-import org.antlr.v4.runtime.VocabularyImpl;
-import org.antlr.v4.runtime.atn.ATN;
-import org.antlr.v4.runtime.atn.ATNDeserializer;
-import org.antlr.v4.runtime.atn.ParserATNSimulator;
-import org.antlr.v4.runtime.atn.PredictionContextCache;
+import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.tree.ParseTreeVisitor;
-import org.antlr.v4.runtime.tree.TerminalNode;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.*;
+import org.antlr.v4.runtime.tree.*;
+import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class GumboParser extends Parser {
@@ -29,28 +18,29 @@ public class GumboParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, LOAD=3, REL=4, CSV=5, ARITY=6, SET=7, DIR=8, OUTPUT=9, 
-		SCRATCH=10, SELECT=11, FROM=12, SATISFYING=13, WHERE=14, IN=15, OR=16, 
-		AND=17, NOT=18, INT=19, ID=20, PLACEHOLDER=21, FILENAME=22, QUOTE=23, 
-		LPAR=24, RPAR=25, SEMICOLON=26, WS=27, SINGLE_LINE_COMMENT=28;
+		T__0=1, T__1=2, LOAD=3, REL=4, CSV=5, ARITY=6, AS=7, SET=8, DIR=9, OUTPUT=10, 
+		SCRATCH=11, SELECT=12, FROM=13, SATISFYING=14, WHERE=15, IN=16, OR=17, 
+		AND=18, NOT=19, INT=20, ID=21, PLACEHOLDER=22, FILENAME=23, QUOTE=24, 
+		LPAR=25, RPAR=26, SEMICOLON=27, WS=28, SINGLE_LINE_COMMENT=29;
 	public static final int
-		RULE_script = 0, RULE_input = 1, RULE_relname = 2, RULE_relarity = 3, 
-		RULE_file = 4, RULE_schema = 5, RULE_selector = 6, RULE_guardschema = 7, 
-		RULE_outputpath = 8, RULE_scratchpath = 9, RULE_select = 10, RULE_gfquery = 11, 
-		RULE_expr = 12, RULE_guardedrel = 13, RULE_anystring = 14, RULE_keyword = 15;
+		RULE_script = 0, RULE_input = 1, RULE_format = 2, RULE_relname = 3, RULE_relarity = 4, 
+		RULE_file = 5, RULE_schema = 6, RULE_selector = 7, RULE_loadschema = 8, 
+		RULE_outputpath = 9, RULE_scratchpath = 10, RULE_select = 11, RULE_gfquery = 12, 
+		RULE_satclause = 13, RULE_assrt = 14, RULE_expr = 15, RULE_guardedrel = 16, 
+		RULE_anystring = 17, RULE_keyword = 18;
 	public static final String[] ruleNames = {
-		"script", "input", "relname", "relarity", "file", "schema", "selector", 
-		"guardschema", "outputpath", "scratchpath", "select", "gfquery", "expr", 
-		"guardedrel", "anystring", "keyword"
+		"script", "input", "format", "relname", "relarity", "file", "schema", 
+		"selector", "loadschema", "outputpath", "scratchpath", "select", "gfquery", 
+		"satclause", "assrt", "expr", "guardedrel", "anystring", "keyword"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
 		null, "'='", "','", null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		"'('", "')'", "';'"
+		null, "'('", "')'", "';'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, "LOAD", "REL", "CSV", "ARITY", "SET", "DIR", "OUTPUT", 
+		null, null, null, "LOAD", "REL", "CSV", "ARITY", "AS", "SET", "DIR", "OUTPUT", 
 		"SCRATCH", "SELECT", "FROM", "SATISFYING", "WHERE", "IN", "OR", "AND", 
 		"NOT", "INT", "ID", "PLACEHOLDER", "FILENAME", "QUOTE", "LPAR", "RPAR", 
 		"SEMICOLON", "WS", "SINGLE_LINE_COMMENT"
@@ -147,40 +137,40 @@ public class GumboParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(38);
+			setState(44);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==SET || _la==ID) {
 				{
-				setState(36);
+				setState(42);
 				switch ( getInterpreter().adaptivePredict(_input,0,_ctx) ) {
 				case 1:
 					{
-					setState(32);
+					setState(38);
 					outputpath();
 					}
 					break;
 				case 2:
 					{
-					setState(33);
+					setState(39);
 					scratchpath();
 					}
 					break;
 				case 3:
 					{
-					setState(34);
+					setState(40);
 					input();
 					}
 					break;
 				case 4:
 					{
-					setState(35);
+					setState(41);
 					select();
 					}
 					break;
 				}
 				}
-				setState(40);
+				setState(46);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -208,12 +198,14 @@ public class GumboParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
-	public static class InputCsvContext extends InputContext {
+	public static class InputArityContext extends InputContext {
 		public RelnameContext relname() {
 			return getRuleContext(RelnameContext.class,0);
 		}
 		public TerminalNode LOAD() { return getToken(GumboParser.LOAD, 0); }
-		public TerminalNode CSV() { return getToken(GumboParser.CSV, 0); }
+		public FormatContext format() {
+			return getRuleContext(FormatContext.class,0);
+		}
 		public FileContext file() {
 			return getRuleContext(FileContext.class,0);
 		}
@@ -222,31 +214,33 @@ public class GumboParser extends Parser {
 			return getRuleContext(RelarityContext.class,0);
 		}
 		public TerminalNode SEMICOLON() { return getToken(GumboParser.SEMICOLON, 0); }
-		public InputCsvContext(InputContext ctx) { copyFrom(ctx); }
+		public InputArityContext(InputContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof GumboVisitor ) return ((GumboVisitor<? extends T>)visitor).visitInputCsv(this);
+			if ( visitor instanceof GumboVisitor ) return ((GumboVisitor<? extends T>)visitor).visitInputArity(this);
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class InputRelContext extends InputContext {
+	public static class InputSchemaContext extends InputContext {
 		public RelnameContext relname() {
 			return getRuleContext(RelnameContext.class,0);
 		}
 		public TerminalNode LOAD() { return getToken(GumboParser.LOAD, 0); }
+		public FormatContext format() {
+			return getRuleContext(FormatContext.class,0);
+		}
 		public FileContext file() {
 			return getRuleContext(FileContext.class,0);
 		}
-		public TerminalNode ARITY() { return getToken(GumboParser.ARITY, 0); }
-		public RelarityContext relarity() {
-			return getRuleContext(RelarityContext.class,0);
+		public TerminalNode AS() { return getToken(GumboParser.AS, 0); }
+		public LoadschemaContext loadschema() {
+			return getRuleContext(LoadschemaContext.class,0);
 		}
 		public TerminalNode SEMICOLON() { return getToken(GumboParser.SEMICOLON, 0); }
-		public TerminalNode REL() { return getToken(GumboParser.REL, 0); }
-		public InputRelContext(InputContext ctx) { copyFrom(ctx); }
+		public InputSchemaContext(InputContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof GumboVisitor ) return ((GumboVisitor<? extends T>)visitor).visitInputRel(this);
+			if ( visitor instanceof GumboVisitor ) return ((GumboVisitor<? extends T>)visitor).visitInputSchema(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -254,61 +248,111 @@ public class GumboParser extends Parser {
 	public final InputContext input() throws RecognitionException {
 		InputContext _localctx = new InputContext(_ctx, getState());
 		enterRule(_localctx, 2, RULE_input);
-		int _la;
 		try {
-			setState(61);
-			switch ( getInterpreter().adaptivePredict(_input,3,_ctx) ) {
+			setState(65);
+			switch ( getInterpreter().adaptivePredict(_input,2,_ctx) ) {
 			case 1:
-				_localctx = new InputRelContext(_localctx);
+				_localctx = new InputArityContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(41);
-				relname();
-				setState(42);
-				match(T__0);
-				setState(43);
-				match(LOAD);
-				setState(45);
-				_la = _input.LA(1);
-				if (_la==REL) {
-					{
-					setState(44);
-					match(REL);
-					}
-				}
-
 				setState(47);
-				file();
+				relname();
 				setState(48);
-				match(ARITY);
+				match(T__0);
 				setState(49);
-				relarity();
+				match(LOAD);
 				setState(50);
+				format();
+				setState(51);
+				file();
+				setState(52);
+				match(ARITY);
+				setState(53);
+				relarity();
+				setState(54);
 				match(SEMICOLON);
 				}
 				break;
 			case 2:
-				_localctx = new InputCsvContext(_localctx);
+				_localctx = new InputSchemaContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(52);
-				relname();
-				setState(53);
-				match(T__0);
-				setState(54);
-				match(LOAD);
-				setState(55);
-				match(CSV);
 				setState(56);
-				file();
+				relname();
 				setState(57);
-				match(ARITY);
+				match(T__0);
 				setState(58);
-				relarity();
+				match(LOAD);
 				setState(59);
+				format();
+				setState(60);
+				file();
+				setState(61);
+				match(AS);
+				setState(62);
+				loadschema();
+				setState(63);
 				match(SEMICOLON);
 				}
 				break;
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class FormatContext extends ParserRuleContext {
+		public TerminalNode REL() { return getToken(GumboParser.REL, 0); }
+		public TerminalNode CSV() { return getToken(GumboParser.CSV, 0); }
+		public FormatContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_format; }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GumboVisitor ) return ((GumboVisitor<? extends T>)visitor).visitFormat(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final FormatContext format() throws RecognitionException {
+		FormatContext _localctx = new FormatContext(_ctx, getState());
+		enterRule(_localctx, 4, RULE_format);
+		int _la;
+		try {
+			setState(71);
+			switch (_input.LA(1)) {
+			case REL:
+			case QUOTE:
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(68);
+				_la = _input.LA(1);
+				if (_la==REL) {
+					{
+					setState(67);
+					match(REL);
+					}
+				}
+
+				}
+				break;
+			case CSV:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(70);
+				match(CSV);
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 		}
 		catch (RecognitionException re) {
@@ -337,11 +381,11 @@ public class GumboParser extends Parser {
 
 	public final RelnameContext relname() throws RecognitionException {
 		RelnameContext _localctx = new RelnameContext(_ctx, getState());
-		enterRule(_localctx, 4, RULE_relname);
+		enterRule(_localctx, 6, RULE_relname);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(63);
+			setState(73);
 			match(ID);
 			}
 		}
@@ -371,11 +415,11 @@ public class GumboParser extends Parser {
 
 	public final RelarityContext relarity() throws RecognitionException {
 		RelarityContext _localctx = new RelarityContext(_ctx, getState());
-		enterRule(_localctx, 6, RULE_relarity);
+		enterRule(_localctx, 8, RULE_relarity);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(65);
+			setState(75);
 			match(INT);
 			}
 		}
@@ -411,15 +455,15 @@ public class GumboParser extends Parser {
 
 	public final FileContext file() throws RecognitionException {
 		FileContext _localctx = new FileContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_file);
+		enterRule(_localctx, 10, RULE_file);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(67);
+			setState(77);
 			match(QUOTE);
-			setState(68);
+			setState(78);
 			anystring();
-			setState(69);
+			setState(79);
 			match(QUOTE);
 			}
 		}
@@ -456,42 +500,16 @@ public class GumboParser extends Parser {
 
 	public final SchemaContext schema() throws RecognitionException {
 		SchemaContext _localctx = new SchemaContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_schema);
+		enterRule(_localctx, 12, RULE_schema);
 		int _la;
 		try {
-			setState(90);
+			setState(100);
 			switch (_input.LA(1)) {
 			case LPAR:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(71);
+				setState(81);
 				match(LPAR);
-				setState(72);
-				selector();
-				setState(77);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-				while (_la==T__1) {
-					{
-					{
-					setState(73);
-					match(T__1);
-					setState(74);
-					selector();
-					}
-					}
-					setState(79);
-					_errHandler.sync(this);
-					_la = _input.LA(1);
-				}
-				setState(80);
-				match(RPAR);
-				}
-				break;
-			case ID:
-			case PLACEHOLDER:
-				enterOuterAlt(_localctx, 2);
-				{
 				setState(82);
 				selector();
 				setState(87);
@@ -507,6 +525,32 @@ public class GumboParser extends Parser {
 					}
 					}
 					setState(89);
+					_errHandler.sync(this);
+					_la = _input.LA(1);
+				}
+				setState(90);
+				match(RPAR);
+				}
+				break;
+			case ID:
+			case PLACEHOLDER:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(92);
+				selector();
+				setState(97);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+				while (_la==T__1) {
+					{
+					{
+					setState(93);
+					match(T__1);
+					setState(94);
+					selector();
+					}
+					}
+					setState(99);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
@@ -543,12 +587,12 @@ public class GumboParser extends Parser {
 
 	public final SelectorContext selector() throws RecognitionException {
 		SelectorContext _localctx = new SelectorContext(_ctx, getState());
-		enterRule(_localctx, 12, RULE_selector);
+		enterRule(_localctx, 14, RULE_selector);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(92);
+			setState(102);
 			_la = _input.LA(1);
 			if ( !(_la==ID || _la==PLACEHOLDER) ) {
 			_errHandler.recoverInline(this);
@@ -568,52 +612,52 @@ public class GumboParser extends Parser {
 		return _localctx;
 	}
 
-	public static class GuardschemaContext extends ParserRuleContext {
+	public static class LoadschemaContext extends ParserRuleContext {
 		public TerminalNode LPAR() { return getToken(GumboParser.LPAR, 0); }
 		public List<TerminalNode> ID() { return getTokens(GumboParser.ID); }
 		public TerminalNode ID(int i) {
 			return getToken(GumboParser.ID, i);
 		}
 		public TerminalNode RPAR() { return getToken(GumboParser.RPAR, 0); }
-		public GuardschemaContext(ParserRuleContext parent, int invokingState) {
+		public LoadschemaContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_guardschema; }
+		@Override public int getRuleIndex() { return RULE_loadschema; }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof GumboVisitor ) return ((GumboVisitor<? extends T>)visitor).visitGuardschema(this);
+			if ( visitor instanceof GumboVisitor ) return ((GumboVisitor<? extends T>)visitor).visitLoadschema(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final GuardschemaContext guardschema() throws RecognitionException {
-		GuardschemaContext _localctx = new GuardschemaContext(_ctx, getState());
-		enterRule(_localctx, 14, RULE_guardschema);
+	public final LoadschemaContext loadschema() throws RecognitionException {
+		LoadschemaContext _localctx = new LoadschemaContext(_ctx, getState());
+		enterRule(_localctx, 16, RULE_loadschema);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(94);
+			setState(104);
 			match(LPAR);
-			setState(95);
+			setState(105);
 			match(ID);
-			setState(100);
+			setState(110);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==T__1) {
 				{
 				{
-				setState(96);
+				setState(106);
 				match(T__1);
-				setState(97);
+				setState(107);
 				match(ID);
 				}
 				}
-				setState(102);
+				setState(112);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(103);
+			setState(113);
 			match(RPAR);
 			}
 		}
@@ -649,19 +693,19 @@ public class GumboParser extends Parser {
 
 	public final OutputpathContext outputpath() throws RecognitionException {
 		OutputpathContext _localctx = new OutputpathContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_outputpath);
+		enterRule(_localctx, 18, RULE_outputpath);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(105);
+			setState(115);
 			match(SET);
-			setState(106);
+			setState(116);
 			match(OUTPUT);
-			setState(107);
+			setState(117);
 			match(DIR);
-			setState(108);
+			setState(118);
 			file();
-			setState(109);
+			setState(119);
 			match(SEMICOLON);
 			}
 		}
@@ -697,19 +741,19 @@ public class GumboParser extends Parser {
 
 	public final ScratchpathContext scratchpath() throws RecognitionException {
 		ScratchpathContext _localctx = new ScratchpathContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_scratchpath);
+		enterRule(_localctx, 20, RULE_scratchpath);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(111);
+			setState(121);
 			match(SET);
-			setState(112);
+			setState(122);
 			match(SCRATCH);
-			setState(113);
+			setState(123);
 			match(DIR);
-			setState(114);
+			setState(124);
 			file();
-			setState(115);
+			setState(125);
 			match(SEMICOLON);
 			}
 		}
@@ -745,17 +789,17 @@ public class GumboParser extends Parser {
 
 	public final SelectContext select() throws RecognitionException {
 		SelectContext _localctx = new SelectContext(_ctx, getState());
-		enterRule(_localctx, 20, RULE_select);
+		enterRule(_localctx, 22, RULE_select);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(117);
+			setState(127);
 			relname();
-			setState(118);
+			setState(128);
 			match(T__0);
-			setState(119);
+			setState(129);
 			gfquery();
-			setState(120);
+			setState(130);
 			match(SEMICOLON);
 			}
 		}
@@ -783,8 +827,8 @@ public class GumboParser extends Parser {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
-		public GuardschemaContext guardschema() {
-			return getRuleContext(GuardschemaContext.class,0);
+		public SatclauseContext satclause() {
+			return getRuleContext(SatclauseContext.class,0);
 		}
 		public GfqueryContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -799,32 +843,144 @@ public class GumboParser extends Parser {
 
 	public final GfqueryContext gfquery() throws RecognitionException {
 		GfqueryContext _localctx = new GfqueryContext(_ctx, getState());
-		enterRule(_localctx, 22, RULE_gfquery);
+		enterRule(_localctx, 24, RULE_gfquery);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(122);
+			setState(132);
 			match(SELECT);
-			setState(123);
+			setState(133);
 			schema();
-			setState(124);
+			setState(134);
 			match(FROM);
-			setState(125);
+			setState(135);
 			relname();
-			setState(127);
+			setState(137);
 			_la = _input.LA(1);
-			if (_la==LPAR) {
+			if (_la==SATISFYING) {
 				{
-				setState(126);
-				guardschema();
+				setState(136);
+				satclause();
 				}
 			}
 
-			setState(129);
+			setState(139);
 			match(WHERE);
-			setState(130);
+			setState(140);
 			expr(0);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class SatclauseContext extends ParserRuleContext {
+		public TerminalNode SATISFYING() { return getToken(GumboParser.SATISFYING, 0); }
+		public List<AssrtContext> assrt() {
+			return getRuleContexts(AssrtContext.class);
+		}
+		public AssrtContext assrt(int i) {
+			return getRuleContext(AssrtContext.class,i);
+		}
+		public List<TerminalNode> AND() { return getTokens(GumboParser.AND); }
+		public TerminalNode AND(int i) {
+			return getToken(GumboParser.AND, i);
+		}
+		public SatclauseContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_satclause; }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GumboVisitor ) return ((GumboVisitor<? extends T>)visitor).visitSatclause(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final SatclauseContext satclause() throws RecognitionException {
+		SatclauseContext _localctx = new SatclauseContext(_ctx, getState());
+		enterRule(_localctx, 26, RULE_satclause);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(142);
+			match(SATISFYING);
+			setState(143);
+			assrt();
+			setState(148);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			while (_la==AND) {
+				{
+				{
+				setState(144);
+				match(AND);
+				setState(145);
+				assrt();
+				}
+				}
+				setState(150);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class AssrtContext extends ParserRuleContext {
+		public TerminalNode ID() { return getToken(GumboParser.ID, 0); }
+		public List<TerminalNode> QUOTE() { return getTokens(GumboParser.QUOTE); }
+		public TerminalNode QUOTE(int i) {
+			return getToken(GumboParser.QUOTE, i);
+		}
+		public AnystringContext anystring() {
+			return getRuleContext(AnystringContext.class,0);
+		}
+		public AssrtContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_assrt; }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GumboVisitor ) return ((GumboVisitor<? extends T>)visitor).visitAssrt(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final AssrtContext assrt() throws RecognitionException {
+		AssrtContext _localctx = new AssrtContext(_ctx, getState());
+		enterRule(_localctx, 28, RULE_assrt);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(151);
+			match(ID);
+			setState(152);
+			match(T__0);
+			setState(153);
+			match(QUOTE);
+			setState(154);
+			anystring();
+			setState(155);
+			match(QUOTE);
 			}
 		}
 		catch (RecognitionException re) {
@@ -925,23 +1081,23 @@ public class GumboParser extends Parser {
 		int _parentState = getState();
 		ExprContext _localctx = new ExprContext(_ctx, _parentState);
 		ExprContext _prevctx = _localctx;
-		int _startState = 24;
-		enterRecursionRule(_localctx, 24, RULE_expr, _p);
+		int _startState = 30;
+		enterRecursionRule(_localctx, 30, RULE_expr, _p);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(140);
-			switch ( getInterpreter().adaptivePredict(_input,9,_ctx) ) {
+			setState(165);
+			switch ( getInterpreter().adaptivePredict(_input,11,_ctx) ) {
 			case 1:
 				{
 				_localctx = new NotExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
-				setState(133);
+				setState(158);
 				match(NOT);
-				setState(134);
+				setState(159);
 				expr(5);
 				}
 				break;
@@ -950,7 +1106,7 @@ public class GumboParser extends Parser {
 				_localctx = new GuardedExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(135);
+				setState(160);
 				guardedrel();
 				}
 				break;
@@ -959,35 +1115,35 @@ public class GumboParser extends Parser {
 				_localctx = new ParExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(136);
+				setState(161);
 				match(LPAR);
-				setState(137);
+				setState(162);
 				expr(0);
-				setState(138);
+				setState(163);
 				match(RPAR);
 				}
 				break;
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(150);
+			setState(175);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,11,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(148);
-					switch ( getInterpreter().adaptivePredict(_input,10,_ctx) ) {
+					setState(173);
+					switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
 					case 1:
 						{
 						_localctx = new AndExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(142);
+						setState(167);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-						setState(143);
+						setState(168);
 						match(AND);
-						setState(144);
+						setState(169);
 						expr(5);
 						}
 						break;
@@ -995,20 +1151,20 @@ public class GumboParser extends Parser {
 						{
 						_localctx = new OrExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(145);
+						setState(170);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(146);
+						setState(171);
 						match(OR);
-						setState(147);
+						setState(172);
 						expr(4);
 						}
 						break;
 					}
 					} 
 				}
-				setState(152);
+				setState(177);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,11,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
 			}
 			}
 		}
@@ -1069,19 +1225,19 @@ public class GumboParser extends Parser {
 
 	public final GuardedrelContext guardedrel() throws RecognitionException {
 		GuardedrelContext _localctx = new GuardedrelContext(_ctx, getState());
-		enterRule(_localctx, 26, RULE_guardedrel);
+		enterRule(_localctx, 32, RULE_guardedrel);
 		try {
-			setState(163);
-			switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
+			setState(188);
+			switch ( getInterpreter().adaptivePredict(_input,14,_ctx) ) {
 			case 1:
 				_localctx = new RegularGuardedContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(153);
+				setState(178);
 				schema();
-				setState(154);
+				setState(179);
 				match(IN);
-				setState(155);
+				setState(180);
 				relname();
 				}
 				break;
@@ -1089,15 +1245,15 @@ public class GumboParser extends Parser {
 				_localctx = new NestedGuardedContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(157);
+				setState(182);
 				schema();
-				setState(158);
+				setState(183);
 				match(IN);
-				setState(159);
+				setState(184);
 				match(LPAR);
-				setState(160);
+				setState(185);
 				gfquery();
-				setState(161);
+				setState(186);
 				match(RPAR);
 				}
 				break;
@@ -1119,6 +1275,7 @@ public class GumboParser extends Parser {
 			return getRuleContext(KeywordContext.class,0);
 		}
 		public TerminalNode ID() { return getToken(GumboParser.ID, 0); }
+		public TerminalNode INT() { return getToken(GumboParser.INT, 0); }
 		public TerminalNode FILENAME() { return getToken(GumboParser.FILENAME, 0); }
 		public AnystringContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1133,14 +1290,15 @@ public class GumboParser extends Parser {
 
 	public final AnystringContext anystring() throws RecognitionException {
 		AnystringContext _localctx = new AnystringContext(_ctx, getState());
-		enterRule(_localctx, 28, RULE_anystring);
+		enterRule(_localctx, 34, RULE_anystring);
 		try {
-			setState(168);
+			setState(194);
 			switch (_input.LA(1)) {
 			case LOAD:
 			case REL:
 			case CSV:
 			case ARITY:
+			case AS:
 			case SET:
 			case DIR:
 			case OUTPUT:
@@ -1154,21 +1312,28 @@ public class GumboParser extends Parser {
 			case NOT:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(165);
+				setState(190);
 				keyword();
 				}
 				break;
 			case ID:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(166);
+				setState(191);
 				match(ID);
 				}
 				break;
-			case FILENAME:
+			case INT:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(167);
+				setState(192);
+				match(INT);
+				}
+				break;
+			case FILENAME:
+				enterOuterAlt(_localctx, 4);
+				{
+				setState(193);
 				match(FILENAME);
 				}
 				break;
@@ -1192,6 +1357,7 @@ public class GumboParser extends Parser {
 		public TerminalNode REL() { return getToken(GumboParser.REL, 0); }
 		public TerminalNode CSV() { return getToken(GumboParser.CSV, 0); }
 		public TerminalNode ARITY() { return getToken(GumboParser.ARITY, 0); }
+		public TerminalNode AS() { return getToken(GumboParser.AS, 0); }
 		public TerminalNode SET() { return getToken(GumboParser.SET, 0); }
 		public TerminalNode DIR() { return getToken(GumboParser.DIR, 0); }
 		public TerminalNode OUTPUT() { return getToken(GumboParser.OUTPUT, 0); }
@@ -1216,14 +1382,14 @@ public class GumboParser extends Parser {
 
 	public final KeywordContext keyword() throws RecognitionException {
 		KeywordContext _localctx = new KeywordContext(_ctx, getState());
-		enterRule(_localctx, 30, RULE_keyword);
+		enterRule(_localctx, 36, RULE_keyword);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(170);
+			setState(196);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << LOAD) | (1L << REL) | (1L << CSV) | (1L << ARITY) | (1L << SET) | (1L << DIR) | (1L << OUTPUT) | (1L << SCRATCH) | (1L << SELECT) | (1L << FROM) | (1L << WHERE) | (1L << IN) | (1L << OR) | (1L << AND) | (1L << NOT))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << LOAD) | (1L << REL) | (1L << CSV) | (1L << ARITY) | (1L << AS) | (1L << SET) | (1L << DIR) | (1L << OUTPUT) | (1L << SCRATCH) | (1L << SELECT) | (1L << FROM) | (1L << WHERE) | (1L << IN) | (1L << OR) | (1L << AND) | (1L << NOT))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			} else {
 				consume();
@@ -1243,7 +1409,7 @@ public class GumboParser extends Parser {
 
 	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
 		switch (ruleIndex) {
-		case 12:
+		case 15:
 			return expr_sempred((ExprContext)_localctx, predIndex);
 		}
 		return true;
@@ -1259,56 +1425,66 @@ public class GumboParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\36\u00af\4\2\t\2"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\37\u00c9\4\2\t\2"+
 		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
-		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\3\2\3\2"+
-		"\3\2\3\2\7\2\'\n\2\f\2\16\2*\13\2\3\3\3\3\3\3\3\3\5\3\60\n\3\3\3\3\3\3"+
-		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\5\3@\n\3\3\4\3\4\3\5\3"+
-		"\5\3\6\3\6\3\6\3\6\3\7\3\7\3\7\3\7\7\7N\n\7\f\7\16\7Q\13\7\3\7\3\7\3\7"+
-		"\3\7\3\7\7\7X\n\7\f\7\16\7[\13\7\5\7]\n\7\3\b\3\b\3\t\3\t\3\t\3\t\7\t"+
-		"e\n\t\f\t\16\th\13\t\3\t\3\t\3\n\3\n\3\n\3\n\3\n\3\n\3\13\3\13\3\13\3"+
-		"\13\3\13\3\13\3\f\3\f\3\f\3\f\3\f\3\r\3\r\3\r\3\r\3\r\5\r\u0082\n\r\3"+
-		"\r\3\r\3\r\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\5\16\u008f\n\16\3\16"+
-		"\3\16\3\16\3\16\3\16\3\16\7\16\u0097\n\16\f\16\16\16\u009a\13\16\3\17"+
-		"\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\5\17\u00a6\n\17\3\20\3\20"+
-		"\3\20\5\20\u00ab\n\20\3\21\3\21\3\21\2\3\32\22\2\4\6\b\n\f\16\20\22\24"+
-		"\26\30\32\34\36 \2\4\3\2\26\27\4\2\5\16\20\24\u00b0\2(\3\2\2\2\4?\3\2"+
-		"\2\2\6A\3\2\2\2\bC\3\2\2\2\nE\3\2\2\2\f\\\3\2\2\2\16^\3\2\2\2\20`\3\2"+
-		"\2\2\22k\3\2\2\2\24q\3\2\2\2\26w\3\2\2\2\30|\3\2\2\2\32\u008e\3\2\2\2"+
-		"\34\u00a5\3\2\2\2\36\u00aa\3\2\2\2 \u00ac\3\2\2\2\"\'\5\22\n\2#\'\5\24"+
-		"\13\2$\'\5\4\3\2%\'\5\26\f\2&\"\3\2\2\2&#\3\2\2\2&$\3\2\2\2&%\3\2\2\2"+
-		"\'*\3\2\2\2(&\3\2\2\2()\3\2\2\2)\3\3\2\2\2*(\3\2\2\2+,\5\6\4\2,-\7\3\2"+
-		"\2-/\7\5\2\2.\60\7\6\2\2/.\3\2\2\2/\60\3\2\2\2\60\61\3\2\2\2\61\62\5\n"+
-		"\6\2\62\63\7\b\2\2\63\64\5\b\5\2\64\65\7\34\2\2\65@\3\2\2\2\66\67\5\6"+
-		"\4\2\678\7\3\2\289\7\5\2\29:\7\7\2\2:;\5\n\6\2;<\7\b\2\2<=\5\b\5\2=>\7"+
-		"\34\2\2>@\3\2\2\2?+\3\2\2\2?\66\3\2\2\2@\5\3\2\2\2AB\7\26\2\2B\7\3\2\2"+
-		"\2CD\7\25\2\2D\t\3\2\2\2EF\7\31\2\2FG\5\36\20\2GH\7\31\2\2H\13\3\2\2\2"+
-		"IJ\7\32\2\2JO\5\16\b\2KL\7\4\2\2LN\5\16\b\2MK\3\2\2\2NQ\3\2\2\2OM\3\2"+
-		"\2\2OP\3\2\2\2PR\3\2\2\2QO\3\2\2\2RS\7\33\2\2S]\3\2\2\2TY\5\16\b\2UV\7"+
-		"\4\2\2VX\5\16\b\2WU\3\2\2\2X[\3\2\2\2YW\3\2\2\2YZ\3\2\2\2Z]\3\2\2\2[Y"+
-		"\3\2\2\2\\I\3\2\2\2\\T\3\2\2\2]\r\3\2\2\2^_\t\2\2\2_\17\3\2\2\2`a\7\32"+
-		"\2\2af\7\26\2\2bc\7\4\2\2ce\7\26\2\2db\3\2\2\2eh\3\2\2\2fd\3\2\2\2fg\3"+
-		"\2\2\2gi\3\2\2\2hf\3\2\2\2ij\7\33\2\2j\21\3\2\2\2kl\7\t\2\2lm\7\13\2\2"+
-		"mn\7\n\2\2no\5\n\6\2op\7\34\2\2p\23\3\2\2\2qr\7\t\2\2rs\7\f\2\2st\7\n"+
-		"\2\2tu\5\n\6\2uv\7\34\2\2v\25\3\2\2\2wx\5\6\4\2xy\7\3\2\2yz\5\30\r\2z"+
-		"{\7\34\2\2{\27\3\2\2\2|}\7\r\2\2}~\5\f\7\2~\177\7\16\2\2\177\u0081\5\6"+
-		"\4\2\u0080\u0082\5\20\t\2\u0081\u0080\3\2\2\2\u0081\u0082\3\2\2\2\u0082"+
-		"\u0083\3\2\2\2\u0083\u0084\7\20\2\2\u0084\u0085\5\32\16\2\u0085\31\3\2"+
-		"\2\2\u0086\u0087\b\16\1\2\u0087\u0088\7\24\2\2\u0088\u008f\5\32\16\7\u0089"+
-		"\u008f\5\34\17\2\u008a\u008b\7\32\2\2\u008b\u008c\5\32\16\2\u008c\u008d"+
-		"\7\33\2\2\u008d\u008f\3\2\2\2\u008e\u0086\3\2\2\2\u008e\u0089\3\2\2\2"+
-		"\u008e\u008a\3\2\2\2\u008f\u0098\3\2\2\2\u0090\u0091\f\6\2\2\u0091\u0092"+
-		"\7\23\2\2\u0092\u0097\5\32\16\7\u0093\u0094\f\5\2\2\u0094\u0095\7\22\2"+
-		"\2\u0095\u0097\5\32\16\6\u0096\u0090\3\2\2\2\u0096\u0093\3\2\2\2\u0097"+
-		"\u009a\3\2\2\2\u0098\u0096\3\2\2\2\u0098\u0099\3\2\2\2\u0099\33\3\2\2"+
-		"\2\u009a\u0098\3\2\2\2\u009b\u009c\5\f\7\2\u009c\u009d\7\21\2\2\u009d"+
-		"\u009e\5\6\4\2\u009e\u00a6\3\2\2\2\u009f\u00a0\5\f\7\2\u00a0\u00a1\7\21"+
-		"\2\2\u00a1\u00a2\7\32\2\2\u00a2\u00a3\5\30\r\2\u00a3\u00a4\7\33\2\2\u00a4"+
-		"\u00a6\3\2\2\2\u00a5\u009b\3\2\2\2\u00a5\u009f\3\2\2\2\u00a6\35\3\2\2"+
-		"\2\u00a7\u00ab\5 \21\2\u00a8\u00ab\7\26\2\2\u00a9\u00ab\7\30\2\2\u00aa"+
-		"\u00a7\3\2\2\2\u00aa\u00a8\3\2\2\2\u00aa\u00a9\3\2\2\2\u00ab\37\3\2\2"+
-		"\2\u00ac\u00ad\t\3\2\2\u00ad!\3\2\2\2\20&(/?OY\\f\u0081\u008e\u0096\u0098"+
-		"\u00a5\u00aa";
+		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
+		"\4\23\t\23\4\24\t\24\3\2\3\2\3\2\3\2\7\2-\n\2\f\2\16\2\60\13\2\3\3\3\3"+
+		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\5\3D"+
+		"\n\3\3\4\5\4G\n\4\3\4\5\4J\n\4\3\5\3\5\3\6\3\6\3\7\3\7\3\7\3\7\3\b\3\b"+
+		"\3\b\3\b\7\bX\n\b\f\b\16\b[\13\b\3\b\3\b\3\b\3\b\3\b\7\bb\n\b\f\b\16\b"+
+		"e\13\b\5\bg\n\b\3\t\3\t\3\n\3\n\3\n\3\n\7\no\n\n\f\n\16\nr\13\n\3\n\3"+
+		"\n\3\13\3\13\3\13\3\13\3\13\3\13\3\f\3\f\3\f\3\f\3\f\3\f\3\r\3\r\3\r\3"+
+		"\r\3\r\3\16\3\16\3\16\3\16\3\16\5\16\u008c\n\16\3\16\3\16\3\16\3\17\3"+
+		"\17\3\17\3\17\7\17\u0095\n\17\f\17\16\17\u0098\13\17\3\20\3\20\3\20\3"+
+		"\20\3\20\3\20\3\21\3\21\3\21\3\21\3\21\3\21\3\21\3\21\5\21\u00a8\n\21"+
+		"\3\21\3\21\3\21\3\21\3\21\3\21\7\21\u00b0\n\21\f\21\16\21\u00b3\13\21"+
+		"\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\5\22\u00bf\n\22\3\23"+
+		"\3\23\3\23\3\23\5\23\u00c5\n\23\3\24\3\24\3\24\2\3 \25\2\4\6\b\n\f\16"+
+		"\20\22\24\26\30\32\34\36 \"$&\2\4\3\2\27\30\4\2\5\17\21\25\u00ca\2.\3"+
+		"\2\2\2\4C\3\2\2\2\6I\3\2\2\2\bK\3\2\2\2\nM\3\2\2\2\fO\3\2\2\2\16f\3\2"+
+		"\2\2\20h\3\2\2\2\22j\3\2\2\2\24u\3\2\2\2\26{\3\2\2\2\30\u0081\3\2\2\2"+
+		"\32\u0086\3\2\2\2\34\u0090\3\2\2\2\36\u0099\3\2\2\2 \u00a7\3\2\2\2\"\u00be"+
+		"\3\2\2\2$\u00c4\3\2\2\2&\u00c6\3\2\2\2(-\5\24\13\2)-\5\26\f\2*-\5\4\3"+
+		"\2+-\5\30\r\2,(\3\2\2\2,)\3\2\2\2,*\3\2\2\2,+\3\2\2\2-\60\3\2\2\2.,\3"+
+		"\2\2\2./\3\2\2\2/\3\3\2\2\2\60.\3\2\2\2\61\62\5\b\5\2\62\63\7\3\2\2\63"+
+		"\64\7\5\2\2\64\65\5\6\4\2\65\66\5\f\7\2\66\67\7\b\2\2\678\5\n\6\289\7"+
+		"\35\2\29D\3\2\2\2:;\5\b\5\2;<\7\3\2\2<=\7\5\2\2=>\5\6\4\2>?\5\f\7\2?@"+
+		"\7\t\2\2@A\5\22\n\2AB\7\35\2\2BD\3\2\2\2C\61\3\2\2\2C:\3\2\2\2D\5\3\2"+
+		"\2\2EG\7\6\2\2FE\3\2\2\2FG\3\2\2\2GJ\3\2\2\2HJ\7\7\2\2IF\3\2\2\2IH\3\2"+
+		"\2\2J\7\3\2\2\2KL\7\27\2\2L\t\3\2\2\2MN\7\26\2\2N\13\3\2\2\2OP\7\32\2"+
+		"\2PQ\5$\23\2QR\7\32\2\2R\r\3\2\2\2ST\7\33\2\2TY\5\20\t\2UV\7\4\2\2VX\5"+
+		"\20\t\2WU\3\2\2\2X[\3\2\2\2YW\3\2\2\2YZ\3\2\2\2Z\\\3\2\2\2[Y\3\2\2\2\\"+
+		"]\7\34\2\2]g\3\2\2\2^c\5\20\t\2_`\7\4\2\2`b\5\20\t\2a_\3\2\2\2be\3\2\2"+
+		"\2ca\3\2\2\2cd\3\2\2\2dg\3\2\2\2ec\3\2\2\2fS\3\2\2\2f^\3\2\2\2g\17\3\2"+
+		"\2\2hi\t\2\2\2i\21\3\2\2\2jk\7\33\2\2kp\7\27\2\2lm\7\4\2\2mo\7\27\2\2"+
+		"nl\3\2\2\2or\3\2\2\2pn\3\2\2\2pq\3\2\2\2qs\3\2\2\2rp\3\2\2\2st\7\34\2"+
+		"\2t\23\3\2\2\2uv\7\n\2\2vw\7\f\2\2wx\7\13\2\2xy\5\f\7\2yz\7\35\2\2z\25"+
+		"\3\2\2\2{|\7\n\2\2|}\7\r\2\2}~\7\13\2\2~\177\5\f\7\2\177\u0080\7\35\2"+
+		"\2\u0080\27\3\2\2\2\u0081\u0082\5\b\5\2\u0082\u0083\7\3\2\2\u0083\u0084"+
+		"\5\32\16\2\u0084\u0085\7\35\2\2\u0085\31\3\2\2\2\u0086\u0087\7\16\2\2"+
+		"\u0087\u0088\5\16\b\2\u0088\u0089\7\17\2\2\u0089\u008b\5\b\5\2\u008a\u008c"+
+		"\5\34\17\2\u008b\u008a\3\2\2\2\u008b\u008c\3\2\2\2\u008c\u008d\3\2\2\2"+
+		"\u008d\u008e\7\21\2\2\u008e\u008f\5 \21\2\u008f\33\3\2\2\2\u0090\u0091"+
+		"\7\20\2\2\u0091\u0096\5\36\20\2\u0092\u0093\7\24\2\2\u0093\u0095\5\36"+
+		"\20\2\u0094\u0092\3\2\2\2\u0095\u0098\3\2\2\2\u0096\u0094\3\2\2\2\u0096"+
+		"\u0097\3\2\2\2\u0097\35\3\2\2\2\u0098\u0096\3\2\2\2\u0099\u009a\7\27\2"+
+		"\2\u009a\u009b\7\3\2\2\u009b\u009c\7\32\2\2\u009c\u009d\5$\23\2\u009d"+
+		"\u009e\7\32\2\2\u009e\37\3\2\2\2\u009f\u00a0\b\21\1\2\u00a0\u00a1\7\25"+
+		"\2\2\u00a1\u00a8\5 \21\7\u00a2\u00a8\5\"\22\2\u00a3\u00a4\7\33\2\2\u00a4"+
+		"\u00a5\5 \21\2\u00a5\u00a6\7\34\2\2\u00a6\u00a8\3\2\2\2\u00a7\u009f\3"+
+		"\2\2\2\u00a7\u00a2\3\2\2\2\u00a7\u00a3\3\2\2\2\u00a8\u00b1\3\2\2\2\u00a9"+
+		"\u00aa\f\6\2\2\u00aa\u00ab\7\24\2\2\u00ab\u00b0\5 \21\7\u00ac\u00ad\f"+
+		"\5\2\2\u00ad\u00ae\7\23\2\2\u00ae\u00b0\5 \21\6\u00af\u00a9\3\2\2\2\u00af"+
+		"\u00ac\3\2\2\2\u00b0\u00b3\3\2\2\2\u00b1\u00af\3\2\2\2\u00b1\u00b2\3\2"+
+		"\2\2\u00b2!\3\2\2\2\u00b3\u00b1\3\2\2\2\u00b4\u00b5\5\16\b\2\u00b5\u00b6"+
+		"\7\22\2\2\u00b6\u00b7\5\b\5\2\u00b7\u00bf\3\2\2\2\u00b8\u00b9\5\16\b\2"+
+		"\u00b9\u00ba\7\22\2\2\u00ba\u00bb\7\33\2\2\u00bb\u00bc\5\32\16\2\u00bc"+
+		"\u00bd\7\34\2\2\u00bd\u00bf\3\2\2\2\u00be\u00b4\3\2\2\2\u00be\u00b8\3"+
+		"\2\2\2\u00bf#\3\2\2\2\u00c0\u00c5\5&\24\2\u00c1\u00c5\7\27\2\2\u00c2\u00c5"+
+		"\7\26\2\2\u00c3\u00c5\7\31\2\2\u00c4\u00c0\3\2\2\2\u00c4\u00c1\3\2\2\2"+
+		"\u00c4\u00c2\3\2\2\2\u00c4\u00c3\3\2\2\2\u00c5%\3\2\2\2\u00c6\u00c7\t"+
+		"\3\2\2\u00c7\'\3\2\2\2\22,.CFIYcfp\u008b\u0096\u00a7\u00af\u00b1\u00be"+
+		"\u00c4";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

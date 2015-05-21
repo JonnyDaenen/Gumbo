@@ -2,6 +2,7 @@ package gumbo.generator;
 
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.generator.GFGeneratorInput.Relation;
 import gumbo.input.GumboQuery;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFAndExpression;
@@ -45,6 +46,18 @@ public class GFGenerator {
 		_queries = new HashSet<>();
 		_guards = new ArrayList<>();
 		_guardeds = new ArrayList<>();
+	}
+	
+	public void addInput(GFGeneratorInput input) {
+		boolean guardAdded = false;
+		for (Relation relation : input) {
+			if (!guardAdded) {
+				addGuardRelation(relation.name, relation.arity, relation.path, relation.format);
+				guardAdded = true;
+			}
+			else 
+				addGuardedRelation(relation.name, relation.arity, relation.path, relation.format);
+		}
 	}
 	
 	/**
@@ -102,6 +115,8 @@ public class GFGenerator {
 	public void addQuery(QueryType type, int arity) throws GFGeneratorException {
 		if (arity < 1)
 			throw new GFGeneratorException("Please provide an arity of atleast 1.");
+		if (_guardeds.size() < 1)
+			throw new GFGeneratorException("Please provide atleast 1 guarded relation.");
 		
 		RelationSchema guard = _guards.get(0); // get guard relation (can be changed to not only get the first one in the future)
 		String[] guardFields = guard.getFields();
@@ -112,6 +127,7 @@ public class GFGenerator {
 		
 		int currentGuardedId = 0;
 		int currentGuardFieldId = 0;
+		
 		for (int i = 0; i < arity; i++) {
 			RelationSchema guarded = _guardeds.get(currentGuardedId);
 			currentGuardedId = (currentGuardedId + 1) % _guardeds.size();

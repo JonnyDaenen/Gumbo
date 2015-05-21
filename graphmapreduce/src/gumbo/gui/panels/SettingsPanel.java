@@ -20,7 +20,8 @@ import javax.swing.JPanel;
  */
 public class SettingsPanel extends JPanel {
 
-	private JButton compile;
+	private JButton compileInfix;
+	private JButton compileGumboSQL;
 	private JButton execHadoop;
 	private JButton execSpark;
 	private JComboBox<String> partitioners;
@@ -113,11 +114,13 @@ public class SettingsPanel extends JPanel {
 		settings.add(queryDetails,c);
 		
 		JPanel buttons = new JPanel();
-		compile = new JButton("Compile");
+		compileInfix = new JButton("Compile Infix");
+		compileGumboSQL = new JButton("Compile GumboSQL");
 		execHadoop = new JButton("Exec Hadoop");
 		execSpark = new JButton("Exec Spark");
 		buttons.setLayout(new FlowLayout());
-		buttons.add(compile);
+		buttons.add(compileGumboSQL);
+		buttons.add(compileInfix);
 		buttons.add(execHadoop);
 		buttons.add(execSpark);
 		
@@ -144,8 +147,12 @@ public class SettingsPanel extends JPanel {
 		
 	}
 
-	public JButton getCompileButton() {
-		return compile;
+	public JButton getCompileInfixButton() {
+		return compileInfix;
+	}
+	
+	public JButton getCompileGumboSQLButton() {
+		return compileGumboSQL;
 	}
 
 	public JButton getHadoopButton() {
