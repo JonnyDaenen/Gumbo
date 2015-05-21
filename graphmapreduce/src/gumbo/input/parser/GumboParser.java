@@ -946,7 +946,9 @@ public class GumboParser extends Parser {
 	}
 
 	public static class AssrtContext extends ParserRuleContext {
-		public TerminalNode ID() { return getToken(GumboParser.ID, 0); }
+		public SelectorContext selector() {
+			return getRuleContext(SelectorContext.class,0);
+		}
 		public List<TerminalNode> QUOTE() { return getTokens(GumboParser.QUOTE); }
 		public TerminalNode QUOTE(int i) {
 			return getToken(GumboParser.QUOTE, i);
@@ -972,7 +974,7 @@ public class GumboParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(151);
-			match(ID);
+			selector();
 			setState(152);
 			match(T__0);
 			setState(153);
@@ -1467,7 +1469,7 @@ public class GumboParser extends Parser {
 		"\u008d\u008e\7\21\2\2\u008e\u008f\5 \21\2\u008f\33\3\2\2\2\u0090\u0091"+
 		"\7\20\2\2\u0091\u0096\5\36\20\2\u0092\u0093\7\24\2\2\u0093\u0095\5\36"+
 		"\20\2\u0094\u0092\3\2\2\2\u0095\u0098\3\2\2\2\u0096\u0094\3\2\2\2\u0096"+
-		"\u0097\3\2\2\2\u0097\35\3\2\2\2\u0098\u0096\3\2\2\2\u0099\u009a\7\27\2"+
+		"\u0097\3\2\2\2\u0097\35\3\2\2\2\u0098\u0096\3\2\2\2\u0099\u009a\5\20\t"+
 		"\2\u009a\u009b\7\3\2\2\u009b\u009c\7\32\2\2\u009c\u009d\5$\23\2\u009d"+
 		"\u009e\7\32\2\2\u009e\37\3\2\2\2\u009f\u00a0\b\21\1\2\u00a0\u00a1\7\25"+
 		"\2\2\u00a1\u00a8\5 \21\7\u00a2\u00a8\5\"\22\2\u00a3\u00a4\7\33\2\2\u00a4"+

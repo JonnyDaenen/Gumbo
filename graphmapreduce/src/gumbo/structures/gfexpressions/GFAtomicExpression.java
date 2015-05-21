@@ -17,6 +17,7 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 
 	String relation;
 	String[] variables;
+	String[] constants;
 
 	RelationSchema schemaCache = null;
 
@@ -26,10 +27,18 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 	public GFAtomicExpression(String relationName, String... variables) {
 		this.relation = relationName;
 		this.variables = variables;
+		this.constants = new String[variables.length];
+		
+		for (int i = 0; i < variables.length; i++) {
+			String var = variables[i];
+			if (var.contains("=")) {
+				this.variables[i] = var.split("=")[0];
+				this.constants[i] = var.split("=")[1];
+			}
+		}
 
 		cached = false;
 		checks = new LinkedList<Pair<Integer, Integer>>();
-
 	}
 
 	/**
@@ -40,6 +49,7 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 	public GFAtomicExpression(GFAtomicExpression aexp) {
 		this.relation = aexp.relation;
 		this.variables = aexp.variables.clone();
+		this.constants = aexp.constants.clone();
 	}
 
 	public String getName() {
@@ -48,6 +58,10 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 
 	public String[] getVars() {
 		return variables;
+	}
+	
+	public String[] getConstants() {
+		return constants;
 	}
 
 	@Override
@@ -81,8 +95,13 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 
 	private String generateVarString() {
 		String list = "";
-		for (String v : variables)
+		int i = 0;
+		for (String v : variables) {
 			list += "," + v;
+			if (constants[i] != null)
+				list += "=" + constants[i];
+			i++;
+		}
 
 		if (list.length() > 0)
 			return list.substring(1);
@@ -176,6 +195,13 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 
 				}
 			}
+			
+			// check constants
+			for (int i = 0; i < size(); i++) {
+				if (constants[i] != null && !t.get(i).equals(constants[i])) {
+					success = false;
+				}
+			}
 
 			cached = true;
 			return success;
@@ -186,6 +212,14 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 					return false;
 				}
 			}
+			
+			// check constants
+			for (int i = 0; i < size(); i++) {
+				if (constants[i] != null && !t.get(i).equals(constants[i])) {
+					return false;
+				}
+			}
+			
 			return true;
 		}
 	}

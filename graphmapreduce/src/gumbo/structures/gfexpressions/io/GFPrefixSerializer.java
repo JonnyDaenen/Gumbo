@@ -284,8 +284,13 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 	@Override
 	public String visit(GFAtomicExpression e) {
 		String s = "";
+		int i = 0;
+		String[] constants = e.getConstants();
 		for (String var : e.getVars()) {
 			s += "," + var;
+			if (constants[i] != null)
+				s += "=" + constants[i];
+			i++;
 		}
 
 		s = s.substring(1);

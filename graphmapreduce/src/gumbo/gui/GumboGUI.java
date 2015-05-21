@@ -4,6 +4,7 @@
 package gumbo.gui;
 
 import gumbo.compiler.GFCompiler;
+import gumbo.compiler.GFCompilerException;
 import gumbo.compiler.GumboPlan;
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
@@ -29,6 +30,7 @@ import gumbo.gui.panels.QueryInputField;
 import gumbo.gui.panels.SettingsPanel;
 import gumbo.input.GumboQuery;
 import gumbo.input.parser.GumboScriptFileParser;
+import gumbo.input.parser.GumboScriptFileParser.GumboParseException;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.io.GFInfixSerializer;
@@ -607,16 +609,26 @@ public class GumboGUI extends Configured implements Tool {
 				SwingWorker<Integer, Void> worker = new SwingWorker<Integer,Void>() {
 
 					@Override
-					protected Integer doInBackground() throws Exception {
+					protected Integer doInBackground() {
 						GumboScriptFileParser parser = new GumboScriptFileParser();
 
-						gumboQuery = parser.parse(inputQuery.getQueryField().getText(), false);
+						try {
+							gumboQuery = parser.parse(inputQuery.getQueryField().getText(), false);
+						} catch (IOException e) {
+							e.printStackTrace();
+						} catch (GumboParseException e) {
+							e.printStackTrace();
+						}
 						pig.setQuery(gumboQuery);
 						hive.setQuery(gumboQuery);
 
 						// create plan
 						GFCompiler compiler = new GFCompiler(getPartitioner());
-						plan = compiler.createPlan(gumboQuery);
+						try {
+							plan = compiler.createPlan(gumboQuery);
+						} catch (GFCompilerException e) {
+							e.printStackTrace();
+						}
 						//							System.out.println(plan);
 
 						// visualize plan

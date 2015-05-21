@@ -1,6 +1,7 @@
 package gumbo.input.parser;
 
 import gumbo.input.parser.GumboParser.AndExprContext;
+import gumbo.input.parser.GumboParser.AssrtContext;
 import gumbo.input.parser.GumboParser.GfqueryContext;
 import gumbo.input.parser.GumboParser.GuardedExprContext;
 import gumbo.input.parser.GumboParser.NestedGuardedContext;
@@ -72,10 +73,31 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 		if (!relationKnown(guardName))
 			throw new ParseCancellationException("Unknown relation name on line " + ctx.relname().getStart().getLine() + ".");
 		
-		_guardVars.push(vars);
 		String[] guardVars = getRelationSchema(guardName).getFields().clone();
+		String[] guardVarsConstants = guardVars.clone();
+		
+		if (ctx.satclause() != null) {
+			
+			for (AssrtContext assrt : ctx.satclause().assrt()) {
+				String varname = assrt.selector().getText();
+				String value = assrt.anystring().getText();
+				if (varname.contains("$")) {
+					int index = Integer.parseInt(varname.substring(1));
+					if (index < 0 || index > guardVarsConstants.length - 1)
+						throw new ParseCancellationException("Selector index out of range on line " + ctx.relname().getStart().getLine() + ": index " + index + ".");
+					guardVarsConstants[index] += "=" + value;
+				} else {
+					for (int i = 0; i < guardVarsConstants.length; i++) {
+						if (guardVarsConstants[i].equals(varname))
+							guardVarsConstants[i] += "=" + value;
+					}
+				}
+			}
+			
+		}
+		
 		_guardVars.push(new ArrayList<>(Arrays.asList(guardVars)));
-		GFAtomicExpression guard = new GFAtomicExpression(guardName, guardVars);
+		GFAtomicExpression guard = new GFAtomicExpression(guardName, guardVarsConstants);
 		
 		// output relation
 		String outputName = TEMP_RELNAME + _currentID;
