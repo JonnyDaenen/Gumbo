@@ -84,7 +84,7 @@ public class Red2Algorithm {
 			String value = split;
 
 			// record guard tuple if found
-			if (lookingForGuard & msgFactory.isTuple(value)) {
+			if (lookingForGuard && msgFactory.isTuple(value)) {
 				if (lookingForGuard) {
 					guardTuple = msgFactory.getTuple(value);
 					lookingForGuard = false;
