@@ -288,8 +288,10 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 		String[] constants = e.getConstants();
 		for (String var : e.getVars()) {
 			s += "," + var;
+			// CONSTANTCODE begin
 			if (constants[i] != null)
 				s += "=" + constants[i];
+			// CONSTANTCODE end
 			i++;
 		}
 

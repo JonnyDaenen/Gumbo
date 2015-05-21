@@ -29,6 +29,7 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 		this.variables = variables;
 		this.constants = new String[variables.length];
 		
+		// CONSTANTCODE begin
 		for (int i = 0; i < variables.length; i++) {
 			String var = variables[i];
 			if (var.contains("=")) {
@@ -36,6 +37,7 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 				this.constants[i] = var.split("=")[1];
 			}
 		}
+		// CONSTANTCODE end
 
 		cached = false;
 		checks = new LinkedList<Pair<Integer, Integer>>();
@@ -172,6 +174,15 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 			//			System.out.println("name: " + toString() + " " + t.toString());
 			return false;
 		}
+		
+		// CONSTANTCODE begin
+		// check constants
+		for (int i = 0; i < size(); i++) {
+			if (constants[i] != null && !t.get(i).equals(constants[i])) {
+				return false;
+			}
+		}
+		// CONSTANTCODE end
 
 		if (!cached) {
 
@@ -196,26 +207,12 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 				}
 			}
 			
-			// check constants
-			for (int i = 0; i < size(); i++) {
-				if (constants[i] != null && !t.get(i).equals(constants[i])) {
-					success = false;
-				}
-			}
-
 			cached = true;
 			return success;
 		} else {
 
 			for (Pair<Integer, Integer> p : checks) {
 				if (!t.get(p.fst).equals(t.get(p.snd))) {
-					return false;
-				}
-			}
-			
-			// check constants
-			for (int i = 0; i < size(); i++) {
-				if (constants[i] != null && !t.get(i).equals(constants[i])) {
 					return false;
 				}
 			}
