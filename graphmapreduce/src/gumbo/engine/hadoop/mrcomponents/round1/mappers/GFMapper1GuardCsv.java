@@ -34,7 +34,6 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 
 	RelationResolver resolver;
 
-	private StringBuilder stringBuilder;
 	private Text buffer;
 	private byte [] open;
 	private byte [] close;
@@ -55,7 +54,6 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 			Map1GuardMessageFactory msgFactory = new Map1GuardMessageFactory(context,settings,eso);
 			algo = new Map1GuardAlgorithm(eso, msgFactory);
 
-			stringBuilder = new StringBuilder(128);
 			buffer = new Text();
 
 			open = "(".getBytes();

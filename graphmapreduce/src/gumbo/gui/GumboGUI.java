@@ -47,6 +47,7 @@ import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
@@ -392,6 +393,13 @@ public class GumboGUI extends Configured implements Tool {
 					HadoopEngine engine = new HadoopEngine();
 					// TODO add defaults to config
 					// TODO recompile plan?
+					
+					for (Entry<String, String> entry: getConf()) {
+						if ( entry.getKey().contains("gumbo")) {
+							System.out.printf("%s=%s\n", entry.getKey(), entry.getValue());
+						}
+					}
+					
 					engine.executePlan(plan,getConf());
 					final String stats = engine.getCounters();
 

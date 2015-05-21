@@ -175,7 +175,7 @@ public class GumboHadoopConverter {
 
 			// guarded mapper for relational files
 			for ( Path guardedPath : eso.getGuardedRelPaths()) {
-				LOG.info("Setting M1 guarded path to " + guardedPath + " using mapper " + GFMapper1GuardedRel.class.getName());
+				LOG.info("Setting M1 guarded path to " + guardedPath + " using mapper " + GFMapper1GuardedRelOptimized.class.getName());
 				MultipleInputs.addInputPath(hadoopJob, guardedPath, 
 						TextInputFormat.class, GFMapper1GuardedRelOptimized.class);
 			}
@@ -196,7 +196,7 @@ public class GumboHadoopConverter {
 
 			// guard mapper for relational files
 			for ( Path guardPath : eso.getGuardRelPaths()) {
-				LOG.info("Setting M1 guard path to " + guardPath + " using mapper " + GFMapper1GuardRel.class.getName());
+				LOG.info("Setting M1 guard path to " + guardPath + " using mapper " + GFMapper1GuardRelOptimized.class.getName());
 				MultipleInputs.addInputPath(hadoopJob, guardPath, 
 						TextInputFormat.class, GFMapper1GuardRelOptimized.class);
 			}

@@ -84,7 +84,7 @@ public class Red2Algorithm {
 			String value = split;
 
 			// record guard tuple if found
-			if (msgFactory.isTuple(value)) {
+			if (lookingForGuard & msgFactory.isTuple(value)) {
 				if (lookingForGuard) {
 					guardTuple = msgFactory.getTuple(value);
 					lookingForGuard = false;
@@ -110,6 +110,7 @@ public class Red2Algorithm {
 
 
 			}
+			
 
 			return true;
 		} catch(Exception e) {
@@ -126,6 +127,8 @@ public class Red2Algorithm {
 		} else {
 			msgFactory.incrementTuples(1);
 		}
+		
+
 
 		try {
 			/* evaluate all formulas */
@@ -137,6 +140,7 @@ public class Red2Algorithm {
 
 					// get associated boolean expression
 					BExpression booleanChildExpression = eso.getBooleanChildExpression(formula);
+					
 
 					// evaluate
 					boolean eval = booleanChildExpression.evaluate(booleanContext);
