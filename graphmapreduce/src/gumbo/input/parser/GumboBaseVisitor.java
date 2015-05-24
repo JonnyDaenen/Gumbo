@@ -1,7 +1,5 @@
 package gumbo.input.parser;
 
-// Generated from Gumbo.g4 by ANTLR 4.5
-import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -124,7 +122,14 @@ public class GumboBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAssrt(GumboParser.AssrtContext ctx) { return visitChildren(ctx); }
+	@Override public T visitConstantAssert(GumboParser.ConstantAssertContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitEqualityAssert(GumboParser.EqualityAssertContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

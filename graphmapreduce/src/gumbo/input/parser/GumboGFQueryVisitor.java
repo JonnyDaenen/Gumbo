@@ -2,6 +2,8 @@ package gumbo.input.parser;
 
 import gumbo.input.parser.GumboParser.AndExprContext;
 import gumbo.input.parser.GumboParser.AssrtContext;
+import gumbo.input.parser.GumboParser.ConstantAssertContext;
+import gumbo.input.parser.GumboParser.EqualityAssertContext;
 import gumbo.input.parser.GumboParser.GfqueryContext;
 import gumbo.input.parser.GumboParser.GuardedExprContext;
 import gumbo.input.parser.GumboParser.NestedGuardedContext;
@@ -37,11 +39,13 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 	private int _currentID;
 	private ArrayList<RelationSchema> _relations;
 	private Stack<ArrayList<String> > _guardVars;
+	private Stack<ArrayList<String> > _guardSchemas;
 	
 	public GumboGFQueryVisitor(ArrayList<RelationSchema> inputrelations) {
 		_currentID = 0;
 		
 		_guardVars = new Stack<>();
+		_guardSchemas = new Stack<>();
 		_relations = new ArrayList<RelationSchema>();
 		_relations.addAll(inputrelations);
 	}	
@@ -74,13 +78,55 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 			throw new ParseCancellationException("Unknown relation name on line " + ctx.relname().getStart().getLine() + ".");
 		
 		String[] guardVars = getRelationSchema(guardName).getFields().clone();
-		String[] guardVarsConstants = guardVars.clone();
 		
+		_guardSchemas.push(new ArrayList<>(Arrays.asList(guardVars)));
+		
+		// equality asserts
 		if (ctx.satclause() != null) {
-			
 			for (AssrtContext assrt : ctx.satclause().assrt()) {
-				String varname = assrt.selector().getText();
-				String value = assrt.anystring().getText();
+				if (!(assrt instanceof EqualityAssertContext))
+					continue;
+				EqualityAssertContext eqassrt = (EqualityAssertContext) assrt;
+				String varname1 = eqassrt.selector(0).getText();
+				String varname2 = eqassrt.selector(1).getText();
+				if (varname1.contains("$")) {
+					int i = Integer.parseInt(varname1.substring(1));
+					if (i < 0 || i > guardVars.length - 1)
+						throw new ParseCancellationException("Selector index out of range on line " + ctx.relname().getStart().getLine() + ": index " + i + ".");
+					if (varname2.contains("$")) {
+						int j = Integer.parseInt(varname1.substring(1));
+						if (j < 0 || j > guardVars.length - 1)
+							throw new ParseCancellationException("Selector index out of range on line " + ctx.relname().getStart().getLine() + ": index " + j + ".");
+						guardVars[i] = guardVars[j];
+					} else {						
+						guardVars[i] = varname2; 
+					}
+				} else {
+					int index = -1;
+					if (varname2.contains("$")) {
+						index = Integer.parseInt(varname2.substring(1));
+						if (index < 0 || index > guardVars.length - 1)
+							throw new ParseCancellationException("Selector index out of range on line " + ctx.relname().getStart().getLine() + ": index " + index + ".");
+					}
+					for (int i = 0; i < guardVars.length; i++) {
+						if (guardVars[i].equals(varname1))
+							guardVars[i] = index == -1 ? varname2 : guardVars[index];
+					}
+				}
+			}
+		}
+		
+		_guardVars.push(new ArrayList<>(Arrays.asList(guardVars)));
+		String[] guardVarsConstants = guardVars.clone();
+
+		// constant asserts
+		if (ctx.satclause() != null) {
+			for (AssrtContext assrt : ctx.satclause().assrt()) {
+				if (!(assrt instanceof ConstantAssertContext))
+					continue;
+				ConstantAssertContext cteassrt = (ConstantAssertContext) assrt;
+				String varname = cteassrt.selector().getText();
+				String value = cteassrt.anystring().getText();
 				if (varname.contains("$")) {
 					int index = Integer.parseInt(varname.substring(1));
 					if (index < 0 || index > guardVarsConstants.length - 1)
@@ -93,10 +139,8 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 					}
 				}
 			}
-			
 		}
 		
-		_guardVars.push(new ArrayList<>(Arrays.asList(guardVars)));
 		GFAtomicExpression guard = new GFAtomicExpression(guardName, guardVarsConstants);
 		
 		// output relation
@@ -173,6 +217,7 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 	public GFExpression visitRegularGuarded(RegularGuardedContext ctx) {
 		String guardedName = ctx.relname().getText();
 		ArrayList<String> vars = new ArrayList<String>();
+		ArrayList<String> guardSchema = _guardSchemas.peek();
 		ArrayList<String> guardVars = _guardVars.peek();
 		for (SelectorContext var : ctx.schema().selector()) {
 			if (var.getText().contains("$")) {
@@ -181,7 +226,13 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 					throw new ParseCancellationException("Selector index out of range on line " + ctx.relname().getStart().getLine() + ".");
 				vars.add(guardVars.get(index));
 			} else {
-				vars.add(var.getText());		
+				//vars.add(var.getText());		
+				for (int i = 0; i < guardSchema.size(); i++) {
+					if (guardSchema.get(i).equals(var.getText())) {
+						vars.add(guardVars.get(i));
+						break;
+					}
+				}
 			}
 		}
 		String[] guardedVars = new String[vars.size()];

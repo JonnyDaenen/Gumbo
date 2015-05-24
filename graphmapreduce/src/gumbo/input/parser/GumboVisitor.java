@@ -1,7 +1,5 @@
 package gumbo.input.parser;
 
-// Generated from Gumbo.g4 by ANTLR 4.5
-import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -105,11 +103,19 @@ public interface GumboVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSatclause(GumboParser.SatclauseContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link GumboParser#assrt}.
+	 * Visit a parse tree produced by the {@code ConstantAssert}
+	 * labeled alternative in {@link GumboParser#assrt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAssrt(GumboParser.AssrtContext ctx);
+	T visitConstantAssert(GumboParser.ConstantAssertContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code EqualityAssert}
+	 * labeled alternative in {@link GumboParser#assrt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEqualityAssert(GumboParser.EqualityAssertContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code AndExpr}
 	 * labeled alternative in {@link GumboParser#expr}.

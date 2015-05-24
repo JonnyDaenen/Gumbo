@@ -946,6 +946,17 @@ public class GumboParser extends Parser {
 	}
 
 	public static class AssrtContext extends ParserRuleContext {
+		public AssrtContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_assrt; }
+	 
+		public AssrtContext() { }
+		public void copyFrom(AssrtContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class ConstantAssertContext extends AssrtContext {
 		public SelectorContext selector() {
 			return getRuleContext(SelectorContext.class,0);
 		}
@@ -956,13 +967,24 @@ public class GumboParser extends Parser {
 		public AnystringContext anystring() {
 			return getRuleContext(AnystringContext.class,0);
 		}
-		public AssrtContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_assrt; }
+		public ConstantAssertContext(AssrtContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof GumboVisitor ) return ((GumboVisitor<? extends T>)visitor).visitAssrt(this);
+			if ( visitor instanceof GumboVisitor ) return ((GumboVisitor<? extends T>)visitor).visitConstantAssert(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class EqualityAssertContext extends AssrtContext {
+		public List<SelectorContext> selector() {
+			return getRuleContexts(SelectorContext.class);
+		}
+		public SelectorContext selector(int i) {
+			return getRuleContext(SelectorContext.class,i);
+		}
+		public EqualityAssertContext(AssrtContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GumboVisitor ) return ((GumboVisitor<? extends T>)visitor).visitEqualityAssert(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -971,18 +993,36 @@ public class GumboParser extends Parser {
 		AssrtContext _localctx = new AssrtContext(_ctx, getState());
 		enterRule(_localctx, 28, RULE_assrt);
 		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(151);
-			selector();
-			setState(152);
-			match(T__0);
-			setState(153);
-			match(QUOTE);
-			setState(154);
-			anystring();
-			setState(155);
-			match(QUOTE);
+			setState(161);
+			switch ( getInterpreter().adaptivePredict(_input,11,_ctx) ) {
+			case 1:
+				_localctx = new ConstantAssertContext(_localctx);
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(151);
+				selector();
+				setState(152);
+				match(T__0);
+				setState(153);
+				match(QUOTE);
+				setState(154);
+				anystring();
+				setState(155);
+				match(QUOTE);
+				}
+				break;
+			case 2:
+				_localctx = new EqualityAssertContext(_localctx);
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(157);
+				selector();
+				setState(158);
+				match(T__0);
+				setState(159);
+				selector();
+				}
+				break;
 			}
 		}
 		catch (RecognitionException re) {
@@ -1089,17 +1129,17 @@ public class GumboParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(165);
-			switch ( getInterpreter().adaptivePredict(_input,11,_ctx) ) {
+			setState(171);
+			switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
 			case 1:
 				{
 				_localctx = new NotExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
-				setState(158);
+				setState(164);
 				match(NOT);
-				setState(159);
+				setState(165);
 				expr(5);
 				}
 				break;
@@ -1108,7 +1148,7 @@ public class GumboParser extends Parser {
 				_localctx = new GuardedExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(160);
+				setState(166);
 				guardedrel();
 				}
 				break;
@@ -1117,35 +1157,35 @@ public class GumboParser extends Parser {
 				_localctx = new ParExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(161);
+				setState(167);
 				match(LPAR);
-				setState(162);
+				setState(168);
 				expr(0);
-				setState(163);
+				setState(169);
 				match(RPAR);
 				}
 				break;
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(175);
+			setState(181);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,14,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(173);
-					switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
+					setState(179);
+					switch ( getInterpreter().adaptivePredict(_input,13,_ctx) ) {
 					case 1:
 						{
 						_localctx = new AndExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(167);
+						setState(173);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-						setState(168);
+						setState(174);
 						match(AND);
-						setState(169);
+						setState(175);
 						expr(5);
 						}
 						break;
@@ -1153,20 +1193,20 @@ public class GumboParser extends Parser {
 						{
 						_localctx = new OrExprContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(170);
+						setState(176);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(171);
+						setState(177);
 						match(OR);
-						setState(172);
+						setState(178);
 						expr(4);
 						}
 						break;
 					}
 					} 
 				}
-				setState(177);
+				setState(183);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,14,_ctx);
 			}
 			}
 		}
@@ -1229,17 +1269,17 @@ public class GumboParser extends Parser {
 		GuardedrelContext _localctx = new GuardedrelContext(_ctx, getState());
 		enterRule(_localctx, 32, RULE_guardedrel);
 		try {
-			setState(188);
-			switch ( getInterpreter().adaptivePredict(_input,14,_ctx) ) {
+			setState(194);
+			switch ( getInterpreter().adaptivePredict(_input,15,_ctx) ) {
 			case 1:
 				_localctx = new RegularGuardedContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(178);
+				setState(184);
 				schema();
-				setState(179);
+				setState(185);
 				match(IN);
-				setState(180);
+				setState(186);
 				relname();
 				}
 				break;
@@ -1247,15 +1287,15 @@ public class GumboParser extends Parser {
 				_localctx = new NestedGuardedContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(182);
+				setState(188);
 				schema();
-				setState(183);
+				setState(189);
 				match(IN);
-				setState(184);
+				setState(190);
 				match(LPAR);
-				setState(185);
+				setState(191);
 				gfquery();
-				setState(186);
+				setState(192);
 				match(RPAR);
 				}
 				break;
@@ -1294,7 +1334,7 @@ public class GumboParser extends Parser {
 		AnystringContext _localctx = new AnystringContext(_ctx, getState());
 		enterRule(_localctx, 34, RULE_anystring);
 		try {
-			setState(194);
+			setState(200);
 			switch (_input.LA(1)) {
 			case LOAD:
 			case REL:
@@ -1314,28 +1354,28 @@ public class GumboParser extends Parser {
 			case NOT:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(190);
+				setState(196);
 				keyword();
 				}
 				break;
 			case ID:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(191);
+				setState(197);
 				match(ID);
 				}
 				break;
 			case INT:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(192);
+				setState(198);
 				match(INT);
 				}
 				break;
 			case FILENAME:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(193);
+				setState(199);
 				match(FILENAME);
 				}
 				break;
@@ -1389,7 +1429,7 @@ public class GumboParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(196);
+			setState(202);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << LOAD) | (1L << REL) | (1L << CSV) | (1L << ARITY) | (1L << AS) | (1L << SET) | (1L << DIR) | (1L << OUTPUT) | (1L << SCRATCH) | (1L << SELECT) | (1L << FROM) | (1L << WHERE) | (1L << IN) | (1L << OR) | (1L << AND) | (1L << NOT))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -1427,7 +1467,7 @@ public class GumboParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\37\u00c9\4\2\t\2"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\37\u00cf\4\2\t\2"+
 		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
 		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\3\2\3\2\3\2\3\2\7\2-\n\2\f\2\16\2\60\13\2\3\3\3\3"+
@@ -1438,55 +1478,57 @@ public class GumboParser extends Parser {
 		"\n\3\13\3\13\3\13\3\13\3\13\3\13\3\f\3\f\3\f\3\f\3\f\3\f\3\r\3\r\3\r\3"+
 		"\r\3\r\3\16\3\16\3\16\3\16\3\16\5\16\u008c\n\16\3\16\3\16\3\16\3\17\3"+
 		"\17\3\17\3\17\7\17\u0095\n\17\f\17\16\17\u0098\13\17\3\20\3\20\3\20\3"+
-		"\20\3\20\3\20\3\21\3\21\3\21\3\21\3\21\3\21\3\21\3\21\5\21\u00a8\n\21"+
-		"\3\21\3\21\3\21\3\21\3\21\3\21\7\21\u00b0\n\21\f\21\16\21\u00b3\13\21"+
-		"\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\5\22\u00bf\n\22\3\23"+
-		"\3\23\3\23\3\23\5\23\u00c5\n\23\3\24\3\24\3\24\2\3 \25\2\4\6\b\n\f\16"+
-		"\20\22\24\26\30\32\34\36 \"$&\2\4\3\2\27\30\4\2\5\17\21\25\u00ca\2.\3"+
-		"\2\2\2\4C\3\2\2\2\6I\3\2\2\2\bK\3\2\2\2\nM\3\2\2\2\fO\3\2\2\2\16f\3\2"+
-		"\2\2\20h\3\2\2\2\22j\3\2\2\2\24u\3\2\2\2\26{\3\2\2\2\30\u0081\3\2\2\2"+
-		"\32\u0086\3\2\2\2\34\u0090\3\2\2\2\36\u0099\3\2\2\2 \u00a7\3\2\2\2\"\u00be"+
-		"\3\2\2\2$\u00c4\3\2\2\2&\u00c6\3\2\2\2(-\5\24\13\2)-\5\26\f\2*-\5\4\3"+
-		"\2+-\5\30\r\2,(\3\2\2\2,)\3\2\2\2,*\3\2\2\2,+\3\2\2\2-\60\3\2\2\2.,\3"+
-		"\2\2\2./\3\2\2\2/\3\3\2\2\2\60.\3\2\2\2\61\62\5\b\5\2\62\63\7\3\2\2\63"+
-		"\64\7\5\2\2\64\65\5\6\4\2\65\66\5\f\7\2\66\67\7\b\2\2\678\5\n\6\289\7"+
-		"\35\2\29D\3\2\2\2:;\5\b\5\2;<\7\3\2\2<=\7\5\2\2=>\5\6\4\2>?\5\f\7\2?@"+
-		"\7\t\2\2@A\5\22\n\2AB\7\35\2\2BD\3\2\2\2C\61\3\2\2\2C:\3\2\2\2D\5\3\2"+
-		"\2\2EG\7\6\2\2FE\3\2\2\2FG\3\2\2\2GJ\3\2\2\2HJ\7\7\2\2IF\3\2\2\2IH\3\2"+
-		"\2\2J\7\3\2\2\2KL\7\27\2\2L\t\3\2\2\2MN\7\26\2\2N\13\3\2\2\2OP\7\32\2"+
-		"\2PQ\5$\23\2QR\7\32\2\2R\r\3\2\2\2ST\7\33\2\2TY\5\20\t\2UV\7\4\2\2VX\5"+
-		"\20\t\2WU\3\2\2\2X[\3\2\2\2YW\3\2\2\2YZ\3\2\2\2Z\\\3\2\2\2[Y\3\2\2\2\\"+
-		"]\7\34\2\2]g\3\2\2\2^c\5\20\t\2_`\7\4\2\2`b\5\20\t\2a_\3\2\2\2be\3\2\2"+
-		"\2ca\3\2\2\2cd\3\2\2\2dg\3\2\2\2ec\3\2\2\2fS\3\2\2\2f^\3\2\2\2g\17\3\2"+
-		"\2\2hi\t\2\2\2i\21\3\2\2\2jk\7\33\2\2kp\7\27\2\2lm\7\4\2\2mo\7\27\2\2"+
-		"nl\3\2\2\2or\3\2\2\2pn\3\2\2\2pq\3\2\2\2qs\3\2\2\2rp\3\2\2\2st\7\34\2"+
-		"\2t\23\3\2\2\2uv\7\n\2\2vw\7\f\2\2wx\7\13\2\2xy\5\f\7\2yz\7\35\2\2z\25"+
-		"\3\2\2\2{|\7\n\2\2|}\7\r\2\2}~\7\13\2\2~\177\5\f\7\2\177\u0080\7\35\2"+
-		"\2\u0080\27\3\2\2\2\u0081\u0082\5\b\5\2\u0082\u0083\7\3\2\2\u0083\u0084"+
-		"\5\32\16\2\u0084\u0085\7\35\2\2\u0085\31\3\2\2\2\u0086\u0087\7\16\2\2"+
-		"\u0087\u0088\5\16\b\2\u0088\u0089\7\17\2\2\u0089\u008b\5\b\5\2\u008a\u008c"+
-		"\5\34\17\2\u008b\u008a\3\2\2\2\u008b\u008c\3\2\2\2\u008c\u008d\3\2\2\2"+
-		"\u008d\u008e\7\21\2\2\u008e\u008f\5 \21\2\u008f\33\3\2\2\2\u0090\u0091"+
-		"\7\20\2\2\u0091\u0096\5\36\20\2\u0092\u0093\7\24\2\2\u0093\u0095\5\36"+
-		"\20\2\u0094\u0092\3\2\2\2\u0095\u0098\3\2\2\2\u0096\u0094\3\2\2\2\u0096"+
-		"\u0097\3\2\2\2\u0097\35\3\2\2\2\u0098\u0096\3\2\2\2\u0099\u009a\5\20\t"+
-		"\2\u009a\u009b\7\3\2\2\u009b\u009c\7\32\2\2\u009c\u009d\5$\23\2\u009d"+
-		"\u009e\7\32\2\2\u009e\37\3\2\2\2\u009f\u00a0\b\21\1\2\u00a0\u00a1\7\25"+
-		"\2\2\u00a1\u00a8\5 \21\7\u00a2\u00a8\5\"\22\2\u00a3\u00a4\7\33\2\2\u00a4"+
-		"\u00a5\5 \21\2\u00a5\u00a6\7\34\2\2\u00a6\u00a8\3\2\2\2\u00a7\u009f\3"+
-		"\2\2\2\u00a7\u00a2\3\2\2\2\u00a7\u00a3\3\2\2\2\u00a8\u00b1\3\2\2\2\u00a9"+
-		"\u00aa\f\6\2\2\u00aa\u00ab\7\24\2\2\u00ab\u00b0\5 \21\7\u00ac\u00ad\f"+
-		"\5\2\2\u00ad\u00ae\7\23\2\2\u00ae\u00b0\5 \21\6\u00af\u00a9\3\2\2\2\u00af"+
-		"\u00ac\3\2\2\2\u00b0\u00b3\3\2\2\2\u00b1\u00af\3\2\2\2\u00b1\u00b2\3\2"+
-		"\2\2\u00b2!\3\2\2\2\u00b3\u00b1\3\2\2\2\u00b4\u00b5\5\16\b\2\u00b5\u00b6"+
-		"\7\22\2\2\u00b6\u00b7\5\b\5\2\u00b7\u00bf\3\2\2\2\u00b8\u00b9\5\16\b\2"+
-		"\u00b9\u00ba\7\22\2\2\u00ba\u00bb\7\33\2\2\u00bb\u00bc\5\32\16\2\u00bc"+
-		"\u00bd\7\34\2\2\u00bd\u00bf\3\2\2\2\u00be\u00b4\3\2\2\2\u00be\u00b8\3"+
-		"\2\2\2\u00bf#\3\2\2\2\u00c0\u00c5\5&\24\2\u00c1\u00c5\7\27\2\2\u00c2\u00c5"+
-		"\7\26\2\2\u00c3\u00c5\7\31\2\2\u00c4\u00c0\3\2\2\2\u00c4\u00c1\3\2\2\2"+
-		"\u00c4\u00c2\3\2\2\2\u00c4\u00c3\3\2\2\2\u00c5%\3\2\2\2\u00c6\u00c7\t"+
-		"\3\2\2\u00c7\'\3\2\2\2\22,.CFIYcfp\u008b\u0096\u00a7\u00af\u00b1\u00be"+
-		"\u00c4";
+		"\20\3\20\3\20\3\20\3\20\3\20\3\20\5\20\u00a4\n\20\3\21\3\21\3\21\3\21"+
+		"\3\21\3\21\3\21\3\21\5\21\u00ae\n\21\3\21\3\21\3\21\3\21\3\21\3\21\7\21"+
+		"\u00b6\n\21\f\21\16\21\u00b9\13\21\3\22\3\22\3\22\3\22\3\22\3\22\3\22"+
+		"\3\22\3\22\3\22\5\22\u00c5\n\22\3\23\3\23\3\23\3\23\5\23\u00cb\n\23\3"+
+		"\24\3\24\3\24\2\3 \25\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&\2\4"+
+		"\3\2\27\30\4\2\5\17\21\25\u00d1\2.\3\2\2\2\4C\3\2\2\2\6I\3\2\2\2\bK\3"+
+		"\2\2\2\nM\3\2\2\2\fO\3\2\2\2\16f\3\2\2\2\20h\3\2\2\2\22j\3\2\2\2\24u\3"+
+		"\2\2\2\26{\3\2\2\2\30\u0081\3\2\2\2\32\u0086\3\2\2\2\34\u0090\3\2\2\2"+
+		"\36\u00a3\3\2\2\2 \u00ad\3\2\2\2\"\u00c4\3\2\2\2$\u00ca\3\2\2\2&\u00cc"+
+		"\3\2\2\2(-\5\24\13\2)-\5\26\f\2*-\5\4\3\2+-\5\30\r\2,(\3\2\2\2,)\3\2\2"+
+		"\2,*\3\2\2\2,+\3\2\2\2-\60\3\2\2\2.,\3\2\2\2./\3\2\2\2/\3\3\2\2\2\60."+
+		"\3\2\2\2\61\62\5\b\5\2\62\63\7\3\2\2\63\64\7\5\2\2\64\65\5\6\4\2\65\66"+
+		"\5\f\7\2\66\67\7\b\2\2\678\5\n\6\289\7\35\2\29D\3\2\2\2:;\5\b\5\2;<\7"+
+		"\3\2\2<=\7\5\2\2=>\5\6\4\2>?\5\f\7\2?@\7\t\2\2@A\5\22\n\2AB\7\35\2\2B"+
+		"D\3\2\2\2C\61\3\2\2\2C:\3\2\2\2D\5\3\2\2\2EG\7\6\2\2FE\3\2\2\2FG\3\2\2"+
+		"\2GJ\3\2\2\2HJ\7\7\2\2IF\3\2\2\2IH\3\2\2\2J\7\3\2\2\2KL\7\27\2\2L\t\3"+
+		"\2\2\2MN\7\26\2\2N\13\3\2\2\2OP\7\32\2\2PQ\5$\23\2QR\7\32\2\2R\r\3\2\2"+
+		"\2ST\7\33\2\2TY\5\20\t\2UV\7\4\2\2VX\5\20\t\2WU\3\2\2\2X[\3\2\2\2YW\3"+
+		"\2\2\2YZ\3\2\2\2Z\\\3\2\2\2[Y\3\2\2\2\\]\7\34\2\2]g\3\2\2\2^c\5\20\t\2"+
+		"_`\7\4\2\2`b\5\20\t\2a_\3\2\2\2be\3\2\2\2ca\3\2\2\2cd\3\2\2\2dg\3\2\2"+
+		"\2ec\3\2\2\2fS\3\2\2\2f^\3\2\2\2g\17\3\2\2\2hi\t\2\2\2i\21\3\2\2\2jk\7"+
+		"\33\2\2kp\7\27\2\2lm\7\4\2\2mo\7\27\2\2nl\3\2\2\2or\3\2\2\2pn\3\2\2\2"+
+		"pq\3\2\2\2qs\3\2\2\2rp\3\2\2\2st\7\34\2\2t\23\3\2\2\2uv\7\n\2\2vw\7\f"+
+		"\2\2wx\7\13\2\2xy\5\f\7\2yz\7\35\2\2z\25\3\2\2\2{|\7\n\2\2|}\7\r\2\2}"+
+		"~\7\13\2\2~\177\5\f\7\2\177\u0080\7\35\2\2\u0080\27\3\2\2\2\u0081\u0082"+
+		"\5\b\5\2\u0082\u0083\7\3\2\2\u0083\u0084\5\32\16\2\u0084\u0085\7\35\2"+
+		"\2\u0085\31\3\2\2\2\u0086\u0087\7\16\2\2\u0087\u0088\5\16\b\2\u0088\u0089"+
+		"\7\17\2\2\u0089\u008b\5\b\5\2\u008a\u008c\5\34\17\2\u008b\u008a\3\2\2"+
+		"\2\u008b\u008c\3\2\2\2\u008c\u008d\3\2\2\2\u008d\u008e\7\21\2\2\u008e"+
+		"\u008f\5 \21\2\u008f\33\3\2\2\2\u0090\u0091\7\20\2\2\u0091\u0096\5\36"+
+		"\20\2\u0092\u0093\7\24\2\2\u0093\u0095\5\36\20\2\u0094\u0092\3\2\2\2\u0095"+
+		"\u0098\3\2\2\2\u0096\u0094\3\2\2\2\u0096\u0097\3\2\2\2\u0097\35\3\2\2"+
+		"\2\u0098\u0096\3\2\2\2\u0099\u009a\5\20\t\2\u009a\u009b\7\3\2\2\u009b"+
+		"\u009c\7\32\2\2\u009c\u009d\5$\23\2\u009d\u009e\7\32\2\2\u009e\u00a4\3"+
+		"\2\2\2\u009f\u00a0\5\20\t\2\u00a0\u00a1\7\3\2\2\u00a1\u00a2\5\20\t\2\u00a2"+
+		"\u00a4\3\2\2\2\u00a3\u0099\3\2\2\2\u00a3\u009f\3\2\2\2\u00a4\37\3\2\2"+
+		"\2\u00a5\u00a6\b\21\1\2\u00a6\u00a7\7\25\2\2\u00a7\u00ae\5 \21\7\u00a8"+
+		"\u00ae\5\"\22\2\u00a9\u00aa\7\33\2\2\u00aa\u00ab\5 \21\2\u00ab\u00ac\7"+
+		"\34\2\2\u00ac\u00ae\3\2\2\2\u00ad\u00a5\3\2\2\2\u00ad\u00a8\3\2\2\2\u00ad"+
+		"\u00a9\3\2\2\2\u00ae\u00b7\3\2\2\2\u00af\u00b0\f\6\2\2\u00b0\u00b1\7\24"+
+		"\2\2\u00b1\u00b6\5 \21\7\u00b2\u00b3\f\5\2\2\u00b3\u00b4\7\23\2\2\u00b4"+
+		"\u00b6\5 \21\6\u00b5\u00af\3\2\2\2\u00b5\u00b2\3\2\2\2\u00b6\u00b9\3\2"+
+		"\2\2\u00b7\u00b5\3\2\2\2\u00b7\u00b8\3\2\2\2\u00b8!\3\2\2\2\u00b9\u00b7"+
+		"\3\2\2\2\u00ba\u00bb\5\16\b\2\u00bb\u00bc\7\22\2\2\u00bc\u00bd\5\b\5\2"+
+		"\u00bd\u00c5\3\2\2\2\u00be\u00bf\5\16\b\2\u00bf\u00c0\7\22\2\2\u00c0\u00c1"+
+		"\7\33\2\2\u00c1\u00c2\5\32\16\2\u00c2\u00c3\7\34\2\2\u00c3\u00c5\3\2\2"+
+		"\2\u00c4\u00ba\3\2\2\2\u00c4\u00be\3\2\2\2\u00c5#\3\2\2\2\u00c6\u00cb"+
+		"\5&\24\2\u00c7\u00cb\7\27\2\2\u00c8\u00cb\7\26\2\2\u00c9\u00cb\7\31\2"+
+		"\2\u00ca\u00c6\3\2\2\2\u00ca\u00c7\3\2\2\2\u00ca\u00c8\3\2\2\2\u00ca\u00c9"+
+		"\3\2\2\2\u00cb%\3\2\2\2\u00cc\u00cd\t\3\2\2\u00cd\'\3\2\2\2\23,.CFIYc"+
+		"fp\u008b\u0096\u00a3\u00ad\u00b5\u00b7\u00c4\u00ca";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
