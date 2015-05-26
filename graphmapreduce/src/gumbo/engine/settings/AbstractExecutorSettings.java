@@ -39,6 +39,8 @@ public abstract class AbstractExecutorSettings {
 	public static final String round1FiniteMemoryOptimizationOn = "gumbo.engine.round1FiniteMemoryOptimizationOn"; 
 	
 	public static final String turnOffOpts = "gumbo.turnOffOpts";
+	public static final String turnOnOpts = "gumbo.turnOnOpts";
+	public static final String turnOnDefaultOpts = "gumbo.turnOnDefaultOpts";
 	
 
 	/**
