@@ -49,6 +49,7 @@ public abstract class AbstractExecutorSettings {
 	public void loadDefaults() {
 		turnOnOptimizations();
 		setBooleanProperty(guardedCombinerOptimizationOn, false); 
+//		setBooleanProperty(round1FiniteMemoryOptimizationOn, false); 
 		setProperty(PROOF_SYMBOL, "#");
 	}
 	
