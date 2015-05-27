@@ -47,6 +47,9 @@ public class Gumbo extends Configured implements Tool {
 		
 		if (getConf().getBoolean(AbstractExecutorSettings.turnOffOpts, false))
 			settings.turnOffOptimizations();
+		
+		if (getConf().getBoolean(AbstractExecutorSettings.turnOnOpts, false))
+			settings.turnOnOptimizations();
 			
 		
 		settings.loadConfig(getConf());
