@@ -3,6 +3,7 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round2.mappers;
 
+import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1Identity;
 import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Map2GuardAlgorithm;
 import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Map2GuardMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.RelationResolver;
@@ -16,6 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Mapper.Context;
 
 /**
  * Also outputs the atoms when a guard is projected onto them.
@@ -23,7 +25,7 @@ import org.apache.hadoop.mapreduce.Mapper;
  * @author Jonny Daenen
  * 
  */
-public class GFMapper2GuardCsv extends GFMapper2GuardRelOptimized {
+public class GFMapper2GuardCsv extends GFMapper1Identity {
 
 	private static final Log LOG = LogFactory.getLog(GFMapper2GuardCsv.class);
 
@@ -38,9 +40,7 @@ public class GFMapper2GuardCsv extends GFMapper2GuardRelOptimized {
 	private byte[] close;
 
 	@Override
-	protected void setup(Mapper<LongWritable, Text, Text, Text>.Context context)
-			throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
+	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
 
 		try {
@@ -52,6 +52,7 @@ public class GFMapper2GuardCsv extends GFMapper2GuardRelOptimized {
 			Map2GuardMessageFactory msgFactory = new Map2GuardMessageFactory(context,settings,eso);		
 			algo = new Map2GuardAlgorithm(eso, msgFactory);
 
+			buffer = new Text();
 			open = "(".getBytes();
 			close = ")".getBytes();
 			
