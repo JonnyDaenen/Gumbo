@@ -33,9 +33,10 @@ public abstract class AbstractExecutorSettings {
 	public static final String guardReferenceOptimizationOn = "gumbo.engine.guardAddressOptimizationOn";
 //	public static final String guardAsGuardedReReadOptimizationOn = "gumbo.engine.guardAsGuardedReReadOptimizationOn"; // TODO this is currently implemented, but needs to become a toggle
 
-	public static final String guardedCombinerOptimizationOn = "gumbo.engine.guardedCombinerOptimizationOn";  
+	  
 
 	// speed options
+	public static final String guardedCombinerOptimizationOn = "gumbo.engine.guardedCombinerOptimizationOn";
 	public static final String round1FiniteMemoryOptimizationOn = "gumbo.engine.round1FiniteMemoryOptimizationOn"; 
 	
 	public static final String turnOffOpts = "gumbo.engine.turnOffOpts";
@@ -49,7 +50,7 @@ public abstract class AbstractExecutorSettings {
 	public void loadDefaults() {
 		turnOnOptimizations();
 		setBooleanProperty(guardedCombinerOptimizationOn, false); 
-//		setBooleanProperty(round1FiniteMemoryOptimizationOn, false); 
+		setBooleanProperty(round1FiniteMemoryOptimizationOn, false); 
 		setProperty(PROOF_SYMBOL, "#");
 	}
 	
