@@ -58,7 +58,6 @@ public abstract class AbstractExecutorSettings {
 		setBooleanProperty(requestAtomIdOptimizationOn, false);
 		setBooleanProperty(guardKeepAliveOptimizationOn, false);
 		setBooleanProperty(guardReferenceOptimizationOn, false);
-//		setBooleanProperty(guardAsGuardedReReadOptimizationOn, false); 
 		setBooleanProperty(round1FiniteMemoryOptimizationOn, false); 
 		setBooleanProperty(guardedCombinerOptimizationOn, false); 
 	}
@@ -68,7 +67,6 @@ public abstract class AbstractExecutorSettings {
 		setBooleanProperty(requestAtomIdOptimizationOn, true);
 		setBooleanProperty(guardKeepAliveOptimizationOn, true);
 		setBooleanProperty(guardReferenceOptimizationOn, true);
-//		setBooleanProperty(guardAsGuardedReReadOptimizationOn, true);
 		setBooleanProperty(round1FiniteMemoryOptimizationOn, true);
 		setBooleanProperty(guardedCombinerOptimizationOn, true);
 
