@@ -1,10 +1,10 @@
 package gumbo.generator;
 
+import gumbo.compiler.filemapper.InputFormat;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
-import gumbo.compiler.filemapper.InputFormat;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

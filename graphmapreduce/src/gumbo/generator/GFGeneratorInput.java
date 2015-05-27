@@ -1,9 +1,9 @@
 package gumbo.generator;
 
+import gumbo.compiler.filemapper.InputFormat;
+
 import java.util.Iterator;
 import java.util.Vector;
-
-import gumbo.compiler.filemapper.InputFormat;
 
 public class GFGeneratorInput implements Iterable<GFGeneratorInput.Relation> {
 	

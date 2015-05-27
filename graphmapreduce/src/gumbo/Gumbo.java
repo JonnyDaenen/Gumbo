@@ -70,12 +70,14 @@ public class Gumbo extends Configured implements Tool {
 				pickup = true;
 			} else if (pickup) {
 				filename = arg;
+				pickup = false;
 			}
 			
 			else if (arg.equals("-j")) {
 				pickupname = true;
 			} else if (pickupname) {
 				jobname = arg;
+				pickupname = false;
 			}
 		}
 		

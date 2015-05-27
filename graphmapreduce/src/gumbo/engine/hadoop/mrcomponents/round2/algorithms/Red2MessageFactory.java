@@ -3,12 +3,10 @@ package gumbo.engine.hadoop.mrcomponents.round2.algorithms;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.MessageFailedException;
 import gumbo.engine.hadoop.mrcomponents.round2.reducers.GumboRed2Counter;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
-import java.io.IOException;
 import java.util.Set;
 
 import org.apache.hadoop.fs.Path;

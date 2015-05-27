@@ -1,18 +1,18 @@
 package gumbo.cli;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import gumbo.generator.GFGenerator;
 import gumbo.generator.GFGeneratorException;
 import gumbo.generator.GFGeneratorInput;
 import gumbo.generator.GFGeneratorInputParser;
 import gumbo.generator.QueryType;
 import gumbo.input.parser.GumboExporter;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;

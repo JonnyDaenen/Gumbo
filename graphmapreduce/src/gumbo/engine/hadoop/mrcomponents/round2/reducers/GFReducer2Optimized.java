@@ -7,20 +7,7 @@ import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Red2Algorithm;
 import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Red2MessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.ParameterPasser;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.engine.settings.AbstractExecutorSettings;
-import gumbo.structures.booleanexpressions.BEvaluationContext;
-import gumbo.structures.booleanexpressions.BExpression;
-import gumbo.structures.booleanexpressions.BVariable;
-import gumbo.structures.booleanexpressions.VariableNotFoundException;
-import gumbo.structures.conversion.GFBooleanMapping;
-import gumbo.structures.data.Tuple;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.GFExistentialExpression;
-import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
-import gumbo.structures.gfexpressions.operations.GFAtomProjection;
-import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
 
 import java.io.IOException;
 
@@ -28,7 +15,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Reducer;
 
 /**

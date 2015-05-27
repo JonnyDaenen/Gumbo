@@ -5,8 +5,6 @@ import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
-import java.io.IOException;
-
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Reducer;

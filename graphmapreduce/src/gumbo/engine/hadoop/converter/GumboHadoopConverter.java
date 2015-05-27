@@ -16,10 +16,8 @@ import gumbo.engine.hadoop.mrcomponents.round1.comparators.Round1GroupComparator
 import gumbo.engine.hadoop.mrcomponents.round1.comparators.Round1Partitioner;
 import gumbo.engine.hadoop.mrcomponents.round1.comparators.Round1SortComparator;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardCsv;
-import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardRel;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardRelOptimized;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardedCsv;
-import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardedRel;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardedRelOptimized;
 import gumbo.engine.hadoop.mrcomponents.round1.reducers.GFReducer1Optimized;
 import gumbo.engine.hadoop.mrcomponents.round2.mappers.GFMapper2GuardCsv;

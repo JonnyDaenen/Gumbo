@@ -3,7 +3,6 @@ package gumbo.engine.hadoop.mrcomponents.round2.algorithms;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.MessageFailedException;
 import gumbo.engine.hadoop.mrcomponents.round2.mappers.GumboMap2Counter;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator;
-import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;

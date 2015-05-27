@@ -5,14 +5,11 @@ package gumbo.engine.hadoop.mrcomponents.round1.mappers;
 
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardAlgorithm;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactory;
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedAlgorithm;
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.RelationResolver;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.Tuple;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -3,8 +3,8 @@ package gumbo.gui.dialogs;
 import gumbo.generator.GFGenerator;
 import gumbo.generator.GFGeneratorException;
 import gumbo.generator.GFGeneratorInput;
-import gumbo.generator.QueryType;
 import gumbo.generator.GFGeneratorInput.Relation;
+import gumbo.generator.QueryType;
 import gumbo.gui.panels.QueryInputField;
 import gumbo.input.parser.GumboExporter;
 

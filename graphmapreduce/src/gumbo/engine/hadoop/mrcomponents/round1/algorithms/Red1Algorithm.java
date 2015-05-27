@@ -1,14 +1,11 @@
 package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import gumbo.engine.hadoop.mrcomponents.round1.reducers.GumboRed1Counter;
 import gumbo.engine.settings.AbstractExecutorSettings;
-import gumbo.structures.data.Tuple;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

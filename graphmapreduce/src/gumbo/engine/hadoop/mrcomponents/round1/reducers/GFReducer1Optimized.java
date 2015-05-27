@@ -7,20 +7,15 @@ import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Red1Algorithm;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Red1MessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.ParameterPasser;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Reducer;
 
 /**
