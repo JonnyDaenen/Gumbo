@@ -29,7 +29,7 @@ public abstract class AbstractExecutorSettings {
 	// compression options
 	public static final String assertConstantOptimizationOn = "gumbo.engine.assertConstantOptimizationOn";
 	public static final String requestAtomIdOptimizationOn = "gumbo.engine.requestAtomIdOptimizationOn";
-	public static final String guardKeepAliveOptimizationOn = "gumbo.engine.guardKeepAliveReductionOn";
+	public static final String guardKeepAliveOptimizationOn = "gumbo.engine.guardKeepAliveOptimizationOn";
 	public static final String guardReferenceOptimizationOn = "gumbo.engine.guardAddressOptimizationOn";
 //	public static final String guardAsGuardedReReadOptimizationOn = "gumbo.engine.guardAsGuardedReReadOptimizationOn"; // TODO this is currently implemented, but needs to become a toggle
 

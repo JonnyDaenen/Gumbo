@@ -1,0 +1,13 @@
+
+
+# Goal: test whether adding new atoms from same relation has an impact
+# compare to exp 010
+
+OUTPUT -> output/EXP_010/
+SCRATCH -> scratch/EXP_010/
+
+R,2 <- input/experiments/EXP_010/R, CSV;
+S,1 <- input/experiments/EXP_010/S, CSV;
+T,1 <- input/experiments/EXP_010/T, CSV;
+
+Out1(x) : R(x,y) & (S(y) & S(x));
