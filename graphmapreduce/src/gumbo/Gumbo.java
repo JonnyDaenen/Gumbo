@@ -44,30 +44,31 @@ public class Gumbo extends Configured implements Tool {
 		// load Configuration processed by ToolRunner
 		HadoopExecutorSettings settings = new HadoopExecutorSettings();
 		settings.loadDefaults();
-		
+
 		if (getConf().getBoolean(AbstractExecutorSettings.turnOffOpts, false))
 			settings.turnOffOptimizations();
-		
+
 		if (getConf().getBoolean(AbstractExecutorSettings.turnOnOpts, false))
 			settings.turnOnOptimizations();
-			
-		
+
+
 		settings.loadConfig(getConf());
-//		settings.setBooleanProperty(AbstractExecutorSettings.round1FiniteMemoryOptimizationOn, false);
-		
-		
+		//		settings.setBooleanProperty(AbstractExecutorSettings.round1FiniteMemoryOptimizationOn, false);
+
+
 		for (Entry<String, String> entry: settings.getConf()) {
 			if ( entry.getKey().contains("gumbo")) {
 				System.out.printf("%s=%s\n", entry.getKey(), entry.getValue());
 			}
 		}
-		
+
 		// get file argument
 		// FUTURE make more advanced
 		String filename = null;
 		boolean pickup = false;
 		boolean pickupname = false;
 		String jobname = null;
+
 		for (String arg : args) {
 			if (arg.equals("-f")) {
 				pickup = true;
@@ -75,26 +76,30 @@ public class Gumbo extends Configured implements Tool {
 				filename = arg;
 				pickup = false;
 			}
-			
+
 			else if (arg.equals("-j")) {
 				pickupname = true;
 			} else if (pickupname) {
 				jobname = arg;
 				pickupname = false;
 			}
+			else if (arg.equals("--infix")) {
+				// FUTURE implement
+			}
 		}
-		
+
 		if (filename == null) {
 			throw new NoQueryException("No query file given.");
 		}
-		
+
 		// parse file
 		GumboFileParser parser = new GumboFileParser();
-//		GumboScriptFileParser parser = new GumboScriptFileParser();
+		//		parser.setInfix(infix); TODO 
+		//		GumboScriptFileParser parser = new GumboScriptFileParser();
 		GumboQuery query = parser.parse(filename, jobname);
-		
+
 		LOG.info(query);
-		
+
 		GFCompiler compiler = new GFCompiler();
 		GumboPlan plan = compiler.createPlan(query);
 
@@ -102,7 +107,7 @@ public class Gumbo extends Configured implements Tool {
 
 		HadoopEngine engine = new HadoopEngine();
 		engine.executePlan(plan,settings.getConf());
-		
+
 		System.out.println(engine.getCounters());
 
 		return 0;
@@ -110,7 +115,7 @@ public class Gumbo extends Configured implements Tool {
 
 
 	public static void main(String[] args) throws Exception {
-//		Thread.sleep(10000);
+		//		Thread.sleep(10000);
 		// Let ToolRunner handle generic command-line options 
 		int res = ToolRunner.run(new Configuration(), new Gumbo(), args);
 

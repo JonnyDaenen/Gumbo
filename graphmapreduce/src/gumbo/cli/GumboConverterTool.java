@@ -6,6 +6,8 @@ import gumbo.convertors.hive.GFHiveConverterLong;
 import gumbo.convertors.hive.GFHiveConverterWide;
 import gumbo.convertors.pig.GFPigConverterLong;
 import gumbo.convertors.pig.GFPigConverterWide;
+import gumbo.input.GumboFileParser;
+import gumbo.input.GumboFileParser.MissingQueryComponentException;
 import gumbo.input.GumboQuery;
 import gumbo.input.parser.GumboScriptFileParser;
 import gumbo.input.parser.GumboScriptFileParser.GumboParseException;
@@ -36,6 +38,7 @@ public class GumboConverterTool implements GumboCommandLineTool {
 		_options.addOption("m", "method", true, "Specify either 'wide' or 'long' as the conversion method. Default: wide.");
 		_options.addOption("i", "input", true, "Specify the input gumboscript.");
 		_options.addOption("o", "output", true, "Specify the output filename.");
+		_options.addOption("p", "prefix", false, "Optional flag to undicate the file is in prefix format");
 	}
 	
 	@Override
@@ -92,9 +95,15 @@ public class GumboConverterTool implements GumboCommandLineTool {
 	    String in = cmd.getOptionValue("i");
 	    String out = cmd.getOptionValue("o");
 	    
-	    GumboScriptFileParser gumboparser = new GumboScriptFileParser();
 	    try {
-			GumboQuery query = gumboparser.parse(in);
+			GumboQuery query = null;
+			if (!cmd.hasOption("p")) {
+			    GumboScriptFileParser gumboparser = new GumboScriptFileParser();
+				query = gumboparser.parse(in);
+			} else {
+				GumboFileParser gumboparser = new GumboFileParser();
+				query = gumboparser.parse(in,in);
+			}
 			
 			LOG.info("Lang: " + lang);
 			LOG.info("Method: " + method);
@@ -107,13 +116,9 @@ public class GumboConverterTool implements GumboCommandLineTool {
 		    writer.write(script);
 		    writer.close();
 		    LOG.info("Done!");
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (GumboParseException e) {
-			e.printStackTrace();
-		} catch (GFConversionException e) {
-			e.printStackTrace();
-		}
+		} catch (IOException | MissingQueryComponentException | GumboParseException | GFConversionException e) {
+		    e.printStackTrace();
+		} 
 	    	
 	}
 	

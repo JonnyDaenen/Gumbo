@@ -28,7 +28,7 @@ import org.apache.hadoop.util.ToolRunner;
 public class GumboSparkTester extends Configured implements Tool {
 	
 
-	private static final Log LOG = LogFactory.getLog(Gumbo.class);
+	private static final Log LOG = LogFactory.getLog(GumboSparkTester.class);
 
 	public class NoQueryException extends Exception {
 		private static final long serialVersionUID = 1L;

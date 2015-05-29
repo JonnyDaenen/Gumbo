@@ -16,6 +16,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import tests.GumboSparkTester;
+
 /**
  * @author Jonny Daenen
  * 
@@ -32,6 +37,9 @@ import java.util.Stack;
  */
 public class GFInfixSerializer {
 
+
+	private static final Log LOG = LogFactory.getLog(GFInfixSerializer.class);
+	
 	public String serializeGuard(GFAtomicExpression e) {
 		return e.generateString();
 	}

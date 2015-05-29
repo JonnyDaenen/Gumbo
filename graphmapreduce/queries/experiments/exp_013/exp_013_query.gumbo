@@ -7,11 +7,36 @@
 OUTPUT -> output/EXP_010/
 SCRATCH -> scratch/EXP_010/
 
-R,2 <- input/experiments/EXP_010/R, CSV;
+R,5 <- input/experiments/EXP_010/R, CSV;
 S,1 <- input/experiments/EXP_010/S, CSV;
+T,1 <- input/experiments/EXP_010/T, CSV;
+U,1 <- input/experiments/EXP_010/U, CSV;
+V,1 <- input/experiments/EXP_010/V, CSV;
+W,1 <- input/experiments/EXP_010/W, CSV;
 
-Out1(x) : R(x,y,z) & (
-	(S(x) & !S(y) & !S(z)) |
-	(!S(x) & S(y) & !S(z)) |
-	(!S(x) & !S(y) & S(z))
+Out1(x) : R(x,y,z,v,w) & (S(x) & !T(y) & !U(z) & !V(v) & !W(w));
+
+Out1(x) : R(x,y,z,v,w) & (
+	(S(x) & !T(y) & !U(z) & !V(v) & !W(w)) |
+	(!S(x) & T(y) & !U(z) & !V(v) & !W(w)) 
+);
+
+Out1(x) : R(x,y,z,v,w) & (
+	(S(x) & !T(y) & !U(z) & !V(v) & !W(w)) |
+	(!S(x) & T(y) & !U(z) & !V(v) & !W(w)) |
+	(!S(x) & !T(y) & U(z) & !V(v) & !W(w)) 
+);
+
+Out1(x) : R(x,y,z,v,w) & (
+	(S(x) & !T(y) & !U(z) & !V(v) & !W(w)) |
+	(!S(x) & T(y) & !U(z) & !V(v) & !W(w)) |
+	(!S(x) & !T(y) & U(z) & !V(v) & !W(w)) |
+	(!S(x) & !T(y) & !U(z) & V(v) & !W(w)) 
+);
+
+Out1(x) : R(x,y,z,v,w) & (
+	(S(x) & !T(y) & !U(z) & !V(v) & !W(w)) |
+	(!S(x) & T(y) & !U(z) & !V(v) & !W(w)) |
+	(!S(x) & !T(y) & U(z) & !V(v) & !W(w)) |
+	(!S(x) & !T(y) & !U(z) & !V(v) & W(w)) 
 );
