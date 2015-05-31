@@ -204,6 +204,7 @@ public class Map1GuardMessageFactory {
 
 			byte[] projectBytes = p.projectString(t).getBytes();
 			keyText.append(projectBytes,0,projectBytes.length);
+			
 
 			// value: request message with response code and atom
 			//		String valueString = replyAddress + ";" + guardedID;

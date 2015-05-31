@@ -31,6 +31,7 @@ public class Map1GuardAlgorithm {
 			boolean outputAssert = false;
 			boolean guardIsGuarded = false;
 
+			
 			// check guards + atom (keep-alive)
 			for (GFAtomicExpression guard : eso.getGuardsAll()) {
 
@@ -53,7 +54,7 @@ public class Map1GuardAlgorithm {
 
 						msgFactory.sendRequest(guardedInfo);
 					}
-				}
+				} 
 			}
 
 			// output an assert message if the guard is also guarded (forced)

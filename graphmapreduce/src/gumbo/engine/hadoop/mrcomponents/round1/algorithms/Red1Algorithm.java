@@ -38,6 +38,10 @@ public class Red1Algorithm {
 	public void initialize(String key) throws AlgorithmInterruptedException{
 		keyFound = false;
 		buffer = new HashSet<>(10);
+		
+//		if (key.contains("S(")){
+//			int i = 0;
+//		}
 	}
 
 	/**

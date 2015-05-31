@@ -79,7 +79,7 @@ public class Round1SortComparator extends WritableComparator {
 			CharBuffer charbuf2 = decoder.decode(bb2);
 
 			int val =  compareBuffers(charbuf1, charbuf2);
-//			System.out.println(charbuf1 + " " + charbuf2 + " " + val + " " + charbuf1.length() + " " + l1);
+			
 			return val;
 		} catch (Exception e) {
 
@@ -104,8 +104,8 @@ public class Round1SortComparator extends WritableComparator {
 		if (lastChar2 == '#')
 			len2--;
 		int lim = Math.min(len1, len2);
-		
-//		System.out.println(lastChar1 + " " + lastChar2 + " " + len1 + " " + len2);
+
+		//		System.out.println(lastChar1 + " " + lastChar2 + " " + len1 + " " + len2);
 
 		int k = 0;
 		while (k < lim) {

@@ -48,6 +48,10 @@ public class Round1Partitioner extends Partitioner<Text, Text> {
 	private int getHashCode(CharBuffer cb) {
 		int h = 0;
 		int length = cb.length();
+		
+		if (cb.charAt(cb.length() - 1 ) == '#')
+			length--;
+		
 		for (int i = 0; i < length; i++) {
 			h = 31 * h + cb.get(i);
 		}
