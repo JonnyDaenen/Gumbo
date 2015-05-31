@@ -6,6 +6,7 @@ import gumbo.structures.booleanexpressions.BEvaluationContext;
 import gumbo.structures.booleanexpressions.BExpression;
 import gumbo.structures.booleanexpressions.BVariable;
 import gumbo.structures.conversion.GFBooleanMapping;
+import gumbo.structures.conversion.GFBooleanMapping.AtomNotFoundException;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
@@ -92,20 +93,24 @@ public class Red2Algorithm {
 				String atomRef = value;
 				BVariable atom;
 
-				if (atomIdOn) {
-					int id = Integer.parseInt(atomRef);
-					GFAtomicExpression atomExp = eso.getAtom(id); 
-					atom = mapGFtoB.getVariable(atomExp);
-				} else {
-					Tuple atomTuple = new Tuple(atomRef);
-					GFAtomicExpression dummy = new GFAtomicExpression(atomTuple.getName(), atomTuple.getAllData());
-					atom = mapGFtoB.getVariable(dummy);
+				try {
+					if (atomIdOn) {
+						int id = Integer.parseInt(atomRef);
+						GFAtomicExpression atomExp = eso.getAtom(id); 
+						atom = mapGFtoB.getVariableIfExists(atomExp);
+					} else {
+						Tuple atomTuple = new Tuple(atomRef);
+						GFAtomicExpression dummy = new GFAtomicExpression(atomTuple.getName(), atomTuple.getAllData());
+						atom = mapGFtoB.getVariableIfExists(dummy);
+					}
+					booleanContext.setValue(atom, true);
+				} catch (AtomNotFoundException e) {
+					// ignore bad values
 				}
-				booleanContext.setValue(atom, true);
 
 
 			}
-			
+
 
 			return true;
 		} catch(Exception e) {
@@ -122,7 +127,7 @@ public class Red2Algorithm {
 		} else {
 			msgFactory.incrementTuples(1);
 		}
-		
+
 
 
 		try {
@@ -135,7 +140,7 @@ public class Red2Algorithm {
 
 					// get associated boolean expression
 					BExpression booleanChildExpression = eso.getBooleanChildExpression(formula);
-					
+
 
 					// evaluate
 					boolean eval = booleanChildExpression.evaluate(booleanContext);

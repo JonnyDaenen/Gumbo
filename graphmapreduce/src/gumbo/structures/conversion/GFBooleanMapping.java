@@ -16,18 +16,26 @@ import java.util.Map;
  *
  */
 public class GFBooleanMapping {
-	
+
+	public class AtomNotFoundException extends Exception {
+
+		public AtomNotFoundException(String msg) {
+			super(msg);
+		}
+
+	}
+
 	int nextId;
 	Map<GFExpression, BVariable> mapping;
-	
+
 	public GFBooleanMapping() {
 		mapping = new HashMap<GFExpression, BVariable>();
 		nextId = 0;
 	}
-	
+
 	public void insertElement(GFExistentialExpression gf){
 		BVariable v;
-		
+
 		if (!mapping.containsKey(gf)) {
 			v = new BVariable(nextId);
 			mapping.put(gf, v);
@@ -35,10 +43,10 @@ public class GFBooleanMapping {
 			nextId++;	
 		}
 	}
-	
+
 	public void insertElement(GFAtomicExpression gf){
 		BVariable v;
-		
+
 		if (!mapping.containsKey(gf)) {
 			v = new BVariable(nextId);
 			mapping.put(gf, v);
@@ -46,12 +54,12 @@ public class GFBooleanMapping {
 			nextId++;	
 		}
 	}
-	
-	
+
+
 	public BVariable getVariable(GFExistentialExpression aex) {
-		
+
 		BVariable v;
-		
+
 		// create new var if necessary  
 		if(!mapping.containsKey(aex)) {
 			v = new BVariable(nextId);
@@ -61,15 +69,15 @@ public class GFBooleanMapping {
 		} else {
 			v = mapping.get(aex);
 		}
-			
-		
+
+
 		return v;
 	}
-	
+
 	public BVariable getVariable(GFAtomicExpression aex) {
-		
+
 		BVariable v;
-		
+
 		// create new var if necessary  
 		if(!mapping.containsKey(aex)) {
 			v = new BVariable(nextId);
@@ -79,15 +87,29 @@ public class GFBooleanMapping {
 		} else {
 			v = mapping.get(aex);
 		}
-			
+
 		return v;
 	}
-	
-	
+
+	public BVariable getVariableIfExists(GFAtomicExpression aex) throws AtomNotFoundException {
+
+		BVariable v;
+
+		// create new var if necessary  
+		if(!mapping.containsKey(aex)) {
+			throw new AtomNotFoundException("Atom " + aex + " not found in boolean mapping.");
+		} else {
+			v = mapping.get(aex);
+		}
+
+		return v;
+	}
+
+
 	@Override
 	public String toString() {
 		String s = "";
-		
+
 		for(GFExpression aex : mapping.keySet()) {
 			BVariable v = mapping.get(aex);
 			s += aex.generateString() + " -> " + v.generateString() + "\n";
@@ -108,7 +130,7 @@ public class GFBooleanMapping {
 			if(val.equals(e))
 				return key;
 		}
-		
+
 		return null;
 	}
 
