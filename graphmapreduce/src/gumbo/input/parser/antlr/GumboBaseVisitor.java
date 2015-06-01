@@ -1,4 +1,4 @@
-package gumbo.input.parser;
+package gumbo.input.parser.antlr;
 
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 

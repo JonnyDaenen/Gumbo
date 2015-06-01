@@ -1,4 +1,4 @@
-package gumbo.input.parser;
+package gumbo.input.parser.antlr;
 
 // Generated from Gumbo.g4 by ANTLR 4.5
 import java.util.List;

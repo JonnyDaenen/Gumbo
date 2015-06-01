@@ -1,18 +1,19 @@
 package gumbo.input.parser;
 
-import gumbo.input.parser.GumboParser.AndExprContext;
-import gumbo.input.parser.GumboParser.AssrtContext;
-import gumbo.input.parser.GumboParser.ConstantAssertContext;
-import gumbo.input.parser.GumboParser.EqualityAssertContext;
-import gumbo.input.parser.GumboParser.GfqueryContext;
-import gumbo.input.parser.GumboParser.GuardedExprContext;
-import gumbo.input.parser.GumboParser.NestedGuardedContext;
-import gumbo.input.parser.GumboParser.NotExprContext;
-import gumbo.input.parser.GumboParser.OrExprContext;
-import gumbo.input.parser.GumboParser.ParExprContext;
-import gumbo.input.parser.GumboParser.RegularGuardedContext;
-import gumbo.input.parser.GumboParser.SelectContext;
-import gumbo.input.parser.GumboParser.SelectorContext;
+import gumbo.input.parser.antlr.GumboBaseVisitor;
+import gumbo.input.parser.antlr.GumboParser.AndExprContext;
+import gumbo.input.parser.antlr.GumboParser.AssrtContext;
+import gumbo.input.parser.antlr.GumboParser.ConstantAssertContext;
+import gumbo.input.parser.antlr.GumboParser.EqualityAssertContext;
+import gumbo.input.parser.antlr.GumboParser.GfqueryContext;
+import gumbo.input.parser.antlr.GumboParser.GuardedExprContext;
+import gumbo.input.parser.antlr.GumboParser.NestedGuardedContext;
+import gumbo.input.parser.antlr.GumboParser.NotExprContext;
+import gumbo.input.parser.antlr.GumboParser.OrExprContext;
+import gumbo.input.parser.antlr.GumboParser.ParExprContext;
+import gumbo.input.parser.antlr.GumboParser.RegularGuardedContext;
+import gumbo.input.parser.antlr.GumboParser.SelectContext;
+import gumbo.input.parser.antlr.GumboParser.SelectorContext;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFAndExpression;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
@@ -65,7 +66,7 @@ public class GumboGFQueryVisitor extends GumboBaseVisitor<GFExpression> {
 	}
 	
 	/**
-	 * @see gumbo.input.parser.GumboBaseVisitor#visitGfquery(gumbo.input.parser.GumboParser.GfqueryContext)
+	 * @see gumbo.input.parser.antlr.GumboBaseVisitor#visitGfquery(gumbo.input.parser.antlr.GumboParser.GfqueryContext)
 	 */
 	@Override
 	public GFExpression visitGfquery(GfqueryContext ctx) {

@@ -1,6 +1,8 @@
 package gumbo.input.parser;
 
 import gumbo.input.GumboQuery;
+import gumbo.input.parser.antlr.GumboLexer;
+import gumbo.input.parser.antlr.GumboParser;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;

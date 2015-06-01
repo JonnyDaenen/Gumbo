@@ -1,11 +1,12 @@
 package gumbo.input.parser;
 
 import gumbo.input.GumboQuery;
-import gumbo.input.parser.GumboParser.InputContext;
-import gumbo.input.parser.GumboParser.OutputpathContext;
-import gumbo.input.parser.GumboParser.ScratchpathContext;
-import gumbo.input.parser.GumboParser.ScriptContext;
-import gumbo.input.parser.GumboParser.SelectContext;
+import gumbo.input.parser.antlr.GumboBaseVisitor;
+import gumbo.input.parser.antlr.GumboParser.InputContext;
+import gumbo.input.parser.antlr.GumboParser.OutputpathContext;
+import gumbo.input.parser.antlr.GumboParser.ScratchpathContext;
+import gumbo.input.parser.antlr.GumboParser.ScriptContext;
+import gumbo.input.parser.antlr.GumboParser.SelectContext;
 import gumbo.structures.gfexpressions.GFExpression;
 
 import java.util.Collection;
@@ -21,7 +22,7 @@ import java.util.List;
 public class GumboScriptVisitor extends GumboBaseVisitor<GumboQuery> {
 
 	/**
-	 * @see gumbo.input.parser.GumboBaseVisitor#visitScript(gumbo.input.parser.GumboParser.ScriptContext)
+	 * @see gumbo.input.parser.antlr.GumboBaseVisitor#visitScript(gumbo.input.parser.antlr.GumboParser.ScriptContext)
 	 */
 	@Override
 	public GumboQuery visitScript(ScriptContext ctx) {

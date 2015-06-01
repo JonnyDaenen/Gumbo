@@ -2,8 +2,9 @@ package gumbo.input.parser;
 
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.input.parser.GumboParser.InputArityContext;
-import gumbo.input.parser.GumboParser.InputSchemaContext;
+import gumbo.input.parser.antlr.GumboBaseVisitor;
+import gumbo.input.parser.antlr.GumboParser.InputArityContext;
+import gumbo.input.parser.antlr.GumboParser.InputSchemaContext;
 import gumbo.structures.data.RelationSchema;
 
 import java.util.ArrayList;
