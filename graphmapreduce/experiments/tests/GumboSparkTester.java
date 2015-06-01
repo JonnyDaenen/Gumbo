@@ -3,7 +3,6 @@
  */
 package tests;
 
-import gumbo.Gumbo;
 import gumbo.compiler.GFCompiler;
 import gumbo.compiler.GumboPlan;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
