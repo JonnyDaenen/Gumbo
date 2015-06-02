@@ -41,6 +41,12 @@ public class Gumbo extends Configured implements Tool {
 
 	public int run(String[] args) throws Exception {
 
+		String tmpdir = getConf().get("java.io.tmpdir");
+		if (tmpdir != null)
+			System.setProperty("java.io.tmpdir", tmpdir);
+		System.out.println(System.getProperty("java.io.tmpdir"));
+
+
 		// load Configuration processed by ToolRunner
 		HadoopExecutorSettings settings = new HadoopExecutorSettings();
 		settings.loadDefaults();

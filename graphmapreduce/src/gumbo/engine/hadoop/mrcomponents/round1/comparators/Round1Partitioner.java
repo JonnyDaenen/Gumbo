@@ -45,6 +45,7 @@ public class Round1Partitioner extends Partitioner<Text, Text> {
 		return partition;
 	}
 
+	// TEST create unit test with multiple reducers!
 	private int getHashCode(CharBuffer cb) {
 		int h = 0;
 		int length = cb.length();
