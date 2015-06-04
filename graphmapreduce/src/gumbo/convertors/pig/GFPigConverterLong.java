@@ -69,7 +69,7 @@ public class GFPigConverterLong extends GFPigConverter {
 		
 		// create union of all conjunctions
 		if (unions.size() > 1) {
-			query += gfe.getOutputRelation().getName() + " = UNION ";
+			query += gfe.getOutputRelation().getName() + "_U" + " = UNION ";
 			for (int i = 0; i < unions.size(); i++) {
 				query += unions.get(i);
 				if (i < unions.size() - 1)
