@@ -119,6 +119,7 @@ public class Map1GuardedMessageFactory {
 
 			context.write(keyText, valueText);
 
+
 			//System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");
 		} catch(Exception e) {
 			throw new MessageFailedException(e);

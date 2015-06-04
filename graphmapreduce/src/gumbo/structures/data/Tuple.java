@@ -16,12 +16,12 @@ import org.apache.hadoop.io.Text;
  */
 public class Tuple {
 
-//	private static Pattern p = Pattern.compile("\\(|,|\\)");
+	//	private static Pattern p = Pattern.compile("\\(|,|\\)");
 
 	String name;
 	String[] data;
 	String representationCache;
-	
+
 
 	/**
 	 * Creates a new tuple based on a given String. When the string is
@@ -37,7 +37,7 @@ public class Tuple {
 
 		representationCache = s;
 
-//		initialize(s.getBytes());
+		//		initialize(s.getBytes());
 		// // old2
 		int fb = StringUtils.indexOf(s, '('); // s.indexOf('(');
 		int lb = StringUtils.lastIndexOf(s, ')'); // s.lastIndexOf(')');
@@ -76,7 +76,7 @@ public class Tuple {
 		start = end + 1;
 		data[i] = rest.substring(start);
 
-		
+
 		//// old
 		//
 		// String[] t; // = s.split(new String("\\(|,|\\)"));
@@ -101,17 +101,17 @@ public class Tuple {
 
 	public Tuple(byte [] b,int length) {
 		initialize(b, length);
-		
+
 	}
-	
+
 	@Deprecated
 	public Tuple(Text value) {
-//		this(value.toString());
+		//		this(value.toString());
 
 		byte[] b = value.getBytes();
 
 		initialize(b,value.getLength());
-//		System.out.println(name + " " + data[0] + data[1]);
+		//		System.out.println(name + " " + data[0] + data[1]);
 	}
 
 	public String getData(String newname, HashMap<Integer, Integer> f) {
@@ -125,7 +125,7 @@ public class Tuple {
 		return newname + "(" + s.substring(1) + ")";
 
 	}
-	
+
 	private void initialize(byte [] b, int length) {
 		StringBuilder sb = new StringBuilder(length);
 		LinkedList<String> list = new LinkedList<>();
@@ -138,7 +138,8 @@ public class Tuple {
 				list.add(sb.toString());
 				sb.setLength(0);
 			} else if (c == ')') { // do this separately
-				list.add(sb.toString());
+//				if (sb.length() > 0) TODO skip empty lines in calling function
+					list.add(sb.toString());
 				sb.setLength(0);
 				break; // Text can contain extra garbage
 			} else if (c == ' ') { // skip spaces
@@ -147,10 +148,10 @@ public class Tuple {
 			} else {
 				sb.append(c);
 			}
-			
+
 			// System.out.print((char)b[i]);
 		}
-			
+
 		representationCache = new String(b,0,length).trim();
 		data = list.toArray(new String [0]);
 	}
@@ -162,8 +163,8 @@ public class Tuple {
 			for (String d : data)
 				numChars += d.length();
 			numChars += name.length() + data.length + 2; // name,  comma's and brackets
-			
-			
+
+
 			StringBuilder sb = new StringBuilder(numChars);
 
 
@@ -176,8 +177,8 @@ public class Tuple {
 			}
 			sb.append(data[i]);
 			sb.append(')');
-//			sb.insert(0, '(');
-//			sb.insert(0, name);
+			//			sb.insert(0, '(');
+			//			sb.insert(0, name);
 
 			representationCache = sb.toString();
 		}

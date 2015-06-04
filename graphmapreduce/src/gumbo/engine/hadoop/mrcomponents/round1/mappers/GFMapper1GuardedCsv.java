@@ -3,8 +3,13 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round1.mappers;
 
+import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardAlgorithm;
+import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactory;
+import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedAlgorithm;
+import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.RelationResolver;
 import gumbo.structures.data.RelationSchema;
+import gumbo.structures.data.Tuple;
 
 import java.io.IOException;
 
@@ -27,6 +32,10 @@ public class GFMapper1GuardedCsv extends GFMapper1GuardedRelOptimized {
 	private static final Log LOG = LogFactory.getLog(GFMapper1GuardedCsv.class);
 	private RelationResolver resolver;
 	private StringBuilder stringBuilder;
+	private Map1GuardedAlgorithm algo;
+	private Text buffer;
+	private byte[] open;
+	private byte[] close;
 
 	@Override
 	protected void setup(Mapper<LongWritable, Text, Text, Text>.Context context)
@@ -39,7 +48,14 @@ public class GFMapper1GuardedCsv extends GFMapper1GuardedRelOptimized {
 			// pre-cache
 			resolver.extractRelationSchema(context);
 
-			stringBuilder = new StringBuilder(128);
+			Map1GuardedMessageFactory msgFactory = new Map1GuardedMessageFactory(context,settings,eso);
+			algo = new Map1GuardedAlgorithm(eso, msgFactory);
+
+			buffer = new Text();
+
+			open = "(".getBytes();
+			close = ")".getBytes();
+
 		} catch (Exception e) {
 			throw new InterruptedException(e.getMessage());
 		}
@@ -60,20 +76,18 @@ public class GFMapper1GuardedCsv extends GFMapper1GuardedRelOptimized {
 
 			// find out relation name
 			RelationSchema rs = resolver.extractRelationSchema(context);
-
-			// trim is necessary to remove extra whitespace
-			String t1 = value.toString().trim();
-
+			byte [] namebytes = rs.getName().getBytes();
+			
 			// wrap tuple in relation name
-			stringBuilder.setLength(0);
-			stringBuilder.append(rs.getName());
-			stringBuilder.append('(');
-			stringBuilder.append(t1);
-			stringBuilder.append(')');
+			buffer.clear();
+			buffer.append(namebytes,0,namebytes.length);
+			buffer.append(open,0,open.length);
+			buffer.append(value.getBytes(),0,value.getLength());
+			buffer.append(close,0,close.length);
 
-			value.set(stringBuilder.toString());
-
-			super.map(key, value, context);
+			//			super.map(key, value, context);
+			Tuple t = new Tuple(buffer.getBytes(),buffer.getLength());
+			algo.run(t, key.get());
 
 		} catch (Exception e) {
 			LOG.error(e.getMessage());

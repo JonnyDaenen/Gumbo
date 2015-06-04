@@ -229,10 +229,11 @@ public class Map1GuardMessageFactory {
 
 			context.write(keyText, valueText);
 
+			//		System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");
+
 			keyText.clear();
 			valueText.clear();
 
-			//		System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");
 		} catch(Exception e) {
 			throw new MessageFailedException(e);
 		}
@@ -252,8 +253,6 @@ public class Map1GuardMessageFactory {
 	}
 
 
-	protected void sendMessage(byte[] key, byte[] value) throws MessageFailedException {
 
-	}
 
 }
