@@ -13,4 +13,4 @@ V,1 <- input/experiments/EXP_010/V, CSV;
 W,1 <- input/experiments/EXP_010/W, CSV;
 
 Out1(z,v,w) : R(x,y,z,v,w) & (!S(x) & !T(y)) ;
-Out2() : Out1(z,v,w) & (!U(z) & !V(z) )
+Out2(z,v) : Out1(z,v,w) & (!U(z) & !V(z) )

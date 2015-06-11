@@ -5,6 +5,11 @@ package gumbo;
 
 import gumbo.compiler.GFCompiler;
 import gumbo.compiler.GumboPlan;
+import gumbo.compiler.partitioner.CalculationPartitioner;
+import gumbo.compiler.partitioner.DepthPartitioner;
+import gumbo.compiler.partitioner.HeightPartitioner;
+import gumbo.compiler.partitioner.OptimalPartitioner;
+import gumbo.compiler.partitioner.UnitPartitioner;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.engine.settings.AbstractExecutorSettings;
@@ -106,7 +111,23 @@ public class Gumbo extends Configured implements Tool {
 
 		LOG.info(query);
 
-		GFCompiler compiler = new GFCompiler();
+		
+		CalculationPartitioner partitioner;
+		switch (getConf().get(AbstractExecutorSettings.partitionClass,"")) {
+		case "optimal":
+			partitioner = new OptimalPartitioner();
+			break;
+		case "depth":
+			partitioner = new DepthPartitioner();
+			break;
+		case "height":
+			partitioner = new HeightPartitioner();
+			break;
+		default:
+			partitioner = new UnitPartitioner();
+		}
+		
+		GFCompiler compiler = new GFCompiler(partitioner);
 		GumboPlan plan = compiler.createPlan(query);
 
 		System.out.println(plan);

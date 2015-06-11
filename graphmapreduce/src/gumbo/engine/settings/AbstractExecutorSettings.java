@@ -42,6 +42,8 @@ public abstract class AbstractExecutorSettings {
 	public static final String turnOffOpts = "gumbo.engine.turnOffOpts";
 	public static final String turnOnOpts = "gumbo.engine.turnOnOpts";
 	public static final String turnOnDefaultOpts = "gumbo.engine.turnOnDefaultOpts";
+
+	public static String partitionClass = "gumbo.compiler.partitionClass";
 	
 
 	/**
