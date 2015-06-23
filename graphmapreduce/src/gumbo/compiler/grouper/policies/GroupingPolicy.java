@@ -1,6 +1,7 @@
 package gumbo.compiler.grouper.policies;
 
-import gumbo.compiler.grouper.GuardedSemiJoinCalculation;
+import gumbo.compiler.grouper.structures.CalculationGroup;
+import gumbo.compiler.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
 
 import java.util.List;
@@ -16,6 +17,6 @@ public interface GroupingPolicy {
 	 * @param semijoins the semijoins that will be partitioned
 	 * @return a list of semijoin groups (sets)
 	 */
-	List<Set<GuardedSemiJoinCalculation>> group(Set<GuardedSemiJoinCalculation> semijoins);
+	List<CalculationGroup> group(CalculationGroup group);
 
 }

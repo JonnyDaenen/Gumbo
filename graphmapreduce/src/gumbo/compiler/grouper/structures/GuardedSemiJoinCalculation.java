@@ -1,4 +1,4 @@
-package gumbo.compiler.grouper;
+package gumbo.compiler.grouper.structures;
 
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 

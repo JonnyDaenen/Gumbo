@@ -2,6 +2,8 @@ package gumbo.compiler.grouper;
 
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnit;
+import gumbo.compiler.grouper.structures.CalculationGroup;
+import gumbo.compiler.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
@@ -23,9 +25,9 @@ public class Decomposer {
 	 * @param partition the partition that contains the calculations to decompose
 	 * @return decomposition in binary guarded semijoins
 	 */
-	public Set<GuardedSemiJoinCalculation> decompose(CalculationUnitGroup partition) {
+	public CalculationGroup decompose(CalculationUnitGroup partition) {
 
-		HashSet<GuardedSemiJoinCalculation> result = new HashSet<>();
+		CalculationGroup result = new CalculationGroup();
 		
 		// create all guard-guarded pairs
 		for (CalculationUnit c: partition.getCalculations()) {

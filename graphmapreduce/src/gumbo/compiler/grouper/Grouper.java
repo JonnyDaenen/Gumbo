@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Set;
 
 import gumbo.compiler.grouper.policies.GroupingPolicy;
+import gumbo.compiler.grouper.structures.CalculationGroup;
+import gumbo.compiler.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
 
@@ -33,7 +35,7 @@ public class Grouper {
 		for (int level = 0; level < numPart; level++) {
 			
 			CalculationUnitGroup partition = partitions.getPartition(level);
-			List<Set<GuardedSemiJoinCalculation>> groupedSJ = getGrouping(partition);
+			List<CalculationGroup> groupedSJ = getGrouping(partition);
 			
 			result.setGroup(level, groupedSJ);
 			
@@ -48,13 +50,13 @@ public class Grouper {
 	 * @param partition
 	 * @return
 	 */
-	private List<Set<GuardedSemiJoinCalculation>> getGrouping(CalculationUnitGroup partition) {
+	private List<CalculationGroup> getGrouping(CalculationUnitGroup partition) {
 		
 		// decompose
-		Set<GuardedSemiJoinCalculation> semijoins = decomposer.decompose(partition);
+		CalculationGroup semijoins = decomposer.decompose(partition);
 		
 		// apply grouping using the policy
-		List<Set<GuardedSemiJoinCalculation>> groupedSJ = policy.group(semijoins);
+		List<CalculationGroup> groupedSJ = policy.group(semijoins);
 		
 		return groupedSJ;
 		

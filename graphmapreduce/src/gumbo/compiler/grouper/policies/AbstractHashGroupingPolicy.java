@@ -1,6 +1,7 @@
 package gumbo.compiler.grouper.policies;
 
-import gumbo.compiler.grouper.GuardedSemiJoinCalculation;
+import gumbo.compiler.grouper.structures.CalculationGroup;
+import gumbo.compiler.grouper.structures.GuardedSemiJoinCalculation;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,17 +23,17 @@ public abstract class AbstractHashGroupingPolicy implements GroupingPolicy {
 	 * Wraps all semijoin together in one group.
 	 */
 	@Override
-	public List<Set<GuardedSemiJoinCalculation>> group(
-			Set<GuardedSemiJoinCalculation> semijoins) {
+	public List<CalculationGroup> group(
+			CalculationGroup semijoins) {
 
 		// hash the semijoins
-		HashMap<String,Set<GuardedSemiJoinCalculation>> hashmap = hash(semijoins); 
+		HashMap<String,CalculationGroup> hashmap = hash(semijoins); 
 
 		// each bucket becomes one group
-		LinkedList<Set<GuardedSemiJoinCalculation>> groupedResult = new LinkedList<Set<GuardedSemiJoinCalculation>>();
+		LinkedList<CalculationGroup> groupedResult = new LinkedList<CalculationGroup>();
 
 		for (String key : hashmap.keySet()) {
-			HashSet<GuardedSemiJoinCalculation> group = new HashSet<GuardedSemiJoinCalculation>(1);
+			CalculationGroup group = new CalculationGroup();
 			group.addAll(hashmap.get(key));
 			groupedResult.add(group);
 		}
@@ -41,16 +42,16 @@ public abstract class AbstractHashGroupingPolicy implements GroupingPolicy {
 		return groupedResult;
 	}
 
-	private HashMap<String, Set<GuardedSemiJoinCalculation>> hash(
-			Set<GuardedSemiJoinCalculation> semijoins) {
+	private HashMap<String, CalculationGroup> hash(
+			CalculationGroup semijoins) {
 
-		HashMap<String, Set<GuardedSemiJoinCalculation>> hashmap = new HashMap<String, Set<GuardedSemiJoinCalculation>>();
+		HashMap<String, CalculationGroup> hashmap = new HashMap<String, CalculationGroup>();
 		
-		for (GuardedSemiJoinCalculation semijoin : semijoins) {	
+		for (GuardedSemiJoinCalculation semijoin : semijoins.getAll()) {	
 
 			String hashVal = hash(semijoin);
 			if (!hashmap.containsKey(hashVal)) {
-				hashmap.put(hashVal, new HashSet<GuardedSemiJoinCalculation>());
+				hashmap.put(hashVal, new CalculationGroup());
 			}
 			
 			hashmap.get(hashVal).add(semijoin);

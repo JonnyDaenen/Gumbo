@@ -4,6 +4,8 @@
 package gumbo.compiler.grouper;
 
 import gumbo.compiler.calculations.CalculationUnit;
+import gumbo.compiler.grouper.structures.CalculationGroup;
+import gumbo.compiler.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
 
@@ -34,15 +36,15 @@ public class GroupedPartitionedCUGroup {
 
 	}
 
-	Map<Integer, List<Set<GuardedSemiJoinCalculation>>> semijoins;
+	Map<Integer, List<CalculationGroup>> semijoins;
 	private PartitionedCUGroup partitions;
 	
 	public GroupedPartitionedCUGroup(PartitionedCUGroup partitions) {
 		this.partitions = partitions;
-		semijoins = new HashMap<Integer, List<Set<GuardedSemiJoinCalculation>>>();
+		semijoins = new HashMap<Integer, List<CalculationGroup>>();
 	}
 
-	public void setGroup(int level, List<Set<GuardedSemiJoinCalculation>> groupedSJ) {
+	public void setGroup(int level, List<CalculationGroup> groupedSJ) {
 		semijoins.put(level, groupedSJ);
 	}
 	
@@ -58,9 +60,9 @@ public class GroupedPartitionedCUGroup {
 	 * 
 	 * @throws GroupingNotAvailableException when no grouping is attached to the specified level
 	 */
-	public List<Set<GuardedSemiJoinCalculation>> getSemiJoinGrouping(int level) throws GroupingNotAvailableException {
+	public List<CalculationGroup> getSemiJoinGrouping(int level) throws GroupingNotAvailableException {
 		
-		List<Set<GuardedSemiJoinCalculation>> result = semijoins.get(level);
+		List<CalculationGroup> result = semijoins.get(level);
 		
 		if (result == null)
 			throw new GroupingNotAvailableException("No grouping found for this level");

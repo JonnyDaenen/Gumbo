@@ -3,7 +3,8 @@
  */
 package gumbo.compiler.grouper.policies;
 
-import gumbo.compiler.grouper.GuardedSemiJoinCalculation;
+import gumbo.compiler.grouper.structures.CalculationGroup;
+import gumbo.compiler.grouper.structures.GuardedSemiJoinCalculation;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -24,13 +25,13 @@ public class NoneGrouper implements GroupingPolicy {
 	 * Wraps each semijoin in a separate group.
 	 */
 	@Override
-	public List<Set<GuardedSemiJoinCalculation>> group(
-			Set<GuardedSemiJoinCalculation> semijoins) {
+	public List<CalculationGroup> group(
+			CalculationGroup semijoins) {
 		
-		LinkedList<Set<GuardedSemiJoinCalculation>> groupedResult = new LinkedList<Set<GuardedSemiJoinCalculation>>();
+		LinkedList<CalculationGroup> groupedResult = new LinkedList<CalculationGroup>();
 		
-		for (GuardedSemiJoinCalculation semijoin : semijoins) {
-			HashSet<GuardedSemiJoinCalculation> group = new HashSet<GuardedSemiJoinCalculation>(1);
+		for (GuardedSemiJoinCalculation semijoin : semijoins.getAll()) {
+			CalculationGroup group = new CalculationGroup();
 			group.add(semijoin);
 			groupedResult.add(group);
 		}

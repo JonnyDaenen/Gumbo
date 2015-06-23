@@ -1,6 +1,7 @@
 package gumbo.compiler.grouper.policies;
 
-import gumbo.compiler.grouper.GuardedSemiJoinCalculation;
+import gumbo.compiler.grouper.structures.CalculationGroup;
+import gumbo.compiler.grouper.structures.GuardedSemiJoinCalculation;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -20,13 +21,13 @@ public class AllGrouper implements GroupingPolicy {
 	 * Wraps all semijoin together in one group.
 	 */
 	@Override
-	public List<Set<GuardedSemiJoinCalculation>> group(
-			Set<GuardedSemiJoinCalculation> semijoins) {
+	public List<CalculationGroup> group(
+			CalculationGroup semijoins) {
 		
-		LinkedList<Set<GuardedSemiJoinCalculation>> groupedResult = new LinkedList<Set<GuardedSemiJoinCalculation>>();
-		HashSet<GuardedSemiJoinCalculation> group = new HashSet<GuardedSemiJoinCalculation>(1);
+		LinkedList<CalculationGroup> groupedResult = new LinkedList<CalculationGroup>();
+		CalculationGroup group = new CalculationGroup();
 		
-		for (GuardedSemiJoinCalculation semijoin : semijoins) {	
+		for (GuardedSemiJoinCalculation semijoin : semijoins.getAll()) {	
 			group.add(semijoin);
 		}
 		

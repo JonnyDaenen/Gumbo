@@ -1,6 +1,6 @@
 package gumbo.compiler.grouper.policies;
 
-import gumbo.compiler.grouper.GuardedSemiJoinCalculation;
+import gumbo.compiler.grouper.structures.GuardedSemiJoinCalculation;
 
 import java.util.HashMap;
 import java.util.HashSet;
