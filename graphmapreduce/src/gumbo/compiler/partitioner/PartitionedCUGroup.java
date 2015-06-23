@@ -26,11 +26,11 @@ import java.util.Set;
  */
 public class PartitionedCUGroup {
 
-	CalculationUnitGroup group;
+	protected CalculationUnitGroup group;
 	
-	Map<CalculationUnit, Integer> levelAssignmment; // FUTURE convert to list?
+	protected Map<CalculationUnit, Integer> levelAssignmment; // FUTURE convert to list?
 	// FUTURE add reverse mapping
-	int currentPartition = -1;
+	protected int currentPartition = -1;
 
 
 	public PartitionedCUGroup() {
