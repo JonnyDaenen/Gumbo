@@ -1,0 +1,2 @@
+R,10 - input/query0/R, CSV;
+S,1 - input/query0/S, CSV;
