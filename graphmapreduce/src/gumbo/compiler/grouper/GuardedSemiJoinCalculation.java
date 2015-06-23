@@ -28,4 +28,19 @@ public class GuardedSemiJoinCalculation {
 		return guarded;
 	}
 	
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (! (obj instanceof GuardedSemiJoinCalculation)){
+			return false;
+		}
+		GuardedSemiJoinCalculation other = (GuardedSemiJoinCalculation) obj;
+		
+		return guard.equals(other.guard) && guarded.equals(other.guarded);
+	}
+	
+	public int hashCode() {
+		return guard.hashCode() ^ guarded.hashCode();
+	};
 }
