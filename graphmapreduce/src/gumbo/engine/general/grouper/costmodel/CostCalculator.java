@@ -1,6 +1,6 @@
-package gumbo.compiler.grouper.costmodel;
+package gumbo.engine.general.grouper.costmodel;
 
-import gumbo.compiler.grouper.structures.CalculationGroup;
+import gumbo.engine.general.grouper.structures.CalculationGroup;
 
 import java.util.Set;
 

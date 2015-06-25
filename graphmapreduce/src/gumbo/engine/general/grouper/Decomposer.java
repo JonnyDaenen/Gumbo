@@ -1,15 +1,12 @@
-package gumbo.compiler.grouper;
+package gumbo.engine.general.grouper;
 
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnit;
-import gumbo.compiler.grouper.structures.CalculationGroup;
-import gumbo.compiler.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.engine.general.grouper.structures.CalculationGroup;
+import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Component used to decompose basic expressions into binary semijoins.

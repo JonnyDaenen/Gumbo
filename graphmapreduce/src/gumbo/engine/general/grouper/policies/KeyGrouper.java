@@ -1,8 +1,8 @@
-package gumbo.compiler.grouper.policies;
+package gumbo.engine.general.grouper.policies;
 
-import gumbo.compiler.grouper.costmodel.CostCalculator;
-import gumbo.compiler.grouper.structures.CalculationGroup;
-import gumbo.compiler.grouper.structures.GuardedSemiJoinCalculation;
+import gumbo.engine.general.grouper.costmodel.CostCalculator;
+import gumbo.engine.general.grouper.structures.CalculationGroup;
+import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.structures.gfexpressions.io.Pair;
 
 import java.util.LinkedList;

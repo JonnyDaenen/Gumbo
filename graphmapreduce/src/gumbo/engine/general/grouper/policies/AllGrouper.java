@@ -1,7 +1,7 @@
-package gumbo.compiler.grouper.policies;
+package gumbo.engine.general.grouper.policies;
 
-import gumbo.compiler.grouper.structures.CalculationGroup;
-import gumbo.compiler.grouper.structures.GuardedSemiJoinCalculation;
+import gumbo.engine.general.grouper.structures.CalculationGroup;
+import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 
 import java.util.HashSet;
 import java.util.LinkedList;

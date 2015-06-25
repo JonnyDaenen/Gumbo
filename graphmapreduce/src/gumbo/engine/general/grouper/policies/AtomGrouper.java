@@ -1,6 +1,6 @@
-package gumbo.compiler.grouper.policies;
+package gumbo.engine.general.grouper.policies;
 
-import gumbo.compiler.grouper.structures.GuardedSemiJoinCalculation;
+import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 
 import java.util.List;
 import java.util.Set;

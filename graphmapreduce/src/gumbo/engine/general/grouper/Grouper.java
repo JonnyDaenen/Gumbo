@@ -1,13 +1,11 @@
-package gumbo.compiler.grouper;
+package gumbo.engine.general.grouper;
 
-import java.util.List;
-import java.util.Set;
-
-import gumbo.compiler.grouper.policies.GroupingPolicy;
-import gumbo.compiler.grouper.structures.CalculationGroup;
-import gumbo.compiler.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
+import gumbo.engine.general.grouper.policies.GroupingPolicy;
+import gumbo.engine.general.grouper.structures.CalculationGroup;
+
+import java.util.List;
 
 
 public class Grouper {

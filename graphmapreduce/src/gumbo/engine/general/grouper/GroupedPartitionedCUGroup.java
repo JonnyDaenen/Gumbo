@@ -1,21 +1,14 @@
 /**
  * Created: 2015-06-23
  */
-package gumbo.compiler.grouper;
+package gumbo.engine.general.grouper;
 
-import gumbo.compiler.calculations.CalculationUnit;
-import gumbo.compiler.grouper.structures.CalculationGroup;
-import gumbo.compiler.grouper.structures.GuardedSemiJoinCalculation;
-import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
+import gumbo.engine.general.grouper.structures.CalculationGroup;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A {@link PartitionedCUGroup}, augmented with a set of smaller
