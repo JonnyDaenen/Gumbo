@@ -3,7 +3,9 @@ package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GumboMap1Counter;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
+import gumbo.engine.hadoop.reporter.CounterMeasures;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.io.Triple;
@@ -50,11 +52,11 @@ public class Map1GuardMessageFactory {
 	byte [] proofBytes;
 	byte [] tbytes;
 	private byte[] sepBytes;
+	private boolean sampleCounter;
 
-	public Map1GuardMessageFactory(Mapper<LongWritable, Text, Text, Text>.Context context, HadoopExecutorSettings settings, ExpressionSetOperations eso) {
+	public Map1GuardMessageFactory(Mapper<LongWritable, Text, Text, Text>.Context context, AbstractExecutorSettings settings, ExpressionSetOperations eso) {
 		keyText = new Text();
 		valueText = new Text();
-
 		// ---
 		this.context = context;
 		this.eso = eso;
@@ -87,6 +89,11 @@ public class Map1GuardMessageFactory {
 		proofBytes = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL).getBytes();
 		sepBytes = ";".getBytes();
 
+		sampleCounter = false;
+	}
+
+	public void enableSampleCounting() {
+		sampleCounter = true;
 	}
 
 	public void loadGuardValue(Tuple t, long offset) throws TupleIDError {
@@ -99,6 +106,10 @@ public class Map1GuardMessageFactory {
 		} else
 			tRef = tbytes;
 
+		if (sampleCounter) {
+			context.getCounter(CounterMeasures.IN_TUPLES).increment(1);
+			context.getCounter(CounterMeasures.IN_BYTES).increment(t.toString().length());
+		}
 	}
 
 	/**
@@ -204,7 +215,7 @@ public class Map1GuardMessageFactory {
 
 			byte[] projectBytes = p.projectString(t).getBytes();
 			keyText.append(projectBytes,0,projectBytes.length);
-			
+
 
 			// value: request message with response code and atom
 			//		String valueString = replyAddress + ";" + guardedID;
@@ -231,8 +242,17 @@ public class Map1GuardMessageFactory {
 
 			//		System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");
 
+			if (sampleCounter) {
+				context.getCounter(CounterMeasures.OUT_TUPLES).increment(1);
+				context.getCounter(CounterMeasures.OUT_BYTES).increment(keyText.getLength() + valueText.getLength());
+				context.getCounter(CounterMeasures.OUT_KEY_BYTES).increment(keyText.getLength());
+				context.getCounter(CounterMeasures.OUT_VALUE_BYTES).increment(valueText.getLength());
+			}
+			
 			keyText.clear();
 			valueText.clear();
+
+			
 
 		} catch(Exception e) {
 			throw new MessageFailedException(e);

@@ -45,11 +45,11 @@ public class RandomTupleEstimator extends TupleEstimator {
 	public long estimateNumTuples(Path path) {
 		long size;
 		try {
-			size = getFileSize(path);
+			size = Sampler.getFileSize(path);
 			
 			long [] offsets = new long[numSamples];
 			for (int i = 0; i < offsets.length; i++)
-				offsets[i] = getRandom(0,size-blockSize);
+				offsets[i] = Sampler.getRandom(0,size-blockSize);
 
 			return estimateNumTuples(path, blockSize, offsets);
 			

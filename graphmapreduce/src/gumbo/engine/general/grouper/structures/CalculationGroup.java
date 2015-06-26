@@ -1,5 +1,6 @@
 package gumbo.engine.general.grouper.structures;
 
+import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 
 import java.util.List;
@@ -44,6 +45,16 @@ public class CalculationGroup {
 	public int getKeys(GFAtomicExpression guard) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	public boolean isGuard(RelationSchema rs) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public Set<RelationSchema> getRelations() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

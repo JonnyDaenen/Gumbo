@@ -5,18 +5,29 @@ package gumbo;
 
 import gumbo.compiler.GFCompiler;
 import gumbo.compiler.GumboPlan;
+import gumbo.compiler.calculations.BasicGFCalculationUnit;
+import gumbo.compiler.calculations.CalculationUnit;
+import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.CalculationPartitioner;
 import gumbo.compiler.partitioner.DepthPartitioner;
 import gumbo.compiler.partitioner.HeightPartitioner;
 import gumbo.compiler.partitioner.OptimalPartitioner;
 import gumbo.compiler.partitioner.UnitPartitioner;
+import gumbo.engine.general.FileMappingExtractor;
 import gumbo.engine.hadoop.HadoopEngine;
+import gumbo.engine.hadoop.reporter.RelationReport;
+import gumbo.engine.hadoop.reporter.RelationReporter;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.input.GumboFileParser;
 import gumbo.input.GumboQuery;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
 
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -131,7 +142,29 @@ public class Gumbo extends Configured implements Tool {
 		GumboPlan plan = compiler.createPlan(query);
 
 		System.out.println(plan);
-
+		
+		// --- fresh
+		FileMappingExtractor fme = new FileMappingExtractor();
+		RelationFileMapping mapping2 = fme.extractFileMapping(plan.getFileManager());
+		
+		Set<CalculationUnit> calcs = plan.getPartitions().getBottomUpList().get(0).getCalculations();
+		RelationReporter rr = new RelationReporter(mapping2, settings);
+		
+		Set<GFExistentialExpression> exps = new HashSet<GFExistentialExpression>();
+		for (CalculationUnit calc : calcs)  {
+			BasicGFCalculationUnit bgfu = (BasicGFCalculationUnit)calc;
+			exps.add(bgfu.getBasicExpression());
+		}
+		
+		Map<RelationSchema, RelationReport> reports = rr.generateReports(exps);
+		for (RelationReport value : reports.values()){
+			System.out.println(value);
+			System.out.println("---");
+		}
+		System.exit(0);
+		// ---
+		
+		
 		HadoopEngine engine = new HadoopEngine();
 		engine.executePlan(plan,settings.getConf());
 

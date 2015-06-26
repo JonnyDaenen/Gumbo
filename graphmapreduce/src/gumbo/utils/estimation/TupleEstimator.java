@@ -9,7 +9,6 @@ import java.io.IOException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.ContentSummary;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -52,7 +51,7 @@ public abstract class TupleEstimator {
 		FileSystem fs = FileSystem.get(conf);
 		FSDataInputStream in = null;
 	
-		long size = getFileSize(path);
+		long size = Sampler.getFileSize(path);
 		try {
 			
 			
@@ -63,7 +62,7 @@ public abstract class TupleEstimator {
 			for (int i = 0; i < offsets.length; i++) {
 				
 				long start = offsets[i];
-				total += sampleBlock(in, start, start+blockSize, size);
+				total += Sampler.sampleBlock(in, start, start+blockSize, size);
 			}
 			
 
@@ -74,66 +73,5 @@ public abstract class TupleEstimator {
 		}
 		
 //		return size / 128;
-	}
-	
-	
-	/**
-	 * Counts the number of newlines in a a block starting at start and ending at end (exclusive).
-	 * @return
-	 */
-	protected static long sampleBlock(FSDataInputStream in, long start, long end, long fileSize) {
-		
-		try {
-			// adjust bounds
-			start = Math.max(0,start);
-			end = Math.min(end, fileSize);
-			int amount = (int)(end - start);
-			
-			byte [] buf = new byte[amount];
-			in.seek(start);
-			IOUtils.readFully(in, buf, 0 , amount);
-//			in.seek(0); // not necessary
-			
-
-			return countNewlines(buf);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return (end - start) / 128;
-	}
-	
-	/**
-	 * Counts the number of newline symbols appearing in a byte buffer.
-	 * @param buf the buffer.
-	 * @return the number of newlines in the buffer
-	 */
-	protected static int countNewlines(byte[] buf) {
-		int lines = 0;
-		for (int i = 0; i < buf.length; i++) {
-			if (buf[i] == '\n')
-				lines++;
-
-		}
-		return lines;
-	}
-
-	// TODO move to utility class
-	public static long getRandom(long min, long max) {
-		return (long) (Math.random() * (max - min + 1) + min);
-	}
-	
-
-	/**
-	 * source: http://stackoverflow.com/a/22485418/787036
-	 */
-	public static long getFileSize(Path path) throws IOException, FileNotFoundException
-	{
-		Configuration config = new Configuration();
-		FileSystem hdfs = path.getFileSystem(config);
-		ContentSummary cSummary = hdfs.getContentSummary(path);
-		long length = cSummary.getLength();
-		return length;
 	}
 }

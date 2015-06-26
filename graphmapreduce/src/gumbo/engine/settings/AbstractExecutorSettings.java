@@ -32,7 +32,7 @@ public abstract class AbstractExecutorSettings {
 	public static final String guardKeepAliveOptimizationOn = "gumbo.engine.guardKeepAliveOptimizationOn";
 	public static final String guardReferenceOptimizationOn = "gumbo.engine.guardAddressOptimizationOn";
 //	public static final String guardAsGuardedReReadOptimizationOn = "gumbo.engine.guardAsGuardedReReadOptimizationOn"; // TODO this is currently implemented, but needs to become a toggle
-
+	public static final String requestGroupingOptimizationOn = "gumbo.engine.requestGroupingOptimizationOn";
 	  
 
 	// speed options

@@ -6,27 +6,27 @@ import gumbo.structures.data.RelationSchema;
 public interface CostSheet {
 	
 	
-	int getRelationInputTuples(RelationSchema rs);
-	int getRelationInputBytes(RelationSchema rs);
-	int getRelationInputPages(RelationSchema rs);
+	long getRelationInputTuples(RelationSchema rs);
+	long getRelationInputBytes(RelationSchema rs);
+	long getTotalInputBytes(CalculationGroup group);
 	
-	int getRelationIntermediateTuples(RelationSchema rs, CalculationGroup group);
-	int getRelationIntermediateBytes(RelationSchema rs, CalculationGroup group);
-	int getRelationIntermediatePages(RelationSchema rs, CalculationGroup group);
+	long getRelationIntermediateTuples(RelationSchema rs, CalculationGroup group);
+	long getRelationIntermediateBytes(RelationSchema rs, CalculationGroup group);
+	long getTotalIntermediateBytes(CalculationGroup group);
 	
-	int getLocalReadCost();
-	int getLocalWriteCost();
+	double getLocalReadCost();
+	double getLocalWriteCost();
+	double getDFSReadCost();
+	double getDFSWriteCost();
+	double getTransferCost();
 	
-	int getDFSReadCost();
-	int getDFSWriteCost();
-	
-	int getTransferCost();
-	
-	int getMergeOrder();
-	int getNumMappers();
+	int getNumMappers(CalculationGroup group);
 	int getMapMergeOrder();
-	int getMapSortBuffer();
-	int getNumReducers();
+	long getMapSortBuffer();
+	
+	int getNumReducers(CalculationGroup group);
+	int getReduceMergeOrder();
+	long getReduceSortBuffer();
 	
 
 

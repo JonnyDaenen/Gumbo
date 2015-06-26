@@ -35,15 +35,13 @@ public class GGTCostCalculator {
 		// intermediate output tuples for guards
 		for (GFAtomicExpression guard : guards) {
 			RelationSchema guardSchema = guard.getRelationSchema();
-			int keys = group.getKeys(guard);
-			intermediate += cs.getRelationInputBytes(guardSchema) * keys; // TODO this is wrong
+			intermediate += cs.getRelationIntermediateBytes(guardSchema,group);
 		}
 
 		// intermediate output tuples for guarded
 		for (GFAtomicExpression guarded : guardeds) {
 			RelationSchema guardedSchema = guarded.getRelationSchema();
-			int keys = group.getKeys(guarded);
-			intermediate += cs.getRelationInputBytes(guardedSchema) * keys; // TODO this is wrong
+			intermediate += cs.getRelationIntermediateBytes(guardedSchema,group);
 		}
 
 
@@ -58,8 +56,8 @@ public class GGTCostCalculator {
 	private double determineReduceCost(List<GFAtomicExpression> guards, List<GFAtomicExpression> guardeds, long intermediate) {
 		
 		double reduceCost = 0;
-		int numReducers = cs.getNumReducers();
-		int rwCost = cs.getLocalReadCost() + cs.getLocalWriteCost();
+		long numReducers = cs.getNumReducers();
+		double rwCost = cs.getLocalReadCost() + cs.getLocalWriteCost();
 
 		// shuffle (transfer)
 		reduceCost += intermediate * cs.getTransferCost();
@@ -67,8 +65,8 @@ public class GGTCostCalculator {
 
 		// merge
 		// calculate number of pieces one reducer has to process
-		int mergeOrderR = cs.getMapMergeOrder();
-		int sortBufferR = cs.getMapSortBuffer();
+		int mergeOrderR = cs.getReduceMergeOrder();
+		long sortBufferR = cs.getReduceSortBuffer();
 		long piecesR = (long) Math.ceil((intermediate/numReducers)/sortBufferR);
 
 		// for a given order and pieces, calculate the number of rounds
@@ -107,10 +105,10 @@ public class GGTCostCalculator {
 
 
 
-		int rwCost = cs.getLocalReadCost() + cs.getLocalWriteCost();
+		double rwCost = cs.getLocalReadCost() + cs.getLocalWriteCost();
 		int numMappers = cs.getNumMappers();
 		int mergeOrderM = cs.getMapMergeOrder();
-		int sortBufferM = cs.getMapSortBuffer();
+		long sortBufferM = cs.getMapSortBuffer();
 
 		// calculate number of pieces one mapper has to process
 		long piecesM = Math.round((intermediate/numMappers)/sortBufferM);

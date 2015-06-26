@@ -1,7 +1,9 @@
 package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GumboMap1Counter;
+import gumbo.engine.hadoop.reporter.CounterMeasures;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
@@ -18,6 +20,9 @@ public class Map1GuardedMessageFactory {
 	Text valueText;
 	private Counter ASSERT;
 	private Counter ASSERTBYTES;
+	
+
+	private boolean sampleCounter;
 
 	private boolean guardedIdOptimizationOn;
 	private boolean round1FiniteMemoryOptimizationOn;
@@ -33,7 +38,7 @@ public class Map1GuardedMessageFactory {
 	String tKey;
 	String proofBytes;
 
-	public Map1GuardedMessageFactory(Mapper<LongWritable, Text, Text, Text>.Context context, HadoopExecutorSettings settings, ExpressionSetOperations eso) {
+	public Map1GuardedMessageFactory(Mapper<LongWritable, Text, Text, Text>.Context context, AbstractExecutorSettings settings, ExpressionSetOperations eso) {
 		keyText = new Text();
 		valueText = new Text();
 
@@ -60,6 +65,12 @@ public class Map1GuardedMessageFactory {
 		// prepare the value with the proof symbol
 		if (guardedIdOptimizationOn)
 			valueBuilder.append(proofBytes);
+		
+		sampleCounter = false;
+	}
+	
+	public void enableSampleCounting() {
+		sampleCounter = true;
 	}
 
 	public void loadGuardedValue(Tuple t) {
@@ -72,6 +83,11 @@ public class Map1GuardedMessageFactory {
 		if (round1FiniteMemoryOptimizationOn) {
 			keyBuilder.append(proofBytes);
 		} 
+		
+		if (sampleCounter) {
+			context.getCounter(CounterMeasures.IN_TUPLES).increment(1);
+			context.getCounter(CounterMeasures.IN_BYTES).increment(t.toString().length());
+		}
 	}
 
 
@@ -118,6 +134,14 @@ public class Map1GuardedMessageFactory {
 			valueText.append(value, 0, value.length);
 
 			context.write(keyText, valueText);
+			
+			
+			if (sampleCounter) {
+				context.getCounter(CounterMeasures.OUT_TUPLES).increment(1);
+				context.getCounter(CounterMeasures.OUT_BYTES).increment(key.length + value.length);
+				context.getCounter(CounterMeasures.OUT_KEY_BYTES).increment(key.length);
+				context.getCounter(CounterMeasures.OUT_VALUE_BYTES).increment(value.length);
+			}
 
 
 			//System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");

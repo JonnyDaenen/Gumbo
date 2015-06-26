@@ -9,7 +9,7 @@ import gumbo.structures.gfexpressions.operations.GFAtomProjection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class Map1GuardAlgorithm {
+public class Map1GuardAlgorithm implements MapAlgorithm{
 	
 	private static final Log LOG = LogFactory.getLog(Map1GuardAlgorithm.class);
 
@@ -25,7 +25,7 @@ public class Map1GuardAlgorithm {
 	public void run(Tuple t, long offset) throws AlgorithmInterruptedException {
 
 		try {
-			msgFactory.loadGuardValue(t,offset);
+			msgFactory.loadGuardValue(t,offset); // do not postpone this, for counting purposes
 
 
 			boolean outputAssert = false;

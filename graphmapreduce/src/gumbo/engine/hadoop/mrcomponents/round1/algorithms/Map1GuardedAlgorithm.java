@@ -7,7 +7,7 @@ import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class Map1GuardedAlgorithm {
+public class Map1GuardedAlgorithm implements MapAlgorithm {
 
 	private static final Log LOG = LogFactory.getLog(Map1GuardedAlgorithm.class);
 
@@ -23,7 +23,7 @@ public class Map1GuardedAlgorithm {
 	public void run(Tuple t, long offset) throws AlgorithmInterruptedException {
 
 		try {
-			msgFactory.loadGuardedValue(t);
+			msgFactory.loadGuardedValue(t); // do not postpone this, for counting purposes
 
 			// OPTIMIZE search for guarded atom based on relation name
 			// guarded ASSERT output
