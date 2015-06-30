@@ -35,7 +35,7 @@ public class RelationReporter {
 	AbstractExecutorSettings settings;
 
 	private static final int SAMPLES_PER_FILE = 10;
-	private static final int SAMPLE_SIZE = 4 *  1024;
+	private static final int SAMPLE_SIZE = 40*  1024;
 
 	public RelationReporter(RelationFileMapping mapping, AbstractExecutorSettings settings) {
 		this.mapping = mapping;
