@@ -3,12 +3,17 @@ package gumbo.engine.general.grouper.structures;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 public class CalculationGroup {
 	
 	Set<GuardedSemiJoinCalculation> semijoins;
+	
+	public CalculationGroup() {
+		semijoins = new HashSet<>();
+	}
 	
 	
 	public void add(GuardedSemiJoinCalculation semijoin) {
@@ -27,39 +32,43 @@ public class CalculationGroup {
 		return semijoins.size();
 	}
 	
-	public List<GFAtomicExpression> getGuardDistinctList() {
-		// TODO Auto-generated method stub
-		return null;
+	public Collection<GFAtomicExpression> getGuardsDistinct() {
+		Set<GFAtomicExpression> result = new HashSet<>();
+		for (GuardedSemiJoinCalculation sj : semijoins) {
+			result.add(sj.getGuard());
+		}
+		return result;
 	}
 	
-	public List<GFAtomicExpression> getGuardList() {
-		// TODO Auto-generated method stub
-		return null;
+	public Collection<GFAtomicExpression> getGuardedsDistinct() {
+		Set<GFAtomicExpression> result = new HashSet<>();
+		for (GuardedSemiJoinCalculation sj : semijoins) {
+			result.add(sj.getGuarded());
+		}
+		return result;
 	}
 
-	public List<GFAtomicExpression> getGuardedDistinctList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	public int getKeys(GFAtomicExpression guard) {
-		// TODO Auto-generated method stub
-		return 0;
+	public Collection<RelationSchema> getAllSchemas() {
+		Set<RelationSchema> result = new HashSet<>();
+		for (GuardedSemiJoinCalculation sj : semijoins) {
+			result.add(sj.getGuard().getRelationSchema());
+			result.add(sj.getGuarded().getRelationSchema());
+		}
+		return result;
 	}
-
-	public boolean isGuard(RelationSchema rs) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public Set<RelationSchema> getRelations() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Set<RelationSchema> getAllSchemas() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		for (GuardedSemiJoinCalculation sj : semijoins) {
+			sb.append(System.lineSeparator());
+			sb.append("\t" + sj.toString());
+		}
+		
+		return sb.toString();
+		
 	}
 
 }

@@ -33,13 +33,13 @@ public class RelationReporter {
 
 	RelationFileMapping mapping;
 	AbstractExecutorSettings settings;
+	RelationSampleContainer rsc;
 
-	private static final int SAMPLES_PER_FILE = 10;
-	private static final int SAMPLE_SIZE = 40*  1024;
 
-	public RelationReporter(RelationFileMapping mapping, AbstractExecutorSettings settings) {
+	public RelationReporter(RelationSampleContainer rsc, RelationFileMapping mapping, AbstractExecutorSettings settings) {
 		this.mapping = mapping;
 		this.settings = settings;
+		this.rsc = rsc;
 	}
 
 	public Map<RelationSchema, RelationReport> generateReports(Collection<GFExistentialExpression> group) throws GFOperationInitException {
@@ -78,10 +78,23 @@ public class RelationReporter {
 		long numInputBytes = mapping.getRelationSize(relation); 
 		rr.setNumInputBytes(numInputBytes);
 
-		// sample
-		RelationReport rr1 = runSample(relation, group, eso, guard, 1);
-		RelationReport rr2 = runSample(relation, group, eso, guard, 10);
+		// split sample in two unequal parts, to improve extrapolation
+		byte [][] bytes = rsc.getSamples(relation);
+		int split = (int) Math.floor(bytes.length / 10);
+		byte [][] bytes1 = new byte[split][];
+		byte [][] bytes2 = new byte[bytes.length - split][];
+		for (int i = 0; i < bytes.length; i++) {
+			if (i < split) {
+				bytes1[i] = bytes[i];
+			} else {
+				bytes2[i-split] = bytes[i];
+			}
+		}
+		
+		RelationReport rr1 = runSample(relation, group, eso, guard, bytes1);
+		RelationReport rr2 = runSample(relation, group, eso, guard, bytes2);
 
+		// TODO make extrapolation optional.
 		extrapolate(rr1,rr2,rr);
 
 		return rr;
@@ -90,7 +103,8 @@ public class RelationReporter {
 
 
 	private RelationReport runSample(RelationSchema rs, Collection<GFExistentialExpression> group,
-			ExpressionSetOperations eso, boolean guard, int factor) {
+			ExpressionSetOperations eso, boolean guard, 
+			byte [][] rawbytes) {
 
 		RelationReport rr = new RelationReport(rs);
 
@@ -117,45 +131,44 @@ public class RelationReporter {
 
 			long totalBytesRead = 0;
 
-			for (Path path: mapping.getPaths(rs)) {
-				byte [][] rawbytes = Sampler.getRandomBlocks(path, SAMPLES_PER_FILE, SAMPLE_SIZE*factor);
 
-				for (int i = 0; i < SAMPLES_PER_FILE; i++) {
-					// read text lines
-					try(LineReader l = new LineReader(new ByteArrayInputStream(rawbytes[i]))) {
-						// skip first line, as it may be incomplete
-						long bytesread = l.readLine(t); 
 
-						long offset = 0;
-						while (true) {
-							// read next line
-							bytesread = l.readLine(t); 
-							if (bytesread <= 0)
-								break;
+			for (int i = 0; i < rawbytes.length; i++) {
+				// read text lines
+				try(LineReader l = new LineReader(new ByteArrayInputStream(rawbytes[i]))) {
+					// skip first line, as it may be incomplete
+					long bytesread = l.readLine(t); 
 
-							// if csv, wrap
-							InputFormat format = mapping.getInputFormat(rs);
+					long offset = 0;
+					while (true) {
+						// read next line
+						bytesread = l.readLine(t); 
+						if (bytesread <= 0)
+							break;
 
-							String s = t.toString();
-							if (format == InputFormat.CSV) {
-								s = rs.getName() + "(" + s + ")";
-							}
+						// if csv, wrap
+						InputFormat format = mapping.getInputFormat(rs);
 
-							// convert to tuple
-							Tuple tuple = new Tuple(s);
-
-							// feed to algorithm
-							algo.run(tuple, offset);
-							offset += bytesread;
+						String s = t.toString();
+						if (format == InputFormat.CSV) {
+							s = rs.getName() + "(" + s + ")";
 						}
 
-						// keep track of actual bytes read
-						totalBytesRead += offset;
+						// convert to tuple
+						Tuple tuple = new Tuple(s);
+
+						// feed to algorithm
+						algo.run(tuple, offset);
+						offset += bytesread;
 					}
 
-
+					// keep track of actual bytes read
+					totalBytesRead += offset;
 				}
+
+
 			}
+
 
 			// get results from fake context
 			// and extrapolate
@@ -174,7 +187,7 @@ public class RelationReporter {
 
 
 
-		} catch (SamplingException | AlgorithmInterruptedException | IOException e) {
+		} catch (AlgorithmInterruptedException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -187,7 +200,7 @@ public class RelationReporter {
 		try {
 			LinearExtrapolator le = new LinearExtrapolator();
 			for (Field f : RelationReport.class.getFields()) {
-				
+
 				if (f.getName().contains("est")) {
 					le.loadValues(rr1.getNumInputBytes(), (long)f.get(rr1), rr2.getNumInputBytes(), (long)f.get(rr2));
 					f.set(goal, (long)le.extrapolate(goal.getNumInputBytes()));

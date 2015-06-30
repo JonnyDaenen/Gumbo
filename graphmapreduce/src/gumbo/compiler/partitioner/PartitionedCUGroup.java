@@ -113,10 +113,10 @@ public class PartitionedCUGroup {
 	 * 
 	 * @return the {@link CalculationUnit}s of the specified level
 	 */
-	public CalculationUnitGroup getPartition(int i) {
+	public CalculationUnitGroup getPartition(int level) {
 		CalculationUnitGroup set = new CalculationUnitGroup();
 		for (CalculationUnit c : levelAssignmment.keySet()) {
-			if (levelAssignmment.get(c) == i)
+			if (levelAssignmment.get(c) == level)
 				set.add(c);
 		}
 		return set;

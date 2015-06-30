@@ -10,7 +10,7 @@ import java.util.Set;
  * atom. This is not very useful, as this is done in the engine as well...
  * Plus, the semijoins are in a set, so duplicates are not present anyway.
  * 
- * TODO maybe remove this feature in the engine?
+ * TODO maybe remove this feature from the engine? (when we can do it here, the engine can be more general)
  * 
  * @author Jonny Daenen
  *

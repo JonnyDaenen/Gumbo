@@ -1,23 +1,44 @@
 package gumbo.engine.hadoop.converter;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 
+import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.engine.general.grouper.costmodel.CostSheet;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.engine.hadoop.reporter.RelationReport;
 import gumbo.engine.hadoop.reporter.RelationReporter;
+import gumbo.engine.hadoop.reporter.RelationSampleContainer;
+import gumbo.engine.hadoop.reporter.RelationSampler;
+import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
+import gumbo.utils.estimation.SamplingException;
 
+
+/**
+ * Round 1 cost model.
+ * 
+ * @author Jonny Daenen
+ *
+ */
 public class HadoopCostSheet implements CostSheet {
-	
-	
-	
+
+
+
 	private Map<RelationSchema, RelationReport> reports;
 	private CalculationGroup group;
+	private RelationSampler sampler;
+	private RelationFileMapping mapping;
+	private AbstractExecutorSettings settings;
 
-	public HadoopCostSheet(Map<RelationSchema, RelationReport> reports) {
-		this.reports = reports;
+	public HadoopCostSheet(RelationFileMapping mapping, AbstractExecutorSettings settings) {
+		sampler = new RelationSampler(mapping);
+		this.mapping = mapping;
+		this.settings = settings;
 	}
 
 	@Override
@@ -32,12 +53,12 @@ public class HadoopCostSheet implements CostSheet {
 
 	@Override
 	public long getTotalInputBytes() {
-		
+
 		long output = 0;
 		for (RelationSchema rs : group.getAllSchemas()) {
 			output += reports.get(rs).getNumInputBytes();
 		}
-		
+
 		return output;
 	}
 
@@ -57,7 +78,7 @@ public class HadoopCostSheet implements CostSheet {
 		for (RelationSchema rs : group.getAllSchemas()) {
 			output += reports.get(rs).getEstIntermBytes();
 		}
-		
+
 		return output;
 	}
 
@@ -131,7 +152,24 @@ public class HadoopCostSheet implements CostSheet {
 	@Override
 	public void initialize(CalculationGroup group) {
 		this.group = group;
-		
+		try {
+			RelationSampleContainer samples = sampler.sample(10, 4 * 1024);
+			RelationReporter rr = new RelationReporter(samples, mapping, settings);
+
+
+			Collection<GFExistentialExpression> calcs = new HashSet<>();
+
+			for (GuardedSemiJoinCalculation element : group.getAll()) {
+				calcs.add(element.getExpression());
+			}
+
+
+			reports = rr.generateReports(calcs);
+		} catch (SamplingException | GFOperationInitException e){
+			e.printStackTrace();
+			// TODO handle exception
+		}
+
 	}
 
 }

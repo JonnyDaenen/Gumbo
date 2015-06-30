@@ -1,6 +1,7 @@
 package gumbo.engine.general.grouper.structures;
 
 import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 
 /**
@@ -42,5 +43,16 @@ public class GuardedSemiJoinCalculation {
 	
 	public int hashCode() {
 		return guard.hashCode() ^ guarded.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return guard + " |X " + guarded;
+	}
+	
+	public GFExistentialExpression getExpression() {
+		return new GFExistentialExpression(guard, guarded, guard);
 	};
+	
+	
 }

@@ -1,5 +1,6 @@
 package gumbo.engine.general.grouper.costmodel;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -23,11 +24,13 @@ public class GGTCostCalculator {
 
 
 	public double calculateCost(CalculationGroup group) {
+		
+		cs.initialize(group);
 
-		List<GFAtomicExpression> guards = group.getGuardDistinctList();
+		Collection<GFAtomicExpression> guards = group.getGuardsDistinct();
 		//		List<GFAtomicExpression> guards = group.getGuardList();
 
-		List<GFAtomicExpression> guardeds = group.getGuardedDistinctList();
+		Collection<GFAtomicExpression> guardeds = group.getGuardedsDistinct();
 
 
 		long intermediate = 0;
@@ -35,13 +38,13 @@ public class GGTCostCalculator {
 		// intermediate output tuples for guards
 		for (GFAtomicExpression guard : guards) {
 			RelationSchema guardSchema = guard.getRelationSchema();
-			intermediate += cs.getRelationIntermediateBytes(guardSchema,group);
+			intermediate += cs.getRelationIntermediateBytes(guardSchema);
 		}
 
 		// intermediate output tuples for guarded
 		for (GFAtomicExpression guarded : guardeds) {
 			RelationSchema guardedSchema = guarded.getRelationSchema();
-			intermediate += cs.getRelationIntermediateBytes(guardedSchema,group);
+			intermediate += cs.getRelationIntermediateBytes(guardedSchema);
 		}
 
 
@@ -53,7 +56,7 @@ public class GGTCostCalculator {
 	}
 
 
-	private double determineReduceCost(List<GFAtomicExpression> guards, List<GFAtomicExpression> guardeds, long intermediate) {
+	private double determineReduceCost(Collection<GFAtomicExpression> guards, Collection<GFAtomicExpression> guardeds, long intermediate) {
 		
 		double reduceCost = 0;
 		long numReducers = cs.getNumReducers();
@@ -87,7 +90,7 @@ public class GGTCostCalculator {
 	}
 
 
-	private double determineMapCost(List<GFAtomicExpression> guards, List<GFAtomicExpression> guardeds, long intermediate) {
+	private double determineMapCost(Collection<GFAtomicExpression> guards, Collection<GFAtomicExpression> guardeds, long intermediate) {
 		double mapCost = 0;
 
 		// local (!) guard input read

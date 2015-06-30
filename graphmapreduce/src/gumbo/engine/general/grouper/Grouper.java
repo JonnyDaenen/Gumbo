@@ -4,11 +4,18 @@ import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.engine.general.grouper.policies.GroupingPolicy;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
+import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardAlgorithm;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 
 public class Grouper {
+	
+
+	private static final Log LOG = LogFactory.getLog(Grouper.class);
 	
 	protected Decomposer decomposer;
 	protected GroupingPolicy policy;
@@ -32,8 +39,12 @@ public class Grouper {
 		// process each partition
 		for (int level = 0; level < numPart; level++) {
 			
+			LOG.info("Grouping level " + level );
+			
 			CalculationUnitGroup partition = partitions.getPartition(level);
-			List<CalculationGroup> groupedSJ = getGrouping(partition);
+			LOG.info("Number of calculations: " + partition.size() );
+			
+			List<CalculationGroup> groupedSJ = group(partition);
 			
 			result.setGroup(level, groupedSJ);
 			
@@ -48,13 +59,17 @@ public class Grouper {
 	 * @param partition
 	 * @return
 	 */
-	private List<CalculationGroup> getGrouping(CalculationUnitGroup partition) {
+	public List<CalculationGroup> group(CalculationUnitGroup partition) {
 		
 		// decompose
 		CalculationGroup semijoins = decomposer.decompose(partition);
 		
+		LOG.info("Decomposition complete: " + semijoins );
+		
 		// apply grouping using the policy
 		List<CalculationGroup> groupedSJ = policy.group(semijoins);
+		
+		LOG.info("Grouping complete: " + groupedSJ.size() + " groups" );
 		
 		return groupedSJ;
 		

@@ -14,7 +14,11 @@ import gumbo.compiler.partitioner.HeightPartitioner;
 import gumbo.compiler.partitioner.OptimalPartitioner;
 import gumbo.compiler.partitioner.UnitPartitioner;
 import gumbo.engine.general.FileMappingExtractor;
+import gumbo.engine.general.grouper.Decomposer;
+import gumbo.engine.general.grouper.Grouper;
+import gumbo.engine.general.grouper.policies.AtomGrouper;
 import gumbo.engine.hadoop.HadoopEngine;
+import gumbo.engine.hadoop.converter.HadoopCostSheet;
 import gumbo.engine.hadoop.reporter.RelationReport;
 import gumbo.engine.hadoop.reporter.RelationReporter;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
@@ -144,23 +148,10 @@ public class Gumbo extends Configured implements Tool {
 		System.out.println(plan);
 		
 		// --- fresh
-		FileMappingExtractor fme = new FileMappingExtractor();
-		RelationFileMapping mapping2 = fme.extractFileMapping(plan.getFileManager());
+		Grouper grouper = new Grouper(new AtomGrouper());
 		
-		Set<CalculationUnit> calcs = plan.getPartitions().getBottomUpList().get(0).getCalculations();
-		RelationReporter rr = new RelationReporter(mapping2, settings);
+		grouper.group(plan.getPartitions());
 		
-		Set<GFExistentialExpression> exps = new HashSet<GFExistentialExpression>();
-		for (CalculationUnit calc : calcs)  {
-			BasicGFCalculationUnit bgfu = (BasicGFCalculationUnit)calc;
-			exps.add(bgfu.getBasicExpression());
-		}
-		
-		Map<RelationSchema, RelationReport> reports = rr.generateReports(exps);
-		for (RelationReport value : reports.values()){
-			System.out.println(value);
-			System.out.println("---");
-		}
 		System.exit(0);
 		// ---
 		
