@@ -1,49 +1,64 @@
 package gumbo.engine.hadoop.converter;
 
+import java.util.Map;
+
 import gumbo.engine.general.grouper.costmodel.CostSheet;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
+import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
+import gumbo.engine.hadoop.reporter.RelationReport;
+import gumbo.engine.hadoop.reporter.RelationReporter;
 import gumbo.structures.data.RelationSchema;
 
 public class HadoopCostSheet implements CostSheet {
 	
-	InputEstimator input;
-	IntermediateEstimator interm;
 	
-	public HadoopCostSheet(InputEstimator input, IntermediateEstimator interm) {
-		this.input = input;
-		this.interm = interm;
+	
+	private Map<RelationSchema, RelationReport> reports;
+	private CalculationGroup group;
+
+	public HadoopCostSheet(Map<RelationSchema, RelationReport> reports) {
+		this.reports = reports;
 	}
 
 	@Override
 	public long getRelationInputTuples(RelationSchema rs) {
-		return input.estNumTuples(rs);
+		return reports.get(rs).getEstInputTuples();
 	}
 
 	@Override
 	public long getRelationInputBytes(RelationSchema rs) {
-		return input.getNumBytes(rs);
+		return reports.get(rs).getNumInputBytes();
 	}
 
 	@Override
-	public long getTotalInputBytes(CalculationGroup group) {
-		return input.getTotalBytes(group);
+	public long getTotalInputBytes() {
+		
+		long output = 0;
+		for (RelationSchema rs : group.getAllSchemas()) {
+			output += reports.get(rs).getNumInputBytes();
+		}
+		
+		return output;
 	}
 
 	@Override
-	public long getRelationIntermediateTuples(RelationSchema rs,
-			CalculationGroup group) {
-		return interm.estNumTuples(rs,group);
+	public long getRelationIntermediateTuples(RelationSchema rs) {
+		return reports.get(rs).getEstIntermTuples();
 	}
 
 	@Override
-	public long getRelationIntermediateBytes(RelationSchema rs,
-			CalculationGroup group) {
-		return interm.estNumBytes(rs,group);
+	public long getRelationIntermediateBytes(RelationSchema rs) {
+		return reports.get(rs).getEstIntermBytes();
 	}
 
 	@Override
-	public long getTotalIntermediateBytes(CalculationGroup group) {
-		return interm.getTotalBytes(group);
+	public long getTotalIntermediateBytes() {
+		long output = 0;
+		for (RelationSchema rs : group.getAllSchemas()) {
+			output += reports.get(rs).getEstIntermBytes();
+		}
+		
+		return output;
 	}
 
 
@@ -75,12 +90,12 @@ public class HadoopCostSheet implements CostSheet {
 
 
 	@Override
-	public int getNumMappers(CalculationGroup group) {
+	public int getNumMappers() {
 		// TODO
 		// per input file
 		// size / hdfs block size
 
-		return (int)(getTotalInputBytes(group) / (128 * 1024 * 1024)); // 128MB
+		return (int)(getTotalInputBytes() / (128 * 1024 * 1024)); // 128MB
 	}
 
 	@Override
@@ -96,9 +111,9 @@ public class HadoopCostSheet implements CostSheet {
 	}
 
 	@Override
-	public int getNumReducers(CalculationGroup group) {
+	public int getNumReducers() {
 		// TODO use setting for this
-		return (int)(getTotalIntermediateBytes(group) / (128 * 1024 * 1024)); // 128MB TODO 1 GB?
+		return (int)(getTotalIntermediateBytes() / (128 * 1024 * 1024)); // 128MB TODO 1 GB?
 	}
 
 	@Override
@@ -111,6 +126,12 @@ public class HadoopCostSheet implements CostSheet {
 	public long getReduceSortBuffer() {
 		// TODO read from config file
 		return 100*1024*1024; //100mb
+	}
+
+	@Override
+	public void initialize(CalculationGroup group) {
+		this.group = group;
+		
 	}
 
 }

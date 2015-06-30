@@ -57,4 +57,9 @@ public class CalculationGroup {
 		return null;
 	}
 
+	public Set<RelationSchema> getAllSchemas() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
