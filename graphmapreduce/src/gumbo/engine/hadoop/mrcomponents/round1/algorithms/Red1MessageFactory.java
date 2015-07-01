@@ -89,7 +89,6 @@ public class Red1MessageFactory {
 			String [] parts = reply.split(",");
 			// start at second index to skip Assert constant/value
 			for (int i = 0; i < parts.length; i++) {
-				LOG.info("parts: " + parts[i]);
 				if (reqAtomIdOn)
 					requestKeys.add(Integer.parseInt(parts[i]));
 				else {
@@ -114,8 +113,8 @@ public class Red1MessageFactory {
 		// only send out replies that have an answer
 
 		if (outGroupingOn) { 
-			LOG.info("Assert ids: " + assertKeys);
-			LOG.info("Request ids: " + requestKeys);
+//			LOG.info("Assert ids: " + assertKeys);
+//			LOG.info("Request ids: " + requestKeys);
 			requestKeys.retainAll(assertKeys);
 
 			for (int replyid : requestKeys) {

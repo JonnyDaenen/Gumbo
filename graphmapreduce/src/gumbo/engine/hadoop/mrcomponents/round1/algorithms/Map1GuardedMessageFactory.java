@@ -134,7 +134,7 @@ public class Map1GuardedMessageFactory {
 			valueText.append(value, 0, value.length);
 
 			context.write(keyText, valueText);
-			LOG.info("ASSERT: " + keyText + " : " + valueText );
+//			LOG.info("ASSERT: " + keyText + " : " + valueText );
 
 
 			if (sampleCounter) {

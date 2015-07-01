@@ -285,7 +285,7 @@ public class Map1GuardMessageFactory {
 
 			context.write(keyText, valueText);
 
-			LOG.info("<" + keyText.toString() + " : " + valueText.toString() + ">");
+//			LOG.info("<" + keyText.toString() + " : " + valueText.toString() + ">");
 
 			if (sampleCounter) {
 				context.getCounter(CounterMeasures.OUT_TUPLES).increment(1);

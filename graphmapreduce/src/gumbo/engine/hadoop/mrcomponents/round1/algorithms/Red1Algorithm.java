@@ -125,7 +125,6 @@ public class Red1Algorithm {
 		// start at second index to skip Assert constant/value
 		for (int i = 1; i < parts.length; i++) {
 			keysFound.add(Integer.parseInt(parts[i]));
-			LOG.info("Found key:" + parts[i]);
 		}
 		
 	}
