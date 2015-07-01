@@ -1,5 +1,6 @@
 package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
+import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.io.Triple;
@@ -18,11 +19,15 @@ public class Map1GuardAlgorithm implements MapAlgorithm{
 
 	Map1GuardMessageFactory msgFactory;
 	ExpressionSetOperations eso;
+
+	private boolean keepAliveOn;
 	
 
-	public Map1GuardAlgorithm(ExpressionSetOperations eso, Map1GuardMessageFactory msgFactory) {
+	public Map1GuardAlgorithm(ExpressionSetOperations eso, Map1GuardMessageFactory msgFactory, AbstractExecutorSettings settings) {
 		this.msgFactory = msgFactory;
 		this.eso = eso;
+		keepAliveOn = !settings.getBooleanProperty(AbstractExecutorSettings.guardKeepAliveOptimizationOn);
+		
 	}
 
 	public void run(Tuple t, long offset) throws AlgorithmInterruptedException {
@@ -39,6 +44,12 @@ public class Map1GuardAlgorithm implements MapAlgorithm{
 			
 			// check guards + atom (keep-alive)
 			for (GFAtomicExpression guard : eso.getGuardsAll()) {
+				
+				// add extra id to make sure keep alive is picked up in grouping mode
+				// when grouping mode is off, this is transmitted, but ignored by the reducer.
+				if (keepAliveOn) {
+					ids.add(eso.getAtomId(guard));
+				}
 
 				// if the tuple satisfies the guard expression
 				if (guard.matches(t)) {

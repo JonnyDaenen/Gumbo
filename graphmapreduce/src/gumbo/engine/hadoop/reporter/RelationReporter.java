@@ -118,7 +118,7 @@ public class RelationReporter {
 			if (guard) { // TODO make eso predicate
 				Map1GuardMessageFactory fact = new Map1GuardMessageFactory(fm.context, settings, eso);
 				fact.enableSampleCounting();
-				algo = new Map1GuardAlgorithm(eso, fact);
+				algo = new Map1GuardAlgorithm(eso, fact, settings);
 			} else {
 				Map1GuardedMessageFactory fact = new Map1GuardedMessageFactory(fm.context, settings, eso);
 				fact.enableSampleCounting();

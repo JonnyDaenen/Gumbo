@@ -179,7 +179,7 @@ public class Map1GuardedMessageFactory {
 
 		if (mapOutputGroupingOptimizationOn)
 			for(int id : ids) {
-				valueBuilder.append(",");
+				valueBuilder.append(":");
 				valueBuilder.append(id);
 			}
 

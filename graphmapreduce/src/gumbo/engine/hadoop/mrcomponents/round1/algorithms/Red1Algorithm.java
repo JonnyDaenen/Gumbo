@@ -63,7 +63,7 @@ public class Red1Algorithm {
 	 * @throws AlgorithmInterruptedException
 	 */
 	public boolean processTuple(Pair<String,String> split) throws AlgorithmInterruptedException {
-
+		
 		try {
 			// is this not the key (key is only thing that can appear without atom reference)
 			// it does not matter whether it's sent as S(1) or with a constant symbol such as '#'
@@ -121,7 +121,7 @@ public class Red1Algorithm {
 	}
 
 	private void collectIds(String s) {
-		String [] parts = s.split(",");
+		String [] parts = s.split(":");
 		// start at second index to skip Assert constant/value
 		for (int i = 1; i < parts.length; i++) {
 			keysFound.add(Integer.parseInt(parts[i]));
@@ -130,10 +130,12 @@ public class Red1Algorithm {
 	}
 
 	public void finish() throws AlgorithmInterruptedException {
-
+		
 		try {
 			// output the remaining data
-			if (keyFound) {
+			// when grouping is active we start outputting anyway,
+			// as every "key" has been parsed
+			if (keyFound || outGroupingOn) {
 				for (Pair<String, String> p : buffer) {
 					msgFactory.loadValue(p.fst, p.snd);
 					msgFactory.sendReplies();

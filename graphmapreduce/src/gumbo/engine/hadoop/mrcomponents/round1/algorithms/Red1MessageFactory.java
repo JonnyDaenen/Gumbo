@@ -86,7 +86,7 @@ public class Red1MessageFactory {
 
 		if (outGroupingOn) {
 			requestKeys.clear();
-			String [] parts = reply.split(",");
+			String [] parts = reply.split(":");
 			// start at second index to skip Assert constant/value
 			for (int i = 0; i < parts.length; i++) {
 				if (reqAtomIdOn)
@@ -113,6 +113,7 @@ public class Red1MessageFactory {
 		// only send out replies that have an answer
 
 		if (outGroupingOn) { 
+//			LOG.info(keyText);
 //			LOG.info("Assert ids: " + assertKeys);
 //			LOG.info("Request ids: " + requestKeys);
 			requestKeys.retainAll(assertKeys);
@@ -148,6 +149,8 @@ public class Red1MessageFactory {
 
 	protected void sendMessage() throws MessageFailedException{
 		try {
+
+//			LOG.info("Reply: " + keyText + " : " + valueText);
 			mos.write(keyText, valueText, filename);
 		} catch(Exception e) {
 			throw new MessageFailedException(e);

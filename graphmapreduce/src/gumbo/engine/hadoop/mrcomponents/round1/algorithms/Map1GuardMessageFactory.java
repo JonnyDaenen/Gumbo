@@ -101,7 +101,7 @@ public class Map1GuardMessageFactory {
 
 		proofBytes = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL).getBytes();
 		sepBytes = ";".getBytes();
-		commaBytes = ",".getBytes();
+		commaBytes = ":".getBytes();
 
 		sampleCounter = false;
 
@@ -156,7 +156,9 @@ public class Map1GuardMessageFactory {
 
 			// output guard
 			if (!guardKeepaliveOptimizationOn) {
-				keyText.append(tbytes,0,tbytes.length);
+
+				byte[] tbytes2 = t.generateString(mapOutputGroupingOptimizationOn).getBytes();
+				keyText.append(tbytes2,0,tbytes2.length);
 
 				valueText.append(tRef,0,tRef.length);
 				valueText.append(sepBytes,0,sepBytes.length);
@@ -234,9 +236,9 @@ public class Map1GuardMessageFactory {
 			GFAtomProjection p = guardedInfo.snd;
 
 
-			String guardedString;
-			String keyString = p.projectString(t,mapOutputGroupingOptimizationOn);
 
+			String keyString = p.projectString(t,mapOutputGroupingOptimizationOn);
+			String guardedString;
 			if (guardIdOptimizationOn)
 				guardedString = Integer.toString(guardedInfo.trd);
 			else

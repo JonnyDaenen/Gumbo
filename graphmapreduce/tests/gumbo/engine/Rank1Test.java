@@ -91,6 +91,7 @@ public class Rank1Test {
 			hc.setBooleanProperty(key, true);
 
 			Object [] oneOnTest = {hc.getConf(), key};
+//			if (key.contains("Group"))
 			confs.add(oneOnTest);
 		}
 		

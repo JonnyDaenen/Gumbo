@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.Text;
 
 /**
@@ -18,6 +20,8 @@ public class Tuple {
 
 	//	private static Pattern p = Pattern.compile("\\(|,|\\)");
 
+	private static final Log LOG = LogFactory.getLog(Tuple.class);
+	
 	String name;
 	String[] data;
 	String representationCache;
@@ -41,7 +45,6 @@ public class Tuple {
 		// // old2
 		int fb = StringUtils.indexOf(s, '('); // s.indexOf('(');
 		int lb = StringUtils.lastIndexOf(s, ')'); // s.lastIndexOf(')');
-
 		name = s.substring(0, fb);
 		String rest = s.substring(fb + 1, lb);
 		// data = rest.split(",");
