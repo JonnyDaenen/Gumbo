@@ -11,6 +11,8 @@ import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOpera
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -18,6 +20,7 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 public class Red1MessageFactory {
 
+	private static final Log LOG = LogFactory.getLog(Red1MessageFactory.class);
 
 	Text keyText;
 	Text valueText;
@@ -90,8 +93,8 @@ public class Red1MessageFactory {
 				if (reqAtomIdOn)
 					replyKeys.add(Integer.parseInt(parts[i]));
 				else {
-					
-					
+
+
 					Tuple atomTuple = new Tuple(parts[i]);
 					GFAtomicExpression dummy = new GFAtomicExpression(atomTuple.getName(), atomTuple.getAllData());
 					try {
@@ -109,25 +112,36 @@ public class Red1MessageFactory {
 	public void sendReplies() throws MessageFailedException {
 
 		// only send out replies that have an answer
-		replyKeys.retainAll(assertKeys);
 
-		for (int replyid : replyKeys) {
-			if (reqAtomIdOn) {
-				valueText.set(""+replyid);
-			} else {
-				try {
-					valueText.set(eso.getAtom(replyid).toString());
-				} catch (GFOperationInitException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} 
+		if (outGroupingOn) { 
+
+			replyKeys.retainAll(assertKeys);
+
+			for (int replyid : replyKeys) {
+				valueText.clear();
+				if (reqAtomIdOn) {
+					valueText.set(""+replyid);
+				} else {
+					try {
+						valueText.set(eso.getAtom(replyid).toString());
+					} catch (GFOperationInitException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} 
+				}
+
+				OUTB.increment(keyText.getLength()+valueText.getLength());
+				sendMessage(); // OPTIMIZE bundle all these values for round 2
+
 			}
-
+			OUTR.increment(replyKeys.size());
+		} else {
+//			LOG.info("Out: " + keyText + " : " + valueText);
+			OUTR.increment(1);
 			OUTB.increment(keyText.getLength()+valueText.getLength());
-			sendMessage();
 
+			sendMessage();
 		}
-		OUTR.increment(replyKeys.size());
 
 	}
 

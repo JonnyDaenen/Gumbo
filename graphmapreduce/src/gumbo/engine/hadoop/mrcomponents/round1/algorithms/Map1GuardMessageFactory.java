@@ -20,12 +20,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Mapper;
 
 public class Map1GuardMessageFactory {
+	
+
+	private static final Log LOG = LogFactory.getLog(Map1GuardedMessageFactory.class);
 
 	Text keyText;
 	Text valueText;
@@ -265,7 +270,7 @@ public class Map1GuardMessageFactory {
 
 			context.write(keyText, valueText);
 
-			//		System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");
+//			LOG.info("<" +keyText.toString()+ " : " + valueText.toString() + ">");
 
 			if (sampleCounter) {
 				context.getCounter(CounterMeasures.OUT_TUPLES).increment(1);

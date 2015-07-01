@@ -10,15 +10,20 @@ import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import java.io.IOException;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Mapper;
 
+
 public class Map1GuardedMessageFactory {
 
-	Text keyText;
-	Text valueText;
+	private static final Log LOG = LogFactory.getLog(Map1GuardedMessageFactory.class);
+	
+	private Text keyText;
+	private Text valueText;
 	private Counter ASSERT;
 	private Counter ASSERTBYTES;
 	
@@ -135,6 +140,7 @@ public class Map1GuardedMessageFactory {
 			valueText.append(value, 0, value.length);
 
 			context.write(keyText, valueText);
+//			LOG.info("ASSERT: " + keyText + " : " + valueText );
 			
 			
 			if (sampleCounter) {
@@ -152,8 +158,8 @@ public class Map1GuardedMessageFactory {
 	}
 
 	public void sendAssert(Set<Integer> ids) throws MessageFailedException {
+		valueBuilder.setLength(0);
 		if (!guardedIdOptimizationOn) {
-			valueBuilder.setLength(0);
 			valueBuilder.append(t.toString());
 		} else {
 			valueBuilder.append(proofBytes);
