@@ -53,7 +53,7 @@ public abstract class AbstractExecutorSettings {
 		turnOnOptimizations();
 		setBooleanProperty(guardedCombinerOptimizationOn, false); 
 		setBooleanProperty(round1FiniteMemoryOptimizationOn, false); 
-		setBooleanProperty(mapOutputGroupingOptimizationOn, false); 
+//		setBooleanProperty(mapOutputGroupingOptimizationOn, false); 
 		setProperty(PROOF_SYMBOL, "#");
 	}
 	

@@ -160,7 +160,7 @@ public class GFReducer2 extends Reducer<Text, IntWritable, Text, Text> {
 						String outfile = generateFileName(p.getOutputSchema());
 
 						// project the tuple and output it
-						String outputTuple = p.project(keyTuple).generateString();
+						String outputTuple = p.project(keyTuple).toString();
 						out1.set(outputTuple);
 						mos.write((Text)null, out1, outfile);
 					}

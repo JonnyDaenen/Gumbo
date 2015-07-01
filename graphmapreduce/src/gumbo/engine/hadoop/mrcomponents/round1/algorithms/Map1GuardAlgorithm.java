@@ -1,5 +1,8 @@
 package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.io.Triple;
@@ -30,6 +33,8 @@ public class Map1GuardAlgorithm implements MapAlgorithm{
 
 			boolean outputAssert = false;
 			boolean guardIsGuarded = false;
+			
+			Set<Integer> ids = new HashSet<>();
 
 			
 			// check guards + atom (keep-alive)
@@ -50,6 +55,7 @@ public class Map1GuardAlgorithm implements MapAlgorithm{
 						// if guarded is same relation, output special assert afterwards
 						if (guarded.getRelationSchema().equals(guard.getRelationSchema())) {
 							guardIsGuarded = true;
+							ids.add(guardedInfo.trd);
 						}
 
 						msgFactory.sendRequest(guardedInfo);
@@ -60,10 +66,11 @@ public class Map1GuardAlgorithm implements MapAlgorithm{
 			// output an assert message if the guard is also guarded (forced)
 			// or if it matched a guard was matched and a Keep-alive assert is required
 			if (guardIsGuarded || outputAssert) {
-				msgFactory.sendGuardedAssert(guardIsGuarded);
+				msgFactory.sendGuardedAssert(guardIsGuarded,ids); // TODO apply grouping here
 			}
 			
 			msgFactory.finish();
+			
 		} catch(Exception e) {
 			throw new AlgorithmInterruptedException(e);
 		}

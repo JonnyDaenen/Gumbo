@@ -138,8 +138,8 @@ public class Tuple {
 				list.add(sb.toString());
 				sb.setLength(0);
 			} else if (c == ')') { // do this separately
-//				if (sb.length() > 0) TODO skip empty lines in calling function
-					list.add(sb.toString());
+				//				if (sb.length() > 0) TODO skip empty lines in calling function
+				list.add(sb.toString());
 				sb.setLength(0);
 				break; // Text can contain extra garbage
 			} else if (c == ' ') { // skip spaces
@@ -156,7 +156,15 @@ public class Tuple {
 		data = list.toArray(new String [0]);
 	}
 
-	public String generateString() {
+	/**
+	 * Returns a String representation of a tuple.
+	 * When csv representation is requested, the tuple is not wrapped in "RelationName(...)".
+	 * A cache is kept to quickly obtain the representation in future requests.
+	 * 
+	 * @param csv
+	 * @return
+	 */
+	public String generateString(boolean csv) {
 
 		if (representationCache == null) {
 			int numChars = 0;
@@ -167,23 +175,29 @@ public class Tuple {
 
 			StringBuilder sb = new StringBuilder(numChars);
 
-
 			sb.append(name);
 			sb.append('(');
+
 			int i;
 			for (i = 0; i < data.length-1; i++) {
 				sb.append(data[i]);
 				sb.append(',');
 			}
 			sb.append(data[i]);
+
 			sb.append(')');
+
 			//			sb.insert(0, '(');
 			//			sb.insert(0, name);
 
 			representationCache = sb.toString();
 		}
 
-		return representationCache;
+		if (csv) {
+			return representationCache.substring(representationCache.indexOf('(')+1, representationCache.lastIndexOf(')'));
+		} else {
+			return representationCache;
+		}
 
 	}
 
@@ -249,7 +263,7 @@ public class Tuple {
 	@Override
 	public String toString() {
 
-		return generateString();
+		return generateString(false);
 
 		//
 		// String out = "";

@@ -62,12 +62,7 @@ public class Map1GuardedAlgorithm implements MapAlgorithm {
 
 			// send the assert message
 			if (output) {
-				if (sendIds) {
-					msgFactory.sendAssert();
-				}
-				else {
-					msgFactory.sendAssert(ids);
-				}
+				msgFactory.sendAssert(ids);
 			}
 
 		} catch ( Exception e) {

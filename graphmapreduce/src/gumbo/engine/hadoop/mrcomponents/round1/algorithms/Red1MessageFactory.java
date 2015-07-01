@@ -43,8 +43,7 @@ public class Red1MessageFactory {
 	String proofBytes;
 	String filename;
 	private Set<Integer> assertKeys;
-	private Set<Integer> replyKeys;
-	private Set<String> replyKeys2;
+	private Set<Integer> requestKeys;
 	private boolean outGroupingOn;
 	private boolean reqAtomIdOn;
 	private ExpressionSetOperations eso;
@@ -72,7 +71,7 @@ public class Red1MessageFactory {
 		this.eso = eso;
 
 		assertKeys = null;
-		replyKeys = new HashSet<>(10);
+		requestKeys = new HashSet<>(10);
 
 
 
@@ -86,19 +85,20 @@ public class Red1MessageFactory {
 		valueText.set(reply);
 
 		if (outGroupingOn) {
-			replyKeys.clear();
+			requestKeys.clear();
 			String [] parts = reply.split(",");
 			// start at second index to skip Assert constant/value
-			for (int i = 1; i < parts.length; i++) {
+			for (int i = 0; i < parts.length; i++) {
+				LOG.info("parts: " + parts[i]);
 				if (reqAtomIdOn)
-					replyKeys.add(Integer.parseInt(parts[i]));
+					requestKeys.add(Integer.parseInt(parts[i]));
 				else {
 
 
 					Tuple atomTuple = new Tuple(parts[i]);
 					GFAtomicExpression dummy = new GFAtomicExpression(atomTuple.getName(), atomTuple.getAllData());
 					try {
-						replyKeys.add(eso.getAtomId(dummy));
+						requestKeys.add(eso.getAtomId(dummy));
 					} catch (GFOperationInitException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -114,10 +114,11 @@ public class Red1MessageFactory {
 		// only send out replies that have an answer
 
 		if (outGroupingOn) { 
+			LOG.info("Assert ids: " + assertKeys);
+			LOG.info("Request ids: " + requestKeys);
+			requestKeys.retainAll(assertKeys);
 
-			replyKeys.retainAll(assertKeys);
-
-			for (int replyid : replyKeys) {
+			for (int replyid : requestKeys) {
 				valueText.clear();
 				if (reqAtomIdOn) {
 					valueText.set(""+replyid);
@@ -134,7 +135,7 @@ public class Red1MessageFactory {
 				sendMessage(); // OPTIMIZE bundle all these values for round 2
 
 			}
-			OUTR.increment(replyKeys.size());
+			OUTR.increment(requestKeys.size());
 		} else {
 //			LOG.info("Out: " + keyText + " : " + valueText);
 			OUTR.increment(1);

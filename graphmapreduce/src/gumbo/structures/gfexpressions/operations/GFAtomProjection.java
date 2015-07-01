@@ -123,7 +123,7 @@ public class GFAtomProjection {
 	 */
 	public String projectString(Tuple t, boolean csv) throws NonMatchingTupleException {
 
-		StringBuilder sb = new StringBuilder(target.getName().length()+t.generateString().length());
+		StringBuilder sb = new StringBuilder(target.getName().length()+t.toString().length());
 
 
 		// head

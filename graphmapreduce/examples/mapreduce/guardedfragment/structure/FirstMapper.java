@@ -61,7 +61,7 @@ public class FirstMapper {
 			tkey = t.getData(arrayAllAtoms[i].getName(), f);
 			
 			// add to output
-			p.add(new KeyValuePair(tkey,t.generateString()));
+			p.add(new KeyValuePair(tkey,t.toString()));
 		}
 		return p;
 	}

@@ -116,7 +116,7 @@ boolean print = false;
 					// determine output
 					GFAtomProjection p = eso.getOutputProjection(formula);
 					String outputRelation = p.getOutputSchema().toString(); // TODO #spark check this!
-					String outputTuple = p.project(keyTuple).generateString();
+					String outputTuple = p.project(keyTuple).toString();
 
 					if (print) 
 					System.out.println(outputRelation);

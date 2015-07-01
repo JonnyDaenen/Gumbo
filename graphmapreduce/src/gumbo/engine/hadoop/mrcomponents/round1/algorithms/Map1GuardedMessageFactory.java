@@ -21,17 +21,18 @@ import org.apache.hadoop.mapreduce.Mapper;
 public class Map1GuardedMessageFactory {
 
 	private static final Log LOG = LogFactory.getLog(Map1GuardedMessageFactory.class);
-	
+
 	private Text keyText;
 	private Text valueText;
 	private Counter ASSERT;
 	private Counter ASSERTBYTES;
-	
+
 
 	private boolean sampleCounter;
 
 	private boolean guardedIdOptimizationOn;
 	private boolean round1FiniteMemoryOptimizationOn;
+	private boolean mapOutputGroupingOptimizationOn;
 
 	private Mapper<LongWritable, Text, Text, Text>.Context context;
 
@@ -56,6 +57,7 @@ public class Map1GuardedMessageFactory {
 		// ---
 		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
 		guardedIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.assertConstantOptimizationOn);
+		mapOutputGroupingOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.mapOutputGroupingOptimizationOn);
 
 		// ---
 
@@ -71,10 +73,10 @@ public class Map1GuardedMessageFactory {
 		// prepare the value with the proof symbol
 		if (guardedIdOptimizationOn)
 			valueBuilder.append(proofBytes);
-		
+
 		sampleCounter = false;
 	}
-	
+
 	public void enableSampleCounting() {
 		sampleCounter = true;
 	}
@@ -83,13 +85,13 @@ public class Map1GuardedMessageFactory {
 
 		this.t = t;
 		keyBuilder.setLength(0);
-		keyBuilder.append(t.toString());
+		keyBuilder.append(t.generateString(mapOutputGroupingOptimizationOn));
 
 		// add sort indication to key if necessary
 		if (round1FiniteMemoryOptimizationOn) {
 			keyBuilder.append(proofBytes);
 		} 
-		
+
 		if (sampleCounter) {
 			context.getCounter(CounterMeasures.IN_TUPLES).increment(1);
 			context.getCounter(CounterMeasures.IN_BYTES).increment(t.toString().length());
@@ -98,15 +100,7 @@ public class Map1GuardedMessageFactory {
 
 
 
-	/**
-	 * Sends out an assert message to this guarded tuple,
-	 * to indicate its own existance.
-	 * If the guarded ID optimization is on,
-	 * the message constant is replaced with a special constant symbol.
-	 * 
-	 * @throws InterruptedException 
-	 * @throws IOException 
-	 */
+	
 	public void sendAssert() throws MessageFailedException {
 
 		if (!guardedIdOptimizationOn) {
@@ -140,9 +134,9 @@ public class Map1GuardedMessageFactory {
 			valueText.append(value, 0, value.length);
 
 			context.write(keyText, valueText);
-//			LOG.info("ASSERT: " + keyText + " : " + valueText );
-			
-			
+			LOG.info("ASSERT: " + keyText + " : " + valueText );
+
+
 			if (sampleCounter) {
 				context.getCounter(CounterMeasures.OUT_TUPLES).increment(1);
 				context.getCounter(CounterMeasures.OUT_BYTES).increment(key.length + value.length);
@@ -157,6 +151,24 @@ public class Map1GuardedMessageFactory {
 		}
 	}
 
+	/**
+	 * Sends out an assert message to this guarded tuple,
+	 * to indicate its own existance.
+	 * 
+	 * If the guarded ID optimization is on,
+	 * the message constant is replaced with a special constant symbol.
+	 * 
+	 * If map output grouping is on, the atom ids of matching
+	 * atoms are also sent as a list. Note that, if the supplied list is empty,
+	 * this methods acts as if grouping is off and just sends the 
+	 * message. This means that checking if the message should be sent
+	 * should be done before calling this method.
+	 * 
+	 * @param ids the list of atom ids that match the tuple
+	 * 
+	 * @throws InterruptedException 
+	 * @throws IOException 
+	 */
 	public void sendAssert(Set<Integer> ids) throws MessageFailedException {
 		valueBuilder.setLength(0);
 		if (!guardedIdOptimizationOn) {
@@ -164,17 +176,19 @@ public class Map1GuardedMessageFactory {
 		} else {
 			valueBuilder.append(proofBytes);
 		}
-		for(int id : ids) {
-			valueBuilder.append(",");
-			valueBuilder.append(id);
-		}
+
+		if (mapOutputGroupingOptimizationOn)
+			for(int id : ids) {
+				valueBuilder.append(",");
+				valueBuilder.append(id);
+			}
 
 		// update counters before sending the message
 		ASSERT.increment(1);
 		ASSERTBYTES.increment(keyBuilder.length()+valueBuilder.length());
 
 		sendMessage();
-		
+
 	}
 
 }
