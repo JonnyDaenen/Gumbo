@@ -63,8 +63,8 @@ public class CalculationGroup {
 		StringBuilder sb = new StringBuilder();
 		
 		for (GuardedSemiJoinCalculation sj : semijoins) {
-			sb.append(System.lineSeparator());
 			sb.append("\t" + sj.toString());
+			sb.append(System.lineSeparator());
 		}
 		
 		return sb.toString();

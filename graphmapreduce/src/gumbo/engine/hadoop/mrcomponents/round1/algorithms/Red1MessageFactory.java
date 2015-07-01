@@ -1,7 +1,11 @@
 package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import gumbo.engine.hadoop.mrcomponents.round1.reducers.GumboRed1Counter;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
@@ -33,6 +37,11 @@ public class Red1MessageFactory {
 	String tRef;
 	String proofBytes;
 	String filename;
+	private Set<Integer> assertKeys;
+	private Set<Integer> replyKeys;
+	private boolean outGroupingOn;
+	private boolean reqAtomIdOn;
+	private ExpressionSetOperations eso;
 
 	public Red1MessageFactory(Reducer<Text, Text, Text, Text>.Context context, HadoopExecutorSettings settings, ExpressionSetOperations eso, String filename) {
 		keyText = new Text();
@@ -48,9 +57,17 @@ public class Red1MessageFactory {
 
 		proofBytes = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL);
 
+		outGroupingOn = settings.getBooleanProperty(AbstractExecutorSettings.mapOutputGroupingOptimizationOn);
+		reqAtomIdOn = settings.getBooleanProperty(AbstractExecutorSettings.requestAtomIdOptimizationOn);
+
 
 		mos = new MultipleOutputs<>(context);
 		this.filename = filename;
+		this.eso = eso;
+
+		assertKeys = null;
+		replyKeys = new HashSet<>(10);
+
 
 
 	}
@@ -62,12 +79,38 @@ public class Red1MessageFactory {
 		keyText.set(address);
 		valueText.set(reply);
 
+		if (outGroupingOn) {
+			replyKeys.clear();
+			String [] parts = reply.split(",");
+			// start at second index to skip Assert constant/value
+			for (int i = 1; i < parts.length; i++) {
+				if (reqAtomIdOn)
+					replyKeys.add(Integer.parseInt(parts[i]));
+				else {
+					// FIXME !!! this should also work for atom strings.
+				}
+			}
+		}
+
 	}
 
-	public void sendReply() throws MessageFailedException {
-		OUTR.increment(1);
-		OUTB.increment(keyText.getLength()+valueText.getLength());
-		sendMessage();
+	public void sendReplies() throws MessageFailedException {
+
+		// only send out replies that have an answer
+		replyKeys.retainAll(assertKeys);
+
+		for (int replyid : replyKeys) {
+			if (reqAtomIdOn) {
+				valueText.set(""+replyid);
+			} else {
+				// valueText.set(eso.getAtomId(null)); // FIXME
+			}
+
+			OUTB.increment(keyText.getLength()+valueText.getLength());
+			sendMessage();
+
+		}
+		OUTR.increment(replyKeys.size());
 
 	}
 
@@ -95,6 +138,11 @@ public class Red1MessageFactory {
 
 	public void addBuffered(long incr) {
 		BUFFERED.increment(incr);
+	}
+
+	public void setKeys(Set<Integer> keysFound) {
+		this.assertKeys = keysFound;
+
 	}
 
 

@@ -16,7 +16,10 @@ import gumbo.compiler.partitioner.UnitPartitioner;
 import gumbo.engine.general.FileMappingExtractor;
 import gumbo.engine.general.grouper.Decomposer;
 import gumbo.engine.general.grouper.Grouper;
+import gumbo.engine.general.grouper.costmodel.GGTCostCalculator;
+import gumbo.engine.general.grouper.policies.AllGrouper;
 import gumbo.engine.general.grouper.policies.AtomGrouper;
+import gumbo.engine.general.grouper.policies.KeyGrouper;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.hadoop.converter.HadoopCostSheet;
 import gumbo.engine.hadoop.reporter.RelationReport;
@@ -126,7 +129,7 @@ public class Gumbo extends Configured implements Tool {
 
 		LOG.info(query);
 
-		
+
 		CalculationPartitioner partitioner;
 		switch (getConf().get(AbstractExecutorSettings.partitionClass,"")) {
 		case "optimal":
@@ -141,21 +144,23 @@ public class Gumbo extends Configured implements Tool {
 		default:
 			partitioner = new UnitPartitioner();
 		}
-		
+
 		GFCompiler compiler = new GFCompiler(partitioner);
 		GumboPlan plan = compiler.createPlan(query);
 
 		System.out.println(plan);
-		
+
 		// --- fresh
-		Grouper grouper = new Grouper(new AtomGrouper());
-		
+		FileMappingExtractor fme = new FileMappingExtractor(false);
+		RelationFileMapping mapping2 = fme.extractFileMapping(plan.getFileManager());
+		Grouper grouper = new Grouper(new KeyGrouper(new GGTCostCalculator(new HadoopCostSheet(mapping2, settings))));
+
 		grouper.group(plan.getPartitions());
-		
+
 		System.exit(0);
 		// ---
-		
-		
+
+
 		HadoopEngine engine = new HadoopEngine();
 		engine.executePlan(plan,settings.getConf());
 

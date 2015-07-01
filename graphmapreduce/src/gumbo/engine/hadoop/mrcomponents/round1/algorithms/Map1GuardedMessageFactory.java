@@ -8,6 +8,7 @@ import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 import java.io.IOException;
+import java.util.Set;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -148,6 +149,28 @@ public class Map1GuardedMessageFactory {
 		} catch(Exception e) {
 			throw new MessageFailedException(e);
 		}
+	}
+
+	public void sendAssert(Set<Integer> ids) throws MessageFailedException {
+		if (!guardedIdOptimizationOn) {
+			valueBuilder.setLength(0);
+			valueBuilder.append(t.toString());
+		} else {
+			valueBuilder.append(proofBytes);
+		}
+		
+		// FIXME reducer needs to change because of this
+		for(int id : ids) {
+			valueBuilder.append(",");
+			valueBuilder.append(id);
+		}
+
+		// update counters before sending the message
+		ASSERT.increment(1);
+		ASSERTBYTES.increment(keyBuilder.length()+valueBuilder.length());
+
+		sendMessage();
+		
 	}
 
 }

@@ -4,8 +4,8 @@ Scratch -> scratch/bigtest
 Output -> output/bigtest
 
 // input
-R,2 <- /Users/jonny/tmp/R, CSV
-S,1 <- /Users/jonny/tmp/S, CSV
+R,2 <- /Users/jonny/tmp/medium/R, CSV
+S,1 <- /Users/jonny/tmp/medium/S, CSV
 
 // query
-#Out1(x)&R(x,y)S(y);
+#Out1(x)&R(x,y)&S(y)S(x);

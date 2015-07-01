@@ -14,7 +14,7 @@ public class GFAtomProjection {
 
 	GFAtomicExpression source;
 	GFAtomicExpression target;
-	
+
 
 	int [] arrayMapping; 
 
@@ -27,7 +27,7 @@ public class GFAtomProjection {
 	 */
 	public GFAtomProjection(GFAtomicExpression source,
 			GFAtomicExpression target) {
-		
+
 		this.source = source;
 		this.target = target;
 
@@ -35,7 +35,7 @@ public class GFAtomProjection {
 		arrayMapping = new int[target.getNumVariables()];
 		initialize();
 	}
-	
+
 
 	/**
 	 * Constructs a mapping between the atoms.
@@ -52,24 +52,24 @@ public class GFAtomProjection {
 	 * 
 	 */
 	private void initialize() {
-		
-		
+
+
 		String[] sourceVars = source.getVars();
 		String[] targetVars = target.getVars();
 
 		// TODO what if mapping is not possible? -> test using projection of the variable tuple??
-		
-		
-		
+
+
+
 		// check for equal variable identifiers
 		// for each position of the target
 		for (int i = 0; i < targetVars.length; i++) {
 			// check where it occurs in the source
 			for (int j = 0; j < sourceVars.length; j++) {
-				
+
 				// if we find a match
 				if (targetVars[i].equals(sourceVars[j])) {
-					
+
 					// add it
 					arrayMapping[i] = j;
 
@@ -93,9 +93,9 @@ public class GFAtomProjection {
 	 * @throws NonMatchingTupleException not thrown for now
 	 */
 	public Tuple project(Tuple t) throws NonMatchingTupleException {
-		
+
 		// TODO throw exception if non-matching
-		
+
 		int fields = target.getNumFields();
 
 		String[] s = new String[fields];
@@ -108,16 +108,30 @@ public class GFAtomProjection {
 		return new Tuple(target.getName(), s);
 
 	}
-	
-	public String projectString(Tuple t) throws NonMatchingTupleException {
-		
+
+	/**
+	 * Projects a tuple onto another according to this transformation.
+	 * When CSV mode is turned on, no relation name nor surrounding brackets will be present
+	 * in the output.
+	 * 
+	 * @param t a tuple
+	 * @param csv when turned on, csv format will be returned
+	 * 
+	 * @return the projected tuple
+	 * 
+	 * @throws NonMatchingTupleException
+	 */
+	public String projectString(Tuple t, boolean csv) throws NonMatchingTupleException {
+
 		StringBuilder sb = new StringBuilder(target.getName().length()+t.generateString().length());
 
-		
+
 		// head
-		sb.append(target.getName());
-		sb.append('(');
-		
+		if (!csv) {
+			sb.append(target.getName());
+			sb.append('(');
+		}
+
 		// middle
 		int i;
 		int fields = target.getNumFields()-1;
@@ -126,10 +140,12 @@ public class GFAtomProjection {
 			sb.append(',');
 		}
 		sb.append(t.get(arrayMapping[i]));
-		
+
 		// tail
-		sb.append(')');
-		
+		if (!csv) {
+			sb.append(')');
+		}
+
 		return sb.toString();
 
 	}

@@ -69,7 +69,8 @@ public class Grouper {
 		// apply grouping using the policy
 		List<CalculationGroup> groupedSJ = policy.group(semijoins);
 		
-		LOG.info("Grouping complete: " + groupedSJ.size() + " groups" );
+		LOG.info("Grouping complete: " + groupedSJ.size() + " group(s)" );
+		LOG.info("Grouping: " +  groupedSJ);
 		
 		return groupedSJ;
 		

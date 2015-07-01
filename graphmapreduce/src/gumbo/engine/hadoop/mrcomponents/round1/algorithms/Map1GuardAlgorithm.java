@@ -62,6 +62,8 @@ public class Map1GuardAlgorithm implements MapAlgorithm{
 			if (guardIsGuarded || outputAssert) {
 				msgFactory.sendGuardedAssert(guardIsGuarded);
 			}
+			
+			msgFactory.finish();
 		} catch(Exception e) {
 			throw new AlgorithmInterruptedException(e);
 		}

@@ -1,13 +1,18 @@
 package gumbo.engine.general.grouper.policies;
 
+import gumbo.engine.general.grouper.Grouper;
 import gumbo.engine.general.grouper.costmodel.CostCalculator;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.structures.gfexpressions.io.Pair;
 
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -19,7 +24,9 @@ import java.util.Set;
  *
  */
 public class KeyGrouper implements GroupingPolicy {
-	
+
+
+	private static final Log LOG = LogFactory.getLog(KeyGrouper.class);
 	
 	CostCalculator costCalculator;
 	
@@ -48,6 +55,9 @@ public class KeyGrouper implements GroupingPolicy {
 			
 			// create cost savings matrix
 			double [][] matrix = createCostMatrix(groups);
+			
+			logcostmatrix(groups, matrix);
+			
 
 			savingsPossible = hasSavings(matrix);
 
@@ -66,6 +76,33 @@ public class KeyGrouper implements GroupingPolicy {
 		return groups;
 	}
 	
+	private void logcostmatrix(List<CalculationGroup> groups, double[][] matrix) {
+		
+
+		String s = "";
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[i].length; j++){
+				s += (matrix[i][j]) + "\t";
+			}
+			s += System.lineSeparator();
+		}
+		
+		LOG.info("\n" + s);
+
+		LOG.info("---");
+		
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = i+1; j < matrix[i].length; j++){
+				LOG.info(groups.get(i) + " MERGE WITH" + groups.get(j) + ": " + matrix[i][j]);
+				
+			}
+		}
+
+		LOG.info("---");
+		
+		
+	}
+
 	/**
 	 * Creates the group cost matrix, based on the cost function.
 	 * 
@@ -82,15 +119,29 @@ public class KeyGrouper implements GroupingPolicy {
 				CalculationGroup group1 = groups.get(i);
 				CalculationGroup group2 = groups.get(j);
 				
+				LOG.info("Trying to group" );
+				
 				// create merged group
 				CalculationGroup newGroup = new CalculationGroup();
 				newGroup.addAll(group1);
 				newGroup.addAll(group2);
 				
 				matrix[i][j] = 0;
-				matrix[i][j] += costCalculator.calculateCost(group1);
-				matrix[i][j] += costCalculator.calculateCost(group2);
-				matrix[i][j] -= costCalculator.calculateCost(newGroup);
+				double cost1 = costCalculator.calculateCost(group1);
+				double cost2 = costCalculator.calculateCost(group2);
+				double cost3 = costCalculator.calculateCost(newGroup);
+				
+
+				LOG.info(group1);
+				LOG.info("Cost: " + cost1);
+				LOG.info(group2);
+				LOG.info("Cost: " + cost2);
+				LOG.info(newGroup);
+				LOG.info("Cost: " + cost3);
+				
+				matrix[i][j] = cost1 + cost2 - cost3;
+				LOG.info("Improvement: " + matrix[i][j]);
+				LOG.info("Improvement %: " + (matrix[i][j] / (cost1 + cost2))*100);
 				
 				
 			}

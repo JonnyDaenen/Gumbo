@@ -125,7 +125,7 @@ public class RelationReporter {
 			} else {
 				Map1GuardedMessageFactory fact = new Map1GuardedMessageFactory(fm.context, settings, eso);
 				fact.enableSampleCounting();
-				algo = new Map1GuardedAlgorithm(eso,fact);
+				algo = new Map1GuardedAlgorithm(eso,fact,settings.getBooleanProperty(AbstractExecutorSettings.mapOutputGroupingOptimizationOn));
 
 			}
 

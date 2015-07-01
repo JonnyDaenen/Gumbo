@@ -4,8 +4,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.engine.general.grouper.costmodel.CostSheet;
+import gumbo.engine.general.grouper.policies.KeyGrouper;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.engine.hadoop.reporter.RelationReport;
@@ -27,6 +31,7 @@ import gumbo.utils.estimation.SamplingException;
  */
 public class HadoopCostSheet implements CostSheet {
 
+	private static final Log LOG = LogFactory.getLog(HadoopCostSheet.class);
 
 
 	private Map<RelationSchema, RelationReport> reports;
@@ -34,6 +39,7 @@ public class HadoopCostSheet implements CostSheet {
 	private RelationSampler sampler;
 	private RelationFileMapping mapping;
 	private AbstractExecutorSettings settings;
+	RelationSampleContainer samples;
 
 	public HadoopCostSheet(RelationFileMapping mapping, AbstractExecutorSettings settings) {
 		sampler = new RelationSampler(mapping);
@@ -116,7 +122,7 @@ public class HadoopCostSheet implements CostSheet {
 		// per input file
 		// size / hdfs block size
 
-		return (int)(getTotalInputBytes() / (128 * 1024 * 1024)); // 128MB
+		return (int)Math.max(1,Math.ceil(getTotalInputBytes() / (128 * 1024 * 1024))); // 128MB
 	}
 
 	@Override
@@ -134,7 +140,7 @@ public class HadoopCostSheet implements CostSheet {
 	@Override
 	public int getNumReducers() {
 		// TODO use setting for this
-		return (int)(getTotalIntermediateBytes() / (128 * 1024 * 1024)); // 128MB TODO 1 GB?
+		return (int)Math.max(1,Math.ceil(getTotalIntermediateBytes() / (128 * 1024 * 1024))); // 128MB TODO 1 GB?
 	}
 
 	@Override
@@ -153,7 +159,9 @@ public class HadoopCostSheet implements CostSheet {
 	public void initialize(CalculationGroup group) {
 		this.group = group;
 		try {
-			RelationSampleContainer samples = sampler.sample(10, 4 * 1024);
+			if (samples == null) 
+				samples = sampler.sample(10, 4 * 1024);
+			
 			RelationReporter rr = new RelationReporter(samples, mapping, settings);
 
 
@@ -165,6 +173,10 @@ public class HadoopCostSheet implements CostSheet {
 
 
 			reports = rr.generateReports(calcs);
+//
+//			for (RelationReport report : reports.values())
+//				LOG.info(report);
+
 		} catch (SamplingException | GFOperationInitException e){
 			e.printStackTrace();
 			// TODO handle exception

@@ -11,7 +11,7 @@ import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 
-public class GGTCostCalculator {
+public class GGTCostCalculator implements CostCalculator{
 
 	private static final Log LOG = LogFactory.getLog(GGTCostCalculator.class); 
 
@@ -70,21 +70,21 @@ public class GGTCostCalculator {
 		// calculate number of pieces one reducer has to process
 		int mergeOrderR = cs.getReduceMergeOrder();
 		long sortBufferR = cs.getReduceSortBuffer();
-		long piecesR = (long) Math.ceil((intermediate/numReducers)/sortBufferR);
+		long piecesR = (long) Math.max(1, Math.ceil((intermediate/numReducers)/sortBufferR));
 
 		// for a given order and pieces, calculate the number of rounds
 
 		long levelsR = (long) (Math.ceil(Math.log10(piecesR) / Math.log10(mergeOrderR)) - 1);
-
+		
+		
 		// each round, the entire intermediate data is read/written to/from disk
 		// (spread across the cluster of course)
 		reduceCost +=  levelsR * intermediate * rwCost;
-
 		// final merge read
 		reduceCost += intermediate * cs.getLocalReadCost();
-
 		// DFS write
 		reduceCost += intermediate * cs.getDFSWriteCost();
+		
 
 		return reduceCost;
 	}
@@ -114,7 +114,7 @@ public class GGTCostCalculator {
 		long sortBufferM = cs.getMapSortBuffer();
 
 		// calculate number of pieces one mapper has to process
-		long piecesM = Math.round((intermediate/numMappers)/sortBufferM);
+		long piecesM = Math.max(1, Math.round((intermediate/numMappers)/sortBufferM));
 
 		// for a given order and pieces, calculate the number of rounds
 
@@ -124,6 +124,7 @@ public class GGTCostCalculator {
 		// (spread across the cluster of course)
 		mapCost +=  levelsM * intermediate * rwCost;
 
+		
 		return mapCost;
 	}
 
