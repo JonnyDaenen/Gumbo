@@ -4,7 +4,6 @@ import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.engine.general.grouper.policies.GroupingPolicy;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardAlgorithm;
 
 import java.util.List;
 

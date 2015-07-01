@@ -1,15 +1,12 @@
 package gumbo.engine.general.grouper.policies;
 
-import gumbo.engine.general.grouper.Grouper;
 import gumbo.engine.general.grouper.costmodel.CostCalculator;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.structures.gfexpressions.io.Pair;
 
-import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

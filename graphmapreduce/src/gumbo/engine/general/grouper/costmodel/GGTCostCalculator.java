@@ -1,15 +1,13 @@
 package gumbo.engine.general.grouper.costmodel;
 
-import java.util.Collection;
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import gumbo.compiler.GFCompiler;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
+
+import java.util.Collection;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class GGTCostCalculator implements CostCalculator{
 

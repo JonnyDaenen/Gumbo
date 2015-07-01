@@ -1,11 +1,8 @@
 package gumbo.engine.general.grouper.policies;
 
-import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
-import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 
 import java.util.List;
-import java.util.Set;
 
 public interface GroupingPolicy {
 	

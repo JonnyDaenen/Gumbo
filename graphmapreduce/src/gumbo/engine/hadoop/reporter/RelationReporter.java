@@ -15,8 +15,6 @@ import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
-import gumbo.utils.estimation.Sampler;
-import gumbo.utils.estimation.SamplingException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -25,7 +23,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.util.LineReader;
 

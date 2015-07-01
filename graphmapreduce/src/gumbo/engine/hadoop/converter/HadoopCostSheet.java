@@ -1,15 +1,7 @@
 package gumbo.engine.hadoop.converter;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.engine.general.grouper.costmodel.CostSheet;
-import gumbo.engine.general.grouper.policies.KeyGrouper;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.engine.hadoop.reporter.RelationReport;
@@ -21,6 +13,13 @@ import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 import gumbo.utils.estimation.SamplingException;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 /**

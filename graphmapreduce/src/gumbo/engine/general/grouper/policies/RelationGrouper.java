@@ -2,12 +2,6 @@ package gumbo.engine.general.grouper.policies;
 
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 
 /**
  * Grouping policy that groups semijoin calculations that have the same guard and guarded

@@ -1,8 +1,8 @@
 package gumbo.engine.hadoop.reporter;
 
-import java.lang.reflect.Field;
-
 import gumbo.structures.data.RelationSchema;
+
+import java.lang.reflect.Field;
 
 public class RelationReport {
 

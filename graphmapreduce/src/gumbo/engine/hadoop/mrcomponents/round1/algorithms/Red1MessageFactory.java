@@ -1,8 +1,5 @@
 package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import gumbo.engine.hadoop.mrcomponents.round1.reducers.GumboRed1Counter;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.engine.settings.AbstractExecutorSettings;
@@ -10,6 +7,9 @@ import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;

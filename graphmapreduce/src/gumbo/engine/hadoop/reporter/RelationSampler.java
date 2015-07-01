@@ -1,11 +1,11 @@
 package gumbo.engine.hadoop.reporter;
 
-import org.apache.hadoop.fs.Path;
-
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.structures.data.RelationSchema;
 import gumbo.utils.estimation.Sampler;
 import gumbo.utils.estimation.SamplingException;
+
+import org.apache.hadoop.fs.Path;
 
 
 /**
