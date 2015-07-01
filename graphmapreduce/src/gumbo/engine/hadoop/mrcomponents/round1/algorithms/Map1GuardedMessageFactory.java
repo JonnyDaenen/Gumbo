@@ -158,8 +158,6 @@ public class Map1GuardedMessageFactory {
 		} else {
 			valueBuilder.append(proofBytes);
 		}
-		
-		// FIXME reducer needs to change because of this
 		for(int id : ids) {
 			valueBuilder.append(",");
 			valueBuilder.append(id);

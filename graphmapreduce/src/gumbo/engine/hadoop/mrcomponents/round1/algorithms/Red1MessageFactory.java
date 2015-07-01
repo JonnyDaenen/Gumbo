@@ -7,7 +7,9 @@ import gumbo.engine.hadoop.mrcomponents.round1.reducers.GumboRed1Counter;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.Tuple;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
@@ -39,6 +41,7 @@ public class Red1MessageFactory {
 	String filename;
 	private Set<Integer> assertKeys;
 	private Set<Integer> replyKeys;
+	private Set<String> replyKeys2;
 	private boolean outGroupingOn;
 	private boolean reqAtomIdOn;
 	private ExpressionSetOperations eso;
@@ -87,7 +90,16 @@ public class Red1MessageFactory {
 				if (reqAtomIdOn)
 					replyKeys.add(Integer.parseInt(parts[i]));
 				else {
-					// FIXME !!! this should also work for atom strings.
+					
+					
+					Tuple atomTuple = new Tuple(parts[i]);
+					GFAtomicExpression dummy = new GFAtomicExpression(atomTuple.getName(), atomTuple.getAllData());
+					try {
+						replyKeys.add(eso.getAtomId(dummy));
+					} catch (GFOperationInitException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -103,7 +115,12 @@ public class Red1MessageFactory {
 			if (reqAtomIdOn) {
 				valueText.set(""+replyid);
 			} else {
-				// valueText.set(eso.getAtomId(null)); // FIXME
+				try {
+					valueText.set(eso.getAtom(replyid).toString());
+				} catch (GFOperationInitException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
 			}
 
 			OUTB.increment(keyText.getLength()+valueText.getLength());
