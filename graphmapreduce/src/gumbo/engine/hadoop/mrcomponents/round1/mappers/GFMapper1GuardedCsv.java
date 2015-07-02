@@ -5,9 +5,9 @@ package gumbo.engine.hadoop.mrcomponents.round1.mappers;
 
 import gumbo.engine.general.algorithms.Map1GuardedAlgorithm;
 import gumbo.engine.general.messagefactories.Map1GuardedMessageFactoryInterface;
+import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.RelationResolver;
-import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.Tuple;
 

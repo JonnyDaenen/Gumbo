@@ -2,7 +2,7 @@ package gumbo.engine.general.algorithms;
 
 import gumbo.engine.general.messagefactories.MessageFailedException;
 import gumbo.engine.general.messagefactories.Red1MessageFactoryInterface;
-import gumbo.engine.settings.AbstractExecutorSettings;
+import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 

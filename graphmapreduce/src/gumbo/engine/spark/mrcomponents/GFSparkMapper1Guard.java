@@ -3,8 +3,8 @@
  */
 package gumbo.engine.spark.mrcomponents;
 
+import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;

@@ -1,7 +1,7 @@
 package gumbo.engine.general.algorithms;
 
 import gumbo.engine.general.messagefactories.Map1GuardMessageFactoryInterface;
-import gumbo.engine.settings.AbstractExecutorSettings;
+import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.io.Triple;

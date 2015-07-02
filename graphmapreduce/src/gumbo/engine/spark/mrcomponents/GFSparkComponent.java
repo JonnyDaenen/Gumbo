@@ -5,8 +5,8 @@ package gumbo.engine.spark.mrcomponents;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.filemapper.RelationFileMappingException;
-import gumbo.engine.settings.AbstractExecutorSettings;
-import gumbo.engine.settings.ExecutorSettings;
+import gumbo.engine.general.settings.AbstractExecutorSettings;
+import gumbo.engine.general.settings.ExecutorSettings;
 import gumbo.structures.data.RelationSchemaException;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;

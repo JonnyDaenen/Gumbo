@@ -3,7 +3,7 @@
  */
 package gumbo.engine.spark.mrcomponents;
 
-import gumbo.engine.settings.AbstractExecutorSettings;
+import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 import java.util.HashSet;

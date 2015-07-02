@@ -3,7 +3,7 @@
  */
 package gumbo.engine.spark.mrcomponents;
 
-import gumbo.engine.settings.AbstractExecutorSettings;
+import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.structures.booleanexpressions.BEvaluationContext;
 import gumbo.structures.booleanexpressions.BExpression;
 import gumbo.structures.conversion.GFBooleanMapping;

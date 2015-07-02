@@ -2,12 +2,12 @@ package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
 import gumbo.engine.general.messagefactories.Map1GuardMessageFactoryInterface;
 import gumbo.engine.general.messagefactories.MessageFailedException;
+import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GumboMap1Counter;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
 import gumbo.engine.hadoop.reporter.CounterMeasures;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.io.Triple;

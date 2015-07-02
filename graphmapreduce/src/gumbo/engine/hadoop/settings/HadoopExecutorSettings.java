@@ -3,7 +3,7 @@
  */
 package gumbo.engine.hadoop.settings;
 
-import gumbo.engine.settings.AbstractExecutorSettings;
+import gumbo.engine.general.settings.AbstractExecutorSettings;
 
 import java.util.Map.Entry;
 

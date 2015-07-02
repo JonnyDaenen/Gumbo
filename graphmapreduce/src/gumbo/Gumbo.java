@@ -14,11 +14,11 @@ import gumbo.compiler.partitioner.UnitPartitioner;
 import gumbo.engine.general.grouper.Grouper;
 import gumbo.engine.general.grouper.costmodel.GGTCostCalculator;
 import gumbo.engine.general.grouper.policies.KeyGrouper;
+import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.general.utils.FileMappingExtractor;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.hadoop.converter.HadoopCostSheet;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.input.GumboFileParser;
 import gumbo.input.GumboQuery;
 
