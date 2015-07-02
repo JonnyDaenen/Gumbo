@@ -1,2 +1,0 @@
-R,10 - input/experiments/EXP_008/R, CSV;
-S,1 - input/experiments/EXP_008/S, CSV;

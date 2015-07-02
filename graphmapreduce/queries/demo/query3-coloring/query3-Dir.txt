@@ -1,4 +1,0 @@
-E,2 - input/query4/E, CSV;
-R,1 - input/query4/R, CSV;
-G,1 - input/query4/G, CSV;
-B,1 - input/query4/B, CSV;
