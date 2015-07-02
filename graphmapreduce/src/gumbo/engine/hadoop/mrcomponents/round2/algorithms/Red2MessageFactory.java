@@ -9,6 +9,8 @@ import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
@@ -18,6 +20,8 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 public class Red2MessageFactory {
 
 
+	private static final Log LOG = LogFactory.getLog(Red2MessageFactory.class);
+	
 	Text keyText;
 	Text valueText;
 
@@ -85,6 +89,7 @@ public class Red2MessageFactory {
 
 	protected void sendMessage() throws MessageFailedException{
 		try {
+
 			mos.write((Text)null, valueText, filename);
 		} catch(Exception e) {
 			throw new MessageFailedException(e);

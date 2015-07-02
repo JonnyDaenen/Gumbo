@@ -52,6 +52,7 @@ public class Red2Algorithm {
 
 	public void initialize(String key) throws AlgorithmInterruptedException {
 		try {
+
 			mapGFtoB = eso.getBooleanMapping();
 			booleanContext = new BEvaluationContext();
 			lookingForGuard = guardRefOn;
@@ -74,6 +75,7 @@ public class Red2Algorithm {
 	 * @throws AlgorithmInterruptedException
 	 */
 	public boolean processTuple(String split) throws AlgorithmInterruptedException {
+
 
 
 		try {
@@ -99,6 +101,8 @@ public class Red2Algorithm {
 						GFAtomicExpression atomExp = eso.getAtom(id); 
 						atom = mapGFtoB.getVariableIfExists(atomExp);
 					} else {
+
+						
 						Tuple atomTuple = new Tuple(atomRef);
 						GFAtomicExpression dummy = new GFAtomicExpression(atomTuple.getName(), atomTuple.getAllData());
 						atom = mapGFtoB.getVariableIfExists(dummy);
@@ -106,6 +110,7 @@ public class Red2Algorithm {
 					booleanContext.setValue(atom, true);
 				} catch (AtomNotFoundException e) {
 					// ignore bad values
+					LOG.warn(e);
 				}
 
 

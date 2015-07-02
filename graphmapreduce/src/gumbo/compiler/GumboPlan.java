@@ -5,6 +5,7 @@ package gumbo.compiler;
 
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
+import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.structures.data.RelationSchema;
 
 /**

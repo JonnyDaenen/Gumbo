@@ -3,7 +3,9 @@ package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GumboMap1Counter;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
+import gumbo.engine.hadoop.reporter.CounterMeasures;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.io.Triple;
@@ -13,13 +15,22 @@ import gumbo.structures.gfexpressions.operations.GFAtomProjection;
 import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Mapper;
 
 public class Map1GuardMessageFactory {
+
+
+	private static final Log LOG = LogFactory.getLog(Map1GuardMessageFactory.class);
 
 	Text keyText;
 	Text valueText;
@@ -36,6 +47,7 @@ public class Map1GuardMessageFactory {
 	private boolean round1FiniteMemoryOptimizationOn;
 	private boolean guardIdOptimizationOn;
 	private boolean guardedIdOptimizationOn;
+	private boolean mapOutputGroupingOptimizationOn;
 	private Mapper<LongWritable, Text, Text, Text>.Context context;
 
 	// components
@@ -50,11 +62,14 @@ public class Map1GuardMessageFactory {
 	byte [] proofBytes;
 	byte [] tbytes;
 	private byte[] sepBytes;
+	private byte [] commaBytes;
+	private boolean sampleCounter;
 
-	public Map1GuardMessageFactory(Mapper<LongWritable, Text, Text, Text>.Context context, HadoopExecutorSettings settings, ExpressionSetOperations eso) {
+	private Map<String, Set<String>> messageBuffer;
+
+	public Map1GuardMessageFactory(Mapper<LongWritable, Text, Text, Text>.Context context, AbstractExecutorSettings settings, ExpressionSetOperations eso) {
 		keyText = new Text();
 		valueText = new Text();
-
 		// ---
 		this.context = context;
 		this.eso = eso;
@@ -68,7 +83,7 @@ public class Map1GuardMessageFactory {
 		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
 		guardIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.requestAtomIdOptimizationOn);
 		guardedIdOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.assertConstantOptimizationOn);
-
+		mapOutputGroupingOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.mapOutputGroupingOptimizationOn);
 
 		// ---
 		KAR = context.getCounter(GumboMap1Counter.KEEP_ALIVE_REQUEST);
@@ -86,7 +101,15 @@ public class Map1GuardMessageFactory {
 
 		proofBytes = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL).getBytes();
 		sepBytes = ";".getBytes();
+		commaBytes = ":".getBytes();
 
+		sampleCounter = false;
+
+		messageBuffer = new HashMap<>();
+	}
+
+	public void enableSampleCounting() {
+		sampleCounter = true;
 	}
 
 	public void loadGuardValue(Tuple t, long offset) throws TupleIDError {
@@ -99,6 +122,10 @@ public class Map1GuardMessageFactory {
 		} else
 			tRef = tbytes;
 
+		if (sampleCounter) {
+			context.getCounter(CounterMeasures.IN_TUPLES).increment(1);
+			context.getCounter(CounterMeasures.IN_BYTES).increment(t.toString().length());
+		}
 	}
 
 	/**
@@ -129,7 +156,9 @@ public class Map1GuardMessageFactory {
 
 			// output guard
 			if (!guardKeepaliveOptimizationOn) {
-				keyText.append(tbytes,0,tbytes.length);
+
+				byte[] tbytes2 = t.generateString(mapOutputGroupingOptimizationOn).getBytes();
+				keyText.append(tbytes2,0,tbytes2.length);
 
 				valueText.append(tRef,0,tRef.length);
 				valueText.append(sepBytes,0,sepBytes.length);
@@ -165,11 +194,13 @@ public class Map1GuardMessageFactory {
 	 * @throws InterruptedException 
 	 * @throws IOException 
 	 */
-	public void sendGuardedAssert(boolean force) throws MessageFailedException {
+	public void sendGuardedAssert(boolean force, Set<Integer> ids) throws MessageFailedException {
 
 		if (!guardKeepaliveOptimizationOn || force) {
 
-			keyText.append(tbytes,0,tbytes.length);
+			// possibly the key has to be unwrapped
+			byte[] tbytes2 = t.generateString(mapOutputGroupingOptimizationOn).getBytes();
+			keyText.append(tbytes2,0,tbytes2.length);
 
 			// add special symbol for sort order
 			if (round1FiniteMemoryOptimizationOn)
@@ -180,6 +211,14 @@ public class Map1GuardMessageFactory {
 				valueText.append(proofBytes,0,proofBytes.length);
 			else
 				valueText.append(tbytes,0,tbytes.length);
+
+			if (mapOutputGroupingOptimizationOn) {
+				for (int id : ids) {
+					valueText.append(commaBytes,0,commaBytes.length);
+					byte[] valBytes = (""+id).getBytes();
+					valueText.append(valBytes,0,valBytes.length);
+				}
+			}
 
 			// update counters
 			ASSERT.increment(1);
@@ -196,29 +235,48 @@ public class Map1GuardMessageFactory {
 			//		GFAtomicExpression guarded = guardedInfo.fst;
 			GFAtomProjection p = guardedInfo.snd;
 
-			byte [] guardRef;
+
+
+			String keyString = p.projectString(t,mapOutputGroupingOptimizationOn);
+			String guardedString;
 			if (guardIdOptimizationOn)
-				guardRef = Integer.toString(guardedInfo.trd).getBytes();
+				guardedString = Integer.toString(guardedInfo.trd);
 			else
-				guardRef = guardedInfo.fst.toString().getBytes();
+				guardedString = guardedInfo.fst.toString();
 
-			byte[] projectBytes = p.projectString(t).getBytes();
-			keyText.append(projectBytes,0,projectBytes.length);
-			
 
-			// value: request message with response code and atom
-			//		String valueString = replyAddress + ";" + guardedID;
+			// if necessary, buffer for later grouping
+			if (mapOutputGroupingOptimizationOn) {
 
-			valueText.append(tRef,0,tRef.length);
-			valueText.append(sepBytes,0,sepBytes.length);
-			valueText.append(guardRef,0,guardRef.length);
+				if (!messageBuffer.containsKey(keyString)) {
+					messageBuffer.put(keyString, new HashSet<String>(10));
+				}
 
-			R.increment(1);
-			RB.increment(keyText.getLength() + valueText.getLength());
-			RKB.increment(keyText.getLength());
-			RVB.increment(valueText.getLength());
+				messageBuffer.get(keyString).add(guardedString);
 
-			sendMessage();
+			} else {
+				byte [] guardedRef = guardedString.getBytes();
+
+
+				byte[] projectBytes = keyString.getBytes();
+				keyText.append(projectBytes,0,projectBytes.length);
+
+
+				// value: request message with response code and atom
+				//		String valueString = replyAddress + ";" + guardedID;
+
+
+				valueText.append(tRef,0,tRef.length);
+				valueText.append(sepBytes,0,sepBytes.length);
+				valueText.append(guardedRef,0,guardedRef.length);
+
+				R.increment(1);
+				RB.increment(keyText.getLength() + valueText.getLength());
+				RKB.increment(keyText.getLength());
+				RVB.increment(valueText.getLength());
+
+				sendMessage();
+			}
 		} catch(NonMatchingTupleException e) {
 			throw new MessageFailedException(e);
 		}
@@ -229,10 +287,19 @@ public class Map1GuardMessageFactory {
 
 			context.write(keyText, valueText);
 
-			//		System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");
+//			LOG.info("<" + keyText.toString() + " : " + valueText.toString() + ">");
+
+			if (sampleCounter) {
+				context.getCounter(CounterMeasures.OUT_TUPLES).increment(1);
+				context.getCounter(CounterMeasures.OUT_BYTES).increment(keyText.getLength() + valueText.getLength());
+				context.getCounter(CounterMeasures.OUT_KEY_BYTES).increment(keyText.getLength());
+				context.getCounter(CounterMeasures.OUT_VALUE_BYTES).increment(valueText.getLength());
+			}
 
 			keyText.clear();
 			valueText.clear();
+
+
 
 		} catch(Exception e) {
 			throw new MessageFailedException(e);
@@ -250,6 +317,37 @@ public class Map1GuardMessageFactory {
 			b[j] = (byte) buffer[j];
 
 		return b;
+	}
+
+	public void finish() throws MessageFailedException {
+
+		// group buffered messages on their key
+		for ( String key: messageBuffer.keySet() ){
+
+			keyText.set(key);
+
+			valueText.set(tRef);
+			valueText.append(sepBytes,0,sepBytes.length);
+			for (String val : messageBuffer.get(key)) {
+				byte [] bytes = val.getBytes();
+				valueText.append(bytes, 0, bytes.length);
+				valueText.append(commaBytes, 0, commaBytes.length);
+			}
+
+			// update counters
+			R.increment(1);
+			RB.increment(keyText.getLength() + valueText.getLength());
+			RKB.increment(keyText.getLength());
+			RVB.increment(valueText.getLength());
+
+			// send them out
+			sendMessage();
+		}
+
+
+
+
+		messageBuffer.clear();
 	}
 
 

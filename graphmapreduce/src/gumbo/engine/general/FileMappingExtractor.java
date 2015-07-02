@@ -21,14 +21,20 @@ import org.apache.hadoop.fs.Path;
  *
  */
 public class FileMappingExtractor {
-	
-	
+
+
 	InputPathExpander expander;
+	private boolean includeOut;
 	
 	public FileMappingExtractor() {
-		expander = new InputPathExpander();
+		this(true);
 	}
-	
+
+	public FileMappingExtractor(boolean includeOutputDirs) {
+		expander = new InputPathExpander();
+		includeOut = includeOutputDirs;
+	}
+
 	/**
 	 * Extracts a mapping from a {@link FileManager} and expands the input paths
 	 * into file paths.
@@ -42,8 +48,10 @@ public class FileMappingExtractor {
 		RelationFileMapping outs = fm.getOutFileMapping();
 
 		RelationFileMapping expandedIns = expand(ins);
-		expandedIns.putAll(outs);
 		
+		if (includeOut)
+			expandedIns.putAll(outs);
+
 		return expandedIns;
 	}
 

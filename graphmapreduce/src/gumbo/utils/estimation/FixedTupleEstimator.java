@@ -43,7 +43,7 @@ public class FixedTupleEstimator extends TupleEstimator {
 	public long estimateNumTuples(Path path) {
 		long size;
 		try {
-			size = getFileSize(path);
+			size = Sampler.getFileSize(path);
 			long [] offsets = new long[3];
 			offsets[0] = 0;
 			offsets[1] = size / 2;

@@ -368,6 +368,13 @@ public class RelationFileMapping {
 	}
 
 
+	/**
+	 * Estimates the byte size of a relation, possibly
+	 * spread out over multiple files.
+	 * 
+	 * @param s 
+	 * @return the byte size of the relation
+	 */
 	public long getRelationSize(RelationSchema s) {
 		Set<Path> paths;
 		long l = 0;

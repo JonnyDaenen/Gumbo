@@ -49,7 +49,7 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 			resolver.extractRelationSchema(context);
 
 			Map1GuardMessageFactory msgFactory = new Map1GuardMessageFactory(context,settings,eso);
-			algo = new Map1GuardAlgorithm(eso, msgFactory);
+			algo = new Map1GuardAlgorithm(eso, msgFactory,settings);
 
 			buffer = new Text();
 

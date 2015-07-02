@@ -26,11 +26,11 @@ import java.util.Set;
  */
 public class PartitionedCUGroup {
 
-	CalculationUnitGroup group;
+	protected CalculationUnitGroup group;
 	
-	Map<CalculationUnit, Integer> levelAssignmment; // FUTURE convert to list?
+	protected Map<CalculationUnit, Integer> levelAssignmment; // FUTURE convert to list?
 	// FUTURE add reverse mapping
-	int currentPartition = -1;
+	protected int currentPartition = -1;
 
 
 	public PartitionedCUGroup() {
@@ -113,10 +113,10 @@ public class PartitionedCUGroup {
 	 * 
 	 * @return the {@link CalculationUnit}s of the specified level
 	 */
-	public CalculationUnitGroup getPartition(int i) {
+	public CalculationUnitGroup getPartition(int level) {
 		CalculationUnitGroup set = new CalculationUnitGroup();
 		for (CalculationUnit c : levelAssignmment.keySet()) {
-			if (levelAssignmment.get(c) == i)
+			if (levelAssignmment.get(c) == level)
 				set.add(c);
 		}
 		return set;

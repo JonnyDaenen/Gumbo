@@ -3,11 +3,10 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round1.mappers;
 
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardAlgorithm;
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedAlgorithm;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.RelationResolver;
+import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.Tuple;
 
@@ -49,7 +48,7 @@ public class GFMapper1GuardedCsv extends GFMapper1GuardedRelOptimized {
 			resolver.extractRelationSchema(context);
 
 			Map1GuardedMessageFactory msgFactory = new Map1GuardedMessageFactory(context,settings,eso);
-			algo = new Map1GuardedAlgorithm(eso, msgFactory);
+			algo = new Map1GuardedAlgorithm(eso, msgFactory,settings.getBooleanProperty(AbstractExecutorSettings.mapOutputGroupingOptimizationOn));
 
 			buffer = new Text();
 

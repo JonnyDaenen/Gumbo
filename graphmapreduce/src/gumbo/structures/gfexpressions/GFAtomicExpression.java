@@ -52,6 +52,8 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 		this.relation = aexp.relation;
 		this.variables = aexp.variables.clone();
 		this.constants = aexp.constants.clone();
+		cached = false;
+		checks = new LinkedList<Pair<Integer, Integer>>();
 	}
 
 	public String getName() {

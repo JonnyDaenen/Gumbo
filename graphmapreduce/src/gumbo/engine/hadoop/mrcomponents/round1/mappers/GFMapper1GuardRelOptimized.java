@@ -37,7 +37,7 @@ public class GFMapper1GuardRelOptimized extends GFMapper1Identity {
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
 		Map1GuardMessageFactory msgFactory = new Map1GuardMessageFactory(context,settings,eso);		
-		algo = new Map1GuardAlgorithm(eso, msgFactory);
+		algo = new Map1GuardAlgorithm(eso, msgFactory,settings);
 
 		// dummy 
 		LOG.getClass();

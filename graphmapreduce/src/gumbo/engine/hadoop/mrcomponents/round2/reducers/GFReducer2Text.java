@@ -175,7 +175,7 @@ public class GFReducer2Text extends Reducer<Text, Text, Text, Text> {
 						String outfile = generateFileName(p.getOutputSchema());
 
 						// project the tuple and output it
-						String outputTuple = p.project(keyTuple).generateString();
+						String outputTuple = p.project(keyTuple).toString();
 						out1.set(outputTuple);
 						mos.write((Text)null, out1, outfile);
 						context.getCounter(GumboRed2Counter.RED2_OUT_BYTES).increment(out1.getLength());

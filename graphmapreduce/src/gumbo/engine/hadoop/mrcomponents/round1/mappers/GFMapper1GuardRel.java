@@ -167,7 +167,7 @@ public class GFMapper1GuardRel extends GFMapper1Identity {
 						// TODO isn't this always the case?
 						//						if (guarded.matches(tprime)) {
 						// key: the value we are looking for 
-						out1.set(p.projectString(t).getBytes());
+						out1.set(p.projectString(t,false).getBytes());
 
 						// value: request message with response code and atom
 //						String valueString = replyAddress + ";" + guardedID;
