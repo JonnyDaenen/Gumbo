@@ -95,6 +95,9 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 			// WARNING Text object will be reused by Hadoop!
 			for (Text t : values) {
 
+				// the following is faster then first converting to a String representation
+				algo.processTuple(algo.split(t.getBytes(), t.getLength()));
+				
 				// feed it to algo
 				if(!algo.processTuple(t.toString()))
 					break;
@@ -111,57 +114,7 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 			throw new InterruptedException(e.getMessage());
 		}
 		
-		//		boolean keyFound = false;
-		//
-		//		// WARNING Text object will be reused by Hadoop!
-		//		for (Text t : values) {
-		//
-		//			//			if (print)
-		//			//				LOG.error("Red1: " + key + " " + t);
-		//
-		//			// parse input
-		//			Pair<String, String> split = split(t);
-		//
-		//
-		//			// is this not the key (key is only thing that can appear without atom reference)
-		//			// it does not matter whether it's sent as S(1) or with a constant symbol such as '#'
-		//			if (split.snd.length() > 0) {
-		//
-		//				msgFactory.loadValue(split.fst, split.snd);
-		//
-		//				// if the key has already been found, we can output
-		//				if (keyFound) {
-		//					msgFactory.sendReply();
-		//				}
-		//				// if optimization is on, we know that if the key is not there, we can skip the rest
-		//				else if (finiteMemOptOn) {
-		//					ABORTS.increment(1);
-		//					break;
-		//				} 
-		//				// otherwise, we buffer the data
-		//				else {
-		//					buffer.add(split);
-		//					BUFFERED.increment(1);
-		//				}
-		//
-		//			} // if this is the key, we mark it
-		//			else if (!keyFound) {
-		//				keyFound = true;
-		//			}
-		//		}
-		//
-		//		// output the remaining data
-		//		if (keyFound) {
-		//			for (Pair<String, String> p : buffer) {
-		//				msgFactory.loadValue(p.fst, p.snd);
-		//				msgFactory.sendReply();
-		//			}
-		//		}
-		//
-		//		// clear the buffer for next round
-		//		// this is done in the end in case hadoop invokes GC
-		//		// (not sure whether hadoop does this in between calls)
-		//		buffer.clear();
+		
 
 	}
 

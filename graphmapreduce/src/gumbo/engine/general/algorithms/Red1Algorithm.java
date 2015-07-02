@@ -67,7 +67,11 @@ public class Red1Algorithm implements ReduceAlgorithm {
 	 */
 	public boolean processTuple(String value) throws AlgorithmInterruptedException {
 		
-		Pair<String,String> split = split(value);
+		Pair<String,String> split = split(value.getBytes(), value.length());
+		return processTuple(split);
+	}
+	
+	public boolean processTuple(Pair<String,String> split) throws AlgorithmInterruptedException {	
 		
 		try {
 			// is this not the key (key is only thing that can appear without atom reference)
@@ -171,13 +175,16 @@ public class Red1Algorithm implements ReduceAlgorithm {
 	 * When no ';' is present, the numeric value is -1. 
 	 * @param t
 	 */
-	protected Pair<String, String> split(String t) {
+	public Pair<String, String> split(byte []  bytes, int length) {
 
 
-		int pos = t.indexOf(';');
-
-		byte [] bytes = t.getBytes();
-		int length = t.length(); // to fix internal byte buffer length mismatch
+		int pos = -1;
+		for (int i = 0; i < length; i++) {
+			if (bytes[i] == ';') {
+				pos = i;
+				break;
+			}
+		}
 
 		String address = "";
 		String reply = "";
