@@ -4,7 +4,7 @@
 package gumbo.engine.hadoop.mrcomponents.round1.mappers;
 
 import gumbo.engine.general.algorithms.Map1GuardAlgorithm;
-import gumbo.engine.general.factories.Map1GuardMessageFactoryInterface;
+import gumbo.engine.general.messagefactories.Map1GuardMessageFactoryInterface;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactory;
 import gumbo.structures.data.Tuple;
 

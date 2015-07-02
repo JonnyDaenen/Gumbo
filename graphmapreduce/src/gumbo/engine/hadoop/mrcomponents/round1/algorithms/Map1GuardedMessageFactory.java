@@ -1,7 +1,7 @@
 package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
-import gumbo.engine.general.factories.Map1GuardedMessageFactoryInterface;
-import gumbo.engine.general.factories.MessageFailedException;
+import gumbo.engine.general.messagefactories.Map1GuardedMessageFactoryInterface;
+import gumbo.engine.general.messagefactories.MessageFailedException;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GumboMap1Counter;
 import gumbo.engine.hadoop.reporter.CounterMeasures;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
@@ -9,7 +9,6 @@ import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
-import java.io.IOException;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;

@@ -4,7 +4,7 @@
 package gumbo.engine.hadoop.mrcomponents.round2.reducers;
 
 import gumbo.engine.general.algorithms.Red2Algorithm;
-import gumbo.engine.general.factories.Red2MessageFactoryInterface;
+import gumbo.engine.general.messagefactories.Red2MessageFactoryInterface;
 import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Red2MessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.ParameterPasser;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;

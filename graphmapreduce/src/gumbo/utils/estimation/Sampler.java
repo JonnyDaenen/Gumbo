@@ -1,12 +1,8 @@
 package gumbo.utils.estimation;
 
-import gumbo.structures.gfexpressions.io.Pair;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Set;
-//import java.util.function.Function;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,6 +12,7 @@ import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
+//import java.util.function.Function;
 
 
 public class Sampler {

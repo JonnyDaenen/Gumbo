@@ -1,4 +1,4 @@
-package gumbo.engine.general.factories;
+package gumbo.engine.general.messagefactories;
 
 import java.util.Set;
 

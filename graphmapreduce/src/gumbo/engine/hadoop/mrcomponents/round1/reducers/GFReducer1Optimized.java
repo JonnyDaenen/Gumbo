@@ -4,11 +4,10 @@
 package gumbo.engine.hadoop.mrcomponents.round1.reducers;
 
 import gumbo.engine.general.algorithms.Red1Algorithm;
-import gumbo.engine.general.factories.Red1MessageFactoryInterface;
+import gumbo.engine.general.messagefactories.Red1MessageFactoryInterface;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Red1MessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.ParameterPasser;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 import java.io.IOException;

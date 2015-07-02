@@ -1,7 +1,7 @@
 package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
-import gumbo.engine.general.factories.Map1GuardMessageFactoryInterface;
-import gumbo.engine.general.factories.MessageFailedException;
+import gumbo.engine.general.messagefactories.Map1GuardMessageFactoryInterface;
+import gumbo.engine.general.messagefactories.MessageFailedException;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GumboMap1Counter;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
@@ -16,7 +16,6 @@ import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOpera
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
 import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

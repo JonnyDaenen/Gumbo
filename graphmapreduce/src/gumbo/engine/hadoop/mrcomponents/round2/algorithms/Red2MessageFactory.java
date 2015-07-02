@@ -1,7 +1,7 @@
 package gumbo.engine.hadoop.mrcomponents.round2.algorithms;
 
-import gumbo.engine.general.factories.MessageFailedException;
-import gumbo.engine.general.factories.Red2MessageFactoryInterface;
+import gumbo.engine.general.messagefactories.MessageFailedException;
+import gumbo.engine.general.messagefactories.Red2MessageFactoryInterface;
 import gumbo.engine.hadoop.mrcomponents.round2.reducers.GumboRed2Counter;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.RelationSchema;

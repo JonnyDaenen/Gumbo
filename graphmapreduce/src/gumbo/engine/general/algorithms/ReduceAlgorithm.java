@@ -1,6 +1,5 @@
 package gumbo.engine.general.algorithms;
 
-import gumbo.structures.data.Tuple;
 
 public interface ReduceAlgorithm {
 	

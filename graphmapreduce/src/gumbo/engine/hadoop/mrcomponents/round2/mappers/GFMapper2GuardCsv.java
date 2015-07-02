@@ -4,7 +4,7 @@
 package gumbo.engine.hadoop.mrcomponents.round2.mappers;
 
 import gumbo.engine.general.algorithms.Map2GuardAlgorithm;
-import gumbo.engine.general.factories.Map2GuardMessageInterface;
+import gumbo.engine.general.messagefactories.Map2GuardMessageInterface;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1Identity;
 import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Map2GuardMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.RelationResolver;

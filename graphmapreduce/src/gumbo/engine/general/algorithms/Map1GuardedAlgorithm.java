@@ -1,6 +1,6 @@
 package gumbo.engine.general.algorithms;
 
-import gumbo.engine.general.factories.Map1GuardedMessageFactoryInterface;
+import gumbo.engine.general.messagefactories.Map1GuardedMessageFactoryInterface;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;

@@ -1,6 +1,6 @@
 package gumbo.engine.general.algorithms;
 
-import gumbo.engine.general.factories.Red2MessageFactoryInterface;
+import gumbo.engine.general.messagefactories.Red2MessageFactoryInterface;
 import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.booleanexpressions.BEvaluationContext;
 import gumbo.structures.booleanexpressions.BExpression;
