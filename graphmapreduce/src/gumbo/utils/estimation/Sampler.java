@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
-import java.util.function.Function;
+//import java.util.function.Function;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -88,7 +88,7 @@ public class Sampler {
 
 
 
-	private static double sampleBlock(FSDataInputStream in, long start, long end, long fileSize, Function<byte[], Double> f) throws SamplingException {
+	/*private static double sampleBlock(FSDataInputStream in, long start, long end, long fileSize, Function<byte[], Double> f) throws SamplingException {
 
 		try {
 			// adjust bounds
@@ -189,7 +189,7 @@ public class Sampler {
 
 		return finalVal;
 	}
-
+*/
 	
 	/**
 	 * 
