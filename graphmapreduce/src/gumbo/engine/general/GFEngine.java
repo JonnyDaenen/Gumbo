@@ -1,7 +1,7 @@
 /**
  * Created: 22 Aug 2014
  */
-package gumbo.engine;
+package gumbo.engine.general;
 
 import gumbo.compiler.GumboPlan;
 

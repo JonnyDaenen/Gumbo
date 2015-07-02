@@ -14,7 +14,7 @@ import gumbo.compiler.partitioner.HeightPartitioner;
 import gumbo.compiler.partitioner.OptimalPartitioner;
 import gumbo.compiler.partitioner.UnitPartitioner;
 import gumbo.compiler.plan.GraphVizPlanVisualizer;
-import gumbo.engine.ExecutionException;
+import gumbo.engine.general.ExecutionException;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.spark.SparkEngine;
 import gumbo.generator.GFGeneratorInput;

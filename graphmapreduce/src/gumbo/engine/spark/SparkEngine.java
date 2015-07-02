@@ -5,8 +5,8 @@ package gumbo.engine.spark;
 
 import gumbo.compiler.GumboPlan;
 import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.engine.ExecutionException;
-import gumbo.engine.GFEngine;
+import gumbo.engine.general.ExecutionException;
+import gumbo.engine.general.GFEngine;
 import gumbo.engine.general.settings.ExecutorSettings;
 import gumbo.engine.spark.converter.GumboSparkConverter;
 

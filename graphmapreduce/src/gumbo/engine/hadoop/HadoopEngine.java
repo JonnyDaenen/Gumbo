@@ -5,7 +5,7 @@ package gumbo.engine.hadoop;
 
 import gumbo.compiler.GumboPlan;
 import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.engine.ExecutionException;
+import gumbo.engine.general.ExecutionException;
 import gumbo.engine.hadoop.converter.GumboHadoopConverter;
 import gumbo.engine.hadoop.converter.GumboHadoopConverter.ConversionException;
 
