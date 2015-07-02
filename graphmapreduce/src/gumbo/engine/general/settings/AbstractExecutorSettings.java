@@ -3,6 +3,10 @@
  */
 package gumbo.engine.general.settings;
 
+import gumbo.compiler.partitioner.HeightPartitioner;
+import gumbo.engine.general.grouper.policies.AllGrouper;
+import gumbo.engine.general.grouper.policies.KeyGrouper;
+
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +28,7 @@ public abstract class AbstractExecutorSettings {
 
 	private static final Log LOG = LogFactory.getLog(AbstractExecutorSettings.class);
 
-	public static final String PROOF_SYMBOL = "gumbo.engine.proofsymbol";
+	
 
 	// compression options
 	public static final String assertConstantOptimizationOn = "gumbo.engine.assertConstantOptimizationOn";
@@ -43,7 +47,9 @@ public abstract class AbstractExecutorSettings {
 	public static final String turnOnOpts = "gumbo.engine.turnOnOpts";
 	public static final String turnOnDefaultOpts = "gumbo.engine.turnOnDefaultOpts";
 
-	public static String partitionClass = "gumbo.compiler.partitioner";
+	public static final String PROOF_SYMBOL = "gumbo.engine.proofsymbol";
+	public static final String partitionClass = "gumbo.compiler.partitioner";
+	public static final String mapOutputGroupingClass = "gumbo.engine.mapOutputGroupingClass";
 	
 
 	/**
@@ -54,7 +60,11 @@ public abstract class AbstractExecutorSettings {
 		setBooleanProperty(guardedCombinerOptimizationOn, false); 
 		setBooleanProperty(round1FiniteMemoryOptimizationOn, false); 
 //		setBooleanProperty(mapOutputGroupingOptimizationOn, false); 
+		
 		setProperty(PROOF_SYMBOL, "#");
+		setProperty(partitionClass, HeightPartitioner.class.getCanonicalName());
+		setProperty(mapOutputGroupingClass, KeyGrouper.class.getCanonicalName());
+//		setProperty(mapOutputGroupingClass, AllGrouper.class.getCanonicalName());
 	}
 	
 	public void turnOffOptimizations() {

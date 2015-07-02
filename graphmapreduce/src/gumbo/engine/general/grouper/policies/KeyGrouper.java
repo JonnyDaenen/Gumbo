@@ -3,6 +3,7 @@ package gumbo.engine.general.grouper.policies;
 import gumbo.engine.general.grouper.costmodel.CostCalculator;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
+import gumbo.input.parser.GumboGFQueryVisitor;
 import gumbo.structures.gfexpressions.io.Pair;
 
 import java.util.LinkedList;
@@ -27,7 +28,7 @@ public class KeyGrouper implements GroupingPolicy {
 	
 	CostCalculator costCalculator;
 	
-	
+
 	public KeyGrouper(CostCalculator costCalculator) {
 		this.costCalculator = costCalculator;
 	}

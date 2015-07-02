@@ -9,6 +9,14 @@ import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.engine.general.grouper.Grouper;
+import gumbo.engine.general.grouper.costmodel.CostCalculator;
+import gumbo.engine.general.grouper.costmodel.GGTCostCalculator;
+import gumbo.engine.general.grouper.policies.AllGrouper;
+import gumbo.engine.general.grouper.policies.GroupingPolicy;
+import gumbo.engine.general.grouper.policies.KeyGrouper;
+import gumbo.engine.general.grouper.policies.NoneGrouper;
+import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.general.utils.FileMappingExtractor;
 import gumbo.engine.hadoop.mrcomponents.input.GuardTextInputFormat;
@@ -32,6 +40,7 @@ import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -92,6 +101,7 @@ public class GumboHadoopConverter {
 	private static final Log LOG = LogFactory.getLog(GumboHadoopConverter.class);
 
 	/**
+	 * @param grouper 
 	 * 
 	 */
 	public GumboHadoopConverter(String queryName, FileManager fileManager, Configuration conf) {
@@ -101,6 +111,7 @@ public class GumboHadoopConverter {
 
 		this.extractor = new FileMappingExtractor();
 		this.serializer = new GFPrefixSerializer();
+
 	}
 
 	/**
@@ -129,10 +140,10 @@ public class GumboHadoopConverter {
 		// create 2 jobs
 		LinkedList<ControlledJob> jobs = new LinkedList<>();
 
-		ControlledJob job1 = createRound1Job(cug);
-		ControlledJob job2 = createRound2Job(cug,job1);
+		Set<ControlledJob> jobs1 = createRound1Jobs(cug);
+		ControlledJob job2 = createRound2Job(cug,jobs1);
 
-		jobs.add(job1);
+		jobs.addAll(jobs1);
 		jobs.add(job2);
 
 		// return jobs
@@ -140,8 +151,29 @@ public class GumboHadoopConverter {
 
 	}
 
+	private Set<ControlledJob> createRound1Jobs(CalculationUnitGroup cug) throws ConversionException {
 
-	private ControlledJob createRound1Job(CalculationUnitGroup cug) throws ConversionException {
+		Set<ControlledJob> jobs = new HashSet<>();
+
+		// extract file mapping where input paths are made specific
+		// TODO also filter out non-related relations
+		extractor.setIncludeOutputDirs(false); // TODO the grouper should filter out the non-existing files
+		RelationFileMapping mapping1 = extractor.extractFileMapping(fileManager);
+		Grouper grouper = getGrouper(mapping1);
+
+		// apply grouping
+		extractor.setIncludeOutputDirs(true);
+		RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
+		List<CalculationUnitGroup> groups = grouper.group(cug);
+		for (CalculationUnitGroup group : groups) {
+			jobs.add(createRound1Job(group, mapping));
+		}
+
+		return jobs;
+	}
+
+
+	private ControlledJob createRound1Job(CalculationUnitGroup cug, RelationFileMapping mapping) throws ConversionException {
 
 		try {
 
@@ -152,9 +184,7 @@ public class GumboHadoopConverter {
 			hadoopJob.setJarByClass(getClass());
 			hadoopJob.setJobName(getName(cug,1));
 
-			// extract file mapping where input paths are made specific
-			// TODO also filter out non-related relations
-			RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
+
 
 			LOG.info(mapping);
 
@@ -281,16 +311,22 @@ public class GumboHadoopConverter {
 	/**
 	 * TODO #core make a clear list of the input/output types of this round, depending on the optimizations.
 	 * @param cug
-	 * @param previousJob
+	 * @param jobs1
 	 * @return
 	 * @throws ConversionException
 	 */
-	private ControlledJob createRound2Job(CalculationUnitGroup cug, ControlledJob previousJob) throws ConversionException {
+	private ControlledJob createRound2Job(CalculationUnitGroup cug, Set<ControlledJob> jobs1) throws ConversionException {
 
 
 		try {
 
-			Path inPath = FileOutputFormat.getOutputPath(previousJob.getJob());
+			Set<Path> inPaths = new HashSet<Path>();
+			for (ControlledJob job : jobs1) {
+
+				Path inPath = FileOutputFormat.getOutputPath(job.getJob());
+				inPaths.add(inPath);
+			}
+
 
 			// create job
 			Job hadoopJob = Job.getInstance(settings.getConf()); // note: creates a copy of the conf
@@ -339,18 +375,21 @@ public class GumboHadoopConverter {
 				}
 
 				// other files just need to be read and pushed to the reducer
-				LOG.info("Adding M2 normal path " + inPath + " using identity mapper ");
-				MultipleInputs.addInputPath(hadoopJob, inPath, 
-						getRound2MapInputFormat(), Mapper.class);
 
+				for (Path inPath : inPaths) {
+					LOG.info("Adding M2 normal path " + inPath + " using identity mapper ");
+					MultipleInputs.addInputPath(hadoopJob, inPath, 
+							getRound2MapInputFormat(), Mapper.class);
+				}
 			} else {
 
 				// if keep-alive messages are allowed, we use the identity mapper
 
-				LOG.info("Adding M2 path " + inPath + " using identity mapper ");
-				hadoopJob.setMapperClass(Mapper.class);
-				FileInputFormat.addInputPath(hadoopJob, inPath);
-
+				for (Path inPath : inPaths) {
+					LOG.info("Adding M2 path " + inPath + " using identity mapper ");
+					hadoopJob.setMapperClass(Mapper.class);
+					FileInputFormat.addInputPath(hadoopJob, inPath);
+				}
 
 				// FIXME #core when keep-alives are on and tuplepointeropt is also on, guard tuples are not generated.
 				// we use a custom input class to allow the mapper to output key-value pairs again
@@ -371,12 +410,12 @@ public class GumboHadoopConverter {
 			/* REDUCER */
 
 			// the reducer reads text or int format, depending on the optimization
-//			if (settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
-//				hadoopJob.setReducerClass(GFReducer2Text.class);
-//			} else {
-//				hadoopJob.setReducerClass(GFReducer2.class);
-//			}
-			
+			//			if (settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
+			//				hadoopJob.setReducerClass(GFReducer2Text.class);
+			//			} else {
+			//				hadoopJob.setReducerClass(GFReducer2.class);
+			//			}
+
 			hadoopJob.setReducerClass(GFReducer2Optimized.class);
 
 			Round2ReduceJobEstimator redestimator = new Round2ReduceJobEstimator(conf);
@@ -396,8 +435,10 @@ public class GumboHadoopConverter {
 
 			/* CREATE JOB */
 			ControlledJob newjob = new ControlledJob(hadoopJob, null);
-			newjob.addDependingJob(previousJob);
 
+			for (ControlledJob job : jobs1) {
+				newjob.addDependingJob(job);
+			}
 			return newjob;
 
 		} catch (IOException | GFOperationInitException e) {
@@ -424,22 +465,22 @@ public class GumboHadoopConverter {
 		} else {
 			return GFMapper2GuardRelOptimized.class;
 		}
-		
-		
+
+
 		// --- old
-//		if (string.equals("csv") ) {
-//			if (settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
-//				return GFMapper2GuardTextCsv.class;
-//			} else {
-//				return GFMapper2GuardCsv.class;
-//			}
-//		} else {
-//			if (settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
-//				return GFMapper2GuardTextRel.class;
-//			} else {
-//				return GFMapper2GuardRel.class;
-//			}
-//		}
+		//		if (string.equals("csv") ) {
+		//			if (settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
+		//				return GFMapper2GuardTextCsv.class;
+		//			} else {
+		//				return GFMapper2GuardCsv.class;
+		//			}
+		//		} else {
+		//			if (settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
+		//				return GFMapper2GuardTextRel.class;
+		//			} else {
+		//				return GFMapper2GuardRel.class;
+		//			}
+		//		}
 	}
 
 	/**
@@ -454,11 +495,39 @@ public class GumboHadoopConverter {
 	@SuppressWarnings("rawtypes")
 	private Class<? extends InputFormat> getRound2MapInputFormat() {
 		return GuardTextInputFormat.class;
-//		Class<? extends InputFormat> atomInputFormat = GuardInputFormat.class;
-//		if (settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
-//			atomInputFormat = GuardTextInputFormat.class;
-//		}
-//		return atomInputFormat;
+		//		Class<? extends InputFormat> atomInputFormat = GuardInputFormat.class;
+		//		if (settings.getBooleanProperty(HadoopExecutorSettings.guardReferenceOptimizationOn)) {
+		//			atomInputFormat = GuardTextInputFormat.class;
+		//		}
+		//		return atomInputFormat;
+	}
+
+
+	private Grouper getGrouper(RelationFileMapping mapping) {
+		String className = settings.getProperty(AbstractExecutorSettings.mapOutputGroupingClass);
+
+		Class<?> polClass;
+		try {
+			polClass = GroupingPolicy.class.getClassLoader().loadClass(className);
+
+
+			GroupingPolicy policy;
+			if (KeyGrouper.class.isAssignableFrom(polClass) ) {
+				Class[] argClasses = {CostCalculator.class};
+
+				// extract right mapping
+
+				policy = (GroupingPolicy) polClass.getConstructor(argClasses).newInstance(new GGTCostCalculator(new HadoopCostSheet(mapping, settings)));
+			} else {
+				policy = (GroupingPolicy) polClass.newInstance();
+			}
+			return new Grouper(policy);
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+			LOG.error("Unable to create requested grouper, reverting to default behaviour (no grouping)");
+			e.printStackTrace();
+		}
+
+		return new Grouper(new NoneGrouper());
 	}
 
 }

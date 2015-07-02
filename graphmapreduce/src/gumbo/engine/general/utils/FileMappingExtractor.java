@@ -32,6 +32,10 @@ public class FileMappingExtractor {
 
 	public FileMappingExtractor(boolean includeOutputDirs) {
 		expander = new InputPathExpander();
+		setIncludeOutputDirs(includeOutputDirs);
+	}
+	
+	public void setIncludeOutputDirs(boolean includeOutputDirs){
 		includeOut = includeOutputDirs;
 	}
 
