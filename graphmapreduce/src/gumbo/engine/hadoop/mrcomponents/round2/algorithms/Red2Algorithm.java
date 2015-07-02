@@ -77,7 +77,6 @@ public class Red2Algorithm {
 	public boolean processTuple(String split) throws AlgorithmInterruptedException {
 
 
-		LOG.info("input: " +  split);
 
 		try {
 			String value = split;
