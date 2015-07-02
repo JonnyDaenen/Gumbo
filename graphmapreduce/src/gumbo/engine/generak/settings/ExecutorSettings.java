@@ -1,7 +1,7 @@
 /**
  * Created: 20 Jan 2015
  */
-package gumbo.engine.general.settings;
+package gumbo.engine.generak.settings;
 
 import java.util.HashMap;
 import java.util.Map;

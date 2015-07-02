@@ -7,4 +7,4 @@
  * @author Jonny Daenen
  *
  */
-package gumbo.engine.general.settings;
+package gumbo.engine.generak.settings;

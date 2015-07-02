@@ -1,7 +1,7 @@
 /**
  * Created: 13 Feb 2015
  */
-package gumbo.engine.general.settings;
+package gumbo.engine.generak.settings;
 
 import java.lang.reflect.Field;
 import java.util.HashSet;
