@@ -1,4 +1,4 @@
-package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
+package gumbo.engine.general.factories;
 
 public class MessageFailedException extends Exception {
 

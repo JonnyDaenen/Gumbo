@@ -1,7 +1,7 @@
 /**
  * Created: 05 Feb 2015
  */
-package gumbo.engine.general;
+package gumbo.engine.general.utils;
 
 import java.io.IOException;
 import java.util.Collection;

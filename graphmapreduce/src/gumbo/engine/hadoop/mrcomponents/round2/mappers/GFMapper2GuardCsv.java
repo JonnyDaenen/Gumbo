@@ -3,8 +3,9 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round2.mappers;
 
+import gumbo.engine.general.algorithms.Map2GuardAlgorithm;
+import gumbo.engine.general.factories.Map2GuardMessageInterface;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1Identity;
-import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Map2GuardAlgorithm;
 import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Map2GuardMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.RelationResolver;
 import gumbo.structures.data.RelationSchema;
@@ -47,7 +48,7 @@ public class GFMapper2GuardCsv extends GFMapper1Identity {
 			// pre-cache
 			resolver.extractRelationSchema(context);
 
-			Map2GuardMessageFactory msgFactory = new Map2GuardMessageFactory(context,settings,eso);		
+			Map2GuardMessageInterface msgFactory = new Map2GuardMessageFactory(context,settings,eso);		
 			algo = new Map2GuardAlgorithm(eso, msgFactory);
 
 			buffer = new Text();

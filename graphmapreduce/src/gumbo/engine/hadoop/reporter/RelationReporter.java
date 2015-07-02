@@ -2,12 +2,14 @@ package gumbo.engine.hadoop.reporter;
 
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.AlgorithmInterruptedException;
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardAlgorithm;
+import gumbo.engine.general.algorithms.AlgorithmInterruptedException;
+import gumbo.engine.general.algorithms.Map1GuardAlgorithm;
+import gumbo.engine.general.algorithms.Map1GuardedAlgorithm;
+import gumbo.engine.general.algorithms.MapAlgorithm;
+import gumbo.engine.general.factories.Map1GuardMessageFactoryInterface;
+import gumbo.engine.general.factories.Map1GuardedMessageFactoryInterface;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactory;
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedAlgorithm;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactory;
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.MapAlgorithm;
 import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.Tuple;
@@ -116,11 +118,11 @@ public class RelationReporter {
 			Text t = new Text();
 
 			if (guard) { // TODO make eso predicate
-				Map1GuardMessageFactory fact = new Map1GuardMessageFactory(fm.context, settings, eso);
+				Map1GuardMessageFactoryInterface fact = new Map1GuardMessageFactory(fm.context, settings, eso);
 				fact.enableSampleCounting();
 				algo = new Map1GuardAlgorithm(eso, fact, settings);
 			} else {
-				Map1GuardedMessageFactory fact = new Map1GuardedMessageFactory(fm.context, settings, eso);
+				Map1GuardedMessageFactoryInterface fact = new Map1GuardedMessageFactory(fm.context, settings, eso);
 				fact.enableSampleCounting();
 				algo = new Map1GuardedAlgorithm(eso,fact,settings.getBooleanProperty(AbstractExecutorSettings.mapOutputGroupingOptimizationOn));
 

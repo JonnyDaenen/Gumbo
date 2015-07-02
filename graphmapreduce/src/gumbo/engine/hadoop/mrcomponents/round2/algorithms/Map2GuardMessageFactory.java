@@ -1,6 +1,7 @@
 package gumbo.engine.hadoop.mrcomponents.round2.algorithms;
 
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.MessageFailedException;
+import gumbo.engine.general.factories.Map2GuardMessageInterface;
+import gumbo.engine.general.factories.MessageFailedException;
 import gumbo.engine.hadoop.mrcomponents.round2.mappers.GumboMap2Counter;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
@@ -14,7 +15,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class Map2GuardMessageFactory {
+public class Map2GuardMessageFactory implements Map2GuardMessageInterface {
 
 	Text keyText;
 	Text valueText;
@@ -53,6 +54,10 @@ public class Map2GuardMessageFactory {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round2.algorithms.Map2GuardMessageInterface#loadGuardValue(gumbo.structures.data.Tuple, long)
+	 */
+	@Override
 	public void loadGuardValue(Tuple t, long offset) throws MessageFailedException {
 
 		try {
@@ -76,17 +81,10 @@ public class Map2GuardMessageFactory {
 
 	}
 
-	/**
-	 * Sends an assert message to
-	 * the guard reference,
-	 * containing a special assert
-	 * message. This latter message
-	 * is only useful when using pointers
-	 * for the guard tuples and is needed 
-	 * to restore the original guard tuple.
-	 * @throws InterruptedException 
-	 * @throws IOException 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round2.algorithms.Map2GuardMessageInterface#sendGuardAssert()
 	 */
+	@Override
 	public void sendGuardAssert() throws MessageFailedException {
 
 		ASSERT.increment(1);

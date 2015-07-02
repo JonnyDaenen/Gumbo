@@ -3,7 +3,8 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round2.reducers;
 
-import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Red2Algorithm;
+import gumbo.engine.general.algorithms.Red2Algorithm;
+import gumbo.engine.general.factories.Red2MessageFactoryInterface;
 import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Red2MessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.ParameterPasser;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
@@ -54,7 +55,7 @@ public class GFReducer2Optimized extends Reducer<Text, Text, Text, Text> {
 			ExpressionSetOperations eso = pp.loadESO();
 			HadoopExecutorSettings settings = pp.loadSettings();
 
-			Red2MessageFactory msgFactory = new Red2MessageFactory(context, settings, eso);
+			Red2MessageFactoryInterface msgFactory = new Red2MessageFactory(context, settings, eso);
 			algo = new Red2Algorithm(eso, settings, msgFactory);
 
 		} catch (Exception e) {

@@ -1,6 +1,6 @@
-package gumbo.engine.hadoop.mrcomponents.round2.algorithms;
+package gumbo.engine.general.algorithms;
 
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.AlgorithmInterruptedException;
+import gumbo.engine.general.factories.Map2GuardMessageInterface;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
@@ -8,15 +8,15 @@ import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class Map2GuardAlgorithm {
+public class Map2GuardAlgorithm implements MapAlgorithm {
 
 	private static final Log LOG = LogFactory.getLog(Map2GuardAlgorithm.class);
 
-	Map2GuardMessageFactory msgFactory;
+	Map2GuardMessageInterface msgFactory;
 	ExpressionSetOperations eso;
 
 
-	public Map2GuardAlgorithm(ExpressionSetOperations eso, Map2GuardMessageFactory msgFactory) {
+	public Map2GuardAlgorithm(ExpressionSetOperations eso, Map2GuardMessageInterface msgFactory) {
 		this.msgFactory = msgFactory;
 		this.eso = eso;
 	}

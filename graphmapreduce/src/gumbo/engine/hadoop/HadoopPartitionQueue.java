@@ -5,7 +5,7 @@ package gumbo.engine.hadoop;
 
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
-import gumbo.engine.general.PartitionQueue;
+import gumbo.engine.general.utils.PartitionQueue;
 
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;

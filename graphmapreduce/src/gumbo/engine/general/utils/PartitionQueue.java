@@ -1,7 +1,7 @@
 /**
  * Created: 12 Feb 2015
  */
-package gumbo.engine.general;
+package gumbo.engine.general.utils;
 
 import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.linker.CalculationUnitGroup;

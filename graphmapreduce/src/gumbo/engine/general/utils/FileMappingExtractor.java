@@ -1,7 +1,7 @@
 /**
  * Created: 10 Feb 2015
  */
-package gumbo.engine.general;
+package gumbo.engine.general.utils;
 
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;

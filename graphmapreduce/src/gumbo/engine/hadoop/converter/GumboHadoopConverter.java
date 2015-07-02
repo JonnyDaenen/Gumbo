@@ -9,7 +9,7 @@ import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.engine.general.FileMappingExtractor;
+import gumbo.engine.general.utils.FileMappingExtractor;
 import gumbo.engine.hadoop.mrcomponents.input.GuardTextInputFormat;
 import gumbo.engine.hadoop.mrcomponents.round1.combiners.GFCombinerGuarded;
 import gumbo.engine.hadoop.mrcomponents.round1.comparators.Round1GroupComparator;
@@ -21,7 +21,6 @@ import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardedCsv;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardedRelOptimized;
 import gumbo.engine.hadoop.mrcomponents.round1.reducers.GFReducer1Optimized;
 import gumbo.engine.hadoop.mrcomponents.round2.mappers.GFMapper2GuardCsv;
-import gumbo.engine.hadoop.mrcomponents.round2.mappers.GFMapper2GuardRel;
 import gumbo.engine.hadoop.mrcomponents.round2.mappers.GFMapper2GuardRelOptimized;
 import gumbo.engine.hadoop.mrcomponents.round2.reducers.GFReducer2Optimized;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
@@ -324,17 +323,19 @@ public class GumboHadoopConverter {
 				// add special non-identity mapper to process the guard input again
 
 				// direct them to the special mapper (rel)
+				Class<? extends Mapper> relClass = getRound2GuardMapperClass("rel");
 				for (Path guardPath : eso.getGuardRelPaths()) {
-					LOG.info("Adding M2 guard path " + guardPath + " using mapper " + GFMapper2GuardRel.class.getName());
+					LOG.info("Adding M2 guard path " + guardPath + " using mapper " + relClass.getName());
 					MultipleInputs.addInputPath(hadoopJob, guardPath, 
-							TextInputFormat.class, getRound2GuardMapperClass("rel"));
+							TextInputFormat.class, relClass);
 				}
 
 				// direct them to the special mapper (csv)
+				Class<? extends Mapper> csvClass = getRound2GuardMapperClass("csv");
 				for (Path guardPath : eso.getGuardCsvPaths()) {
-					LOG.info("Adding M2 guard path " + guardPath + " using mapper " + GFMapper2GuardCsv.class.getName());
+					LOG.info("Adding M2 guard path " + guardPath + " using mapper " + csvClass.getName());
 					MultipleInputs.addInputPath(hadoopJob, guardPath, 
-							TextInputFormat.class, getRound2GuardMapperClass("csv"));
+							TextInputFormat.class, csvClass );
 				}
 
 				// other files just need to be read and pushed to the reducer

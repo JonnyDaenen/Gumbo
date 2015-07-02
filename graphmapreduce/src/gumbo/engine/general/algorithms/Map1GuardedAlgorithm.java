@@ -1,5 +1,6 @@
-package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
+package gumbo.engine.general.algorithms;
 
+import gumbo.engine.general.factories.Map1GuardedMessageFactoryInterface;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
@@ -14,7 +15,7 @@ public class Map1GuardedAlgorithm implements MapAlgorithm {
 
 	private static final Log LOG = LogFactory.getLog(Map1GuardedAlgorithm.class);
 
-	Map1GuardedMessageFactory msgFactory;
+	Map1GuardedMessageFactoryInterface msgFactory;
 	ExpressionSetOperations eso;
 	boolean sendIds;
 
@@ -26,7 +27,7 @@ public class Map1GuardedAlgorithm implements MapAlgorithm {
 	 * @param msgFactory
 	 * @param sendIds toggle to enable sending the matching atom ids as part of the assert message
 	 */
-	public Map1GuardedAlgorithm(ExpressionSetOperations eso, Map1GuardedMessageFactory msgFactory, boolean sendIds) {
+	public Map1GuardedAlgorithm(ExpressionSetOperations eso, Map1GuardedMessageFactoryInterface msgFactory, boolean sendIds) {
 		this.msgFactory = msgFactory;
 		this.eso = eso;
 		this.sendIds = sendIds;

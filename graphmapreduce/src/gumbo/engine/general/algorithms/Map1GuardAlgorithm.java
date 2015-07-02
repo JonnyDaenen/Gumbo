@@ -1,5 +1,6 @@
-package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
+package gumbo.engine.general.algorithms;
 
+import gumbo.engine.general.factories.Map1GuardMessageFactoryInterface;
 import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
@@ -17,13 +18,13 @@ public class Map1GuardAlgorithm implements MapAlgorithm{
 	
 	private static final Log LOG = LogFactory.getLog(Map1GuardAlgorithm.class);
 
-	Map1GuardMessageFactory msgFactory;
+	Map1GuardMessageFactoryInterface msgFactory;
 	ExpressionSetOperations eso;
 
 	private boolean keepAliveOn;
 	
 
-	public Map1GuardAlgorithm(ExpressionSetOperations eso, Map1GuardMessageFactory msgFactory, AbstractExecutorSettings settings) {
+	public Map1GuardAlgorithm(ExpressionSetOperations eso, Map1GuardMessageFactoryInterface msgFactory, AbstractExecutorSettings settings) {
 		this.msgFactory = msgFactory;
 		this.eso = eso;
 		keepAliveOn = !settings.getBooleanProperty(AbstractExecutorSettings.guardKeepAliveOptimizationOn);

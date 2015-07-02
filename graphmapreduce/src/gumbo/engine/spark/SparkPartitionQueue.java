@@ -5,7 +5,7 @@ package gumbo.engine.spark;
 
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
-import gumbo.engine.general.PartitionQueue;
+import gumbo.engine.general.utils.PartitionQueue;
 
 import java.util.Collection;
 import java.util.HashSet;

@@ -1,5 +1,7 @@
 package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
+import gumbo.engine.general.factories.Map1GuardedMessageFactoryInterface;
+import gumbo.engine.general.factories.MessageFailedException;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GumboMap1Counter;
 import gumbo.engine.hadoop.reporter.CounterMeasures;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
@@ -18,7 +20,7 @@ import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Mapper;
 
 
-public class Map1GuardedMessageFactory {
+public class Map1GuardedMessageFactory implements Map1GuardedMessageFactoryInterface {
 
 	private static final Log LOG = LogFactory.getLog(Map1GuardedMessageFactory.class);
 
@@ -77,10 +79,18 @@ public class Map1GuardedMessageFactory {
 		sampleCounter = false;
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactoryInterface#enableSampleCounting()
+	 */
+	@Override
 	public void enableSampleCounting() {
 		sampleCounter = true;
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactoryInterface#loadGuardedValue(gumbo.structures.data.Tuple)
+	 */
+	@Override
 	public void loadGuardedValue(Tuple t) {
 
 		this.t = t;
@@ -101,6 +111,10 @@ public class Map1GuardedMessageFactory {
 
 
 	
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactoryInterface#sendAssert()
+	 */
+	@Override
 	public void sendAssert() throws MessageFailedException {
 
 		if (!guardedIdOptimizationOn) {
@@ -151,24 +165,10 @@ public class Map1GuardedMessageFactory {
 		}
 	}
 
-	/**
-	 * Sends out an assert message to this guarded tuple,
-	 * to indicate its own existance.
-	 * 
-	 * If the guarded ID optimization is on,
-	 * the message constant is replaced with a special constant symbol.
-	 * 
-	 * If map output grouping is on, the atom ids of matching
-	 * atoms are also sent as a list. Note that, if the supplied list is empty,
-	 * this methods acts as if grouping is off and just sends the 
-	 * message. This means that checking if the message should be sent
-	 * should be done before calling this method.
-	 * 
-	 * @param ids the list of atom ids that match the tuple
-	 * 
-	 * @throws InterruptedException 
-	 * @throws IOException 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactoryInterface#sendAssert(java.util.Set)
 	 */
+	@Override
 	public void sendAssert(Set<Integer> ids) throws MessageFailedException {
 		valueBuilder.setLength(0);
 		if (!guardedIdOptimizationOn) {

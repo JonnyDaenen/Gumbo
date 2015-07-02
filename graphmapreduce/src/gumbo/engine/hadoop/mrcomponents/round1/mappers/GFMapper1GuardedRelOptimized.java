@@ -3,7 +3,8 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round1.mappers;
 
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedAlgorithm;
+import gumbo.engine.general.algorithms.Map1GuardedAlgorithm;
+import gumbo.engine.general.factories.Map1GuardedMessageFactoryInterface;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactory;
 import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.data.Tuple;
@@ -36,7 +37,7 @@ public class GFMapper1GuardedRelOptimized extends GFMapper1Identity {
 	@Override
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
-		Map1GuardedMessageFactory msgFactory = new Map1GuardedMessageFactory(context,settings,eso);
+		Map1GuardedMessageFactoryInterface msgFactory = new Map1GuardedMessageFactory(context,settings,eso);
 		algo = new Map1GuardedAlgorithm(eso, msgFactory,settings.getBooleanProperty(AbstractExecutorSettings.mapOutputGroupingOptimizationOn));
 	}
 

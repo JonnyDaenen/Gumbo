@@ -3,8 +3,9 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round2.mappers;
 
+import gumbo.engine.general.algorithms.Map2GuardAlgorithm;
+import gumbo.engine.general.factories.Map2GuardMessageInterface;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1Identity;
-import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Map2GuardAlgorithm;
 import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Map2GuardMessageFactory;
 import gumbo.structures.data.Tuple;
 
@@ -35,7 +36,7 @@ public class GFMapper2GuardRelOptimized extends GFMapper1Identity {
 	@Override
 	protected void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
-		Map2GuardMessageFactory msgFactory = new Map2GuardMessageFactory(context,settings,eso);		
+		Map2GuardMessageInterface msgFactory = new Map2GuardMessageFactory(context,settings,eso);		
 		algo = new Map2GuardAlgorithm(eso, msgFactory);
 
 		// dummy

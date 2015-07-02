@@ -1,5 +1,7 @@
 package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
+import gumbo.engine.general.factories.MessageFailedException;
+import gumbo.engine.general.factories.Red1MessageFactoryInterface;
 import gumbo.engine.hadoop.mrcomponents.round1.reducers.GumboRed1Counter;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.engine.settings.AbstractExecutorSettings;
@@ -18,7 +20,7 @@ import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
-public class Red1MessageFactory {
+public class Red1MessageFactory implements Red1MessageFactoryInterface {
 
 	private static final Log LOG = LogFactory.getLog(Red1MessageFactory.class);
 
@@ -77,6 +79,10 @@ public class Red1MessageFactory {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Red1MessageFactoryInterface#loadValue(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public void loadValue(String address, String reply)  {
 		keyText.clear();
 		valueText.clear();
@@ -108,6 +114,10 @@ public class Red1MessageFactory {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Red1MessageFactoryInterface#sendReplies()
+	 */
+	@Override
 	public void sendReplies() throws MessageFailedException {
 
 		// only send out replies that have an answer
@@ -158,6 +168,10 @@ public class Red1MessageFactory {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Red1MessageFactoryInterface#cleanup()
+	 */
+	@Override
 	public void cleanup() throws MessageFailedException {
 		try {
 			mos.close();
@@ -166,14 +180,26 @@ public class Red1MessageFactory {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Red1MessageFactoryInterface#addAbort(long)
+	 */
+	@Override
 	public void addAbort(long incr) {
 		ABORTS.increment(incr);
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Red1MessageFactoryInterface#addBuffered(long)
+	 */
+	@Override
 	public void addBuffered(long incr) {
 		BUFFERED.increment(incr);
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Red1MessageFactoryInterface#setKeys(java.util.Set)
+	 */
+	@Override
 	public void setKeys(Set<Integer> keysFound) {
 		this.assertKeys = keysFound;
 

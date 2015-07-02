@@ -1,5 +1,7 @@
 package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
+import gumbo.engine.general.factories.Map1GuardMessageFactoryInterface;
+import gumbo.engine.general.factories.MessageFailedException;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GumboMap1Counter;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
@@ -27,7 +29,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class Map1GuardMessageFactory {
+public class Map1GuardMessageFactory implements Map1GuardMessageFactoryInterface {
 
 
 	private static final Log LOG = LogFactory.getLog(Map1GuardMessageFactory.class);
@@ -108,10 +110,18 @@ public class Map1GuardMessageFactory {
 		messageBuffer = new HashMap<>();
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactoryInterface#enableSampleCounting()
+	 */
+	@Override
 	public void enableSampleCounting() {
 		sampleCounter = true;
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactoryInterface#loadGuardValue(gumbo.structures.data.Tuple, long)
+	 */
+	@Override
 	public void loadGuardValue(Tuple t, long offset) throws TupleIDError {
 
 		this.t = t;
@@ -128,22 +138,10 @@ public class Map1GuardMessageFactory {
 		}
 	}
 
-	/**
-	 * Sends a Guard keep-alive request message.
-	 * The key of the message is the tuple itself,
-	 * in string representation. The value
-	 * consists of a reply address and a reply value.
-	 * The reply address is a reference to the tuple,
-	 * the reply value is a reference to a guarded atom.
-	 * Both representations can be an id, or the object 
-	 * in string representation, depending on the 
-	 * optimization settings.
-	 * 
-	 * @param guard
-	 * @throws IOException
-	 * @throws InterruptedException
-	 * @throws GFOperationInitException
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactoryInterface#sendGuardKeepAliveRequest(gumbo.structures.gfexpressions.GFAtomicExpression)
 	 */
+	@Override
 	public void sendGuardKeepAliveRequest(GFAtomicExpression guard) throws MessageFailedException {
 
 		try {
@@ -175,25 +173,10 @@ public class Map1GuardMessageFactory {
 	}
 
 
-	/**
-	 * Sends out an assert message to the guard tuple,
-	 * as part of the Keep-alive system.
-	 * The key is the tuple itself, in string representation.
-	 * The value consists of a reference to the tuple,
-	 * which can either be the tuple itself, or an id
-	 * representing the tuple. This is dependent of the
-	 * optimization settings.
-	 * 
-	 * When finite memory optimization is enabled,
-	 * the key is padded with a special symbol in order
-	 * to sort, partition and group correctly.
-	 * 
-	 * <b>Important:</b> when keep-alive optimization is enabled, 
-	 * no message will be sent, unless force is true.
-	 * 
-	 * @throws InterruptedException 
-	 * @throws IOException 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactoryInterface#sendGuardedAssert(boolean, java.util.Set)
 	 */
+	@Override
 	public void sendGuardedAssert(boolean force, Set<Integer> ids) throws MessageFailedException {
 
 		if (!guardKeepaliveOptimizationOn || force) {
@@ -229,6 +212,10 @@ public class Map1GuardMessageFactory {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactoryInterface#sendRequest(gumbo.structures.gfexpressions.io.Triple)
+	 */
+	@Override
 	public void sendRequest(Triple<GFAtomicExpression, GFAtomProjection, Integer> guardedInfo) throws MessageFailedException {
 
 		try {
@@ -319,6 +306,10 @@ public class Map1GuardMessageFactory {
 		return b;
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactoryInterface#finish()
+	 */
+	@Override
 	public void finish() throws MessageFailedException {
 
 		// group buffered messages on their key

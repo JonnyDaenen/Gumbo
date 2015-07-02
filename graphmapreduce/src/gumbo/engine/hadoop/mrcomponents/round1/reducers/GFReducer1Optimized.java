@@ -3,7 +3,8 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round1.reducers;
 
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Red1Algorithm;
+import gumbo.engine.general.algorithms.Red1Algorithm;
+import gumbo.engine.general.factories.Red1MessageFactoryInterface;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Red1MessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.ParameterPasser;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
@@ -58,7 +59,7 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 			ExpressionSetOperations eso = pp.loadESO();
 			HadoopExecutorSettings settings = pp.loadSettings();
 
-			Red1MessageFactory msgFactory = new Red1MessageFactory(context, settings, eso, FILENAME);
+			Red1MessageFactoryInterface msgFactory = new Red1MessageFactory(context, settings, eso, FILENAME);
 			algo = new Red1Algorithm(eso,settings,msgFactory);
 
 		} catch (Exception e) {
@@ -94,11 +95,8 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 			// WARNING Text object will be reused by Hadoop!
 			for (Text t : values) {
 
-				// parse input
-				Pair<String, String> split = split(t);
-
 				// feed it to algo
-				if(!algo.processTuple(split))
+				if(!algo.processTuple(t.toString()))
 					break;
 
 			}
@@ -167,33 +165,7 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 
 	}
 
-	/**
-	 * Splits String into 2 parts. String is supposed to be separated with ';'.
-	 * When no ';' is present, the numeric value is -1. 
-	 * @param t
-	 */
-	protected Pair<String, String> split(Text t) {
-
-
-		int pos = t.find(";");
-
-		byte [] bytes = t.getBytes();
-		int length = t.getLength(); // to fix internal byte buffer length mismatch
-
-		String address = "";
-		String reply = "";
-
-		if (pos != -1) {
-			address = new String(bytes, 0, pos);
-			reply = new String(bytes, pos+1,length-pos-1); // 1-offset is to skip ';'
-		} else {
-			address = new String(bytes,0,length);
-			reply = "";
-		}
-
-		return new Pair<>(address, reply);
-
-	}
+	
 
 
 

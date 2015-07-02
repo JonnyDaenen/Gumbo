@@ -1,6 +1,6 @@
-package gumbo.engine.hadoop.mrcomponents.round2.algorithms;
+package gumbo.engine.general.algorithms;
 
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.AlgorithmInterruptedException;
+import gumbo.engine.general.factories.Red2MessageFactoryInterface;
 import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.booleanexpressions.BEvaluationContext;
 import gumbo.structures.booleanexpressions.BExpression;
@@ -16,11 +16,11 @@ import gumbo.structures.gfexpressions.operations.GFAtomProjection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class Red2Algorithm {
+public class Red2Algorithm implements ReduceAlgorithm {
 
 	private static final Log LOG = LogFactory.getLog(Red2Algorithm.class);
 
-	Red2MessageFactory msgFactory;
+	Red2MessageFactoryInterface msgFactory;
 	ExpressionSetOperations eso;
 
 
@@ -38,7 +38,7 @@ public class Red2Algorithm {
 	boolean keyFound;
 
 
-	public Red2Algorithm(ExpressionSetOperations eso, AbstractExecutorSettings settings, Red2MessageFactory msgFactory) {
+	public Red2Algorithm(ExpressionSetOperations eso, AbstractExecutorSettings settings, Red2MessageFactoryInterface msgFactory) {
 		this.msgFactory = msgFactory;
 		this.eso = eso;
 

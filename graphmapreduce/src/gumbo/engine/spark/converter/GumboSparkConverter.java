@@ -10,7 +10,7 @@ import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.engine.general.FileMappingExtractor;
+import gumbo.engine.general.utils.FileMappingExtractor;
 import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.engine.spark.mrcomponents.GFSparkMapper1Guard;
 import gumbo.engine.spark.mrcomponents.GFSparkMapper1Guarded;

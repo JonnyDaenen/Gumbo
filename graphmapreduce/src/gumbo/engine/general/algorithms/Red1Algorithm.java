@@ -1,5 +1,7 @@
-package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
+package gumbo.engine.general.algorithms;
 
+import gumbo.engine.general.factories.MessageFailedException;
+import gumbo.engine.general.factories.Red1MessageFactoryInterface;
 import gumbo.engine.settings.AbstractExecutorSettings;
 import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
@@ -9,12 +11,13 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.io.Text;
 
-public class Red1Algorithm {
+public class Red1Algorithm implements ReduceAlgorithm {
 
 	private static final Log LOG = LogFactory.getLog(Red1Algorithm.class);
 
-	Red1MessageFactory msgFactory;
+	Red1MessageFactoryInterface msgFactory;
 	ExpressionSetOperations eso;
 
 	boolean keyFound;
@@ -27,7 +30,7 @@ public class Red1Algorithm {
 
 
 
-	public Red1Algorithm(ExpressionSetOperations eso, AbstractExecutorSettings settings, Red1MessageFactory msgFactory) {
+	public Red1Algorithm(ExpressionSetOperations eso, AbstractExecutorSettings settings, Red1MessageFactoryInterface msgFactory) {
 		this.msgFactory = msgFactory;
 		this.eso = eso;
 
@@ -62,7 +65,9 @@ public class Red1Algorithm {
 	 * 
 	 * @throws AlgorithmInterruptedException
 	 */
-	public boolean processTuple(Pair<String,String> split) throws AlgorithmInterruptedException {
+	public boolean processTuple(String value) throws AlgorithmInterruptedException {
+		
+		Pair<String,String> split = split(value);
 		
 		try {
 			// is this not the key (key is only thing that can appear without atom reference)
@@ -151,8 +156,41 @@ public class Red1Algorithm {
 		}
 	}
 
-	public void cleanup() throws MessageFailedException {
-		msgFactory.cleanup();
+	public void cleanup() throws AlgorithmInterruptedException {
+		
+		try {
+			msgFactory.cleanup();
+		} catch (MessageFailedException e) {
+			throw new AlgorithmInterruptedException(e);
+		}
+
+	}
+	
+	/**
+	 * Splits String into 2 parts. String is supposed to be separated with ';'.
+	 * When no ';' is present, the numeric value is -1. 
+	 * @param t
+	 */
+	protected Pair<String, String> split(String t) {
+
+
+		int pos = t.indexOf(';');
+
+		byte [] bytes = t.getBytes();
+		int length = t.length(); // to fix internal byte buffer length mismatch
+
+		String address = "";
+		String reply = "";
+
+		if (pos != -1) {
+			address = new String(bytes, 0, pos);
+			reply = new String(bytes, pos+1,length-pos-1); // 1-offset is to skip ';'
+		} else {
+			address = new String(bytes,0,length);
+			reply = "";
+		}
+
+		return new Pair<>(address, reply);
 
 	}
 

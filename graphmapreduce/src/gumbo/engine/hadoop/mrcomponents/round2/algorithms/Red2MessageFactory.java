@@ -1,6 +1,7 @@
 package gumbo.engine.hadoop.mrcomponents.round2.algorithms;
 
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.MessageFailedException;
+import gumbo.engine.general.factories.MessageFailedException;
+import gumbo.engine.general.factories.Red2MessageFactoryInterface;
 import gumbo.engine.hadoop.mrcomponents.round2.reducers.GumboRed2Counter;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.RelationSchema;
@@ -17,7 +18,7 @@ import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
-public class Red2MessageFactory {
+public class Red2MessageFactory implements Red2MessageFactoryInterface {
 
 
 	private static final Log LOG = LogFactory.getLog(Red2MessageFactory.class);
@@ -73,12 +74,20 @@ public class Red2MessageFactory {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round2.algorithms.Red2MessageFactoryInterface#loadValue(gumbo.structures.data.Tuple)
+	 */
+	@Override
 	public void loadValue(Tuple t) {
 		this.filename = generateFileName(t);
 		valueText.clear();
 		valueText.set(t.toString());
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round2.algorithms.Red2MessageFactoryInterface#sendOutput()
+	 */
+	@Override
 	public void sendOutput() throws MessageFailedException {
 		OUTR.increment(1);
 		OUTB.increment(valueText.getLength());
@@ -97,6 +106,10 @@ public class Red2MessageFactory {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round2.algorithms.Red2MessageFactoryInterface#cleanup()
+	 */
+	@Override
 	public void cleanup() throws MessageFailedException {
 		try {
 			mos.close();
@@ -117,28 +130,52 @@ public class Red2MessageFactory {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round2.algorithms.Red2MessageFactoryInterface#getTuple(java.lang.String)
+	 */
+	@Override
 	public Tuple getTuple(String value) {
 		// OPTIMIZE this may be slow
 		return new Tuple(value.substring(1));
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round2.algorithms.Red2MessageFactoryInterface#isTuple(java.lang.String)
+	 */
+	@Override
 	public boolean isTuple(String value) {
 		return value.startsWith(proofBytes);
 	}
 
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round2.algorithms.Red2MessageFactoryInterface#incrementExcept(long)
+	 */
+	@Override
 	public void incrementExcept(long incr) {
 		EXCEPT.increment(incr);
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round2.algorithms.Red2MessageFactoryInterface#incrementFalse(long)
+	 */
+	@Override
 	public void incrementFalse(long incr) {
 		FALSE.increment(incr);
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round2.algorithms.Red2MessageFactoryInterface#incrementTrue(long)
+	 */
+	@Override
 	public void incrementTrue(long incr) {
 		TRUE.increment(incr);
 	}
 
+	/* (non-Javadoc)
+	 * @see gumbo.engine.hadoop.mrcomponents.round2.algorithms.Red2MessageFactoryInterface#incrementTuples(long)
+	 */
+	@Override
 	public void incrementTuples(long incr) {
 		TUPLES.increment(incr);
 	}
