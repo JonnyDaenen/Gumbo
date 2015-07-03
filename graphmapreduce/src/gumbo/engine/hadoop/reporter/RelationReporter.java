@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.hadoop.io.Text;
@@ -80,18 +81,12 @@ public class RelationReporter {
 		// split sample in two unequal parts, to improve extrapolation
 		byte [][] bytes = rsc.getSamples(relation);
 		int split = (int) Math.floor(bytes.length / 10);
-		byte [][] bytes1 = new byte[split][];
-		byte [][] bytes2 = new byte[bytes.length - split][];
-		for (int i = 0; i < bytes.length; i++) {
-			if (i < split) {
-				bytes1[i] = bytes[i];
-			} else {
-				bytes2[i-split] = bytes[i];
-			}
-		}
-		
-		RelationReport rr1 = runSample(relation, group, eso, guard, bytes1);
-		RelationReport rr2 = runSample(relation, group, eso, guard, bytes2);
+		RelationTupleSampleContainer rtsc = new RelationTupleSampleContainer(rsc, split, mapping);
+
+
+
+		RelationReport rr1 = runSample(relation, group, eso, guard, rtsc.getSmallTuples(relation),rtsc.getSmallSize(relation));
+		RelationReport rr2 = runSample(relation, group, eso, guard, rtsc.getBigTuples(relation),rtsc.getBigSize(relation));
 
 		// TODO make extrapolation optional.
 		extrapolate(rr1,rr2,rr);
@@ -103,7 +98,7 @@ public class RelationReporter {
 
 	private RelationReport runSample(RelationSchema rs, Collection<GFExistentialExpression> group,
 			ExpressionSetOperations eso, boolean guard, 
-			byte [][] rawbytes) {
+			List<Tuple> tuples, long bytes) {
 
 		RelationReport rr = new RelationReport(rs);
 
@@ -128,43 +123,13 @@ public class RelationReporter {
 
 			}
 
-			long totalBytesRead = 0;
 
 
-
-			for (int i = 0; i < rawbytes.length; i++) {
-				// read text lines
-				try(LineReader l = new LineReader(new ByteArrayInputStream(rawbytes[i]))) {
-					// skip first line, as it may be incomplete
-					long bytesread = l.readLine(t); 
-
-					long offset = 0;
-					while (true) {
-						// read next line
-						bytesread = l.readLine(t); 
-						if (bytesread <= 0)
-							break;
-
-						// if csv, wrap
-						InputFormat format = mapping.getInputFormat(rs);
-
-						String s = t.toString();
-						if (format == InputFormat.CSV) {
-							s = rs.getName() + "(" + s + ")";
-						}
-
-						// convert to tuple
-						Tuple tuple = new Tuple(s);
-
-						// feed to algorithm
-						algo.run(tuple, offset);
-						offset += bytesread;
-					}
-
-					// keep track of actual bytes read
-					totalBytesRead += offset;
-				}
-
+			long offset = 0;
+			for (Tuple tuple : tuples) {
+				// feed to algorithm
+				algo.run(tuple, offset);
+				offset += tuple.size(); // dummy offset
 
 			}
 
@@ -173,6 +138,7 @@ public class RelationReporter {
 			// and extrapolate
 			double ratio = 1; //rr.getNumInputBytes() / (double)totalBytesRead;
 
+			long totalBytesRead = bytes;
 			rr.setNumInputBytes(totalBytesRead);
 			rr.setEstInputTuples((long)(ratio * fm.context.getInputTuples()));
 			rr.setEstIntermTuples((long) (ratio * fm.context.getOutputTuples()));
@@ -186,7 +152,7 @@ public class RelationReporter {
 
 
 
-		} catch (AlgorithmInterruptedException | IOException e) {
+		} catch (AlgorithmInterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

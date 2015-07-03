@@ -1,0 +1,134 @@
+package gumbo.engine.hadoop.reporter;
+
+import gumbo.compiler.filemapper.InputFormat;
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.data.Tuple;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.util.LineReader;
+
+
+/**
+ * Contains a list of samples for a set of Relations.
+ * 
+ * @author Jonny Daenen
+ *
+ */
+public class RelationTupleSampleContainer {
+
+	Map<RelationSchema, List<Tuple>> smallset;
+	Map<RelationSchema, List<Tuple>> bigset;
+	Map<RelationSchema, Long> smallBytes;
+	Map<RelationSchema, Long> bigBytes;
+	
+	int smallsize;
+	private RelationFileMapping mapping;
+
+	public RelationTupleSampleContainer(RelationSampleContainer rsc, int smallSize, RelationFileMapping mapping) {
+		smallset = new HashMap<>();
+		bigset = new HashMap<>();
+		smallBytes = new HashMap<>();
+		bigBytes = new HashMap<>();
+		
+		this.smallsize = smallSize;
+		this.mapping = mapping;
+		
+		init(rsc);
+	}
+
+
+	private void init(RelationSampleContainer rsc) {
+		
+		for (RelationSchema rs: rsc.getRelationSchemas()) {
+			smallset.put(rs,new LinkedList<Tuple>());
+			bigset.put(rs,new LinkedList<Tuple>());
+			
+			initStrings(rs,rsc);
+		}
+		
+	}
+
+
+	/**
+	 * Creates a set of strings, where each string corresponds to one line of the
+	 * byte sample. The first line is ignored, as this one may not be complete.
+	 * The other lines are scanned until an end-of-line symbol is found.
+	 * @param rsc 
+	 * 
+	 * @return the set of lines in the sample
+	 */
+	private void initStrings(RelationSchema rs, RelationSampleContainer rsc) {
+
+		Text t = new Text();
+		byte [][] rawbytes = rsc.getSamples(rs);
+		
+		long smallbytes = 0;
+		long bigbytes = 0;
+		
+		for (int i = 0; i < rawbytes.length; i++) {
+			// read text lines
+			try(LineReader l = new LineReader(new ByteArrayInputStream(rawbytes[i]))) {
+				// skip first line, as it may be incomplete
+				l.readLine(t); 
+
+				long bytesread = 0;
+				while (true) {
+					// read next line
+					bytesread = l.readLine(t); 
+					if (bytesread <= 0)
+						break;
+
+					// if csv, wrap
+					InputFormat format = mapping.getInputFormat(rs);
+
+					String s = t.toString();
+					if (format == InputFormat.CSV) {
+						s = rs.getName() + "(" + s + ")";
+					}
+					
+					Tuple tuple = new Tuple(s);
+					
+					if (i < smallsize) {
+						smallbytes += bytesread;
+						smallset.get(rs).add(tuple);
+					} else {
+						bigbytes += bytesread;
+						smallset.get(rs).add(tuple);
+					}
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		smallBytes.put(rs, smallbytes);
+		bigBytes.put(rs, bigbytes);
+	}
+	
+	public List<Tuple> getSmallTuples(RelationSchema rs) {
+		return smallset.get(rs);
+	}
+	
+	public List<Tuple> getBigTuples(RelationSchema rs) {
+		return bigset.get(rs);
+	}
+	
+	public long getSmallSize(RelationSchema rs) {
+		return smallBytes.get(rs);
+	}
+	
+	public long getBigSize(RelationSchema rs) {
+		return bigBytes.get(rs);
+	}
+
+}

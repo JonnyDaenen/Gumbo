@@ -1,9 +1,17 @@
 package gumbo.engine.hadoop.reporter;
 
+import gumbo.compiler.filemapper.InputFormat;
 import gumbo.structures.data.RelationSchema;
+import gumbo.structures.data.Tuple;
 
+import java.io.ByteArrayInputStream;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.util.LineReader;
 
 
 /**
@@ -27,7 +35,7 @@ public class RelationSampleContainer {
 	 * @param rs the relation schema
 	 * @param samples the samples
 	 */
-	void setSamples(RelationSchema rs, byte [][] samples) {
+	public void setSamples(RelationSchema rs, byte [][] samples) {
 		this.samples.put(rs,samples);
 	}
 
@@ -38,13 +46,19 @@ public class RelationSampleContainer {
 	 * 
 	 * @return samples the samples
 	 */
-	byte [][] getSamples(RelationSchema rs) {
+	public byte [][] getSamples(RelationSchema rs) {
 
 		byte [][] sample = samples.get(rs);
 		if (sample != null)
 			return sample;
 		else
 			return new byte [0][];
+	}
+	
+
+
+	public Collection<RelationSchema> getRelationSchemas() {
+		return samples.keySet();
 	}
 
 }
