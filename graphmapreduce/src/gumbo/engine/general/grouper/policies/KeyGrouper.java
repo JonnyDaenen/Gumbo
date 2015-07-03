@@ -3,11 +3,14 @@ package gumbo.engine.general.grouper.policies;
 import gumbo.engine.general.grouper.costmodel.CostCalculator;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
-import gumbo.input.parser.GumboGFQueryVisitor;
 import gumbo.structures.gfexpressions.io.Pair;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,12 +28,16 @@ public class KeyGrouper implements GroupingPolicy {
 
 
 	private static final Log LOG = LogFactory.getLog(KeyGrouper.class);
-	
+
 	CostCalculator costCalculator;
-	
+	private Map<Pair<CalculationGroup,CalculationGroup>,Double> costTable;
+	private Map<Pair<CalculationGroup,CalculationGroup>,CalculationGroup> merges;
+
 
 	public KeyGrouper(CostCalculator costCalculator) {
 		this.costCalculator = costCalculator;
+		costTable = new HashMap<>();
+		merges = new HashMap<>();
 	}
 
 	@Override
@@ -46,36 +53,147 @@ public class KeyGrouper implements GroupingPolicy {
 			groups.add(cg);
 		}
 
-		boolean savingsPossible = true;
+		initCostTable(groups);
+		logCostTable(groups);
+		boolean savingsPossible = hasSavings();
 		
+
 		// repeat until no positive savings
 		while (savingsPossible) {	
-			
-			// create cost savings matrix
-			double [][] matrix = createCostMatrix(groups);
-			
-			logcostmatrix(groups, matrix);
-			
-
-			savingsPossible = hasSavings(matrix);
-
-			if (!savingsPossible)
-				break;
 
 			// find jobs with highest cost savings
-			Pair<Integer,Integer> indices = findHighestSavings(matrix);
+			Pair<CalculationGroup, CalculationGroup> indices = findHighestSavings();
 
 			// merge jobs with highest cost savings
-			mergeAndRemove(groups, indices.fst, indices.snd);
-
+			updateCostTable(groups, indices.fst, indices.snd);
+			
+			// log
+			logCostTable(groups);
+			savingsPossible = hasSavings();
 		}
 
 
 		return groups;
 	}
-	
-	private void logcostmatrix(List<CalculationGroup> groups, double[][] matrix) {
+
+	private void initCostTable(List<CalculationGroup> groups) {
+
+		LOG.info("Initializing cost table..." );
+
+		costTable.clear();
+		merges.clear();
+
+		// initial group cost
+		for (int i = 0; i < groups.size(); i++) {
+			CalculationGroup group = groups.get(i);
+			group.setCost(costCalculator.calculateCost(group));
+		}
+
+		for (int i = 0; i < groups.size(); i++) {
+			for (int j = i+1; j < groups.size(); j++){
+
+				CalculationGroup group1 = groups.get(i);
+				CalculationGroup group2 = groups.get(j);
+
+
+				// create merged group
+				CalculationGroup newGroup = new CalculationGroup();
+				newGroup.addAll(group1);
+				newGroup.addAll(group2);
+
+				double cost = costCalculator.calculateCost(newGroup);
+				newGroup.setCost(cost);
+
+				calculateSavings(costTable, group1, group2, newGroup);
+
+			}
+		}
+
+	}
+
+	private double calculateSavings(Map<Pair<CalculationGroup, CalculationGroup>, Double> costTable, CalculationGroup group1, CalculationGroup group2, CalculationGroup newGroup) {
+		double cost1 = group1.getCost();
+		double cost2 = group2.getCost();
+		double cost3 = newGroup.getCost();
+		double savings = cost1 + cost2 - cost3;
+
+		costTable.put(new Pair<CalculationGroup,CalculationGroup>(group1,group2), savings);
+		// symmetry, for ease of removal later
+		costTable.put(new Pair<CalculationGroup,CalculationGroup>(group2,group1), savings);
 		
+		// cache group
+		// TODO remove when parent jobs are gone
+		merges.put(new Pair<>(group1, group2), newGroup);
+		merges.put(new Pair<>(group2, group1), newGroup);
+
+		return savings;
+	}
+
+	private void updateCostTable(List<CalculationGroup> groups, CalculationGroup group1, CalculationGroup group2) {
+
+
+		// remove 
+		groups.remove(group1);
+		groups.remove(group2);
+
+
+		// remove old combo's
+		Set<Pair<CalculationGroup, CalculationGroup>> removals = new HashSet<>();
+		for (Pair<CalculationGroup, CalculationGroup> key : costTable.keySet()) {
+			if (key.fst.equals(group1) || key.fst.equals(group2) || key.snd.equals(group1) || key.snd.equals(group2) )
+				removals.add(key);
+		}
+
+		for (Pair<CalculationGroup, CalculationGroup> key : removals) {
+			costTable.remove(key);
+		}
+
+
+		// fetch cached merged group
+		CalculationGroup newGroup = merges.get(new Pair<>(group1,group2));
+
+		// create all combos with the new group
+		for (CalculationGroup group : groups) {
+			// create merged group
+			CalculationGroup mergedGroup = new CalculationGroup();
+			mergedGroup.addAll(group);
+			mergedGroup.addAll(newGroup);
+
+			double cost = costCalculator.calculateCost(mergedGroup);
+			mergedGroup.setCost(cost);
+
+			calculateSavings(costTable, newGroup,group,mergedGroup);
+
+		}
+
+
+		// add new group
+		groups.add(newGroup);
+
+
+	}
+
+	private void logCostTable(List<CalculationGroup> groups) {
+
+
+		String s = "";
+		for (int i = 0; i < groups.size(); i++) {
+			for (int j = 0; j < groups.size(); j++){
+
+				Pair<CalculationGroup, CalculationGroup> cellid = new Pair<CalculationGroup,CalculationGroup>(groups.get(i),groups.get(j));
+				//				s += cellid.fst + "," + cellid.snd + ": ";
+				s += (costTable.get(cellid)) + "\t";
+			}
+			s += System.lineSeparator();
+		}
+
+		LOG.info("\n" + s);
+
+
+	}
+
+	private void logcostmatrix(List<CalculationGroup> groups, double[][] matrix) {
+
 
 		String s = "";
 		for (int i = 0; i < matrix.length; i++) {
@@ -84,21 +202,21 @@ public class KeyGrouper implements GroupingPolicy {
 			}
 			s += System.lineSeparator();
 		}
-		
+
 		LOG.info("\n" + s);
 
-		LOG.info("---");
-		
-		for (int i = 0; i < matrix.length; i++) {
-			for (int j = i+1; j < matrix[i].length; j++){
-				LOG.info(groups.get(i) + " MERGE WITH" + groups.get(j) + ": " + matrix[i][j]);
-				
-			}
-		}
+		//		LOG.info("---");
+		//
+		//		for (int i = 0; i < matrix.length; i++) {
+		//			for (int j = i+1; j < matrix[i].length; j++){
+		//				LOG.info(groups.get(i) + " MERGE WITH" + groups.get(j) + ": " + matrix[i][j]);
+		//
+		//			}
+		//		}
+		//
+		//		LOG.info("---");
 
-		LOG.info("---");
-		
-		
+
 	}
 
 	/**
@@ -108,46 +226,46 @@ public class KeyGrouper implements GroupingPolicy {
 	 * @return
 	 */
 	private double[][] createCostMatrix(List<CalculationGroup> groups) {
-		
+
 		double [][] matrix = new double[groups.size()][groups.size()];
-		
+
 		for (int i = 0; i < matrix.length; i++) {
 			for (int j = i+1; j < matrix[i].length; j++){
-				
+
 				CalculationGroup group1 = groups.get(i);
 				CalculationGroup group2 = groups.get(j);
-				
-				LOG.info("Trying to group" );
-				
+
+				//				LOG.info("Trying to group" );
+
 				// create merged group
 				CalculationGroup newGroup = new CalculationGroup();
 				newGroup.addAll(group1);
 				newGroup.addAll(group2);
-				
+
 				matrix[i][j] = 0;
 				double cost1 = costCalculator.calculateCost(group1);
 				double cost2 = costCalculator.calculateCost(group2);
 				double cost3 = costCalculator.calculateCost(newGroup);
-				
 
-				LOG.info(group1);
-				LOG.info("Cost: " + cost1);
-				LOG.info(group2);
-				LOG.info("Cost: " + cost2);
-				LOG.info(newGroup);
-				LOG.info("Cost: " + cost3);
-				
+
+				//				LOG.info(group1);
+				//				LOG.info("Cost: " + cost1);
+				//				LOG.info(group2);
+				//				LOG.info("Cost: " + cost2);
+				//				LOG.info(newGroup);
+				//				LOG.info("Cost: " + cost3);
+				//
 				matrix[i][j] = cost1 + cost2 - cost3;
-				LOG.info("Improvement: " + matrix[i][j]);
-				LOG.info("Improvement %: " + (matrix[i][j] / (cost1 + cost2))*100);
-				
-				
+				//				LOG.info("Improvement: " + matrix[i][j]);
+				//				LOG.info("Improvement %: " + (matrix[i][j] / (cost1 + cost2))*100);
+
+
 			}
 		}
-		
+
 		return matrix;
 	}
-	
+
 	/**
 	 * checks if a matrix contains savings, i.e. a cost larger than 0.
 	 * @param matrix
@@ -163,7 +281,19 @@ public class KeyGrouper implements GroupingPolicy {
 		return false;
 	}
 
-	
+	/**
+	 * checks if a matrix contains savings, i.e. a cost larger than 0.
+	 * @return
+	 */
+	private boolean hasSavings() {
+		for (Double val : costTable.values()) {
+			if (val > 0)
+				return true;
+		}
+		return false;
+	}
+
+
 
 	/**
 	 * Finds the positions of the max value in a 2D rectangular matrix.
@@ -173,7 +303,7 @@ public class KeyGrouper implements GroupingPolicy {
 	private Pair<Integer, Integer> findHighestSavings(double[][] matrix) {
 		Pair<Integer, Integer> maxPos = new Pair<Integer, Integer>(0, 0);
 		double max = 0;
-		
+
 		for (int i = 0; i < matrix.length; i++) {
 			for (int j = i+1; j < matrix[i].length; j++){
 				if (matrix[i][j] > max) {
@@ -186,28 +316,46 @@ public class KeyGrouper implements GroupingPolicy {
 		return maxPos;
 	}
 
-	
-	
+	/**
+	 * Finds the combination of groups that yield the highest savings.
+	 * If no savings are possible, null is returned.
+	 * @return
+	 */
+	private Pair<CalculationGroup, CalculationGroup> findHighestSavings() {
+		Pair<CalculationGroup, CalculationGroup> maxPos = null;
+		double max = 0;
+
+		for (Pair<CalculationGroup, CalculationGroup> key : costTable.keySet()) {
+			double val = costTable.get(key);	
+			if (val > max) {
+				max = val;
+				maxPos = new Pair<>(key.fst,key.snd);
+			}
+		}
+		return maxPos;
+	}
+
+
+
 	private void mergeAndRemove(List<CalculationGroup> groups, int fst,
 			int snd) {
 
-		CalculationGroup group1 = groups.get(fst);
-		CalculationGroup group2 = groups.get(snd);
-		
+		// remove from back to front
+		CalculationGroup group1 = groups.remove(Math.max(fst, snd));
+		CalculationGroup group2 = groups.remove(Math.min(fst, snd));
+
 		// create merged group
 		CalculationGroup newGroup = new CalculationGroup();
 		newGroup.addAll(group1);
 		newGroup.addAll(group2);
-		
-		// remove from back to front
-		groups.remove(Math.max(fst, snd));
-		groups.remove(Math.min(fst, snd));
-		
+
+
+
 		// add new group
 		groups.add(newGroup);
-		
+
 	}
 
-	
+
 
 }

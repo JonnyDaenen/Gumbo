@@ -4,7 +4,6 @@
 package gumbo.engine.general.settings;
 
 import gumbo.compiler.partitioner.HeightPartitioner;
-import gumbo.engine.general.grouper.policies.AllGrouper;
 import gumbo.engine.general.grouper.policies.KeyGrouper;
 
 import java.lang.reflect.Field;

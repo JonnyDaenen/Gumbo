@@ -158,8 +158,11 @@ public class HadoopCostSheet implements CostSheet {
 	public void initialize(CalculationGroup group) {
 		this.group = group;
 		try {
-			if (samples == null) 
+			if (samples == null) {
+				LOG.info("Sampling...");
 				samples = sampler.sample(10, 4 * 1024);
+				LOG.info("Samples taken.");
+			}
 			
 			RelationReporter rr = new RelationReporter(samples, mapping, settings);
 
@@ -172,9 +175,9 @@ public class HadoopCostSheet implements CostSheet {
 
 
 			reports = rr.generateReports(calcs);
-//
-//			for (RelationReport report : reports.values())
-//				LOG.info(report);
+			//
+			//			for (RelationReport report : reports.values())
+			//				LOG.info(report);
 
 		} catch (SamplingException | GFOperationInitException e){
 			e.printStackTrace();

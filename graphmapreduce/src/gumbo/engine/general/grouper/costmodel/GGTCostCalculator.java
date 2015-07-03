@@ -45,11 +45,6 @@ public class GGTCostCalculator implements CostCalculator{
 			intermediate += cs.getRelationIntermediateBytes(guardedSchema);
 		}
 
-
-
-
-
-
 		return determineMapCost(guards, guardeds, intermediate) + determineReduceCost(guards, guardeds, intermediate);
 	}
 

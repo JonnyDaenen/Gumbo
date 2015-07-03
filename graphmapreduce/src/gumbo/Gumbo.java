@@ -139,13 +139,15 @@ public class Gumbo extends Configured implements Tool {
 		System.out.println(plan);
 
 		// --- fresh
-//		FileMappingExtractor fme = new FileMappingExtractor(false);
-//		RelationFileMapping mapping2 = fme.extractFileMapping(plan.getFileManager());
-//		Grouper grouper = new Grouper(new KeyGrouper(new GGTCostCalculator(new HadoopCostSheet(mapping2, settings))));
-//
-//		grouper.group(plan.getPartitions());
-//
-//		System.exit(0);
+		long start = System.nanoTime();
+		FileMappingExtractor fme = new FileMappingExtractor(false);
+		RelationFileMapping mapping2 = fme.extractFileMapping(plan.getFileManager());
+		Grouper grouper = new Grouper(new KeyGrouper(new GGTCostCalculator(new HadoopCostSheet(mapping2, settings))));
+
+		grouper.group(plan.getPartitions().getPartition(0));
+
+		System.out.println((System.nanoTime() - start)/(1000000000.0D));
+		System.exit(0);
 		// ---
 
 

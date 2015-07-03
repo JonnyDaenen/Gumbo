@@ -4,7 +4,6 @@ import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.calculations.CalculationUnitException;
 import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.engine.general.grouper.policies.GroupingPolicy;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
