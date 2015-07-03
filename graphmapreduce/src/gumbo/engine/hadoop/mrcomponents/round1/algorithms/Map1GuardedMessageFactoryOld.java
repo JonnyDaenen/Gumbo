@@ -19,9 +19,9 @@ import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Mapper;
 
 
-public class Map1GuardedMessageFactory implements Map1GuardedMessageFactoryInterface {
+public class Map1GuardedMessageFactoryOld implements Map1GuardedMessageFactoryInterface {
 
-	private static final Log LOG = LogFactory.getLog(Map1GuardedMessageFactory.class);
+	private static final Log LOG = LogFactory.getLog(Map1GuardedMessageFactoryOld.class);
 
 	private Text keyText;
 	private Text valueText;
@@ -37,20 +37,23 @@ public class Map1GuardedMessageFactory implements Map1GuardedMessageFactoryInter
 
 	private Mapper<LongWritable, Text, Text, Text>.Context context;
 
+	// components
+	private StringBuilder keyBuilder;
+	private StringBuilder valueBuilder;
 
 	// data
 	Tuple t;
 	String tKey;
-	byte [] proofBytes;
+	String proofBytes;
 
-	private byte[] separatorBytes;
-
-	public Map1GuardedMessageFactory(Mapper<LongWritable, Text, Text, Text>.Context context, AbstractExecutorSettings settings, ExpressionSetOperations eso) {
+	public Map1GuardedMessageFactoryOld(Mapper<LongWritable, Text, Text, Text>.Context context, AbstractExecutorSettings settings, ExpressionSetOperations eso) {
 		keyText = new Text();
 		valueText = new Text();
 
 		// ---
 		this.context = context;
+		keyBuilder = new StringBuilder(32);
+		valueBuilder = new StringBuilder(128);
 
 		// ---
 		round1FiniteMemoryOptimizationOn = settings.getBooleanProperty(HadoopExecutorSettings.round1FiniteMemoryOptimizationOn);
@@ -63,15 +66,14 @@ public class Map1GuardedMessageFactory implements Map1GuardedMessageFactoryInter
 		ASSERTBYTES = context.getCounter(GumboMap1Counter.ASSERT_BYTES);
 
 
-		proofBytes = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL).getBytes();
-		separatorBytes = ":".getBytes();
+		proofBytes = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL);
 
 
 		// ---
 
 		// prepare the value with the proof symbol
 		if (guardedIdOptimizationOn)
-			valueText.set(settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL));
+			valueBuilder.append(proofBytes);
 
 		sampleCounter = false;
 	}
@@ -91,12 +93,12 @@ public class Map1GuardedMessageFactory implements Map1GuardedMessageFactoryInter
 	public void loadGuardedValue(Tuple t) {
 
 		this.t = t;
-		
-		keyText.set(t.generateString(mapOutputGroupingOptimizationOn));
+		keyBuilder.setLength(0);
+		keyBuilder.append(t.generateString(mapOutputGroupingOptimizationOn));
 
 		// add sort indication to key if necessary
 		if (round1FiniteMemoryOptimizationOn) {
-			keyText.append(proofBytes, 0, proofBytes.length);
+			keyBuilder.append(proofBytes);
 		} 
 
 		if (sampleCounter) {
@@ -115,12 +117,13 @@ public class Map1GuardedMessageFactory implements Map1GuardedMessageFactoryInter
 	public void sendAssert() throws MessageFailedException {
 
 		if (!guardedIdOptimizationOn) {
-			valueText.set(t.toString());
+			valueBuilder.setLength(0);
+			valueBuilder.append(t.toString());
 		}
 
 		// update counters before sending the message
 		ASSERT.increment(1);
-		ASSERTBYTES.increment(keyText.getLength()+valueText.getLength());
+		ASSERTBYTES.increment(keyBuilder.length()+valueBuilder.length());
 
 		sendMessage();
 
@@ -131,54 +134,57 @@ public class Map1GuardedMessageFactory implements Map1GuardedMessageFactoryInter
 
 
 	protected void sendMessage() throws MessageFailedException {
+		sendMessage(keyBuilder.toString().getBytes(),valueBuilder.toString().getBytes());
+	}
+
+
+	protected void sendMessage(byte[] key, byte[] value) throws MessageFailedException {
 		try {
+			// OPTIMIZE is it better to work directly on the Text objects?
+			keyText.clear();
+			valueText.clear();
+			keyText.append(key, 0, key.length);
+			valueText.append(value, 0, value.length);
 
 			context.write(keyText, valueText);
+//			LOG.info("ASSERT: " + keyText + " : " + valueText );
 
-//			LOG.info("<" + keyText.toString() + " : " + valueText.toString() + ">");
 
 			if (sampleCounter) {
 				context.getCounter(CounterMeasures.OUT_TUPLES).increment(1);
-				context.getCounter(CounterMeasures.OUT_BYTES).increment(keyText.getLength() + valueText.getLength());
-				context.getCounter(CounterMeasures.OUT_KEY_BYTES).increment(keyText.getLength());
-				context.getCounter(CounterMeasures.OUT_VALUE_BYTES).increment(valueText.getLength());
+				context.getCounter(CounterMeasures.OUT_BYTES).increment(key.length + value.length);
+				context.getCounter(CounterMeasures.OUT_KEY_BYTES).increment(key.length);
+				context.getCounter(CounterMeasures.OUT_VALUE_BYTES).increment(value.length);
 			}
 
-			keyText.clear();
-			valueText.clear();
 
-
-
+			//System.out.println("<" +keyText.toString()+ " : " + valueText.toString() + ">");
 		} catch(Exception e) {
 			throw new MessageFailedException(e);
 		}
 	}
-
-
 
 	/* (non-Javadoc)
 	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactoryInterface#sendAssert(java.util.Set)
 	 */
 	@Override
 	public void sendAssert(Set<Integer> ids) throws MessageFailedException {
-
+		valueBuilder.setLength(0);
 		if (!guardedIdOptimizationOn) {
-			valueText.set(t.toString());
+			valueBuilder.append(t.toString());
 		} else {
-			valueText.set(proofBytes,0,proofBytes.length);
+			valueBuilder.append(proofBytes);
 		}
 
 		if (mapOutputGroupingOptimizationOn)
 			for(int id : ids) {
-				valueText.append(separatorBytes, 0, separatorBytes.length);
-				String repr = "" + id;
-				byte [] reprbytes = repr.getBytes();
-				valueText.append(reprbytes,0,reprbytes.length);
+				valueBuilder.append(":");
+				valueBuilder.append(id);
 			}
 
 		// update counters before sending the message
 		ASSERT.increment(1);
-		ASSERTBYTES.increment(keyText.getLength()+valueText.getLength());
+		ASSERTBYTES.increment(keyBuilder.length()+valueBuilder.length());
 
 		sendMessage();
 
