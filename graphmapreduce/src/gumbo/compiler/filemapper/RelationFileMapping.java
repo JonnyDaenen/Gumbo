@@ -51,7 +51,7 @@ public class RelationFileMapping {
 		rm.addPath(new RelationSchema("S",3), new Path("data/jonny3"));
 		rm.setFormat(new RelationSchema("S",3), InputFormat.CSV);
 
-//		Path cp = new Path("data/jonny1");
+		//		Path cp = new Path("data/jonny1");
 
 
 		System.out.println(rm);
@@ -67,9 +67,12 @@ public class RelationFileMapping {
 	HashMap<RelationSchema, Set<Path>> mapping;
 	HashMap<RelationSchema, InputFormat> format;
 
+	HashMap<Path,Long> sizeCache;
+
 	public RelationFileMapping() {
 		mapping = new HashMap<>();
 		format = new HashMap<>();
+		sizeCache = new HashMap<>();
 	}
 
 	/**
@@ -160,7 +163,7 @@ public class RelationFileMapping {
 		}
 		return result;
 	}
-	
+
 
 
 	/**
@@ -180,8 +183,8 @@ public class RelationFileMapping {
 		paths.add(p);
 
 	}
-	
-	
+
+
 	/**
 	 * <b>Warning:</b> changes all paths of specified relation to the given type!
 	 * 
@@ -240,7 +243,7 @@ public class RelationFileMapping {
 	public Iterable<RelationSchema> getSchemas() {
 		return mapping.keySet();
 	}
-	
+
 	/**
 	 * Returns the input format of all the paths of a relation schema.
 	 * 
@@ -347,20 +350,27 @@ public class RelationFileMapping {
 
 
 	/**
-	 * Calculates the number of bytes that are input to this 
-	 * @return
+	 * Calculates the bytesize of a given path. 
+	 * @return the size in bytes of the given path, 0 if it does not exist
 	 */
-	public static long getInputSize(Path path) {
+	public long getInputSize(Path path) {
 
 		long length = 0;
 
 		try {
 
-			Configuration config = new Configuration();
-			FileSystem hdfs = path.getFileSystem(config);
-			ContentSummary cSummary = hdfs.getContentSummary(path);
-			length = cSummary.getLength();
+			Long size = sizeCache.get(path);
 
+			if (size == null) {
+				Configuration config = new Configuration();
+				FileSystem hdfs = path.getFileSystem(config);
+				ContentSummary cSummary = hdfs.getContentSummary(path);
+				length = cSummary.getLength();
+				sizeCache.put(path, length);
+			}
+			else {
+				length = size;
+			}
 		} catch (IOException e) {
 			LOG.error("Cannot determine input size of " + path, e);
 		}
@@ -423,15 +433,15 @@ public class RelationFileMapping {
 				// maybe there is a better way...
 				FileStatus[] files = fs.globStatus(p); 
 				for(FileStatus file: files) {
-//					LOG.error("processing path: " + file.getPath());
+					//					LOG.error("processing path: " + file.getPath());
 					if (!file.isDirectory()) {
-//						LOG.error("counting path: " + file.getPath());
+						//						LOG.error("counting path: " + file.getPath());
 						numTuples += tupleEstimator.estimateNumTuples(file.getPath());
 					} else {
 						FileStatus[] files2 = fs.listStatus(file.getPath());
 						for(FileStatus file2: files2) {
 							if (!file2.isDirectory()) {
-//								LOG.error("counting subpath: " + file2.getPath());
+								//								LOG.error("counting subpath: " + file2.getPath());
 								numTuples += tupleEstimator.estimateNumTuples(file2.getPath());
 							}
 
