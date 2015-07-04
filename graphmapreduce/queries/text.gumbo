@@ -7,6 +7,8 @@ Output -> output/bigtest
 R,2 <- /Users/jonny/tmp/R, CSV
 S,1 <- /Users/jonny/tmp/S, CSV
 T,1 <- /Users/jonny/tmp/S, CSV
+U,1 <- /Users/jonny/tmp/S, CSV
+V,1 <- /Users/jonny/tmp/S, CSV
 
 // query
 #Out1(x)&R(x,y)&S(y)T(y);

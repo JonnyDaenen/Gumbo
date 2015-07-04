@@ -171,7 +171,7 @@ public class Map1GuardedMessageFactory implements Map1GuardedMessageFactoryInter
 		if (mapOutputGroupingOptimizationOn)
 			for(int id : ids) {
 				valueText.append(separatorBytes, 0, separatorBytes.length);
-				String repr = "" + id;
+				String repr = Integer.toString(id);
 				byte [] reprbytes = repr.getBytes();
 				valueText.append(reprbytes,0,reprbytes.length);
 			}

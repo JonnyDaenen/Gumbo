@@ -84,12 +84,15 @@ public class RelationReporter {
 		RelationTupleSampleContainer rtsc = new RelationTupleSampleContainer(rsc, split, mapping);
 
 
-
 		RelationReport rr1 = runSample(relation, group, eso, guard, rtsc.getSmallTuples(relation),rtsc.getSmallSize(relation));
 		RelationReport rr2 = runSample(relation, group, eso, guard, rtsc.getBigTuples(relation),rtsc.getBigSize(relation));
 
-		// TODO make extrapolation optional.
 		extrapolate(rr1,rr2,rr);
+		
+//		System.out.println(rr1);
+//		System.out.println(rr2);
+//		System.out.println(rr);
+//		System.out.println("---");
 
 		return rr;
 	}
@@ -110,7 +113,6 @@ public class RelationReporter {
 			MapAlgorithm algo;
 
 			FakeMapper fm = new FakeMapper();
-			Text t = new Text();
 
 			if (guard) { // TODO make eso predicate
 				Map1GuardMessageFactoryInterface fact = new Map1GuardMessageFactory(fm.context, settings, eso);

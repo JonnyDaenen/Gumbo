@@ -102,7 +102,7 @@ public class RelationTupleSampleContainer {
 						smallset.get(rs).add(tuple);
 					} else {
 						bigbytes += bytesread;
-						smallset.get(rs).add(tuple);
+						bigset.get(rs).add(tuple);
 					}
 				}
 			} catch (IOException e) {

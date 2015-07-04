@@ -139,7 +139,7 @@ public class HadoopCostSheet implements CostSheet {
 	@Override
 	public int getNumReducers() {
 		// TODO use setting for this
-		return (int)Math.max(1,Math.ceil(getTotalIntermediateBytes() / (128 * 1024 * 1024))); // 128MB TODO 1 GB?
+		return (int)Math.max(1,Math.ceil(getTotalIntermediateBytes() / (1024 * 1024 * 1024))); // 128MB TODO 1 GB?
 	}
 
 	@Override

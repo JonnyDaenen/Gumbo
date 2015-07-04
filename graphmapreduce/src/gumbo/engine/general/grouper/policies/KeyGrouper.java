@@ -101,8 +101,6 @@ public class KeyGrouper implements GroupingPolicy {
 				newGroup.addAll(group1);
 				newGroup.addAll(group2);
 
-				double cost = costCalculator.calculateCost(newGroup);
-				newGroup.setCost(cost);
 
 				calculateSavings(costTable, group1, group2, newGroup);
 
@@ -112,9 +110,12 @@ public class KeyGrouper implements GroupingPolicy {
 	}
 
 	private double calculateSavings(Map<Pair<CalculationGroup, CalculationGroup>, Double> costTable, CalculationGroup group1, CalculationGroup group2, CalculationGroup newGroup) {
+		
+		double cost3 = costCalculator.calculateCost(newGroup);
+		newGroup.setCost(cost3);
+		
 		double cost1 = group1.getCost();
 		double cost2 = group2.getCost();
-		double cost3 = newGroup.getCost();
 		double savings = cost1 + cost2 - cost3;
 
 		costTable.put(new Pair<CalculationGroup,CalculationGroup>(group1,group2), savings);
@@ -158,9 +159,6 @@ public class KeyGrouper implements GroupingPolicy {
 			CalculationGroup mergedGroup = new CalculationGroup();
 			mergedGroup.addAll(group);
 			mergedGroup.addAll(newGroup);
-
-			double cost = costCalculator.calculateCost(mergedGroup);
-			mergedGroup.setCost(cost);
 
 			calculateSavings(costTable, newGroup,group,mergedGroup);
 

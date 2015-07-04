@@ -39,11 +39,13 @@ public class GGTCostCalculator implements CostCalculator{
 			intermediate += cs.getRelationIntermediateBytes(guardSchema);
 		}
 
+
 		// intermediate output tuples for guarded
 		for (GFAtomicExpression guarded : guardeds) {
 			RelationSchema guardedSchema = guarded.getRelationSchema();
 			intermediate += cs.getRelationIntermediateBytes(guardedSchema);
 		}
+		
 
 		return determineMapCost(guards, guardeds, intermediate) + determineReduceCost(guards, guardeds, intermediate);
 	}
@@ -53,6 +55,7 @@ public class GGTCostCalculator implements CostCalculator{
 		
 		double reduceCost = 0;
 		long numReducers = cs.getNumReducers();
+//		System.out.println("NUMR" + numReducers);
 		double rwCost = cs.getLocalReadCost() + cs.getLocalWriteCost();
 
 		// shuffle (transfer)
@@ -67,8 +70,9 @@ public class GGTCostCalculator implements CostCalculator{
 
 		// for a given order and pieces, calculate the number of rounds
 
-		long levelsR = (long) (Math.ceil(Math.log10(piecesR) / Math.log10(mergeOrderR)) - 1);
+		long levelsR = (long) Math.max(0, (Math.ceil(Math.log10(piecesR) / Math.log10(mergeOrderR)))-1);
 		
+//		System.out.println("REDLevels: " + levelsR);
 		
 		// each round, the entire intermediate data is read/written to/from disk
 		// (spread across the cluster of course)
@@ -78,7 +82,8 @@ public class GGTCostCalculator implements CostCalculator{
 		// DFS write
 		reduceCost += intermediate * cs.getDFSWriteCost();
 		
-
+//		System.out.println("RED: " + reduceCost);
+		
 		return reduceCost;
 	}
 
@@ -98,11 +103,12 @@ public class GGTCostCalculator implements CostCalculator{
 			mapCost += cs.getLocalReadCost() * cs.getRelationInputBytes(guardedSchema);
 		}
 
-
+//		System.out.println("MAP: " + mapCost);
 
 
 		double rwCost = cs.getLocalReadCost() + cs.getLocalWriteCost();
 		int numMappers = cs.getNumMappers();
+//		System.out.println("NUMM" + numMappers);
 		int mergeOrderM = cs.getMapMergeOrder();
 		long sortBufferM = cs.getMapSortBuffer();
 
@@ -111,12 +117,14 @@ public class GGTCostCalculator implements CostCalculator{
 
 		// for a given order and pieces, calculate the number of rounds
 
-		long levelsM = (long) Math.ceil(Math.log10(piecesM) / Math.log10(mergeOrderM));
+		long levelsM = (long) Math.max(1, Math.ceil(Math.log10(piecesM) / Math.log10(mergeOrderM)));
 
+//		System.out.println("MAPLevels: " + levelsM);
 		// each round, the entire intermediate data is read/written to/from disk
 		// (spread across the cluster of course)
 		mapCost +=  levelsM * intermediate * rwCost;
 
+//		System.out.println("MAP final: " + mapCost);
 		
 		return mapCost;
 	}
