@@ -67,16 +67,18 @@ public class GGTCostCalculator implements CostCalculator{
 		int mergeOrderR = cs.getReduceMergeOrder();
 		long sortBufferR = cs.getReduceSortBuffer();
 		long piecesR = (long) Math.max(1, Math.ceil((intermediate/numReducers)/sortBufferR));
+		double sortCost = sortBufferR * (Math.log10(sortBufferR)/ Math.log10(2));
 
 		// for a given order and pieces, calculate the number of rounds
 
-		long levelsR = (long) Math.max(0, (Math.ceil(Math.log10(piecesR) / Math.log10(mergeOrderR)))-1);
+		long levelsR = (long) Math.max(0, (Math.ceil(Math.log10(piecesR) / Math.log10(mergeOrderR)))-1) / 10;
 		
 //		System.out.println("REDLevels: " + levelsR);
 		
 		// each round, the entire intermediate data is read/written to/from disk
 		// (spread across the cluster of course)
 		reduceCost +=  levelsR * intermediate * rwCost;
+		reduceCost += numReducers * piecesR  * sortCost; // NEW!
 		// final merge read
 		reduceCost += intermediate * cs.getLocalReadCost();
 		// DFS write
@@ -115,6 +117,9 @@ public class GGTCostCalculator implements CostCalculator{
 		// calculate number of pieces one mapper has to process
 		long piecesM = Math.max(1, Math.round((intermediate/numMappers)/sortBufferM));
 
+		double sortCost = sortBufferM * (Math.log10(sortBufferM)/ Math.log10(2)) / 10;
+
+		
 		// for a given order and pieces, calculate the number of rounds
 
 		long levelsM = (long) Math.max(1, Math.ceil(Math.log10(piecesM) / Math.log10(mergeOrderM)));
@@ -123,7 +128,9 @@ public class GGTCostCalculator implements CostCalculator{
 		// each round, the entire intermediate data is read/written to/from disk
 		// (spread across the cluster of course)
 		mapCost +=  levelsM * intermediate * rwCost;
+		mapCost += numMappers * piecesM  * sortCost; // NEW!
 
+		
 //		System.out.println("MAP final: " + mapCost);
 		
 		return mapCost;

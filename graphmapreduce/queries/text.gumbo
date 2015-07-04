@@ -11,4 +11,4 @@ U,1 <- /Users/jonny/tmp/S, CSV
 V,1 <- /Users/jonny/tmp/S, CSV
 
 // query
-#Out1(x)&R(x,y)&S(y)T(y);
+#Out1(x)&R(x,y)&S(y)&S(x)T(y);
