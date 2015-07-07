@@ -90,13 +90,13 @@ public class HadoopCostSheet implements CostSheet {
 
 	@Override
 	public double getLocalReadCost() {
-		return 0.004;
+		return 0.001;
 //		return 1;
 	}
 
 	@Override
 	public double getLocalWriteCost() {
-		return 0.004;
+		return 0.001;
 //		return 1;
 	}
 
