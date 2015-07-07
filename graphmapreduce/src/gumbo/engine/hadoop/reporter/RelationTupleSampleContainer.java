@@ -49,6 +49,7 @@ public class RelationTupleSampleContainer {
 	private void init(RelationSampleContainer rsc) {
 		
 		for (RelationSchema rs: rsc.getRelationSchemas()) {
+			System.out.println("Creating Samples for " + rs);
 			smallset.put(rs,new LinkedList<Tuple>());
 			bigset.put(rs,new LinkedList<Tuple>());
 			
@@ -124,6 +125,7 @@ public class RelationTupleSampleContainer {
 	}
 	
 	public long getSmallSize(RelationSchema rs) {
+		System.out.println("Small size for: " + rs);
 		return smallBytes.get(rs);
 	}
 	

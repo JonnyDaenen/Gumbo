@@ -120,19 +120,8 @@ public class Gumbo extends Configured implements Tool {
 
 
 		CalculationPartitioner partitioner;
-		switch (getConf().get(AbstractExecutorSettings.partitionClass,"")) {
-		case "optimal":
-			partitioner = new OptimalPartitioner();
-			break;
-		case "depth":
-			partitioner = new DepthPartitioner();
-			break;
-		case "height":
-			partitioner = new HeightPartitioner();
-			break;
-		default:
-			partitioner = new UnitPartitioner();
-		}
+		String partClassName = settings.getProperty(AbstractExecutorSettings.partitionClass);
+		partitioner = (CalculationPartitioner) this.getClass().getClassLoader().loadClass(partClassName).newInstance();
 
 		GFCompiler compiler = new GFCompiler(partitioner);
 		GumboPlan plan = compiler.createPlan(query);
