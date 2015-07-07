@@ -38,7 +38,7 @@ public class GGTCostCalculator implements CostCalculator{
 
 		double totalCost =  determineMapCost(schemas, intermediate) + determineReduceCost(intermediate);
 		
-		System.out.println("Total cost:" + totalCost);
+//		System.out.println("Total cost:" + totalCost);
 		return totalCost;
 	}
 
@@ -47,7 +47,7 @@ public class GGTCostCalculator implements CostCalculator{
 		
 		double reduceCost = 0;
 		long numReducers = cs.getNumReducers();
-		System.out.println("NUMR" + numReducers);
+//		System.out.println("NUMR" + numReducers);
 		double rwCost = cs.getLocalReadCost() + cs.getLocalWriteCost();
 
 		// shuffle (transfer)
@@ -59,13 +59,13 @@ public class GGTCostCalculator implements CostCalculator{
 		int mergeOrderR = cs.getReduceMergeOrder();
 		long sortBufferR = cs.getReduceSortBuffer();
 		long piecesR = (long) Math.max(1, Math.ceil(((double)intermediate/numReducers)/sortBufferR));
-		System.out.println("REDPieces: " + piecesR);
+//		System.out.println("REDPieces: " + piecesR);
 		
 		// for a given order and pieces, calculate the number of rounds
 
 		long levelsR = (long) Math.max(0, (Math.ceil(Math.log10(piecesR) / Math.log10(mergeOrderR)))-1);
 		
-		System.out.println("REDLevels: " + levelsR);
+//		System.out.println("REDLevels: " + levelsR);
 		
 		// each round, the entire intermediate data is read/written to/from disk
 		// (spread across the cluster of course)
@@ -76,7 +76,7 @@ public class GGTCostCalculator implements CostCalculator{
 		// DFS write
 //		reduceCost += cs.getNumOutputTuples() * cs.getDFSWriteCost();
 		
-		System.out.println("RED final: " + reduceCost);
+//		System.out.println("RED final: " + reduceCost);
 		
 		return reduceCost;
 	}
@@ -92,7 +92,7 @@ public class GGTCostCalculator implements CostCalculator{
 		}
 
 		
-		System.out.println("MAP final: " + mapCost);
+//		System.out.println("MAP final: " + mapCost);
 		
 		return mapCost;
 	}
@@ -102,24 +102,24 @@ public class GGTCostCalculator implements CostCalculator{
 
 		long intermediate = cs.getRelationIntermediateBytes(rs);
 		
-		System.out.println("Calculation map output for " + rs);
+//		System.out.println("Calculation map output for " + rs);
 		
 		double rwCost = cs.getLocalReadCost() + cs.getLocalWriteCost();
 		
 		int numMappers = cs.getNumMappers(rs);
-		System.out.println("NUMM" + numMappers);
+//		System.out.println("NUMM" + numMappers);
 		int mergeOrderM = cs.getMapMergeOrder();
 		long sortBufferM = cs.getMapSortBuffer();
 
 		// calculate number of pieces one mapper has to process
 		long piecesM = (long)Math.max(1, Math.ceil(((double)intermediate/numMappers)/sortBufferM));
-		System.out.println("MAPPieces: " + piecesM);
+//		System.out.println("MAPPieces: " + piecesM);
 		
 		// for a given order and pieces, calculate the number of rounds
 
 		long levelsM = (long) Math.max(1, Math.ceil(Math.log10(piecesM) / Math.log10(mergeOrderM)));
 
-		System.out.println("MAPLevels: " + levelsM);
+//		System.out.println("MAPLevels: " + levelsM);
 		
 		// each round, the entire intermediate data is read/written to/from disk
 		// (spread across the cluster of course)
