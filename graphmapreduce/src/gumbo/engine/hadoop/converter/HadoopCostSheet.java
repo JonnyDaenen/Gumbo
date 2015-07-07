@@ -33,8 +33,8 @@ public class HadoopCostSheet implements CostSheet {
 	private static final Log LOG = LogFactory.getLog(HadoopCostSheet.class);
 
 
-	private Map<RelationSchema, RelationReport> reports;
-	private CalculationGroup group;
+	protected Map<RelationSchema, RelationReport> reports;
+	protected CalculationGroup group;
 	private RelationSampler sampler;
 	private RelationFileMapping mapping;
 	private AbstractExecutorSettings settings;
@@ -90,27 +90,37 @@ public class HadoopCostSheet implements CostSheet {
 
 	@Override
 	public double getLocalReadCost() {
-		return 1;
+		return 0.005;
+//		return 1;
 	}
 
 	@Override
 	public double getLocalWriteCost() {
-		return 1;
+		return 0.005;
+//		return 1;
 	}
 
 	@Override
 	public double getDFSReadCost() {
-		return 2;
+		return 0.059;
+//		return 2;
 	}
 
 	@Override
 	public double getDFSWriteCost() {
-		return 3; // TODO take in replication factor into account
+		return 0.334; // TODO take in replication factor into account
+//		return 3; // TODO take in replication factor into account
 	}
 
 	@Override
 	public double getTransferCost() {
-		return 2;
+		return 0.005;
+//		return 2;
+	}
+	
+	@Override
+	public double getSortCost() {
+		return 0.052;
 	}
 
 
@@ -121,7 +131,12 @@ public class HadoopCostSheet implements CostSheet {
 		// per input file
 		// size / hdfs block size
 
-		return (int)Math.max(1,Math.ceil(getTotalInputBytes() / (128 * 1024 * 1024))); // 128MB
+		return (int)Math.max(1,Math.ceil(getTotalInputBytes() / (double)(128 * 1024 * 1024))); // 128MB
+	}
+	
+	@Override
+	public int getNumMappers(RelationSchema rs) {
+		return (int)Math.max(1,Math.ceil(getRelationInputBytes(rs) / (double)(128 * 1024 * 1024))); // 128MB
 	}
 
 	@Override
@@ -139,7 +154,7 @@ public class HadoopCostSheet implements CostSheet {
 	@Override
 	public int getNumReducers() {
 		// TODO use setting for this
-		return (int)Math.max(1,Math.ceil(getTotalIntermediateBytes() / (1024 * 1024 * 1024))); // 128MB TODO 1 GB?
+		return (int)Math.max(1,Math.ceil(getTotalIntermediateBytes() / ((double)1024 * 1024 * 1024))); // 128MB TODO 1 GB?
 	}
 
 	@Override
@@ -185,5 +200,7 @@ public class HadoopCostSheet implements CostSheet {
 		}
 
 	}
+
+	
 
 }

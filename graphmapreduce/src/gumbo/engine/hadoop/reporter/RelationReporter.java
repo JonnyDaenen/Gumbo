@@ -91,8 +91,8 @@ public class RelationReporter {
 		
 //		System.out.println(rr1);
 //		System.out.println(rr2);
-//		System.out.println(rr);
-//		System.out.println("---");
+		System.out.println(rr);
+		System.out.println("---");
 
 		return rr;
 	}

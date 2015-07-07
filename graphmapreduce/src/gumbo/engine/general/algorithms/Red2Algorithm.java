@@ -74,17 +74,16 @@ public class Red2Algorithm implements ReduceAlgorithm {
 	 * @return false if next values for this key may be skipped
 	 * @throws AlgorithmInterruptedException
 	 */
-	public boolean processTuple(String split) throws AlgorithmInterruptedException {
+	public boolean processTuple(String val) throws AlgorithmInterruptedException {
 
 
 
 		try {
-			String value = split;
 
 			// record guard tuple if found
-			if (lookingForGuard && msgFactory.isTuple(value)) {
+			if (lookingForGuard && msgFactory.isTuple(val)) {
 				if (lookingForGuard) {
-					guardTuple = msgFactory.getTuple(value);
+					guardTuple = msgFactory.getTuple(val);
 					lookingForGuard = false;
 				} else
 					return true;
@@ -92,22 +91,31 @@ public class Red2Algorithm implements ReduceAlgorithm {
 			// otherwise we keep track of true atoms
 			else {
 				// extract atom reference and set it to true
-				String atomRef = value;
-				BVariable atom;
+
+
+
+
 
 				try {
-					if (atomIdOn) {
-						int id = Integer.parseInt(atomRef);
-						GFAtomicExpression atomExp = eso.getAtom(id); 
-						atom = mapGFtoB.getVariableIfExists(atomExp);
-					} else {
 
-						
-						Tuple atomTuple = new Tuple(atomRef);
-						GFAtomicExpression dummy = new GFAtomicExpression(atomTuple.getName(), atomTuple.getAllData());
-						atom = mapGFtoB.getVariableIfExists(dummy);
+					String [] values = val.split(":");
+
+					for (String value : values) {
+						String atomRef = value;
+						BVariable atom;
+						if (atomIdOn) {
+							int id = Integer.parseInt(atomRef);
+							GFAtomicExpression atomExp = eso.getAtom(id); 
+							atom = mapGFtoB.getVariableIfExists(atomExp);
+						} else {
+
+
+							Tuple atomTuple = new Tuple(atomRef);
+							GFAtomicExpression dummy = new GFAtomicExpression(atomTuple.getName(), atomTuple.getAllData());
+							atom = mapGFtoB.getVariableIfExists(dummy);
+						}
+						booleanContext.setValue(atom, true);
 					}
-					booleanContext.setValue(atom, true);
 				} catch (AtomNotFoundException e) {
 					// ignore bad values
 					LOG.warn(e);

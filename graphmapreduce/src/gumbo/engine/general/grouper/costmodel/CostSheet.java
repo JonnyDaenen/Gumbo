@@ -23,12 +23,16 @@ public interface CostSheet {
 	double getTransferCost();
 	
 	int getNumMappers();
+	int getNumMappers(RelationSchema rs);
 	int getMapMergeOrder();
 	long getMapSortBuffer();
 	
 	int getNumReducers();
 	int getReduceMergeOrder();
 	long getReduceSortBuffer();
+
+	double getSortCost();
+
 	
 
 

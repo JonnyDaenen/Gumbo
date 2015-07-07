@@ -19,6 +19,7 @@ import gumbo.engine.general.utils.FileMappingExtractor;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.hadoop.converter.HadoopCostSheet;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.experiments.grouping.GroupingTest1;
 import gumbo.input.GumboFileParser;
 import gumbo.input.GumboQuery;
 
@@ -143,7 +144,7 @@ public class Gumbo extends Configured implements Tool {
 		FileMappingExtractor fme = new FileMappingExtractor(false);
 		RelationFileMapping mapping2 = fme.extractFileMapping(plan.getFileManager());
 		Grouper grouper = new Grouper(new KeyGrouper(new GGTCostCalculator(new HadoopCostSheet(mapping2, settings))));
-
+//		Grouper grouper = new Grouper(new KeyGrouper(new GGTCostCalculator(new GroupingTest1(mapping2,settings))));
 		grouper.group(plan.getPartitions().getPartition(0));
 
 		System.out.println((System.nanoTime() - start)/(1000000000.0D));

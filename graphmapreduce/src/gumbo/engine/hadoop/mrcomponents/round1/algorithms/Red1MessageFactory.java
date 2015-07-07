@@ -46,9 +46,13 @@ public class Red1MessageFactory implements Red1MessageFactoryInterface {
 	String filename;
 	private Set<Integer> assertKeys;
 	private Set<Integer> requestKeys;
-	private boolean outGroupingOn;
+	private boolean outMapGroupingOn;
+	private boolean outRedGroupingOn;
 	private boolean reqAtomIdOn;
 	private ExpressionSetOperations eso;
+
+	StringBuilder sb;
+
 
 	public Red1MessageFactory(Reducer<Text, Text, Text, Text>.Context context, HadoopExecutorSettings settings, ExpressionSetOperations eso, String filename) {
 		keyText = new Text();
@@ -64,7 +68,8 @@ public class Red1MessageFactory implements Red1MessageFactoryInterface {
 
 		proofBytes = settings.getProperty(HadoopExecutorSettings.PROOF_SYMBOL);
 
-		outGroupingOn = settings.getBooleanProperty(AbstractExecutorSettings.mapOutputGroupingOptimizationOn);
+		outMapGroupingOn = settings.getBooleanProperty(AbstractExecutorSettings.mapOutputGroupingOptimizationOn);
+		outRedGroupingOn = settings.getBooleanProperty(AbstractExecutorSettings.reduceOutputGroupingOptimizationOn);
 		reqAtomIdOn = settings.getBooleanProperty(AbstractExecutorSettings.requestAtomIdOptimizationOn);
 
 
@@ -76,7 +81,7 @@ public class Red1MessageFactory implements Red1MessageFactoryInterface {
 		requestKeys = new HashSet<>(10);
 
 
-
+		sb = new StringBuilder(40);
 	}
 
 	/* (non-Javadoc)
@@ -90,7 +95,7 @@ public class Red1MessageFactory implements Red1MessageFactoryInterface {
 		keyText.set(address);
 		valueText.set(reply);
 
-		if (outGroupingOn) {
+		if (outMapGroupingOn) {
 			requestKeys.clear();
 			String [] parts = reply.split(":");
 			// start at second index to skip Assert constant/value
@@ -120,39 +125,66 @@ public class Red1MessageFactory implements Red1MessageFactoryInterface {
 	@Override
 	public void sendReplies() throws MessageFailedException {
 
-		// only send out replies that have an answer
+		try {
+			// only send out replies that have an answer
 
-		if (outGroupingOn) { 
-//			LOG.info(keyText);
-//			LOG.info("Assert ids: " + assertKeys);
-//			LOG.info("Request ids: " + requestKeys);
-			requestKeys.retainAll(assertKeys);
+			if (outMapGroupingOn) { 
+				requestKeys.retainAll(assertKeys);
+				
+				if (requestKeys.size() == 0)
+					return;
 
-			for (int replyid : requestKeys) {
-				valueText.clear();
-				if (reqAtomIdOn) {
-					valueText.set(""+replyid);
+				if (outRedGroupingOn) {
+
+					sb.setLength(0);
+					
+					for (int replyid : requestKeys) {
+						sb.append(":");
+						if (reqAtomIdOn) {
+							sb.append(replyid);
+						} else {
+							sb.append(eso.getAtom(replyid).toString());
+						}
+					}
+					sb.deleteCharAt(0);
+					byte [] bytes = sb.toString().getBytes();
+					valueText.append(bytes, 0, bytes.length);
+
+					OUTB.increment(keyText.getLength()+valueText.getLength());
+					sendMessage();
+					
 				} else {
-					try {
-						valueText.set(eso.getAtom(replyid).toString());
-					} catch (GFOperationInitException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} 
+
+					for (int replyid : requestKeys) {
+						valueText.clear();
+
+						if (reqAtomIdOn) {
+							valueText.set(""+replyid);
+						} else {
+							valueText.set(eso.getAtom(replyid).toString());
+						}
+
+						OUTB.increment(keyText.getLength()+valueText.getLength());
+						sendMessage(); 
+
+					}
 				}
 
+
+
+				OUTR.increment(requestKeys.size());
+			} else {
+				//			LOG.info("Out: " + keyText + " : " + valueText);
+				OUTR.increment(1);
 				OUTB.increment(keyText.getLength()+valueText.getLength());
-				sendMessage(); // OPTIMIZE bundle all these values for round 2
 
+				sendMessage();
 			}
-			OUTR.increment(requestKeys.size());
-		} else {
-//			LOG.info("Out: " + keyText + " : " + valueText);
-			OUTR.increment(1);
-			OUTB.increment(keyText.getLength()+valueText.getLength());
 
-			sendMessage();
-		}
+		} catch (GFOperationInitException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 
 	}
 
@@ -160,7 +192,7 @@ public class Red1MessageFactory implements Red1MessageFactoryInterface {
 	protected void sendMessage() throws MessageFailedException{
 		try {
 
-//			LOG.info("Reply: " + keyText + " : " + valueText);
+			//			LOG.info("Reply: " + keyText + " : " + valueText);
 			mos.write(keyText, valueText, filename);
 		} catch(Exception e) {
 			throw new MessageFailedException(e);

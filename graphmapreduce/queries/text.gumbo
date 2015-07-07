@@ -5,10 +5,11 @@ Output -> output/bigtest
 
 // input
 R,2 <- /Users/jonny/tmp/R, CSV
-S,1 <- /Users/jonny/tmp/S, CSV
-T,1 <- /Users/jonny/tmp/S, CSV
+S,1 <- /Users/jonny/tmp/T, CSV
+T,1 <- /Users/jonny/tmp/T, CSV
 U,1 <- /Users/jonny/tmp/S, CSV
 V,1 <- /Users/jonny/tmp/S, CSV
 
 // query
-#Out1(x)&R(x,y)&S(y)&S(x)T(y);
+// #Out1(x)&R(x,y)&S(y)&T(y)&S(x)&T(x)&U(x)&V(x)&U(y)V(y);
+#Out1(x)&R(x,y)&S(y)&T(y)U(y);

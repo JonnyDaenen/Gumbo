@@ -36,7 +36,7 @@ public abstract class AbstractExecutorSettings {
 	public static final String guardReferenceOptimizationOn = "gumbo.engine.guardAddressOptimizationOn";
 //	public static final String guardAsGuardedReReadOptimizationOn = "gumbo.engine.guardAsGuardedReReadOptimizationOn"; // TODO this is currently implemented, but needs to become a toggle
 	public static final String mapOutputGroupingOptimizationOn = "gumbo.engine.mapOutputGroupingOptimizationOn";
-	  
+	public static final String reduceOutputGroupingOptimizationOn = "gumbo.engine.reduceOutputGroupingOptimizationOn";	  
 
 	// speed options
 	public static final String guardedCombinerOptimizationOn = "gumbo.engine.guardedCombinerOptimizationOn";
@@ -74,6 +74,7 @@ public abstract class AbstractExecutorSettings {
 		setBooleanProperty(round1FiniteMemoryOptimizationOn, false); 
 		setBooleanProperty(guardedCombinerOptimizationOn, false); 
 		setBooleanProperty(mapOutputGroupingOptimizationOn, false); 
+		setBooleanProperty(reduceOutputGroupingOptimizationOn, false); 
 	}
 	
 	public void turnOnOptimizations() {
@@ -84,6 +85,7 @@ public abstract class AbstractExecutorSettings {
 		setBooleanProperty(round1FiniteMemoryOptimizationOn, true);
 		setBooleanProperty(guardedCombinerOptimizationOn, true);
 		setBooleanProperty(mapOutputGroupingOptimizationOn, true); 
+		setBooleanProperty(reduceOutputGroupingOptimizationOn, true); 
 
 	}
 	
