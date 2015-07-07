@@ -85,6 +85,7 @@ public class Gumbo extends Configured implements Tool {
 		String filename = null;
 		boolean pickup = false;
 		boolean pickupname = false;
+		boolean groupOnly = false;
 		String jobname = null;
 
 		for (String arg : args) {
@@ -94,7 +95,9 @@ public class Gumbo extends Configured implements Tool {
 				filename = arg;
 				pickup = false;
 			}
-
+			else if (arg.equals("--grouponly")) {
+				groupOnly = true;
+			}
 			else if (arg.equals("-j")) {
 				pickupname = true;
 			} else if (pickupname) {
@@ -128,24 +131,24 @@ public class Gumbo extends Configured implements Tool {
 
 		System.out.println(plan);
 
-		// --- fresh
-		long start = System.nanoTime();
-		FileMappingExtractor fme = new FileMappingExtractor(false);
-		RelationFileMapping mapping2 = fme.extractFileMapping(plan.getFileManager());
-		Grouper grouper = new Grouper(new KeyGrouper(new GGTCostCalculator(new HadoopCostSheet(mapping2, settings))));
-//		Grouper grouper = new Grouper(new KeyGrouper(new GGTCostCalculator(new GroupingTest1(mapping2,settings))));
-		grouper.group(plan.getPartitions().getPartition(0));
 
-		System.out.println((System.nanoTime() - start)/(1000000000.0D));
-		System.exit(0);
-		// ---
+		if (groupOnly) {
+			long start = System.nanoTime();
+			FileMappingExtractor fme = new FileMappingExtractor(false);
+			RelationFileMapping mapping2 = fme.extractFileMapping(plan.getFileManager());
+			Grouper grouper = new Grouper(new KeyGrouper(new GGTCostCalculator(new HadoopCostSheet(mapping2, settings))));
+			//		Grouper grouper = new Grouper(new KeyGrouper(new GGTCostCalculator(new GroupingTest1(mapping2,settings))));
+			grouper.group(plan.getPartitions().getPartition(0));
 
+			System.out.println((System.nanoTime() - start)/(1000000000.0D));
+			System.exit(0);
+		} else {
 
-		HadoopEngine engine = new HadoopEngine();
-		engine.executePlan(plan,settings.getConf());
+			HadoopEngine engine = new HadoopEngine();
+			engine.executePlan(plan,settings.getConf());
 
-		System.out.println(engine.getCounters());
-
+			System.out.println(engine.getCounters());
+		}
 		return 0;
 	}
 
