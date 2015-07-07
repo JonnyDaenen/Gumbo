@@ -3,6 +3,7 @@ package gumbo.engine.general.grouper.policies;
 import gumbo.engine.general.grouper.costmodel.CostCalculator;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
+import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.io.Pair;
 
 import java.util.HashMap;
@@ -56,7 +57,7 @@ public class KeyGrouper implements GroupingPolicy {
 		initCostTable(groups);
 		logCostTable(groups);
 		boolean savingsPossible = hasSavings();
-		
+
 
 		// repeat until no positive savings
 		while (savingsPossible) {	
@@ -66,7 +67,7 @@ public class KeyGrouper implements GroupingPolicy {
 
 			// merge jobs with highest cost savings
 			updateCostTable(groups, indices.fst, indices.snd);
-			
+
 			// log
 			logCostTable(groups);
 			savingsPossible = hasSavings();
@@ -110,10 +111,10 @@ public class KeyGrouper implements GroupingPolicy {
 	}
 
 	private double calculateSavings(Map<Pair<CalculationGroup, CalculationGroup>, Double> costTable, CalculationGroup group1, CalculationGroup group2, CalculationGroup newGroup) {
-		
+
 		double cost3 = costCalculator.calculateCost(newGroup);
 		newGroup.setCost(cost3);
-		
+
 		double cost1 = group1.getCost();
 		double cost2 = group2.getCost();
 		double savings = cost1 + cost2 - cost3;
@@ -121,7 +122,7 @@ public class KeyGrouper implements GroupingPolicy {
 		costTable.put(new Pair<CalculationGroup,CalculationGroup>(group1,group2), savings);
 		// symmetry, for ease of removal later
 		costTable.put(new Pair<CalculationGroup,CalculationGroup>(group2,group1), savings);
-		
+
 		// cache group
 		// TODO remove when parent jobs are gone
 		merges.put(new Pair<>(group1, group2), newGroup);
@@ -173,21 +174,77 @@ public class KeyGrouper implements GroupingPolicy {
 
 	private void logCostTable(List<CalculationGroup> groups) {
 
+		String leftAlignFormatS = "| %-15s ";
+		String leftAlignFormat = "| %15.2f ";
+		String leftAlignFormatO = "|!%15.2f)";
 
 		String s = "";
+
+		// total
+		// header
+		printHeader(groups);
+		
 		for (int i = 0; i < groups.size(); i++) {
+			System.out.format(leftAlignFormatS, getGroupName(groups.get(i)));
 			for (int j = 0; j < groups.size(); j++){
 
 				Pair<CalculationGroup, CalculationGroup> cellid = new Pair<CalculationGroup,CalculationGroup>(groups.get(i),groups.get(j));
 				//				s += cellid.fst + "," + cellid.snd + ": ";
 				s += (costTable.get(cellid)) + "\t";
+
+				if (i == j)
+					System.out.format(leftAlignFormatO, groups.get(i).getCost());
+				else
+					System.out.format(leftAlignFormat, merges.get(cellid).getCost());
 			}
+			System.out.printf("%n");
 			s += System.lineSeparator();
 		}
+		System.out.printf("%n");
 
-		LOG.info("\n" + s);
+
+		// delta
+		printHeader(groups);
+		for (int i = 0; i < groups.size(); i++) {
+			System.out.format(leftAlignFormatS, getGroupName(groups.get(i)));
+			for (int j = 0; j < groups.size(); j++){
+
+				Pair<CalculationGroup, CalculationGroup> cellid = new Pair<CalculationGroup,CalculationGroup>(groups.get(i),groups.get(j));
+				//				s += cellid.fst + "," + cellid.snd + ": ";
+				s += (costTable.get(cellid)) + "\t";
+				if (i == j)
+					System.out.format(leftAlignFormatS, "-");
+				else
+					System.out.format(leftAlignFormat, costTable.get(cellid));
+			}
+			System.out.printf("%n");
+			s += System.lineSeparator();
+		}
+		System.out.printf("%n");
+
+		//		LOG.info("\n" + s);
 
 
+	}
+
+	private void printHeader(List<CalculationGroup> groups) {
+		String leftAlignFormatS = "| %-15s ";
+		String leftAlignFormat = "| %15.2f ";
+		String leftAlignFormatO = "|!%15.2f)";
+		System.out.format(leftAlignFormatS, "");
+		for (int i = 0; i < groups.size(); i++) 
+			System.out.format(leftAlignFormatS, getGroupName(groups.get(i)));
+		System.out.printf("%n");
+		
+	}
+
+	private String getGroupName(CalculationGroup calculationGroup) {
+		String name = "";
+		for (GuardedSemiJoinCalculation calc : calculationGroup.getAll()) {
+			name += calc.getGuarded();
+
+		}
+		return name;
 	}
 
 	private void logcostmatrix(List<CalculationGroup> groups, double[][] matrix) {
