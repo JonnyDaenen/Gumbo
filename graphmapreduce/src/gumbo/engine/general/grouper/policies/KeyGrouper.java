@@ -194,6 +194,8 @@ public class KeyGrouper implements GroupingPolicy {
 
 				if (i == j)
 					System.out.format(leftAlignFormatO, groups.get(i).getCost());
+				else if (i > j)
+					System.out.format(leftAlignFormatS, "-");
 				else
 					System.out.format(leftAlignFormat, merges.get(cellid).getCost());
 			}
@@ -213,6 +215,8 @@ public class KeyGrouper implements GroupingPolicy {
 				//				s += cellid.fst + "," + cellid.snd + ": ";
 				s += (costTable.get(cellid)) + "\t";
 				if (i == j)
+					System.out.format(leftAlignFormatS, "-");
+				else if (i > j)
 					System.out.format(leftAlignFormatS, "-");
 				else
 					System.out.format(leftAlignFormat, costTable.get(cellid));
