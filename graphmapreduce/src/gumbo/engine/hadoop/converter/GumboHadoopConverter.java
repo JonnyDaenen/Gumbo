@@ -9,12 +9,15 @@ import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.engine.general.grouper.Decomposer;
 import gumbo.engine.general.grouper.Grouper;
 import gumbo.engine.general.grouper.costmodel.CostCalculator;
+import gumbo.engine.general.grouper.costmodel.CostSheet;
 import gumbo.engine.general.grouper.costmodel.GGTCostCalculator;
 import gumbo.engine.general.grouper.policies.GroupingPolicy;
 import gumbo.engine.general.grouper.policies.KeyGrouper;
 import gumbo.engine.general.grouper.policies.NoneGrouper;
+import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.general.utils.FileMappingExtractor;
 import gumbo.engine.hadoop.mrcomponents.input.GuardTextInputFormat;
@@ -157,21 +160,29 @@ public class GumboHadoopConverter {
 		// TODO also filter out non-related relations
 		extractor.setIncludeOutputDirs(false); // TODO the grouper should filter out the non-existing files
 		RelationFileMapping mapping1 = extractor.extractFileMapping(fileManager);
-		Grouper grouper = getGrouper(mapping1);
+		HadoopCostSheet costSheet = new HadoopCostSheet(mapping1, settings);
+		Grouper grouper = getGrouper(mapping1,costSheet);
 
 		// apply grouping
 		extractor.setIncludeOutputDirs(true);
 		RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
 		List<CalculationUnitGroup> groups = grouper.group(cug);
+		Decomposer decomposer = new Decomposer();
 		for (CalculationUnitGroup group : groups) {
-			jobs.add(createRound1Job(group, mapping));
+
+			// estimate number of reducers 
+			// OPTIMIZE for key partitioner, this work has been done already
+			CalculationGroup decomposedGroup = decomposer.decompose(group);
+			costSheet.initialize(decomposedGroup);
+
+			jobs.add(createRound1Job(group, mapping,costSheet.getNumReducers()));
 		}
 
 		return jobs;
 	}
 
 
-	private ControlledJob createRound1Job(CalculationUnitGroup cug, RelationFileMapping mapping) throws ConversionException {
+	private ControlledJob createRound1Job(CalculationUnitGroup cug, RelationFileMapping mapping, int numRed) throws ConversionException {
 
 		try {
 
@@ -251,9 +262,12 @@ public class GumboHadoopConverter {
 
 			// determine reducer
 			hadoopJob.setReducerClass(GFReducer1Optimized.class); 
-			Round1ReduceJobEstimator redestimator = new Round1ReduceJobEstimator(settings); // TODO fix estimate
-			hadoopJob.setNumReduceTasks(redestimator.getNumReducers(eso.getExpressionSet(),mapping));
+			//			Round1ReduceJobEstimator redestimator = new Round1ReduceJobEstimator(settings); // TODO fix estimate
+//			hadoopJob.setNumReduceTasks(redestimator.getNumReducers(eso.getExpressionSet(),mapping));
 
+			hadoopJob.setNumReduceTasks(numRed);
+			LOG.info("Setting Reduce tasks to " + numRed);
+			
 			// set reducer output
 			// hadoopJob.setOutputKeyClass(NullWritable.class);
 			hadoopJob.setOutputKeyClass(Text.class);
@@ -501,7 +515,7 @@ public class GumboHadoopConverter {
 	}
 
 
-	private Grouper getGrouper(RelationFileMapping mapping) {
+	private Grouper getGrouper(RelationFileMapping mapping, CostSheet costSheet) {
 		String className = settings.getProperty(AbstractExecutorSettings.mapOutputGroupingClass);
 
 		Class<?> polClass;
@@ -515,7 +529,7 @@ public class GumboHadoopConverter {
 
 				// extract right mapping
 
-				policy = (GroupingPolicy) polClass.getConstructor(argClasses).newInstance(new GGTCostCalculator(new HadoopCostSheet(mapping, settings)));
+				policy = (GroupingPolicy) polClass.getConstructor(argClasses).newInstance(new GGTCostCalculator(costSheet));
 			} else {
 				policy = (GroupingPolicy) polClass.newInstance();
 			}

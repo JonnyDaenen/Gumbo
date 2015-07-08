@@ -35,7 +35,7 @@ import java.util.Set;
 public class CalculationUnitGroup implements Iterable<CalculationUnit> {
 
 	Set<CalculationUnit> calculations;
-
+	
 
 	public CalculationUnitGroup() {
 		calculations = new HashSet<CalculationUnit>();

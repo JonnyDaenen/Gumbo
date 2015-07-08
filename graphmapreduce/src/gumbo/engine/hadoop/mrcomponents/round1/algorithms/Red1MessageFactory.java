@@ -134,7 +134,7 @@ public class Red1MessageFactory implements Red1MessageFactoryInterface {
 				if (requestKeys.size() == 0)
 					return;
 
-				if (outRedGroupingOn) {
+				if (outRedGroupingOn) { // TODO this can be separate from the map output grouping
 
 					sb.setLength(0);
 					

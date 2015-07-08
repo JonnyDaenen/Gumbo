@@ -23,7 +23,7 @@ public class Red1Algorithm implements ReduceAlgorithm {
 	Set<Integer> keysFound;
 
 	private boolean finiteMemOptOn;
-	private boolean outGroupingOn;
+	private boolean mapOutGroupingOn;
 
 	Set<Pair<String, String>> buffer;
 
@@ -35,7 +35,7 @@ public class Red1Algorithm implements ReduceAlgorithm {
 
 		// --- opts
 		finiteMemOptOn = settings.getBooleanProperty(AbstractExecutorSettings.round1FiniteMemoryOptimizationOn);
-		outGroupingOn = settings.getBooleanProperty(AbstractExecutorSettings.mapOutputGroupingOptimizationOn);
+		mapOutGroupingOn = settings.getBooleanProperty(AbstractExecutorSettings.mapOutputGroupingOptimizationOn);
 
 		// counters
 
@@ -84,7 +84,7 @@ public class Red1Algorithm implements ReduceAlgorithm {
 				// we know that all necessary keys have been collected
 				// so we can start outputting
 				// note that the factory has all the keys (see init)
-				if (outGroupingOn && finiteMemOptOn) {
+				if (mapOutGroupingOn && finiteMemOptOn) {
 					keyFound = true;
 				}
 
@@ -111,7 +111,7 @@ public class Red1Algorithm implements ReduceAlgorithm {
 				// key looks like #,id1,id2,id3,...,idn
 
 				// collect all ids
-				if (outGroupingOn) {
+				if (mapOutGroupingOn) {
 					collectIds(split.fst);
 					
 				// if there is no grouping, there is only one possible key
@@ -143,7 +143,7 @@ public class Red1Algorithm implements ReduceAlgorithm {
 			// output the remaining data
 			// when grouping is active we start outputting anyway,
 			// as every "key" has been parsed
-			if (keyFound || outGroupingOn) {
+			if (keyFound || mapOutGroupingOn) {
 				for (Pair<String, String> p : buffer) {
 					msgFactory.loadValue(p.fst, p.snd);
 					msgFactory.sendReplies();
