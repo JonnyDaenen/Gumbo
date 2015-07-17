@@ -136,6 +136,7 @@ public class Red1MessageFactory implements Red1MessageFactoryInterface {
 
 				if (outRedGroupingOn) { // TODO this can be separate from the map output grouping
 
+					valueText.clear();
 					sb.setLength(0);
 					
 					for (int replyid : requestKeys) {
@@ -146,8 +147,7 @@ public class Red1MessageFactory implements Red1MessageFactoryInterface {
 							sb.append(eso.getAtom(replyid).toString());
 						}
 					}
-					sb.deleteCharAt(0);
-					byte [] bytes = sb.toString().getBytes();
+					byte [] bytes = sb.substring(1).getBytes();
 					valueText.append(bytes, 0, bytes.length);
 
 					OUTB.increment(keyText.getLength()+valueText.getLength());
