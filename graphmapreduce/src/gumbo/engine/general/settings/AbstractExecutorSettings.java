@@ -50,6 +50,9 @@ public abstract class AbstractExecutorSettings {
 	public static final String partitionClass = "gumbo.compiler.partitioner";
 	public static final String mapOutputGroupingClass = "gumbo.engine.mapOutputGroupingClass";
 	
+	// constants
+	public static final String REDUCER_SIZE_MB = "gumbo.engine.hadoop.reducersize_mb";
+	
 
 	/**
 	 * Loads the default settings.
@@ -64,6 +67,8 @@ public abstract class AbstractExecutorSettings {
 		setProperty(partitionClass, HeightPartitioner.class.getCanonicalName());
 		setProperty(mapOutputGroupingClass, KeyGrouper.class.getCanonicalName());
 //		setProperty(mapOutputGroupingClass, AllGrouper.class.getCanonicalName());
+		
+		setProperty(REDUCER_SIZE_MB, "1024");
 	}
 	
 	public void turnOffOptimizations() {
@@ -188,6 +193,11 @@ public abstract class AbstractExecutorSettings {
 			String value = kv[1];
 			setProperty(key, value);
 		}
+	}
+
+	public double getNumProperty(String key) {
+		String val = getProperty(key);
+		return Double.parseDouble(val);
 	}
 
 
