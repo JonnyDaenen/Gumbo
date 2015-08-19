@@ -74,8 +74,8 @@ public class Round2ReduceJobEstimator {
 
 
 		LOG.info("Output estimate " + bytesize);
-		// 1 GB per reducer
-		num = (int) Math.ceil(bytesize/1000000000.0);
+		// 128 MB per reducer
+		num = (int) Math.ceil(bytesize/(1024*1024*128.0)); // TODO settings
 		LOG.info("Reducer estimate " + num);
 
 		return Math.max(1,num);
