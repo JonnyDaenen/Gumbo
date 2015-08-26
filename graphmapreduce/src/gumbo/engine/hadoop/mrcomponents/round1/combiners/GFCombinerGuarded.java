@@ -52,8 +52,6 @@ public class GFCombinerGuarded extends Reducer<Text, Text, Text, Text> {
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
-		System.out.println("KEY:" + key);
-		boolean keyFound = false;
 		
 		String assertMsg = "";
 		
@@ -62,14 +60,9 @@ public class GFCombinerGuarded extends Reducer<Text, Text, Text, Text> {
 			String value = t.toString();
 			System.out.println(value);
 			
-			// only continue if value is a proof of existence, i.e: contains no ';' 
+			// only continue if value is an ASSERT message, i.e: contains no ';' 
 			if (!value.contains(";")) {
-				// check if it has been output already
-				if (!keyFound) {
-//					keyFound = true;
-//					context.write(key, t);
-					assertMsg += ":" + value.substring(2);
-				}
+				assertMsg += ":" + value.substring(2);
 			}
 			// if it contains ';', just output
 			else {

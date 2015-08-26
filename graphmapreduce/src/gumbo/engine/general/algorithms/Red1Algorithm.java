@@ -75,7 +75,7 @@ public class Red1Algorithm implements ReduceAlgorithm {
 	 */
 	public boolean processTuple(Pair<String,String> split) throws AlgorithmInterruptedException {	
 		
-		LOG.error(split.fst + ": " + split.snd);
+//		LOG.error(split.fst + ": " + split.snd);
 		try {
 			// is this not the key (key is only thing that can appear without atom reference)
 			// it does not matter whether it's sent as S(1) or with a constant symbol such as '#'
