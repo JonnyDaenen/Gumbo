@@ -89,6 +89,7 @@ public class Red1MessageFactory implements Red1MessageFactoryInterface {
 	 */
 	@Override
 	public void loadValue(String address, String reply)  {
+		
 		keyText.clear();
 		valueText.clear();
 

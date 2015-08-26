@@ -95,12 +95,9 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 			for (Text t : values) {
 
 				// the following is faster then first converting to a String representation
-				algo.processTuple(algo.split(t.getBytes(), t.getLength()));
-				
-				// feed it to algo
-				if(!algo.processTuple(t.toString()))
+				if(!algo.processTuple(algo.split(t.getBytes(), t.getLength())))
 					break;
-
+				
 			}
 
 			// indicate end of tuples

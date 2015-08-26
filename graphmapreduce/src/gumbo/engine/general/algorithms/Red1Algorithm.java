@@ -65,7 +65,6 @@ public class Red1Algorithm implements ReduceAlgorithm {
 	 * @throws AlgorithmInterruptedException
 	 */
 	public boolean processTuple(String value) throws AlgorithmInterruptedException {
-		
 		Pair<String,String> split = split(value.getBytes(), value.length());
 		return processTuple(split);
 	}

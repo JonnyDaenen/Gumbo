@@ -9,4 +9,4 @@ U,2 <- input/experiments/EXP_022/U_small, CSV
 
 
 #Out1(x,y)&R(x,y)S(x);
-#Out2(x,y)&U(x,y)T(x);
+#Out2(x,y)&R(x,y)T(x);

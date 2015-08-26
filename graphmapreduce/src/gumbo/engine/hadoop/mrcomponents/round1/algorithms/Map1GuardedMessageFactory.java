@@ -91,7 +91,7 @@ public class Map1GuardedMessageFactory implements Map1GuardedMessageFactoryInter
 	public void loadGuardedValue(Tuple t) {
 
 		this.t = t;
-		
+
 		keyText.set(t.generateString(mapOutputGroupingOptimizationOn));
 
 		// add sort indication to key if necessary
@@ -107,7 +107,7 @@ public class Map1GuardedMessageFactory implements Map1GuardedMessageFactoryInter
 
 
 
-	
+
 	/* (non-Javadoc)
 	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactoryInterface#sendAssert()
 	 */
@@ -135,7 +135,7 @@ public class Map1GuardedMessageFactory implements Map1GuardedMessageFactoryInter
 //			LOG.error(keyText + ": " + valueText);
 			context.write(keyText, valueText);
 
-//			LOG.info("<" + keyText.toString() + " : " + valueText.toString() + ">");
+			//			LOG.info("<" + keyText.toString() + " : " + valueText.toString() + ">");
 
 			if (sampleCounter) {
 				context.getCounter(CounterMeasures.OUT_TUPLES).increment(1);
