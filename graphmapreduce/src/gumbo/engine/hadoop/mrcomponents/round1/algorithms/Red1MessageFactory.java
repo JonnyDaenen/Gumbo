@@ -153,6 +153,7 @@ public class Red1MessageFactory implements Red1MessageFactoryInterface {
 
 					OUTB.increment(keyText.getLength()+valueText.getLength());
 					sendMessage();
+					OUTR.increment(1);
 					
 				} else {
 
@@ -167,13 +168,13 @@ public class Red1MessageFactory implements Red1MessageFactoryInterface {
 
 						OUTB.increment(keyText.getLength()+valueText.getLength());
 						sendMessage(); 
+						OUTR.increment(1);
 
 					}
 				}
 
 
 
-				OUTR.increment(requestKeys.size());
 			} else {
 				//			LOG.info("Out: " + keyText + " : " + valueText);
 				OUTR.increment(1);
@@ -195,7 +196,7 @@ public class Red1MessageFactory implements Red1MessageFactoryInterface {
 
 			//			LOG.info("Reply: " + keyText + " : " + valueText);
 
-//			LOG.error(keyText + ": " + valueText);
+			LOG.error(keyText + ": " + valueText);
 			mos.write(keyText, valueText, filename);
 		} catch(Exception e) {
 			throw new MessageFailedException(e);
