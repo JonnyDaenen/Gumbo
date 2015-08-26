@@ -2,11 +2,14 @@ package gumbo.engine.general.grouper.costmodel;
 
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+
+import java.util.Collection;
 
 public interface CostSheet {
 	
 	
-	void initialize(CalculationGroup group);
+	void initialize(CalculationGroup group, Collection<GFExistentialExpression> expressions);
 	
 	long getRelationInputTuples(RelationSchema rs);
 	long getRelationInputBytes(RelationSchema rs);

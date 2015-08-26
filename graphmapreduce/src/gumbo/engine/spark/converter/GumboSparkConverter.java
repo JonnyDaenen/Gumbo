@@ -104,7 +104,7 @@ public class GumboSparkConverter {
 			// wrapper object for expressions
 			ExpressionSetOperations eso;
 
-			eso = new ExpressionSetOperations(extractExpressions(cug),mapping);
+			eso = new ExpressionSetOperations(extractExpressions(cug),extractExpressions(cug),mapping); // FIXME second group is wrong
 
 
 

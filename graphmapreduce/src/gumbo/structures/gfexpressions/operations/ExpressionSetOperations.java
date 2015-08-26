@@ -75,6 +75,8 @@ public class ExpressionSetOperations implements Externalizable {
 
 	protected HashMap<GFAtomicExpression, Integer> atomIDs;
 
+	private Collection<GFExistentialExpression> allExpressions;
+
 
 	private ExpressionSetOperations() {
 		guardeds = new HashMap<>();
@@ -93,15 +95,22 @@ public class ExpressionSetOperations implements Externalizable {
 		atomIDs = new HashMap<>();
 	}
 
-
-	public ExpressionSetOperations(Collection<GFExistentialExpression> expressionSet, RelationFileMapping fileMapping) throws GFOperationInitException {
+	/**
+	 * 
+	 * @param expressionSet subset of expressions that is actually used
+	 * @param allExpressions set of all expressions in this round
+	 * @param fileMapping the file mapping (at least the used expressions)
+	 * @throws GFOperationInitException
+	 */
+	public ExpressionSetOperations(Collection<GFExistentialExpression> expressionSet,Collection<GFExistentialExpression> allExpressions , RelationFileMapping fileMapping) throws GFOperationInitException {
 		this();
 		this.fileMapping = fileMapping;
-		setExpressionSet(expressionSet);
+		setExpressionSet(expressionSet,allExpressions);
 	}
 
-	public void setExpressionSet(Collection<GFExistentialExpression> expressionSet) throws GFOperationInitException {
+	public void setExpressionSet(Collection<GFExistentialExpression> expressionSet,Collection<GFExistentialExpression> allExpressions) throws GFOperationInitException {
 		this.expressionSet = expressionSet;
+		this.allExpressions = allExpressions;
 		preCalculate();
 	}
 
@@ -205,12 +214,16 @@ public class ExpressionSetOperations implements Externalizable {
 		}
 
 		// sort the atoms to obtain an ordering
-		HashSet<GFAtomicExpression> allAtoms = new HashSet<>(guardsAll);
-		allAtoms.addAll(guardedsAll);
+		HashSet<GFAtomicExpression> allAtoms = new HashSet<>(20);
+		for (GFExistentialExpression exp : allExpressions) {
+//			System.out.println(exp);
+			Collection<GFAtomicExpression> atomics = exp.getAtomic();
+			allAtoms.addAll(atomics);
+		}
 
 		atoms = allAtoms.toArray(new GFAtomicExpression[0]);
 		Arrays.sort(atoms);
-//		LOG.info("ATOM IDS:" + Arrays.toString(atoms));
+		LOG.info("ATOM IDS:" + Arrays.toString(atoms));
 		atomIDs.clear();
 		for (int i = 0; i < atoms.length; i++) {
 			atomIDs.put(atoms[i], i);
@@ -478,7 +491,7 @@ public class ExpressionSetOperations implements Externalizable {
 		//		Integer result = atomdIDs.get(atom);
 		//		
 		//		if (result == null)
-		throw new GFOperationInitException("Atom with not found: " + atom);
+		throw new GFOperationInitException("Atom not found: " + atom);
 
 		//		return result;
 	}

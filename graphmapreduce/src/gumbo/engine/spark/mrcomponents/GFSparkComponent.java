@@ -87,7 +87,7 @@ public class GFSparkComponent implements Externalizable {
 			}
 			
 			RelationFileMapping rfm = new RelationFileMapping(fileMapSer,null); // FIXME filesystem??
-			eso = new ExpressionSetOperations(formulaSet, rfm);
+			eso = new ExpressionSetOperations(formulaSet, formulaSet, rfm); // FIXME second group is wrong
 			
 		} catch (DeserializeException | GFOperationInitException | RelationSchemaException | RelationFileMappingException e) {
 			// TODO Auto-generated catch block

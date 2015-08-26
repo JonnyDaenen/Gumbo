@@ -170,9 +170,12 @@ public class HadoopCostSheet implements CostSheet {
 	}
 
 	@Override
-	public void initialize(CalculationGroup group) {
+	public void initialize(CalculationGroup group, Collection<GFExistentialExpression> expressions) {
+		
+		// TODO move expression set to constructor?
 		this.group = group;
 		try {
+			// FIXME are these samples ok for new runs?
 			if (samples == null) {
 				LOG.info("Sampling...");
 				samples = sampler.sample(10, 4 * 1024);
@@ -189,7 +192,7 @@ public class HadoopCostSheet implements CostSheet {
 			}
 
 
-			reports = rr.generateReports(calcs);
+			reports = rr.generateReports(calcs, expressions);
 			//
 			//			for (RelationReport report : reports.values())
 			//				LOG.info(report);

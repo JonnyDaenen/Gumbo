@@ -156,33 +156,40 @@ public class GumboHadoopConverter {
 
 		Set<ControlledJob> jobs = new HashSet<>();
 
+		// create one master group to contain everything
+		Collection<GFExistentialExpression> expressions = extractExpressions(cug);
+
 		// extract file mapping where input paths are made specific
 		// TODO also filter out non-related relations
 		extractor.setIncludeOutputDirs(false); // TODO the grouper should filter out the non-existing files
 		RelationFileMapping mapping1 = extractor.extractFileMapping(fileManager);
 		HadoopCostSheet costSheet = new HadoopCostSheet(mapping1, settings);
-		Grouper grouper = getGrouper(mapping1,costSheet);
+		Grouper grouper = getGrouper(mapping1,costSheet, expressions);
 
 		// apply grouping
 		extractor.setIncludeOutputDirs(true);
 		RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
 		List<CalculationUnitGroup> groups = grouper.group(cug);
 		Decomposer decomposer = new Decomposer();
+
+
+
+		// create a job for each group
 		for (CalculationUnitGroup group : groups) {
 
 			// estimate number of reducers 
 			// OPTIMIZE for key partitioner, this work has been done already
 			CalculationGroup decomposedGroup = decomposer.decompose(group);
-			costSheet.initialize(decomposedGroup);
+			costSheet.initialize(decomposedGroup, expressions);
 
-			jobs.add(createRound1Job(group, mapping,costSheet.getNumReducers()));
+			jobs.add(createRound1Job(group, expressions, mapping,costSheet.getNumReducers()));
 		}
 
 		return jobs;
 	}
 
 
-	private ControlledJob createRound1Job(CalculationUnitGroup cug, RelationFileMapping mapping, int numRed) throws ConversionException {
+	private ControlledJob createRound1Job(CalculationUnitGroup cug, Collection<GFExistentialExpression> expressions, RelationFileMapping mapping, int numRed) throws ConversionException {
 
 		try {
 
@@ -198,12 +205,13 @@ public class GumboHadoopConverter {
 			LOG.info(mapping);
 
 			// wrapper object for expressions
-			ExpressionSetOperations eso = new ExpressionSetOperations(extractExpressions(cug),mapping); 
+			ExpressionSetOperations eso = new ExpressionSetOperations(extractExpressions(cug),expressions,mapping); 
 
 			// pass arguments via configuration
 			Configuration conf = hadoopJob.getConfiguration();
 			conf.set("formulaset", serializer.serializeSet(eso.getExpressionSet()));
 			conf.set("relationfilemapping", eso.getFileMapping().toString());
+			conf.set("allexpressions", serializer.serializeSet(expressions));
 
 
 			/* MAPPER */
@@ -263,11 +271,11 @@ public class GumboHadoopConverter {
 			// determine reducer
 			hadoopJob.setReducerClass(GFReducer1Optimized.class); 
 			//			Round1ReduceJobEstimator redestimator = new Round1ReduceJobEstimator(settings); // TODO fix estimate
-//			hadoopJob.setNumReduceTasks(redestimator.getNumReducers(eso.getExpressionSet(),mapping));
+			//			hadoopJob.setNumReduceTasks(redestimator.getNumReducers(eso.getExpressionSet(),mapping));
 
 			hadoopJob.setNumReduceTasks(numRed);
 			LOG.info("Setting Reduce tasks to " + numRed);
-			
+
 			// set reducer output
 			// hadoopJob.setOutputKeyClass(NullWritable.class);
 			hadoopJob.setOutputKeyClass(Text.class);
@@ -351,14 +359,18 @@ public class GumboHadoopConverter {
 			// extract file mapping where input paths are made specific
 			// TODO also filter out non-related relations
 			RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
+			
 			// wrapper object for expressions
-			ExpressionSetOperations eso = new ExpressionSetOperations(extractExpressions(cug),mapping); 
+			// expressions have _all_ the expressions in them
+			Collection<GFExistentialExpression> allExpressions = extractExpressions(cug);
+			ExpressionSetOperations eso = new ExpressionSetOperations(allExpressions,allExpressions,mapping); 
 
 
 			// pass arguments via configuration
 			Configuration conf = hadoopJob.getConfiguration();
 			conf.set("formulaset", serializer.serializeSet(eso.getExpressionSet()));
 			conf.set("relationfilemapping", eso.getFileMapping().toString());
+			conf.set("allexpressions", serializer.serializeSet(allExpressions));
 
 
 
@@ -515,7 +527,7 @@ public class GumboHadoopConverter {
 	}
 
 
-	private Grouper getGrouper(RelationFileMapping mapping, CostSheet costSheet) {
+	private Grouper getGrouper(RelationFileMapping mapping, CostSheet costSheet, Collection<GFExistentialExpression> allExpressions) {
 		String className = settings.getProperty(AbstractExecutorSettings.mapOutputGroupingClass);
 
 		Class<?> polClass;
@@ -529,7 +541,7 @@ public class GumboHadoopConverter {
 
 				// extract right mapping
 
-				policy = (GroupingPolicy) polClass.getConstructor(argClasses).newInstance(new GGTCostCalculator(costSheet));
+				policy = (GroupingPolicy) polClass.getConstructor(argClasses).newInstance(new GGTCostCalculator(costSheet, allExpressions));
 			} else {
 				policy = (GroupingPolicy) polClass.newInstance();
 			}

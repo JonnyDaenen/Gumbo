@@ -1,15 +1,15 @@
 package gumbo.experiments.grouping;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.engine.general.grouper.costmodel.CostSheet;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.hadoop.converter.HadoopCostSheet;
 import gumbo.engine.hadoop.reporter.RelationReport;
 import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+
+import java.util.Collection;
+import java.util.HashMap;
 
 public class GroupingTest1 extends HadoopCostSheet {
 
@@ -20,9 +20,11 @@ public class GroupingTest1 extends HadoopCostSheet {
 		super(null, null);
 		// TODO Auto-generated constructor stub
 	}
-
+	
 	@Override
-	public void initialize(CalculationGroup group) {
+	public void initialize(CalculationGroup group,
+			Collection<GFExistentialExpression> expressions) {
+
 		
 		reports = new HashMap<>();
 		this.group = group;

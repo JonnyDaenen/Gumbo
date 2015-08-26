@@ -55,7 +55,8 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, Text, Text> {
 			settings = pp.loadSettings();
 			
 		} catch (Exception e) {
-			throw new InterruptedException("Mapper initialisation error: " + e.getMessage());
+			e.printStackTrace();
+			throw new InterruptedException("Mapper initialisation error.");
 		}
 		
 		t = new Text();

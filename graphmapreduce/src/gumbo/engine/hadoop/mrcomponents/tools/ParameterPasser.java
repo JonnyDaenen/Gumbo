@@ -52,6 +52,16 @@ public class ParameterPasser {
 					formulaSet.add((GFExistentialExpression) exp);
 				}
 			}
+			
+
+			HashSet<GFExistentialExpression> allFormulaSet = new HashSet<GFExistentialExpression>();
+			String allExpString = conf.get("allexpressions");
+			Set<GFExpression> allExpressions = serializer.deserializeSet(allExpString);
+			for (GFExpression exp : allExpressions) {
+				if (exp instanceof GFExistentialExpression) {
+					allFormulaSet.add((GFExistentialExpression) exp);
+				}
+			}
 
 
 			// get relation name
@@ -59,7 +69,7 @@ public class ParameterPasser {
 
 			FileSystem fs = FileSystem.get(conf);
 			RelationFileMapping rm = new RelationFileMapping(relmapping,fs);
-			ExpressionSetOperations eso = new ExpressionSetOperations(formulaSet, rm);
+			ExpressionSetOperations eso = new ExpressionSetOperations(formulaSet,allFormulaSet, rm);
 
 			return eso;
 		} catch (DeserializeException | GFOperationInitException | RelationSchemaException | RelationFileMappingException | IOException e) {

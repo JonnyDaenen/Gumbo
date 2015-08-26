@@ -132,7 +132,7 @@ public class Map1GuardedMessageFactory implements Map1GuardedMessageFactoryInter
 
 	protected void sendMessage() throws MessageFailedException {
 		try {
-
+//			LOG.error(keyText + ": " + valueText);
 			context.write(keyText, valueText);
 
 //			LOG.info("<" + keyText.toString() + " : " + valueText.toString() + ">");

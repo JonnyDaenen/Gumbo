@@ -2,7 +2,7 @@ package gumbo.engine.general.grouper.costmodel;
 
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.structures.data.RelationSchema;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 import java.util.Collection;
 
@@ -15,15 +15,20 @@ public class GGTCostCalculator implements CostCalculator{
 
 	private CostSheet cs;
 
+	private Collection<GFExistentialExpression> allExpressions;
 
-	public GGTCostCalculator(CostSheet cs) {
+
+	public GGTCostCalculator(CostSheet cs, Collection<GFExistentialExpression> allExpressions) {
 		this.cs = cs;
+		this.allExpressions = allExpressions;
 	}
 
 
 	public double calculateCost(CalculationGroup group) {
 		
-		cs.initialize(group);
+
+		
+		cs.initialize(group, allExpressions);
 
 		Collection<RelationSchema> schemas = group.getAllSchemas();
 

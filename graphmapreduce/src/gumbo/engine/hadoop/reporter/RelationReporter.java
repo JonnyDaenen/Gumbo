@@ -1,6 +1,5 @@
 package gumbo.engine.hadoop.reporter;
 
-import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.engine.general.algorithms.AlgorithmInterruptedException;
 import gumbo.engine.general.algorithms.Map1GuardAlgorithm;
@@ -18,16 +17,11 @@ import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.util.LineReader;
 
 public class RelationReporter {
 
@@ -42,12 +36,12 @@ public class RelationReporter {
 		this.rsc = rsc;
 	}
 
-	public Map<RelationSchema, RelationReport> generateReports(Collection<GFExistentialExpression> group) throws GFOperationInitException {
+	public Map<RelationSchema, RelationReport> generateReports(Collection<GFExistentialExpression> group, Collection<GFExistentialExpression> allExpressions) throws GFOperationInitException {
 
 		HashMap<RelationSchema, RelationReport> reports = new HashMap<>();
 
 
-		ExpressionSetOperations eso = new ExpressionSetOperations(group, mapping);
+		ExpressionSetOperations eso = new ExpressionSetOperations(group, allExpressions, mapping); // FIXME second group is wrong
 
 		// guard
 		for (GFAtomicExpression guard : eso.getGuardsAll()){

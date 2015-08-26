@@ -1,17 +1,10 @@
 package gumbo.engine.hadoop.reporter;
 
-import gumbo.compiler.filemapper.InputFormat;
 import gumbo.structures.data.RelationSchema;
-import gumbo.structures.data.Tuple;
 
-import java.io.ByteArrayInputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.util.LineReader;
 
 
 /**

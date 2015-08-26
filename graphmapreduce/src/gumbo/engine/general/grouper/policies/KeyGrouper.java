@@ -3,7 +3,6 @@ package gumbo.engine.general.grouper.policies;
 import gumbo.engine.general.grouper.costmodel.CostCalculator;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
-import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.io.Pair;
 
 import java.util.HashMap;

@@ -16,7 +16,7 @@ public class AllGrouper implements GroupingPolicy {
 
 	
 	/**
-	 * Wraps all semijoin together in one group.
+	 * Wraps all semijoins together in one group.
 	 */
 	@Override
 	public List<CalculationGroup> group(

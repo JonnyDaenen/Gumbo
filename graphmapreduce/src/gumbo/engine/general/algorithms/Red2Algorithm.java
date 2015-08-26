@@ -52,6 +52,8 @@ public class Red2Algorithm implements ReduceAlgorithm {
 
 	public void initialize(String key) throws AlgorithmInterruptedException {
 		try {
+			
+//			System.out.println(key);
 
 			mapGFtoB = eso.getBooleanMapping();
 			booleanContext = new BEvaluationContext();
@@ -77,6 +79,7 @@ public class Red2Algorithm implements ReduceAlgorithm {
 	public boolean processTuple(String val) throws AlgorithmInterruptedException {
 
 
+//		System.out.println("\t" + val);
 
 		try {
 
@@ -91,11 +94,6 @@ public class Red2Algorithm implements ReduceAlgorithm {
 			// otherwise we keep track of true atoms
 			else {
 				// extract atom reference and set it to true
-
-
-
-
-
 				try {
 
 					String [] values = val.split(":");
