@@ -196,7 +196,7 @@ public class Red1MessageFactory implements Red1MessageFactoryInterface {
 
 			//			LOG.info("Reply: " + keyText + " : " + valueText);
 
-			LOG.error(keyText + ": " + valueText);
+//			LOG.error(keyText + ": " + valueText);
 			mos.write(keyText, valueText, filename);
 		} catch(Exception e) {
 			throw new MessageFailedException(e);
