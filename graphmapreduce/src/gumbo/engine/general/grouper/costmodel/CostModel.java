@@ -2,9 +2,7 @@ package gumbo.engine.general.grouper.costmodel;
 
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 
-public interface CostCalculator {
+public interface CostModel {
 	
-	public double calculateCost(CalculationGroup semijoins);
-	
-
+	public double calculateCost(MRSettings s, GroupedJob job);
 }
