@@ -19,10 +19,13 @@ public class CalculationGroup {
 	
 	double cost;
 
+	private Collection<GFExistentialExpression> sameLevelExpressions;
 
 
-	public CalculationGroup() {
+	
+	public CalculationGroup(Collection<GFExistentialExpression> relevantExpressions) {
 		semijoins = new HashSet<>();
+		this.sameLevelExpressions = relevantExpressions;
 	}
 
 
@@ -149,27 +152,51 @@ public class CalculationGroup {
 	}
 
 
-	public CalculationGroup merge(CalculationGroup existingGroup) {
-		// FIXME implement
+	/**
+	 * Creates a new group from two given groups.
+	 * The resulting group contains a union of expressions,
+	 * but all costs are 0.
+	 * @param g the other group
+	 * @return a representation of the merge result of the two groups
+	 */
+	public CalculationGroup merge(CalculationGroup g) {
+		CalculationGroup result = new CalculationGroup(this.sameLevelExpressions);
+		result.semijoins.addAll(this.semijoins);
+		result.semijoins.addAll(g.semijoins);
+		
 		return null;
 	}
 
 
+
 	public Collection<RelationSchema> getInputRelations() {
-		// FIXME Auto-generated method stub
-		return null;
+		HashSet<RelationSchema> result = new HashSet<RelationSchema>(semijoins.size());
+		
+		for (GuardedSemiJoinCalculation sj : semijoins) {
+			result.add(sj.getGuard().getRelationSchema());
+			result.add(sj.getGuarded().getRelationSchema());
+		}
+		
+		return result;
 	}
 
 
 	public Collection<GFExistentialExpression> getExpressions() {
-		// FIXME Auto-generated method stub
-		return null;
+		HashSet<GFExistentialExpression> result = new HashSet<GFExistentialExpression>(semijoins.size());
+		
+		for (GuardedSemiJoinCalculation sj : semijoins) {
+			result.add(sj.getExpression());
+		}
+		
+		return result;
 	}
 
 
-	public Collection<GFExistentialExpression> getAllExpressions() {
-		// FIXME Auto-generated method stub
-		return null;
+	public Collection<GFExistentialExpression> getRelevantExpressions() {
+		if (sameLevelExpressions == null)
+			return getExpressions();
+		return sameLevelExpressions;
+		
 	}
 
 }

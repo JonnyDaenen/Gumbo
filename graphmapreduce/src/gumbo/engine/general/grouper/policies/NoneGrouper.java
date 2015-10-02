@@ -29,7 +29,7 @@ public class NoneGrouper implements GroupingPolicy {
 		LinkedList<CalculationGroup> groupedResult = new LinkedList<CalculationGroup>();
 		
 		for (GuardedSemiJoinCalculation semijoin : semijoins.getAll()) {
-			CalculationGroup group = new CalculationGroup();
+			CalculationGroup group = new CalculationGroup(semijoins.getRelevantExpressions());
 			group.add(semijoin);
 			groupedResult.add(group);
 		}

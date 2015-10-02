@@ -23,7 +23,7 @@ public class AllGrouper implements GroupingPolicy {
 			CalculationGroup semijoins) {
 		
 		LinkedList<CalculationGroup> groupedResult = new LinkedList<CalculationGroup>();
-		CalculationGroup group = new CalculationGroup();
+		CalculationGroup group = new CalculationGroup(semijoins.getRelevantExpressions());
 		
 		for (GuardedSemiJoinCalculation semijoin : semijoins.getAll()) {	
 			group.add(semijoin);

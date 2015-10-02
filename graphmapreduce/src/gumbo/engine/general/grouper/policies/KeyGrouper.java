@@ -3,8 +3,10 @@ package gumbo.engine.general.grouper.policies;
 import gumbo.engine.general.grouper.costmodel.CostCalculator;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.io.Pair;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -33,6 +35,8 @@ public class KeyGrouper implements GroupingPolicy {
 	private Map<Pair<CalculationGroup,CalculationGroup>,Double> costTable;
 	private Map<Pair<CalculationGroup,CalculationGroup>,CalculationGroup> merges;
 
+	private Collection<GFExistentialExpression> referenceExpressions;
+
 
 	public KeyGrouper(CostCalculator costCalculator) {
 		this.costCalculator = costCalculator;
@@ -43,12 +47,13 @@ public class KeyGrouper implements GroupingPolicy {
 	@Override
 	public List<CalculationGroup> group(
 			CalculationGroup group) {
+		referenceExpressions = group.getRelevantExpressions();
 
 		// init: put every job in its own group
 
 		List<CalculationGroup> groups = new LinkedList<CalculationGroup>();
 		for (GuardedSemiJoinCalculation semijoin : group.getAll()){
-			CalculationGroup cg = new CalculationGroup();
+			CalculationGroup cg = new CalculationGroup(referenceExpressions);
 			cg.add(semijoin);
 			groups.add(cg);
 		}
@@ -97,7 +102,7 @@ public class KeyGrouper implements GroupingPolicy {
 
 
 				// create merged group
-				CalculationGroup newGroup = new CalculationGroup();
+				CalculationGroup newGroup = new CalculationGroup(referenceExpressions);
 				newGroup.addAll(group1);
 				newGroup.addAll(group2);
 
@@ -156,7 +161,7 @@ public class KeyGrouper implements GroupingPolicy {
 		// create all combos with the new group
 		for (CalculationGroup group : groups) {
 			// create merged group
-			CalculationGroup mergedGroup = new CalculationGroup();
+			CalculationGroup mergedGroup = new CalculationGroup(referenceExpressions);
 			mergedGroup.addAll(group);
 			mergedGroup.addAll(newGroup);
 
@@ -296,7 +301,7 @@ public class KeyGrouper implements GroupingPolicy {
 				//				LOG.info("Trying to group" );
 
 				// create merged group
-				CalculationGroup newGroup = new CalculationGroup();
+				CalculationGroup newGroup = new CalculationGroup(referenceExpressions);
 				newGroup.addAll(group1);
 				newGroup.addAll(group2);
 
@@ -403,7 +408,7 @@ public class KeyGrouper implements GroupingPolicy {
 		CalculationGroup group2 = groups.remove(Math.min(fst, snd));
 
 		// create merged group
-		CalculationGroup newGroup = new CalculationGroup();
+		CalculationGroup newGroup = new CalculationGroup(referenceExpressions);
 		newGroup.addAll(group1);
 		newGroup.addAll(group2);
 

@@ -58,7 +58,7 @@ public class Simulator {
 		SimulatorReport report = new SimulatorReport();
 		
 		try {
-			eso = new ExpressionSetOperations(calcJob.getExpressions(), calcJob.getAllExpressions(), mapping);
+			eso = new ExpressionSetOperations(calcJob.getExpressions(), calcJob.getRelevantExpressions(), mapping);
 
 			// for each input relation
 			for (RelationSchema r : calcJob.getInputRelations()) {

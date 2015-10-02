@@ -1,7 +1,9 @@
 package gumbo.engine.general.grouper.policies;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.engine.general.grouper.costmodel.CostModel;
@@ -12,7 +14,9 @@ import gumbo.engine.general.grouper.sample.Simulator;
 import gumbo.engine.general.grouper.sample.SimulatorReport;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
+import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.utils.estimation.SamplingException;
 
@@ -21,15 +25,17 @@ public class CostBasedGrouper implements GroupingPolicy {
 
 	private RelationFileMapping rfm;
 	private CostModel costModel;
-	private Simulator simulator;
+	private AbstractExecutorSettings execSettings;
 
 	private RelationTupleSampleContainer samples;
+	private Simulator simulator;
 	private CostMatrix costMatrix;
 
 
-	public CostBasedGrouper(RelationFileMapping rfm, CostModel costModel) {
+	public CostBasedGrouper(RelationFileMapping rfm, CostModel costModel, AbstractExecutorSettings execSettings) {
 		this.rfm = rfm;
 		this.costModel = costModel;
+		this.execSettings = execSettings;
 	}
 
 
@@ -57,6 +63,8 @@ public class CostBasedGrouper implements GroupingPolicy {
 		RelationSampler sampler = new RelationSampler(rfm);
 		RelationSampleContainer rawSamples = sampler.sample();
 		samples = new RelationTupleSampleContainer(rawSamples, 0.1);
+		
+		simulator = new Simulator(samples, rfm, execSettings);
 	}
 
 
@@ -65,11 +73,16 @@ public class CostBasedGrouper implements GroupingPolicy {
 	 * @param group
 	 */
 	private void init(CalculationGroup group) {
+		
+		Set<CalculationGroup> jobs = new HashSet<CalculationGroup>();
+		
+		// calculate single costs
 		for ( GuardedSemiJoinCalculation calculation : group.getAll()) {
 
 			// create new job
-			CalculationGroup calcJob = new CalculationGroup();
+			CalculationGroup calcJob = new CalculationGroup(group.getRelevantExpressions());
 			calcJob.add(calculation);
+			jobs.add(calcJob);
 
 			// calculate intermediate data
 			estimateParameters(calcJob);
@@ -78,6 +91,30 @@ public class CostBasedGrouper implements GroupingPolicy {
 			double cost = costModel.calculateCost(calcJob);
 			calcJob.setCost(cost);
 		}
+		
+
+		costMatrix = new CostMatrix(jobs);
+		
+		// calculate pair costs
+		for (CalculationGroup job1 : costMatrix.getGroups()) {
+			for (CalculationGroup job2 : costMatrix.getGroups()) {
+				
+				// merge jobs
+				CalculationGroup newJob = job1.merge(job2);
+				
+				// calculate intermediate data
+				estimateParameters(newJob);
+				
+				// calculate and set cost
+				double cost = costModel.calculateCost(newJob);
+				newJob.setCost(cost);
+				
+				costMatrix.putCost(job1, job2, newJob);
+				
+			}
+			
+		}
+		
 
 	}
 

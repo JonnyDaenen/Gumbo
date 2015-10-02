@@ -31,7 +31,7 @@ public abstract class AbstractHashGroupingPolicy implements GroupingPolicy {
 		LinkedList<CalculationGroup> groupedResult = new LinkedList<CalculationGroup>();
 
 		for (String key : hashmap.keySet()) {
-			CalculationGroup group = new CalculationGroup();
+			CalculationGroup group = new CalculationGroup(semijoins.getRelevantExpressions());
 			group.addAll(hashmap.get(key));
 			groupedResult.add(group);
 		}
@@ -49,7 +49,7 @@ public abstract class AbstractHashGroupingPolicy implements GroupingPolicy {
 
 			String hashVal = hash(semijoin);
 			if (!hashmap.containsKey(hashVal)) {
-				hashmap.put(hashVal, new CalculationGroup());
+				hashmap.put(hashVal, new CalculationGroup(semijoins.getRelevantExpressions()));
 			}
 			
 			hashmap.get(hashVal).add(semijoin);

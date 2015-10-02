@@ -23,8 +23,10 @@ public class Decomposer {
 	 * @return decomposition in binary guarded semijoins
 	 */
 	public CalculationGroup decompose(CalculationUnitGroup partition) {
+		
 
-		CalculationGroup result = new CalculationGroup();
+		// null to indicate the group contains all relevant expressions by itself
+		CalculationGroup result = new CalculationGroup(null);
 		
 		// create all guard-guarded pairs
 		for (CalculationUnit c: partition.getCalculations()) {
