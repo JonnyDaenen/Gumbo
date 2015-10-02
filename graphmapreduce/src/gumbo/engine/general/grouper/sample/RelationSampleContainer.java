@@ -1,5 +1,6 @@
-package gumbo.engine.hadoop.reporter;
+package gumbo.engine.general.grouper.sample;
 
+import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.structures.data.RelationSchema;
 
 import java.util.Collection;
@@ -16,6 +17,7 @@ import java.util.Map;
 public class RelationSampleContainer {
 
 	Map<RelationSchema, byte[][]> samples;
+	private RelationFileMapping mapping;
 
 	public RelationSampleContainer() {
 		samples = new HashMap<>();
@@ -52,6 +54,14 @@ public class RelationSampleContainer {
 
 	public Collection<RelationSchema> getRelationSchemas() {
 		return samples.keySet();
+	}
+
+	public void setMapping(RelationFileMapping mapping) {
+		this.mapping = mapping;
+	}
+	
+	public RelationFileMapping getMapping() {
+		return mapping;
 	}
 
 }

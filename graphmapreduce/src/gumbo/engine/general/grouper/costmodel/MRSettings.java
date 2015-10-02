@@ -8,6 +8,7 @@ package gumbo.engine.general.grouper.costmodel;
  */
 public class MRSettings {
 	
+	// costs
 	protected double cost_local_r = 1;
 	protected double cost_local_w = 1;
 	protected double cost_hdfs_w = 330;
@@ -15,6 +16,19 @@ public class MRSettings {
 	protected double cost_transfer = 5;
 	protected double cost_sort = 52;
 	protected double cost_red = 0.12;
+	
+	// FUTURE extract these in separate class, as they can change for different jobs
+	// FIXME create default settings
+	// map settings
+	private double mapChunkSizeMB;
+	private double mapSortBufferMB;
+	private double mapMergeFactor;
+	
+	// reduce settings
+	private double redChunkSizeMB;
+	private double redSortBufferMB;
+	private double redMergeFactor;
+	
 	
 	public double getLocalReadCost() {
 		return cost_local_r;
@@ -42,28 +56,22 @@ public class MRSettings {
 	
 	
 	public double getMapChunkSizeMB() {
-		// TODO Auto-generated method stub
-		return 0;
+		return mapChunkSizeMB;
 	}
 	public double getMapSortBufferMB() {
-		// TODO Auto-generated method stub
-		return 0;
+		return mapSortBufferMB;
 	}
 	public double getMapMergeFactor() {
-		// TODO Auto-generated method stub
-		return 0;
+		return mapMergeFactor;
 	}
 	public double getRedChunkSizeMB() {
-		// TODO Auto-generated method stub
-		return 0;
+		return redChunkSizeMB;
 	}
 	public double getRedSortBufferMB() {
-		// TODO Auto-generated method stub
-		return 0;
+		return redSortBufferMB;
 	}
 	public double getRedMergeFactor() {
-		// TODO Auto-generated method stub
-		return 0;
+		return redMergeFactor;
 	}
 	
 	

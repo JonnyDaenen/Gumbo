@@ -1,4 +1,4 @@
-package gumbo.engine.hadoop.reporter;
+package gumbo.engine.general.grouper.sample;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.structures.data.RelationSchema;
@@ -17,13 +17,21 @@ import org.apache.hadoop.fs.Path;
 public class RelationSampler {
 
 	RelationFileMapping mapping;
+	int blocksPerFile;
+	int blockSize;
 	
 	
 	public RelationSampler(RelationFileMapping mapping) {
-		this.mapping = mapping;
+		this(mapping, 10, 4096);
 	}
 	
-	public RelationSampleContainer sample(int blocksPerFile,int blockSize) throws SamplingException {
+	public RelationSampler(RelationFileMapping mapping, int blocksPerFile, int blockSize) {
+		this.mapping = mapping;
+		this.blocksPerFile = blocksPerFile;
+		this.blockSize = blockSize;
+	}
+	
+	public RelationSampleContainer sample() throws SamplingException {
 		
 		RelationSampleContainer rsc = new RelationSampleContainer();
 		
@@ -43,6 +51,8 @@ public class RelationSampler {
 			
 			rsc.setSamples(rs, allSamples);
 		}
+		
+		rsc.setMapping(mapping);
 		
 		return rsc;
 	}

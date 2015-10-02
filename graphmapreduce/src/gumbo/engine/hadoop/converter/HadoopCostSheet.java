@@ -2,13 +2,13 @@ package gumbo.engine.hadoop.converter;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.engine.general.grouper.costmodel.CostSheet;
+import gumbo.engine.general.grouper.sample.RelationSampleContainer;
+import gumbo.engine.general.grouper.sample.RelationSampler;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.hadoop.reporter.RelationReport;
 import gumbo.engine.hadoop.reporter.RelationReporter;
-import gumbo.engine.hadoop.reporter.RelationSampleContainer;
-import gumbo.engine.hadoop.reporter.RelationSampler;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
@@ -178,7 +178,7 @@ public class HadoopCostSheet implements CostSheet {
 			// FIXME are these samples ok for new runs?
 			if (samples == null) {
 				LOG.info("Sampling...");
-				samples = sampler.sample(10, 4 * 1024);
+				samples = sampler.sample();
 				LOG.info("Samples taken.");
 			}
 			

@@ -2,6 +2,7 @@ package gumbo.engine.hadoop.reporter;
 
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.engine.general.grouper.sample.RelationSampleContainer;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.Tuple;
 
@@ -17,7 +18,8 @@ import org.apache.hadoop.util.LineReader;
 
 
 /**
- * Contains a list of samples for a set of Relations.
+ * Contains a list of tuples for a set of Relations.
+ * The tuples are divided in two parts: a small set and a large set, determined by a percentage.
  * 
  * @author Jonny Daenen
  *
@@ -29,17 +31,17 @@ public class RelationTupleSampleContainer {
 	Map<RelationSchema, Long> smallBytes;
 	Map<RelationSchema, Long> bigBytes;
 	
-	int smallsize;
+	double pctSmall;
 	private RelationFileMapping mapping;
 
-	public RelationTupleSampleContainer(RelationSampleContainer rsc, int smallSize, RelationFileMapping mapping) {
+	public RelationTupleSampleContainer(RelationSampleContainer rsc, double pctSmall) {
 		smallset = new HashMap<>();
 		bigset = new HashMap<>();
 		smallBytes = new HashMap<>();
 		bigBytes = new HashMap<>();
 		
-		this.smallsize = smallSize;
-		this.mapping = mapping;
+		this.pctSmall = pctSmall;
+		this.mapping = rsc.getMapping();
 		
 		init(rsc);
 	}
@@ -73,6 +75,8 @@ public class RelationTupleSampleContainer {
 		long smallbytes = 0;
 		long bigbytes = 0;
 		
+		int bound = (int)(pctSmall * rawbytes.length);
+		
 		for (int i = 0; i < rawbytes.length; i++) {
 			// read text lines
 			try(LineReader l = new LineReader(new ByteArrayInputStream(rawbytes[i]))) {
@@ -96,7 +100,7 @@ public class RelationTupleSampleContainer {
 					
 					Tuple tuple = new Tuple(s);
 					
-					if (i < smallsize) {
+					if (i < bound) {
 						smallbytes += bytesread;
 						smallset.get(rs).add(tuple);
 					} else {

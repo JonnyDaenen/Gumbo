@@ -4,5 +4,5 @@ import gumbo.engine.general.grouper.structures.CalculationGroup;
 
 public interface CostModel {
 	
-	public double calculateCost(MRSettings s, GroupedJob job);
+	public double calculateCost(CalculationGroup job);
 }

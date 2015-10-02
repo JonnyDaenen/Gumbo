@@ -5,6 +5,7 @@ import gumbo.engine.general.algorithms.AlgorithmInterruptedException;
 import gumbo.engine.general.algorithms.Map1GuardAlgorithm;
 import gumbo.engine.general.algorithms.Map1GuardedAlgorithm;
 import gumbo.engine.general.algorithms.MapAlgorithm;
+import gumbo.engine.general.grouper.sample.RelationSampleContainer;
 import gumbo.engine.general.messagefactories.Map1GuardMessageFactoryInterface;
 import gumbo.engine.general.messagefactories.Map1GuardedMessageFactoryInterface;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
@@ -74,8 +75,7 @@ public class RelationReporter {
 
 		// split sample in two unequal parts, to improve extrapolation
 		byte [][] bytes = rsc.getSamples(relation);
-		int split = (int) Math.floor(bytes.length / 10);
-		RelationTupleSampleContainer rtsc = new RelationTupleSampleContainer(rsc, split, mapping);
+		RelationTupleSampleContainer rtsc = new RelationTupleSampleContainer(rsc, 0.1);
 
 
 		RelationReport rr1 = runSample(relation, group, eso, guard, rtsc.getSmallTuples(relation),rtsc.getSmallSize(relation));
