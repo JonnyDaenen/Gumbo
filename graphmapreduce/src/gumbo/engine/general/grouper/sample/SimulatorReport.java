@@ -70,5 +70,15 @@ public class SimulatorReport {
 	public void addGuardedOutBytes(long byteSize) {
 		this.guardedOutBytes += byteSize;
 	}
+	
+	@Override
+	public String toString() {
+		String s = "";
+		s += "Guard in bytes: " + guardInBytes + "\n";
+		s += "Guarded in bytes: " + guardedInBytes + "\n";
+		s += "Guard out bytes: " + guardOutBytes + "\n";
+		s += "Guarded out bytes: " + guardedOutBytes + "\n";
+		return s;
+	}
 
 }

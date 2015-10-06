@@ -80,6 +80,12 @@ public class CalculationGroup {
 			sb.append(System.lineSeparator());
 		}
 
+		sb.append("\tGuard In Bytes" + guardInBytes + System.lineSeparator());
+		sb.append("\tGuarded In Bytes" + guardedInBytes + System.lineSeparator());
+		sb.append("\tGuard Out Bytes" + guardOutBytes + System.lineSeparator());
+		sb.append("\tGuarded Out Bytes" + guardedOutBytes + System.lineSeparator());
+		
+
 		return sb.toString();
 
 	}
@@ -164,7 +170,7 @@ public class CalculationGroup {
 		result.semijoins.addAll(this.semijoins);
 		result.semijoins.addAll(g.semijoins);
 		
-		return null;
+		return result;
 	}
 
 

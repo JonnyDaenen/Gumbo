@@ -17,24 +17,25 @@ import gumbo.structures.gfexpressions.io.Pair;
 public class CostMatrix {
 
 	CalculationGroup [] jobs;
-
 	CalculationGroup [][] combinations;
-
-
 
 	public CostMatrix(Set<CalculationGroup> jobs) {
 		this.jobs = jobs.toArray(new CalculationGroup[0]);
+		this.combinations = new CalculationGroup[this.jobs.length][this.jobs.length];
 	}
 
 
 	public void putCost(CalculationGroup job1, CalculationGroup job2, CalculationGroup cost) {
-		combinations[getIndex(job1)][getIndex(job2)] = cost;
+		int i = getIndex(job1);
+		int j = getIndex(job2);
+		combinations[i][j] = cost;
+		combinations[j][i] = cost;
 
 	}
 
-	private int getIndex(CalculationGroup job1) {
+	private int getIndex(CalculationGroup job) {
 		for (int i = 0; i < jobs.length; i++) {
-			if (jobs[i].equals(job1))
+			if (jobs[i] != null && jobs[i].equals(job))
 				return i;
 		}
 		return -1;
@@ -50,7 +51,7 @@ public class CostMatrix {
 	}
 
 	public void removeEntry(CalculationGroup job1, CalculationGroup job2) {
-		combinations[getIndex(job1)][getIndex(job2)] = null;
+		putCost(job1, job2, null);
 	}
 
 	public void remove(CalculationGroup job) {
@@ -98,15 +99,21 @@ public class CostMatrix {
 		boolean found = false;
 		int i = 0, j = 0;
 
-		for (; i < combinations.length; i++) {
-			for (; j < combinations[i].length; j++) {
+		for (i = 0; i < combinations.length; i++) {
+			for (j = 0; j < combinations[i].length; j++) {
+				if (!exists(i,j))
+					continue;
+
 				CalculationGroup job = combinations[i][j];
-				if (job != null && job.getCost() > maxCost) {
-					maxCost = job.getCost();
+
+				double savings = getCostSavings(getJob(i), getJob(j), job);
+				if (savings > maxCost) {
+					maxCost = savings;
 					maxi = i;
 					maxj = j;
 					found = true;
 				}
+
 			}
 		}
 
@@ -115,6 +122,11 @@ public class CostMatrix {
 		else
 			return new Pair<>(maxi,maxj);
 	}
+
+	private boolean exists(int i, int j) {
+		return i != j && getJob(i) != null && getJob(j) != null && combinations[i][j] != null;
+	}
+
 
 	public CalculationGroup getBestNewGroup() {
 		Pair<Integer,Integer> result = getBestOldGroupsIndex();
@@ -141,10 +153,65 @@ public class CostMatrix {
 		for (int i = 0; i < combinations.length; i++) {
 			for (int j = 0 ; j < combinations[i].length; j++) {
 				CalculationGroup job = combinations[i][j];
-				System.out.print(job.getCost());
+				if (!exists(i,j)) {
+					System.out.print("---\t");
+					continue;
+				}
+				double savings = getCostSavings(getJob(i), getJob(j), job);
+				System.out.print(savings + "\t");
 			}
-			
+
 			System.out.println();
 		}
+		
+		System.out.println("Legend:");
+		
+
+		for (int i = 0; i < jobs.length; i++) {
+			if (jobs[i] != null)
+				System.out.println(i + ":" + jobs[i]);
+			
+		}
+		
+		for (int i = 0; i < combinations.length; i++) {
+			for (int j = 0 ; j < combinations[i].length; j++) {
+				CalculationGroup job = combinations[i][j];
+				if (!exists(i,j)) {
+					continue;
+				}
+				double savings = getCostSavings(getJob(i), getJob(j), job);
+				System.out.println(i + "," + j + ":" + savings + System.lineSeparator() + combinations[i][j]);
+				System.out.println(i + ":" + jobs[i]);
+				System.out.println(j + ":" + jobs[j]);
+				System.out.println("---");
+			}
+
+			System.out.println();
+		}
+		
+		int a = 0;
+	}
+
+
+	public Collection<Pair<CalculationGroup,CalculationGroup>> getGroupPairs() {
+		HashSet<Pair<CalculationGroup,CalculationGroup>> result = new HashSet<>();
+
+		for (int i = 0; i < combinations.length; i++) {
+			if (jobs[i] == null)
+				continue;
+			for (int j = i+1 ; j < combinations[i].length; j++) {
+				if (jobs[i] == null)
+					continue;
+				result.add(new Pair<>(getJob(i),getJob(j)));
+			}
+		}
+
+		return result;
+	}
+
+
+	public double getCostSavings(CalculationGroup job1, CalculationGroup job2, CalculationGroup combinedJob) {
+
+		return job1.getCost() + job2.getCost() - combinedJob.getCost();
 	}
 }

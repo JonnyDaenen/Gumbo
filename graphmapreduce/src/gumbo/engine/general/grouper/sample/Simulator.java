@@ -83,7 +83,6 @@ public class Simulator {
 			// FIXME throw error
 			e.printStackTrace();
 		}
-
 		return report;
 	}
 

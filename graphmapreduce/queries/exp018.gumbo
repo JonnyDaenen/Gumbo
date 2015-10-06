@@ -7,12 +7,12 @@ Scratch -> scratch/EXP_018/
 // Please check if the system uses file grouping,
 // to make sure the resulting measurements are correct!
 
-R,2 <- input/experiments/EXP_018/R, CSV
-S,1 <- input/experiments/EXP_018/S, CSV
-T,1 <- input/experiments/EXP_018/S, CSV
-U,1 <- input/experiments/EXP_018/S, CSV
-V,1 <- input/experiments/EXP_018/S, CSV
-W,1 <- input/experiments/EXP_018/S, CSV
+R,2 <- input/experiments/EXP_018b/R, CSV
+S,1 <- input/experiments/EXP_018b/S, CSV
+T,1 <- input/experiments/EXP_018b/S, CSV
+U,1 <- input/experiments/EXP_018b/S, CSV
+V,1 <- input/experiments/EXP_018b/S, CSV
+W,1 <- input/experiments/EXP_018b/S, CSV
 
 
 #Out1(x)&R(x,y)&S(y)&T(y)&U(y)&V(y)W(y);

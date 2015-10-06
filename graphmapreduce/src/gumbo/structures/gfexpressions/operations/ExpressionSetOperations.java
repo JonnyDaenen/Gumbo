@@ -224,7 +224,7 @@ public class ExpressionSetOperations implements Externalizable {
 
 		atoms = allAtoms.toArray(new GFAtomicExpression[0]);
 		Arrays.sort(atoms);
-		LOG.info("ATOM IDS:" + Arrays.toString(atoms));
+//		LOG.info("ATOM IDS:" + Arrays.toString(atoms));
 		atomIDs.clear();
 		for (int i = 0; i < atoms.length; i++) {
 			atomIDs.put(atoms[i], i);

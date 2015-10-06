@@ -63,7 +63,7 @@ public class CostBasedGrouper implements GroupingPolicy {
 		RelationSampler sampler = new RelationSampler(rfm);
 		RelationSampleContainer rawSamples = sampler.sample();
 		samples = new RelationTupleSampleContainer(rawSamples, 0.1);
-		
+
 		simulator = new Simulator(samples, rfm, execSettings);
 	}
 
@@ -73,9 +73,9 @@ public class CostBasedGrouper implements GroupingPolicy {
 	 * @param group
 	 */
 	private void init(CalculationGroup group) {
-		
+
 		Set<CalculationGroup> jobs = new HashSet<CalculationGroup>();
-		
+
 		// calculate single costs
 		for ( GuardedSemiJoinCalculation calculation : group.getAll()) {
 
@@ -91,30 +91,30 @@ public class CostBasedGrouper implements GroupingPolicy {
 			double cost = costModel.calculateCost(calcJob);
 			calcJob.setCost(cost);
 		}
-		
+
 
 		costMatrix = new CostMatrix(jobs);
-		
+
 		// calculate pair costs
-		for (CalculationGroup job1 : costMatrix.getGroups()) {
-			for (CalculationGroup job2 : costMatrix.getGroups()) {
-				
-				// merge jobs
-				CalculationGroup newJob = job1.merge(job2);
-				
-				// calculate intermediate data
-				estimateParameters(newJob);
-				
-				// calculate and set cost
-				double cost = costModel.calculateCost(newJob);
-				newJob.setCost(cost);
-				
-				costMatrix.putCost(job1, job2, newJob);
-				
-			}
-			
+		for (Pair<CalculationGroup,CalculationGroup> p : costMatrix.getGroupPairs()) {
+			CalculationGroup job1 = p.fst;
+			CalculationGroup job2 = p.snd;
+			// merge jobs
+			CalculationGroup newJob = job1.merge(job2);
+
+			// calculate intermediate data
+			estimateParameters(newJob);
+
+			// calculate and set cost
+			double cost = costModel.calculateCost(newJob);
+			newJob.setCost(cost);
+
+			costMatrix.putCost(job1, job2, newJob);
+
+
 		}
-		
+
+
 
 	}
 
@@ -138,22 +138,23 @@ public class CostBasedGrouper implements GroupingPolicy {
 		// greedy approach
 
 		while (costMatrix.hasPositiveCost()) {
+			costMatrix.printMatrix();
 
 			// pick best merge option
 			Pair<CalculationGroup, CalculationGroup> oldGroups = costMatrix.getBestOldGroups();
 			CalculationGroup group1 = oldGroups.fst;
 			CalculationGroup group2 = oldGroups.snd;
-			
+
 
 			CalculationGroup newGroup = costMatrix.getBestNewGroup();
-			
-			
+
+
 			// update cost matrix
 			costMatrix.remove(group1);
 			costMatrix.remove(group2);
 			costMatrix.add(newGroup);
 			
-			
+
 			// calculate new combinations
 			for (CalculationGroup existingGroup : costMatrix.getGroups()) {
 
@@ -161,12 +162,12 @@ public class CostBasedGrouper implements GroupingPolicy {
 				estimateParameters(newGroupEstimate);
 				costMatrix.putCost(existingGroup, newGroup, newGroupEstimate);
 			}
-			
-			
+
+
 		}
 
 		LinkedList<CalculationGroup> l = new LinkedList<CalculationGroup>(costMatrix.getGroups());
-		
+
 		return l;
 	}
 
