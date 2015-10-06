@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CalculationGroup {
+	
+	long scale = 1; // FIXME this should remain 1 in release versions!
 
 	Set<GuardedSemiJoinCalculation> semijoins;
 	
@@ -84,6 +86,7 @@ public class CalculationGroup {
 		sb.append("\tGuarded In Bytes" + guardedInBytes + System.lineSeparator());
 		sb.append("\tGuard Out Bytes" + guardOutBytes + System.lineSeparator());
 		sb.append("\tGuarded Out Bytes" + guardedOutBytes + System.lineSeparator());
+		sb.append("\tCost:" + cost + System.lineSeparator());
 		
 
 		return sb.toString();
@@ -119,7 +122,7 @@ public class CalculationGroup {
 
 
 	public long getGuardInBytes() {
-		return guardInBytes;
+		return guardInBytes * scale;
 	}
 
 
@@ -129,7 +132,7 @@ public class CalculationGroup {
 
 
 	public long getGuardedInBytes() {
-		return guardedInBytes;
+		return guardedInBytes * scale;
 	}
 
 
@@ -139,7 +142,7 @@ public class CalculationGroup {
 
 
 	public long getGuardOutBytes() {
-		return guardOutBytes;
+		return guardOutBytes * scale;
 	}
 
 
@@ -149,7 +152,7 @@ public class CalculationGroup {
 
 
 	public long getGuardedOutBytes() {
-		return guardedOutBytes;
+		return guardedOutBytes * scale;
 	}
 
 

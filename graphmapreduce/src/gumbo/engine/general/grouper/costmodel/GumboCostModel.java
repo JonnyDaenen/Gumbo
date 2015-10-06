@@ -23,8 +23,8 @@ public class GumboCostModel implements CostModel {
 	}
 
 	public double getReduceCost(CalculationGroup job) {
-		long total_interm = job.getGuardOutBytes() + job.getGuardedOutBytes();
-		long total_input = job.getGuardInBytes() + job.getGuardedInBytes();
+		double total_interm = job.getGuardOutBytes() + job.getGuardedOutBytes();
+		double total_input = job.getGuardInBytes() + job.getGuardedInBytes();
 		
 		// convert to MegaBytes
 		total_interm /= (1024*1024);
@@ -59,11 +59,11 @@ public class GumboCostModel implements CostModel {
 		return getMapCost(job.getGuardedInBytes(), job.getGuardedOutBytes());
 	}
 
-	protected double getMapCost(long input, long intermedate){
+	protected double getMapCost(long inputBytes, long intermedateBytes){
 
 		// convert to MegaBytes
-		input /= (1024*1024);
-		intermedate /= (1024*1024);
+		double input = inputBytes / (double)(1024*1024);
+		double intermedate = intermedateBytes / (double)(1024*1024);
 
 		// read cost
 		double read_cost = settings.getLocalReadCost() * input;

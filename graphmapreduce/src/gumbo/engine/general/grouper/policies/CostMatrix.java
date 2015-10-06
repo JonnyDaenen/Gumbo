@@ -146,9 +146,17 @@ public class CostMatrix {
 
 		return result;
 	}
+	
+	public void printGroups() {
+		for (int i = 0; i < jobs.length; i++) {
+			if (jobs[i] != null)
+				System.out.println(i + ":" + jobs[i]);
+			
+		}
+	}
 
 
-	public void printMatrix() {
+	public void printMatrix(boolean legend) {
 
 		for (int i = 0; i < combinations.length; i++) {
 			for (int j = 0 ; j < combinations[i].length; j++) {
@@ -164,14 +172,13 @@ public class CostMatrix {
 			System.out.println();
 		}
 		
+		if (!legend)
+			return;
+		
 		System.out.println("Legend:");
 		
-
-		for (int i = 0; i < jobs.length; i++) {
-			if (jobs[i] != null)
-				System.out.println(i + ":" + jobs[i]);
-			
-		}
+		printGroups();
+		
 		
 		for (int i = 0; i < combinations.length; i++) {
 			for (int j = 0 ; j < combinations[i].length; j++) {

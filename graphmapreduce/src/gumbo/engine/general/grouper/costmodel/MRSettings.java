@@ -20,14 +20,14 @@ public class MRSettings {
 	// FUTURE extract these in separate class, as they can change for different jobs
 	// FIXME create default settings
 	// map settings
-	private double mapChunkSizeMB;
-	private double mapSortBufferMB;
-	private double mapMergeFactor;
+	private double mapChunkSizeMB = 128;
+	private double mapSortBufferMB = 100;
+	private double mapMergeFactor = 10;
 	
 	// reduce settings
-	private double redChunkSizeMB;
-	private double redSortBufferMB;
-	private double redMergeFactor;
+	private double redChunkSizeMB = 128;
+	private double redSortBufferMB = 1024 * 0.7;
+	private double redMergeFactor = 10;
 	
 	
 	public double getLocalReadCost() {

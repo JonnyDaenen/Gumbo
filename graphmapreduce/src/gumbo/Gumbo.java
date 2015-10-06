@@ -8,7 +8,9 @@ import gumbo.compiler.GumboPlan;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.CalculationPartitioner;
 import gumbo.engine.general.grouper.Grouper;
+import gumbo.engine.general.grouper.costmodel.GumboCostModel;
 import gumbo.engine.general.grouper.costmodel.IOCostModel;
+import gumbo.engine.general.grouper.costmodel.MRSettings;
 import gumbo.engine.general.grouper.costmodel.PaperCostModel;
 import gumbo.engine.general.grouper.policies.CostBasedGrouper;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
@@ -131,7 +133,8 @@ public class Gumbo extends Configured implements Tool {
 			long start = System.nanoTime();
 			FileMappingExtractor fme = new FileMappingExtractor(false);
 			RelationFileMapping mapping2 = fme.extractFileMapping(plan.getFileManager());
-			Grouper grouper = new Grouper(new CostBasedGrouper(mapping2, new IOCostModel(), settings));
+//			Grouper grouper = new Grouper(new CostBasedGrouper(mapping2, new IOCostModel(), settings));
+			Grouper grouper = new Grouper(new CostBasedGrouper(mapping2, new GumboCostModel(new MRSettings()), settings));
 			grouper.group(plan.getPartitions().getPartition(0));
 //
 			System.out.println((System.nanoTime() - start)/(1000000000.0D));

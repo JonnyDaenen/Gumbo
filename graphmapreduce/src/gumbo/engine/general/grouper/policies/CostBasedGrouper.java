@@ -87,9 +87,6 @@ public class CostBasedGrouper implements GroupingPolicy {
 			// calculate intermediate data
 			estimateParameters(calcJob);
 
-			// calculate and set cost
-			double cost = costModel.calculateCost(calcJob);
-			calcJob.setCost(cost);
 		}
 
 
@@ -102,12 +99,8 @@ public class CostBasedGrouper implements GroupingPolicy {
 			// merge jobs
 			CalculationGroup newJob = job1.merge(job2);
 
-			// calculate intermediate data
+			// calculate intermediate data and cost
 			estimateParameters(newJob);
-
-			// calculate and set cost
-			double cost = costModel.calculateCost(newJob);
-			newJob.setCost(cost);
 
 			costMatrix.putCost(job1, job2, newJob);
 
@@ -130,6 +123,10 @@ public class CostBasedGrouper implements GroupingPolicy {
 		calcJob.setGuardOutBytes(report.getGuardOutBytes());
 		calcJob.setGuardedOutBytes(report.getGuardedOutBytes());
 
+		// calculate and set cost
+		double cost = costModel.calculateCost(calcJob);
+		calcJob.setCost(cost);
+
 	}
 
 
@@ -138,7 +135,8 @@ public class CostBasedGrouper implements GroupingPolicy {
 		// greedy approach
 
 		while (costMatrix.hasPositiveCost()) {
-			costMatrix.printMatrix();
+			costMatrix.printMatrix(true);
+			//			costMatrix.printGroups();
 
 			// pick best merge option
 			Pair<CalculationGroup, CalculationGroup> oldGroups = costMatrix.getBestOldGroups();
@@ -153,13 +151,17 @@ public class CostBasedGrouper implements GroupingPolicy {
 			costMatrix.remove(group1);
 			costMatrix.remove(group2);
 			costMatrix.add(newGroup);
-			
+
+
 
 			// calculate new combinations
 			for (CalculationGroup existingGroup : costMatrix.getGroups()) {
 
 				CalculationGroup newGroupEstimate = newGroup.merge(existingGroup);
+
+				// calculate intermediate data and cost
 				estimateParameters(newGroupEstimate);
+
 				costMatrix.putCost(existingGroup, newGroup, newGroupEstimate);
 			}
 
