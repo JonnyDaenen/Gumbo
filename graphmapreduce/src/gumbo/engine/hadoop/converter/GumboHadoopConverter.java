@@ -103,8 +103,6 @@ public class GumboHadoopConverter {
 	private HadoopExecutorSettings settings;
 	private FileManager fileManager;
 	private FileMappingExtractor extractor;
-	
-	private GrouperFactory grouperFactory;
 
 	private String queryName;
 
@@ -175,9 +173,7 @@ public class GumboHadoopConverter {
 		RelationFileMapping mapping1 = extractor.extractFileMapping(fileManager);
 		
 		// get the correct grouper
-		String policyName = settings.getProperty(AbstractExecutorSettings.mapOutputGroupingPolicy);
-		GroupingPolicies policy = Enum.valueOf(GroupingPolicies.class, policyName);
-		Grouper grouper = grouperFactory.createGrouper(policy, mapping1, settings);
+		Grouper grouper = GrouperFactory.createGrouper(mapping1, settings);
 
 		// apply grouping
 		extractor.setIncludeOutputDirs(true);

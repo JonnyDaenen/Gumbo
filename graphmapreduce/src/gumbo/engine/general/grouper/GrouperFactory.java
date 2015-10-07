@@ -23,28 +23,33 @@ public class GrouperFactory {
 
 		Grouper g = null;
 
+		LOG.info("Creating a grouper with policy " + p);
 		switch (p) {
 		case ALLGROUP:
 			g = new Grouper(new AllGrouper());
-
+			break;
+			
 		case NONEGROUP:
 			g = new Grouper(new NoneGrouper());
+			break;
 
 		case COSTGROUP_GUMBO:
 			g = new Grouper(new CostBasedGrouper(rfm, new GumboCostModel(new MRSettings(systemSettings)), systemSettings));
+			break;
 
 		case COSTGROUP_PAPER:
 			g = new Grouper(new CostBasedGrouper(rfm, new PaperCostModel(new MRSettings(systemSettings)), systemSettings));
+			break;
 
 		case COSTGROUP_IO:
 			g = new Grouper(new CostBasedGrouper(rfm, new IOCostModel(), systemSettings));
+			break;
 
 		default:
-			LOG.info("Grouping policy not found, turning off grouping.");
+			LOG.warn("Grouping policy not found, turning off grouping.");
 			g = new Grouper(new NoneGrouper());
 		}
 
-		LOG.info("Setting grouping policy to " + p);
 
 		return g;
 
