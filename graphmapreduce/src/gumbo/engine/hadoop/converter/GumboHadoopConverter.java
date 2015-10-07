@@ -11,9 +11,13 @@ import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.engine.general.grouper.Decomposer;
 import gumbo.engine.general.grouper.Grouper;
+import gumbo.engine.general.grouper.GrouperFactory;
+import gumbo.engine.general.grouper.GroupingPolicies;
 import gumbo.engine.general.grouper.costmodel.CostCalculator;
 import gumbo.engine.general.grouper.costmodel.CostSheet;
 import gumbo.engine.general.grouper.costmodel.GGTCostCalculator;
+import gumbo.engine.general.grouper.costmodel.MRSettings;
+import gumbo.engine.general.grouper.policies.CostBasedGrouper;
 import gumbo.engine.general.grouper.policies.GroupingPolicy;
 import gumbo.engine.general.grouper.policies.KeyGrouper;
 import gumbo.engine.general.grouper.policies.NoneGrouper;
@@ -42,7 +46,9 @@ import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOpera
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,6 +74,8 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
  * A converter for transforming a {@link GumboPlan} into a Map-Reduce plan for hadoop.
  * Serialization is used to pass objects and settings to the mappers and reducers,
  * a file manager is used to create new locations for intermediate data.
+ * 
+ * FIXME this is a becoming a code mess and needs a thorough cleanup!
  * 
  * 
  * @author Jonny Daenen
@@ -95,6 +103,8 @@ public class GumboHadoopConverter {
 	private HadoopExecutorSettings settings;
 	private FileManager fileManager;
 	private FileMappingExtractor extractor;
+	
+	private GrouperFactory grouperFactory;
 
 	private String queryName;
 
@@ -163,33 +173,36 @@ public class GumboHadoopConverter {
 		// TODO also filter out non-related relations
 		extractor.setIncludeOutputDirs(false); // TODO the grouper should filter out the non-existing files
 		RelationFileMapping mapping1 = extractor.extractFileMapping(fileManager);
-		HadoopCostSheet costSheet = new HadoopCostSheet(mapping1, settings);
-		Grouper grouper = getGrouper(mapping1,costSheet, expressions);
+		
+		// get the correct grouper
+		String policyName = settings.getProperty(AbstractExecutorSettings.mapOutputGroupingPolicy);
+		GroupingPolicies policy = Enum.valueOf(GroupingPolicies.class, policyName);
+		Grouper grouper = grouperFactory.createGrouper(policy, mapping1, settings);
 
 		// apply grouping
 		extractor.setIncludeOutputDirs(true);
 		RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
-		List<CalculationUnitGroup> groups = grouper.group(cug);
+		List<CalculationGroup> groups = grouper.group(cug);
 		Decomposer decomposer = new Decomposer();
 
-
+		MRSettings mrSettings = new MRSettings(settings);
 
 		// create a job for each group
-		for (CalculationUnitGroup group : groups) {
-
-			// estimate number of reducers 
-			// OPTIMIZE for key partitioner, this work has been done already
-			CalculationGroup decomposedGroup = decomposer.decompose(group);
-			costSheet.initialize(decomposedGroup, expressions);
-
-			jobs.add(createRound1Job(group, expressions, mapping,costSheet.getNumReducers()));
+		for (CalculationGroup group : groups) {
+			// get number of reducers 
+			long mbytes = (group.getGuardedOutBytes() + group.getGuardedOutBytes()) / (1024*1024);
+			int numReducers = (int) Math.ceil(( mbytes / mrSettings.getRedChunkSizeMB()));
+			
+			// create the MR job
+			ControlledJob groupJob = createRound1Job(group, mapping, numReducers);
+			jobs.add(groupJob);
 		}
 
 		return jobs;
 	}
 
 
-	private ControlledJob createRound1Job(CalculationUnitGroup cug, Collection<GFExistentialExpression> expressions, RelationFileMapping mapping, int numRed) throws ConversionException {
+	private ControlledJob createRound1Job(CalculationGroup cug, RelationFileMapping mapping, int numRed) throws ConversionException {
 
 		try {
 
@@ -205,13 +218,13 @@ public class GumboHadoopConverter {
 			LOG.info(mapping);
 
 			// wrapper object for expressions
-			ExpressionSetOperations eso = new ExpressionSetOperations(extractExpressions(cug),expressions,mapping); 
+			ExpressionSetOperations eso = new ExpressionSetOperations(cug.getExpressions(),cug.getRelevantExpressions(),mapping); 
 
 			// pass arguments via configuration
 			Configuration conf = hadoopJob.getConfiguration();
 			conf.set("formulaset", serializer.serializeSet(eso.getExpressionSet()));
 			conf.set("relationfilemapping", eso.getFileMapping().toString());
-			conf.set("allexpressions", serializer.serializeSet(expressions));
+			conf.set("allexpressions", serializer.serializeSet(cug.getRelevantExpressions()));
 
 
 			/* MAPPER */
@@ -296,12 +309,9 @@ public class GumboHadoopConverter {
 		} 
 
 	}
-
-
+	
 	/**
 	 * Extracts the GF expressions from the group.
-	 * @param cug
-	 * @return
 	 */
 	private Collection<GFExistentialExpression> extractExpressions(CalculationUnitGroup cug) {
 
@@ -313,12 +323,25 @@ public class GumboHadoopConverter {
 		}
 		return set;
 	}
-
+	
 	/**
-	 * @param cug
-	 * @return
+	 * Constructs a name for a group of calculations.
 	 */
 	private String getName(CalculationUnitGroup cug, int round) {
+		String name = "";
+		for (RelationSchema rs : cug.getOutputRelations() ) {
+			// TODO sort
+			name += rs.getName()+"+";
+		}
+		return queryName + "_"+ name + "_"+round;
+	}
+
+
+
+	/**
+	 * Constructs a name for a group of calculations.
+	 */
+	private String getName(CalculationGroup cug, int round) {
 		String name = "";
 		for (RelationSchema rs : cug.getOutputRelations() ) {
 			// TODO sort
@@ -527,31 +550,5 @@ public class GumboHadoopConverter {
 	}
 
 
-	private Grouper getGrouper(RelationFileMapping mapping, CostSheet costSheet, Collection<GFExistentialExpression> allExpressions) {
-		String className = settings.getProperty(AbstractExecutorSettings.mapOutputGroupingClass);
-
-		Class<?> polClass;
-		try {
-			polClass = GroupingPolicy.class.getClassLoader().loadClass(className);
-
-
-			GroupingPolicy policy;
-			if (KeyGrouper.class.isAssignableFrom(polClass) ) {
-				Class[] argClasses = {CostCalculator.class};
-
-				// extract right mapping
-
-				policy = (GroupingPolicy) polClass.getConstructor(argClasses).newInstance(new GGTCostCalculator(costSheet, allExpressions));
-			} else {
-				policy = (GroupingPolicy) polClass.newInstance();
-			}
-			return new Grouper(policy);
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-			LOG.error("Unable to create requested grouper, reverting to default behaviour (no grouping)");
-			e.printStackTrace();
-		}
-
-		return new Grouper(new NoneGrouper());
-	}
 
 }

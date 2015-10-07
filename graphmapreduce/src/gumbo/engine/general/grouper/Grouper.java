@@ -63,7 +63,7 @@ public class Grouper {
 	 * @param partition
 	 * @return
 	 */
-	public List<CalculationUnitGroup> group(CalculationUnitGroup partition) {
+	public List<CalculationGroup> group(CalculationUnitGroup partition) {
 
 		// decompose
 		CalculationGroup semijoins = decomposer.decompose(partition);
@@ -77,9 +77,9 @@ public class Grouper {
 		LOG.info("Grouping: " +  groupedSJ);
 
 		// convert to useful round 1 queries
-		List<CalculationUnitGroup> groupedRound1Queries = makeRound1Queries(groupedSJ);
+//		List<CalculationUnitGroup> groupedRound1Queries = makeRound1Queries(groupedSJ);
 
-		return groupedRound1Queries;
+		return groupedSJ;
 
 	}
 

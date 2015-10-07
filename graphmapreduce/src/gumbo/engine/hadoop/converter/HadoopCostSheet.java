@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Jonny Daenen
  *
  */
+@Deprecated
 public class HadoopCostSheet implements CostSheet {
 
 	private static final Log LOG = LogFactory.getLog(HadoopCostSheet.class);

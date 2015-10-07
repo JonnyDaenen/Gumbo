@@ -188,6 +188,18 @@ public class CalculationGroup {
 		
 		return result;
 	}
+	
+	public Collection<RelationSchema> getOutputRelations() {
+		
+		
+		HashSet<RelationSchema> result = new HashSet<RelationSchema>(semijoins.size());
+		
+		for (GuardedSemiJoinCalculation sj : semijoins) {
+			result.add(sj.getExpression().getOutputSchema());
+		}
+		
+		return result;
+	}
 
 
 	public Collection<GFExistentialExpression> getExpressions() {
@@ -207,5 +219,8 @@ public class CalculationGroup {
 		return sameLevelExpressions;
 		
 	}
+
+
+	
 
 }

@@ -1,5 +1,6 @@
 package gumbo.engine.general.grouper.costmodel;
 
+import gumbo.engine.general.settings.AbstractExecutorSettings;
 
 /**
  * Contains relative cost for processing 1 unit of data.
@@ -17,8 +18,15 @@ public class MRSettings {
 	protected double cost_sort = 52;
 	protected double cost_red = 0.12;
 	
+//	protected double cost_local_r = 1;
+//	protected double cost_local_w = 1;
+//	protected double cost_hdfs_w = 1;
+//	protected double cost_hdfs_r = 1;
+//	protected double cost_transfer = 50;
+//	protected double cost_sort = 0.1;
+//	protected double cost_red = 1000;
+	
 	// FUTURE extract these in separate class, as they can change for different jobs
-	// FIXME create default settings
 	// map settings
 	private double mapChunkSizeMB = 128;
 	private double mapSortBufferMB = 100;
@@ -30,6 +38,9 @@ public class MRSettings {
 	private double redMergeFactor = 10;
 	
 	
+	public MRSettings(AbstractExecutorSettings systemSettings) {
+		// FIXME #group extract settings
+	}
 	public double getLocalReadCost() {
 		return cost_local_r;
 	}

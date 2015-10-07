@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Jonny Daenen
  *
  */
+@Deprecated
 public class KeyGrouper implements GroupingPolicy {
 
 

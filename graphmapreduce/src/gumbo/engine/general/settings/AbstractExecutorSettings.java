@@ -4,6 +4,9 @@
 package gumbo.engine.general.settings;
 
 import gumbo.compiler.partitioner.HeightPartitioner;
+import gumbo.engine.general.grouper.GroupingPolicies;
+import gumbo.engine.general.grouper.costmodel.GumboCostModel;
+import gumbo.engine.general.grouper.policies.CostBasedGrouper;
 import gumbo.engine.general.grouper.policies.KeyGrouper;
 
 import java.lang.reflect.Field;
@@ -48,7 +51,8 @@ public abstract class AbstractExecutorSettings {
 
 	public static final String PROOF_SYMBOL = "gumbo.engine.proofsymbol";
 	public static final String partitionClass = "gumbo.compiler.partitioner";
-	public static final String mapOutputGroupingClass = "gumbo.engine.mapOutputGroupingClass";
+	public static final String mapOutputGroupingPolicy = "gumbo.engine.mapOutputGroupingPolicy";
+
 	
 	// constants
 	public static final String REDUCER_SIZE_MB = "gumbo.engine.hadoop.reducersize_mb";
@@ -65,7 +69,7 @@ public abstract class AbstractExecutorSettings {
 		
 		setProperty(PROOF_SYMBOL, "#");
 		setProperty(partitionClass, HeightPartitioner.class.getCanonicalName());
-		setProperty(mapOutputGroupingClass, KeyGrouper.class.getCanonicalName());
+		setProperty(mapOutputGroupingPolicy, GroupingPolicies.COSTGROUP_GUMBO.toString());
 //		setProperty(mapOutputGroupingClass, AllGrouper.class.getCanonicalName());
 		
 		setProperty(REDUCER_SIZE_MB, "1024");
