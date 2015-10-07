@@ -136,7 +136,7 @@ public class CostBasedGrouper implements GroupingPolicy {
 		// greedy approach
 
 		while (costMatrix.hasPositiveCost()) {
-			costMatrix.printMatrix(true);
+//			costMatrix.printMatrix(true);
 			//			costMatrix.printGroups();
 
 			// pick best merge option
