@@ -35,6 +35,8 @@ import org.apache.hadoop.fs.Path;
  * This is useful when operations are called often, e.g., in a mapper or reducer:
  * The internal caching system will then avoid repeated calculations.
  * 
+ * CLEAN this class needs to be redesigned and rewritten
+ * 
  * @author Jonny Daenen
  * 
  */
@@ -185,10 +187,6 @@ public class ExpressionSetOperations implements Externalizable {
 				set.add(c);
 			}
 		}
-
-
-
-
 
 
 		// map between guards and projections

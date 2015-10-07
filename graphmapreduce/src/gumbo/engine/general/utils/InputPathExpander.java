@@ -132,7 +132,7 @@ public class InputPathExpander {
 	private void addFiles(FileStatus[] files, HashSet<Path> result) throws IOException {
 		for ( FileStatus f : files) {
 			Path p = f.getPath();
-			if (f.isFile()  && f.getLen() > 0 && fs.exists(p))
+			if (f.isFile()  && f.getLen() > 0 && fs.exists(p) && !p.getName().startsWith("."))
 				result.add(p);
 			else 
 				LOG.info("Skipping input file: " + p);

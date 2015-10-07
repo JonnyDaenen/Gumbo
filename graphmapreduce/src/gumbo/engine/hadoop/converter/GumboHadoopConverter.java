@@ -153,9 +153,6 @@ public class GumboHadoopConverter {
 
 		Set<ControlledJob> jobs = new HashSet<>();
 
-		// create one master group to contain everything
-		Collection<GFExistentialExpression> expressions = extractExpressions(cug);
-
 		// extract file mapping where input paths are made specific
 		// TODO also filter out non-related relations
 		extractor.setIncludeOutputDirs(false); // TODO the grouper should filter out the non-existing files
@@ -168,7 +165,6 @@ public class GumboHadoopConverter {
 		extractor.setIncludeOutputDirs(true);
 		RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
 		List<CalculationGroup> groups = grouper.group(cug);
-		Decomposer decomposer = new Decomposer();
 
 		MRSettings mrSettings = new MRSettings(settings);
 
@@ -176,7 +172,7 @@ public class GumboHadoopConverter {
 		for (CalculationGroup group : groups) {
 			// get number of reducers 
 			long mbytes = (group.getGuardedOutBytes() + group.getGuardedOutBytes()) / (1024*1024);
-			int numReducers = (int) Math.ceil(( mbytes / mrSettings.getRedChunkSizeMB()));
+			int numReducers = (int) Math.max(1,Math.ceil(( mbytes / mrSettings.getRedChunkSizeMB())));
 			
 			// create the MR job
 			ControlledJob groupJob = createRound1Job(group, mapping, numReducers);

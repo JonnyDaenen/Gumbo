@@ -67,7 +67,9 @@ public class FileMappingExtractor {
 	 * @return a new expanded mapping
 	 */
 	private RelationFileMapping expand(RelationFileMapping ins) {
+		
 		RelationFileMapping newMapping = new RelationFileMapping();
+		
 		for (RelationSchema rs : ins.getSchemas()){
 			Collection<Path> expandedPaths = expander.expand(ins.getPaths(rs));
 			for (Path p : expandedPaths) {
