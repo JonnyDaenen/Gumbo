@@ -35,6 +35,10 @@ import gumbo.engine.general.grouper.Decomposer;
 import gumbo.engine.general.grouper.Grouper;
 import gumbo.engine.general.grouper.GrouperFactory;
 import gumbo.engine.general.grouper.costmodel.MRSettings;
+import gumbo.engine.general.grouper.sample.RelationSampleContainer;
+import gumbo.engine.general.grouper.sample.RelationSampler;
+import gumbo.engine.general.grouper.sample.Simulator;
+import gumbo.engine.general.grouper.sample.SimulatorReport;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.general.utils.FileMappingExtractor;
@@ -51,12 +55,14 @@ import gumbo.engine.hadoop.mrcomponents.round1.reducers.GFReducer1Optimized;
 import gumbo.engine.hadoop.mrcomponents.round2.mappers.GFMapper2GuardCsv;
 import gumbo.engine.hadoop.mrcomponents.round2.mappers.GFMapper2GuardRelOptimized;
 import gumbo.engine.hadoop.mrcomponents.round2.reducers.GFReducer2Optimized;
+import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
+import gumbo.utils.estimation.SamplingException;
 
 
 /**
@@ -71,6 +77,10 @@ import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOpera
  * 
  */
 public class GumboHadoopConverter {
+	
+
+	private static final Log LOG = LogFactory.getLog(GumboHadoopConverter.class);
+
 
 
 	public class ConversionException extends Exception {
@@ -94,9 +104,8 @@ public class GumboHadoopConverter {
 	private FileMappingExtractor extractor;
 
 	private String queryName;
+	private RelationTupleSampleContainer samples;
 
-
-	private static final Log LOG = LogFactory.getLog(GumboHadoopConverter.class);
 
 	/**
 	 * @param grouper 
@@ -157,7 +166,7 @@ public class GumboHadoopConverter {
 		// TODO also filter out non-related relations
 		extractor.setIncludeOutputDirs(false); // TODO the grouper should filter out the non-existing files
 		RelationFileMapping mapping1 = extractor.extractFileMapping(fileManager);
-		
+
 		// get the correct grouper
 		Grouper grouper = GrouperFactory.createGrouper(mapping1, settings);
 
@@ -165,23 +174,68 @@ public class GumboHadoopConverter {
 		extractor.setIncludeOutputDirs(true);
 		RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
 		List<CalculationGroup> groups = grouper.group(cug);
-
 		MRSettings mrSettings = new MRSettings(settings);
+
+		// FIXME #group jobs do not necessarily have input and intermediate sizes
+		// hence the number of reducers is wrong!
+		this.samples = null;
 
 		// create a job for each group
 		for (CalculationGroup group : groups) {
+
+			if (!group.hasInfo()) {
+				LOG.info("Missing size estimates, sampling data.");
+				addInfo(group,mapping1,settings);
+			}
+
 			// get number of reducers 
-			long mbytes = (group.getGuardedOutBytes() + group.getGuardedOutBytes()) / (1024*1024);
+			double mbytes = (group.getGuardedOutBytes() + group.getGuardedOutBytes()) / (1024.0*1024);
+			LOG.info("Intermediate data size: " + mbytes + " MB");
 			int numReducers = (int)Math.max(1,Math.ceil(( mbytes / mrSettings.getRedChunkSizeMB())));
-			
+			LOG.info("Num reducers: " + numReducers);
+
 			// create the MR job
 			ControlledJob groupJob = createRound1Job(group, mapping, numReducers);
 			jobs.add(groupJob);
 		}
 
+		this.samples = null;
+
 		return jobs;
 	}
 
+
+	private void addInfo(CalculationGroup group, RelationFileMapping rfm, AbstractExecutorSettings settings) {
+		// CLEAN this can be extracted in a separate module, since this is cuplicate code from the CostBasedGrouper
+		try {
+			// create simulator
+			if (this.samples == null) {
+				RelationSampler sampler = new RelationSampler(rfm);
+				RelationSampleContainer rawSamples;
+
+				rawSamples = sampler.sample();
+
+				samples = new RelationTupleSampleContainer(rawSamples, 0.1);
+			}
+
+			
+			// execute algorithm on sample
+			Simulator simulator = new Simulator(samples, rfm, settings);
+			SimulatorReport report = simulator.execute(group);
+
+			// fill in parameters 
+			group.setGuardInBytes(report.getGuardInBytes());
+			group.setGuardedInBytes(report.getGuardedInBytes());
+			group.setGuardOutBytes(report.getGuardOutBytes());
+			group.setGuardedOutBytes(report.getGuardedOutBytes());
+		} catch (SamplingException e) {
+			LOG.error("Could not sample: " + e.getMessage());
+			LOG.warn("Trying to continue without sampling, possibly too few reducers will be allocated.");
+		}
+
+
+
+	}
 
 	private ControlledJob createRound1Job(CalculationGroup cug, RelationFileMapping mapping, int numRed) throws ConversionException {
 
@@ -290,7 +344,7 @@ public class GumboHadoopConverter {
 		} 
 
 	}
-	
+
 	/**
 	 * Extracts the GF expressions from the group.
 	 */
@@ -304,7 +358,7 @@ public class GumboHadoopConverter {
 		}
 		return set;
 	}
-	
+
 	/**
 	 * Constructs a name for a group of calculations.
 	 */
@@ -363,7 +417,7 @@ public class GumboHadoopConverter {
 			// extract file mapping where input paths are made specific
 			// TODO also filter out non-related relations
 			RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
-			
+
 			// wrapper object for expressions
 			// expressions have _all_ the expressions in them
 			Collection<GFExistentialExpression> allExpressions = extractExpressions(cug);

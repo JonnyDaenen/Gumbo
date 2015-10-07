@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.engine.general.algorithms.AlgorithmInterruptedException;
 import gumbo.engine.general.algorithms.Map1GuardAlgorithm;
@@ -15,6 +18,7 @@ import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.messagefactories.Map1GuardMessageFactoryInterface;
 import gumbo.engine.general.messagefactories.Map1GuardedMessageFactoryInterface;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
+import gumbo.engine.hadoop.converter.GumboHadoopConverter;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactory;
 import gumbo.engine.hadoop.reporter.FakeMapper;
@@ -37,6 +41,8 @@ import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOpera
  *
  */
 public class Simulator {
+
+	private static final Log LOG = LogFactory.getLog(Simulator.class);
 
 
 	RelationFileMapping mapping;
@@ -63,6 +69,9 @@ public class Simulator {
 			// for each input relation
 			for (RelationSchema r : calcJob.getInputRelations()) {
 
+				if (LOG.isDebugEnabled())
+					LOG.debug("Sampling relation " + r);
+				
 				// calculate size
 				long byteSize = mapping.getRelationSize(r);
 
@@ -77,6 +86,7 @@ public class Simulator {
 					report.addGuardedInBytes(byteSize);
 					report.addGuardedOutBytes(intermediate);
 				}
+				
 
 			}
 		} catch (GFOperationInitException | AlgorithmInterruptedException e) {

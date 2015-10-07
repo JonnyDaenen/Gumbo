@@ -14,12 +14,12 @@ public class CalculationGroup {
 
 	Set<GuardedSemiJoinCalculation> semijoins;
 	
-	long guardInBytes;
-	long guardedInBytes;
-	long guardOutBytes;
-	long guardedOutBytes;
+	long guardInBytes = 0;
+	long guardedInBytes = 0;
+	long guardOutBytes = 0;
+	long guardedOutBytes = 0;
 	
-	double cost;
+	double cost = 0;
 
 	private Collection<GFExistentialExpression> sameLevelExpressions;
 
@@ -218,6 +218,12 @@ public class CalculationGroup {
 			return getExpressions();
 		return sameLevelExpressions;
 		
+	}
+
+
+	public boolean hasInfo() {
+		
+		return !(guardedInBytes == 0 && guardInBytes == 0 && guardedOutBytes == 0 && guardOutBytes == 0);
 	}
 
 
