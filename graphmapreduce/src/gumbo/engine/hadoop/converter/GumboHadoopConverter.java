@@ -3,6 +3,28 @@
  */
 package gumbo.engine.hadoop.converter;
 
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.InputFormat;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
 import gumbo.compiler.GumboPlan;
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnit;
@@ -12,15 +34,7 @@ import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.engine.general.grouper.Decomposer;
 import gumbo.engine.general.grouper.Grouper;
 import gumbo.engine.general.grouper.GrouperFactory;
-import gumbo.engine.general.grouper.GroupingPolicies;
-import gumbo.engine.general.grouper.costmodel.CostCalculator;
-import gumbo.engine.general.grouper.costmodel.CostSheet;
-import gumbo.engine.general.grouper.costmodel.GGTCostCalculator;
 import gumbo.engine.general.grouper.costmodel.MRSettings;
-import gumbo.engine.general.grouper.policies.CostBasedGrouper;
-import gumbo.engine.general.grouper.policies.GroupingPolicy;
-import gumbo.engine.general.grouper.policies.KeyGrouper;
-import gumbo.engine.general.grouper.policies.NoneGrouper;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.general.utils.FileMappingExtractor;
@@ -43,31 +57,6 @@ import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
-
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.NullWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.InputFormat;
-import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
-import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 
 /**

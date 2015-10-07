@@ -3,18 +3,15 @@
  */
 package gumbo.engine.general.settings;
 
-import gumbo.compiler.partitioner.HeightPartitioner;
-import gumbo.engine.general.grouper.GroupingPolicies;
-import gumbo.engine.general.grouper.costmodel.GumboCostModel;
-import gumbo.engine.general.grouper.policies.CostBasedGrouper;
-import gumbo.engine.general.grouper.policies.KeyGrouper;
-
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import gumbo.compiler.partitioner.HeightPartitioner;
+import gumbo.engine.general.grouper.GroupingPolicies;
 
 
 

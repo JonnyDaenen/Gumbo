@@ -1,10 +1,9 @@
-package gumbo.engine.general.grouper.policies;
+package gumbo.engine.general.grouper.structures;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.structures.gfexpressions.io.Pair;
 
 /**

@@ -13,6 +13,7 @@ import gumbo.engine.general.grouper.sample.RelationSampler;
 import gumbo.engine.general.grouper.sample.Simulator;
 import gumbo.engine.general.grouper.sample.SimulatorReport;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
+import gumbo.engine.general.grouper.structures.CostMatrix;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
