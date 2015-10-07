@@ -195,6 +195,15 @@ public abstract class AbstractExecutorSettings {
 			setProperty(key, value);
 		}
 	}
+	
+	public double getNumProperty(String key, double defaultValue) {
+		try {
+			return getNumProperty(key);
+		} catch (Exception e) {
+			LOG.warn("Failed to find setting with key '"+key+"', reverting to default value " + defaultValue);
+			return defaultValue;
+		}
+	}
 
 	public double getNumProperty(String key) {
 		String val = getProperty(key);

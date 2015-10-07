@@ -8,7 +8,7 @@ import gumbo.engine.general.settings.AbstractExecutorSettings;
  *
  */
 public class MRSettings {
-	
+
 	// costs
 	protected double cost_local_r = 1;
 	protected double cost_local_w = 1;
@@ -17,28 +17,38 @@ public class MRSettings {
 	protected double cost_transfer = 5;
 	protected double cost_sort = 52;
 	protected double cost_red = 0.12;
-	
-//	protected double cost_local_r = 1;
-//	protected double cost_local_w = 1;
-//	protected double cost_hdfs_w = 1;
-//	protected double cost_hdfs_r = 1;
-//	protected double cost_transfer = 50;
-//	protected double cost_sort = 0.1;
-//	protected double cost_red = 1000;
-	
+
+	//	protected double cost_local_r = 1;
+	//	protected double cost_local_w = 1;
+	//	protected double cost_hdfs_w = 1;
+	//	protected double cost_hdfs_r = 1;
+	//	protected double cost_transfer = 50;
+	//	protected double cost_sort = 0.1;
+	//	protected double cost_red = 1000;
+
 	// FUTURE extract these in separate class, as they can change for different jobs
 	// map settings
 	private double mapChunkSizeMB = 128;
 	private double mapSortBufferMB = 100;
 	private double mapMergeFactor = 10;
-	
+
 	// reduce settings
 	private double redChunkSizeMB = 128;
 	private double redSortBufferMB = 1024 * 0.7;
 	private double redMergeFactor = 10;
-	
-	
+
+
 	public MRSettings(AbstractExecutorSettings systemSettings) {
+
+		mapChunkSizeMB = systemSettings.getNumProperty("dfs.blocksize") / (1024*1024);
+		mapSortBufferMB = systemSettings.getNumProperty("mapreduce.task.io.sort.mb");
+		mapMergeFactor = systemSettings.getNumProperty("mapreduce.task.io.sort.factor");
+
+		redChunkSizeMB = systemSettings.getNumProperty(AbstractExecutorSettings.REDUCER_SIZE_MB);
+		redSortBufferMB = systemSettings.getNumProperty("mapreduce.reduce.memory.mb", 1024);
+		redSortBufferMB *= systemSettings.getNumProperty("mapreduce.reduce.shuffle.input.buffer.percent");
+		redMergeFactor = systemSettings.getNumProperty("mapreduce.task.io.sort.factor");
+
 		// FIXME #group extract settings
 	}
 	public double getLocalReadCost() {
@@ -53,19 +63,19 @@ public class MRSettings {
 	public double getHdfsWriteCost() {
 		return cost_hdfs_w;
 	}
-	
+
 	public double getTransferCost() {
 		return cost_transfer;
 	}
-	
+
 	public double getSortCost() {
 		return cost_sort;
 	}
 	public double getReduceCost() {
 		return cost_red;
 	}
-	
-	
+
+
 	public double getMapChunkSizeMB() {
 		return mapChunkSizeMB;
 	}
@@ -84,9 +94,9 @@ public class MRSettings {
 	public double getRedMergeFactor() {
 		return redMergeFactor;
 	}
-	
-	
-	
-	
+
+
+
+
 
 }

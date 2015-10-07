@@ -176,8 +176,7 @@ public class GumboHadoopConverter {
 		List<CalculationGroup> groups = grouper.group(cug);
 		MRSettings mrSettings = new MRSettings(settings);
 
-		// FIXME #group jobs do not necessarily have input and intermediate sizes
-		// hence the number of reducers is wrong!
+		// reset samples for this job conversion
 		this.samples = null;
 
 		// create a job for each group
@@ -198,8 +197,6 @@ public class GumboHadoopConverter {
 			ControlledJob groupJob = createRound1Job(group, mapping, numReducers);
 			jobs.add(groupJob);
 		}
-
-		this.samples = null;
 
 		return jobs;
 	}
