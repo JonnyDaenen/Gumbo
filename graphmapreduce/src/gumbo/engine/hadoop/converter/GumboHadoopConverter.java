@@ -172,7 +172,7 @@ public class GumboHadoopConverter {
 		for (CalculationGroup group : groups) {
 			// get number of reducers 
 			long mbytes = (group.getGuardedOutBytes() + group.getGuardedOutBytes()) / (1024*1024);
-			int numReducers = (int) Math.max(1,Math.ceil(( mbytes / mrSettings.getRedChunkSizeMB())));
+			int numReducers = (int)Math.max(1,Math.ceil(( mbytes / mrSettings.getRedChunkSizeMB())));
 			
 			// create the MR job
 			ControlledJob groupJob = createRound1Job(group, mapping, numReducers);
