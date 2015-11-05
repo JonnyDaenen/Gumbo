@@ -82,10 +82,10 @@ public class CalculationGroup {
 			sb.append(System.lineSeparator());
 		}
 
-		sb.append("\tGuard In Bytes" + guardInBytes + System.lineSeparator());
-		sb.append("\tGuarded In Bytes" + guardedInBytes + System.lineSeparator());
-		sb.append("\tGuard Out Bytes" + guardOutBytes + System.lineSeparator());
-		sb.append("\tGuarded Out Bytes" + guardedOutBytes + System.lineSeparator());
+		sb.append("\tGuard In Bytes" + getGuardInBytes() + System.lineSeparator());
+		sb.append("\tGuarded In Bytes" + getGuardedInBytes() + System.lineSeparator());
+		sb.append("\tGuard Out Bytes" + getGuardOutBytes() + System.lineSeparator());
+		sb.append("\tGuarded Out Bytes" + getGuardedOutBytes() + System.lineSeparator());
 		sb.append("\tCost:" + cost + System.lineSeparator());
 		
 

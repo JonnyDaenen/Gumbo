@@ -1,131 +1,3 @@
-hadoop.security.groups.cache.secs
-hadoop.http.authentication.kerberos.keytab
-hadoop.jetty.logs.serve.aliases
-ipc.server.tcpnodelay
-s3.client-write-packet-size
-hadoop.security.group.mapping.ldap.directory.search.timeout
-io.compression.codec.bzip2.library
-hadoop.work.around.non.threadsafe.getpwuid
-gumbo.engine.mapOutputGroupingPolicy
-fs.ftp.host.port
-net.topology.node.switch.mapping.impl
-ipc.client.connection.maxidletime
-fs.df.interval
-tfile.io.chunk.size
-fs.automatic.close
-ha.health-monitor.sleep-after-disconnect.ms
-io.map.index.interval
-ha.zookeeper.parent-znode
-fs.s3n.multipart.uploads.enabled
-io.seqfile.sorter.recordlimit
-hadoop.util.hash.type
-s3native.stream-buffer-size
-fs.AbstractFileSystem.file.impl
-io.seqfile.local.dir
-net.topology.script.number.args
-fs.s3n.multipart.copy.block.size
-hadoop.http.authentication.token.validity
-fs.s3.block.size
-ha.failover-controller.graceful-fence.rpc-timeout.ms
-s3native.bytes-per-checksum
-hadoop.security.group.mapping
-hadoop.ssl.keystores.factory.class
-fs.AbstractFileSystem.hdfs.impl
-fs.s3.maxRetries
-hadoop.http.filter.initializers
-hadoop.security.groups.cache.warn.after.ms
-io.serializations
-fs.client.resolve.remote.symlinks
-hadoop.ssl.enabled.protocols
-hadoop.kerberos.kinit.command
-rpc.metrics.quantile.enable
-hadoop.ssl.enabled
-io.bytes.per.checksum
-fs.trash.interval
-ipc.client.kill.max
-ipc.server.listen.queue.size
-s3.blocksize
-ipc.client.connect.max.retries.on.timeouts
-fs.s3.buffer.dir
-fs.s3n.block.size
-ha.health-monitor.connect-retry-interval.ms
-nfs.exports.allowed.hosts
-file.client-write-packet-size
-hadoop.security.instrumentation.requires.admin
-ha.failover-controller.cli-check.rpc-timeout.ms
-ha.zookeeper.acl
-ipc.client.connect.max.retries
-io.file.buffer.size
-io.mapfile.bloom.size
-ipc.client.connect.retry.interval
-hadoop.tmp.dir
-fs.swift.impl
-ha.failover-controller.graceful-fence.connection.retries
-mapreduce.client.genericoptionsparser.used
-ftp.blocksize
-hadoop.ssl.require.client.cert
-hadoop.security.uid.cache.secs
-file.stream-buffer-size
-ipc.client.idlethreshold
-io.skip.checksum.errors
-ftp.stream-buffer-size
-file.blocksize
-ftp.replication
-fs.trash.checkpoint.interval
-hadoop.security.authorization
-hadoop.http.authentication.simple.anonymous.allowed
-file.bytes-per-checksum
-s3native.client-write-packet-size
-hadoop.rpc.socket.factory.class.default
-ha.health-monitor.check-interval.ms
-fs.har.impl.disable.cache
-ipc.client.tcpnodelay
-io.seqfile.lazydecompress
-ipc.client.connect.timeout
-hadoop.common.configuration.version
-hadoop.security.authentication
-io.map.index.skip
-io.native.lib.available
-file.replication
-s3.replication
-fs.AbstractFileSystem.har.impl
-fs.s3n.multipart.uploads.block.size
-io.mapfile.bloom.error.rate
-tfile.fs.output.buffer.size
-fs.du.interval
-hadoop.security.group.mapping.ldap.ssl
-fs.defaultFS
-hadoop.security.group.mapping.ldap.search.attr.member
-hadoop.security.group.mapping.ldap.search.attr.group.name
-dfs.ha.fencing.ssh.connect-timeout
-hadoop.ssl.client.conf
-hadoop.user.group.static.mapping.overrides
-tfile.fs.input.buffer.size
-ha.failover-controller.new-active.rpc-timeout.ms
-hadoop.ssl.hostname.verifier
-hadoop.http.authentication.type
-hadoop.ssl.server.conf
-s3native.replication
-hadoop.security.group.mapping.ldap.search.filter.group
-s3native.blocksize
-hadoop.http.authentication.kerberos.principal
-net.topology.impl
-io.seqfile.compress.blocksize
-hadoop.security.group.mapping.ldap.search.filter.user
-ftp.bytes-per-checksum
-s3.stream-buffer-size
-ftp.client-write-packet-size
-ipc.client.fallback-to-simple-auth-allowed
-ha.zookeeper.session-timeout.ms
-s3.bytes-per-checksum
-hadoop.rpc.protection
-fs.permissions.umask-mode
-fs.s3.sleepTimeSeconds
-ha.health-monitor.rpc-timeout.ms
-hadoop.http.staticuser.user
-hadoop.http.authentication.signature.secret.file
-fs.AbstractFileSystem.viewfs.impl
-fs.ftp.host
 gumbo.engine.guardAddressOptimizationOn=true
 gumbo.engine.proofsymbol=#
 gumbo.engine.mapOutputGroupingPolicy=COSTGROUP_GUMBO
@@ -138,24 +10,24 @@ gumbo.engine.reduceOutputGroupingOptimizationOn=true
 gumbo.engine.mapOutputGroupingOptimizationOn=true
 gumbo.engine.requestAtomIdOptimizationOn=true
 gumbo.engine.guardKeepAliveOptimizationOn=true
-[INFO] 15/10/07 16:59:29 gumbo.Gumbo: Input: 
+[INFO] 15/11/05 13:28:14 gumbo.Gumbo: Input: 
 A(x0);input/experiments/EXP_024/2/A;csv;'R(x0,x1);input/experiments/EXP_024/2/R;csv;'S(x0);input/experiments/EXP_024/2/S;csv;'T(x0);input/experiments/EXP_024/2/T;csv;'U(x0);input/experiments/EXP_024/2/U;csv;'V(x0);input/experiments/EXP_024/2/V;csv;'W(x0);input/experiments/EXP_024/2/W;csv;'G(x0,x1);input/experiments/EXP_024/2/G;csv;
 Output: output/EXP_018
 Scratch: scratch/EXP_018
 Queries: 
-[(Out1(x) : R(x,y) & (S(y) & (T(y) & (U(y) & (V(y) & W(y)))))), (Out3(x) : G(x,y) & (S(x) & A(x))), (Out2(x) : R(x,y) & (S(x) & (T(x) & (U(x) & (V(x) & W(x))))))]
+[(Out1(x) : R(x,y) & (S(y) & (T(y) & (U(y) & (V(y) & W(y)))))), (Out2(x) : R(x,y) & (S(x) & (T(x) & (U(x) & (V(x) & W(x)))))), (Out3(x) : G(x,y) & (S(x) & A(x)))]
 
-[INFO] 15/10/07 16:59:29 compiler.GFCompiler: Adding suffix to scratch and output paths: /20151007_165929
-[INFO] 15/10/07 16:59:29 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
-[INFO] 15/10/07 16:59:29 compiler.GFCompiler: Number of BGFEs: 3
-[INFO] 15/10/07 16:59:29 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
-[INFO] 15/10/07 16:59:29 compiler.GFCompiler: Number of CUs: 3
-[INFO] 15/10/07 16:59:29 compiler.GFCompiler: Linking Calculation Units (CUs)...
-[INFO] 15/10/07 16:59:29 compiler.GFCompiler: Creating initial file mapping...
-[INFO] 15/10/07 16:59:29 compiler.GFCompiler: file mapping:
-Out root: output/EXP_018/20151007_165929
-Scratch root: scratch/EXP_018/20151007_165929
-Temp root: scratch/EXP_018/20151007_165929/tmp
+[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Adding suffix to scratch and output paths: /20151105_132814
+[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
+[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Number of BGFEs: 3
+[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
+[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Number of CUs: 3
+[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Linking Calculation Units (CUs)...
+[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Creating initial file mapping...
+[INFO] 15/11/05 13:28:14 compiler.GFCompiler: file mapping:
+Out root: output/EXP_018/20151105_132814
+Scratch root: scratch/EXP_018/20151105_132814
+Temp root: scratch/EXP_018/20151105_132814/tmp
 A(x0) <- [input/experiments/EXP_024/2/A]
 R(x0,x1) <- [input/experiments/EXP_024/2/R]
 S(x0) <- [input/experiments/EXP_024/2/S]
@@ -164,13 +36,13 @@ U(x0) <- [input/experiments/EXP_024/2/U]
 V(x0) <- [input/experiments/EXP_024/2/V]
 W(x0) <- [input/experiments/EXP_024/2/W]
 G(x0,x1) <- [input/experiments/EXP_024/2/G]
-Out3(x0) -> [output/EXP_018/20151007_165929/OUT_0_Out3]
-Out2(x0) -> [output/EXP_018/20151007_165929/OUT_1_Out2]
-Out1(x0) -> [output/EXP_018/20151007_165929/OUT_2_Out1]
+Out3(x0) -> [output/EXP_018/20151105_132814/OUT_0_Out3]
+Out2(x0) -> [output/EXP_018/20151105_132814/OUT_1_Out2]
+Out1(x0) -> [output/EXP_018/20151105_132814/OUT_2_Out1]
 Temp dirs: 
 
-[INFO] 15/10/07 16:59:29 compiler.GFCompiler: Partitioning...
-[INFO] 15/10/07 16:59:29 compiler.GFCompiler: Number of partitions: 1
+[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Partitioning...
+[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Number of partitions: 1
 
 Query:
 exp024.gumbo
@@ -178,13 +50,13 @@ exp024.gumbo
 Partitions:
 -----------
 Calculation Unit Partitions: {
-{id : 0 Depends on: None. - (Out2(x) : R(x,y) & (S(x) & (T(x) & (U(x) & (V(x) & W(x))))))id : 1 Depends on: None. - (Out1(x) : R(x,y) & (S(y) & (T(y) & (U(y) & (V(y) & W(y))))))id : 2 Depends on: None. - (Out3(x) : G(x,y) & (S(x) & A(x)))}
+{id : 0 Depends on: None. - (Out1(x) : R(x,y) & (S(y) & (T(y) & (U(y) & (V(y) & W(y))))))id : 1 Depends on: None. - (Out2(x) : R(x,y) & (S(x) & (T(x) & (U(x) & (V(x) & W(x))))))id : 2 Depends on: None. - (Out3(x) : G(x,y) & (S(x) & A(x)))}
 }
 Folders:
 -------
-Out root: output/EXP_018/20151007_165929
-Scratch root: scratch/EXP_018/20151007_165929
-Temp root: scratch/EXP_018/20151007_165929/tmp
+Out root: output/EXP_018/20151105_132814
+Scratch root: scratch/EXP_018/20151105_132814
+Temp root: scratch/EXP_018/20151105_132814/tmp
 A(x0) <- [input/experiments/EXP_024/2/A]
 R(x0,x1) <- [input/experiments/EXP_024/2/R]
 S(x0) <- [input/experiments/EXP_024/2/S]
@@ -193,20 +65,58 @@ U(x0) <- [input/experiments/EXP_024/2/U]
 V(x0) <- [input/experiments/EXP_024/2/V]
 W(x0) <- [input/experiments/EXP_024/2/W]
 G(x0,x1) <- [input/experiments/EXP_024/2/G]
-Out3(x0) -> [output/EXP_018/20151007_165929/OUT_0_Out3]
-Out2(x0) -> [output/EXP_018/20151007_165929/OUT_1_Out2]
-Out1(x0) -> [output/EXP_018/20151007_165929/OUT_2_Out1]
+Out3(x0) -> [output/EXP_018/20151105_132814/OUT_0_Out3]
+Out2(x0) -> [output/EXP_018/20151105_132814/OUT_1_Out2]
+Out1(x0) -> [output/EXP_018/20151105_132814/OUT_2_Out1]
 Temp dirs: 
 
-[WARN] 15/10/07 16:59:29 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-[INFO] 15/10/07 16:59:29 hadoop.HadoopEngine: Creating Job Control for: exp024.gumbo
-[INFO] 15/10/07 16:59:29 hadoop.HadoopEngine: Starting Job-control thread: Gumbo-Workflow-Thread_exp024.gumbo
-[INFO] 15/10/07 16:59:29 hadoop.HadoopEngine: Processing partition queue.
-[INFO] 15/10/07 16:59:29 utils.PartitionQueue: Dependencies: []
-[INFO] 15/10/07 16:59:29 utils.PartitionQueue: Calculation group {
-id : 0 Depends on: None. - (Out2(x) : R(x,y) & (S(x) & (T(x) & (U(x) & (V(x) & W(x))))))
-id : 1 Depends on: None. - (Out1(x) : R(x,y) & (S(y) & (T(y) & (U(y) & (V(y) & W(y))))))
-id : 2 Depends on: None. - (Out3(x) : G(x,y) & (S(x) & A(x)))
-} is ready to be scheduled.
-[INFO] 15/10/07 16:59:29 grouper.GrouperFactory: Creating a grouper with policy COSTGROUP_GUMBO
-[WARN] 15/10/07 16:59:29 settings.AbstractExecutorSettings: Failed to find setting with key 'mapreduce.reduce.memory.mb', reverting to default value 1024.0
+[WARN] 15/11/05 13:28:14 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[INFO] 15/11/05 13:28:14 grouper.GrouperFactory: Creating a grouper with policy COSTGROUP_GUMBO
+[WARN] 15/11/05 13:28:14 settings.AbstractExecutorSettings: Failed to find setting with key 'mapreduce.reduce.memory.mb', reverting to default value 1024.0
+MRSettings:
+mapChunkSizeMB:128.0
+mapSortBufferMB:100.0
+mapMergeFactor:10.0
+redChunkSizeMB:1024.0
+redSortBufferMB:716.8
+redMergeFactor:10.0
+
+[WARN] 15/11/05 13:28:14 settings.AbstractExecutorSettings: Failed to find setting with key 'mapreduce.reduce.memory.mb', reverting to default value 1024.0
+[INFO] 15/11/05 13:28:14 grouper.Grouper: Decomposition complete: 	R(x,y) |X S(y)
+	R(x,y) |X S(x)
+	R(x,y) |X U(y)
+	R(x,y) |X U(x)
+	R(x,y) |X T(y)
+	R(x,y) |X T(x)
+	G(x,y) |X A(x)
+	R(x,y) |X W(y)
+	R(x,y) |X W(x)
+	R(x,y) |X V(y)
+	R(x,y) |X V(x)
+	G(x,y) |X S(x)
+	Guard In Bytes0
+	Guarded In Bytes0
+	Guard Out Bytes0
+	Guarded Out Bytes0
+	Cost:0.0
+
+[INFO] 15/11/05 13:28:16 grouper.Grouper: Grouping complete: 1 group(s)
+[INFO] 15/11/05 13:28:16 grouper.Grouper: Grouping: [	R(x,y) |X S(y)
+	R(x,y) |X S(x)
+	R(x,y) |X U(y)
+	R(x,y) |X U(x)
+	R(x,y) |X T(y)
+	R(x,y) |X T(x)
+	G(x,y) |X A(x)
+	R(x,y) |X W(x)
+	R(x,y) |X W(y)
+	R(x,y) |X V(x)
+	R(x,y) |X V(y)
+	G(x,y) |X S(x)
+	Guard In Bytes27556208000
+	Guarded In Bytes41332725000
+	Guard Out Bytes63475172000
+	Guarded Out Bytes66357275000
+	Cost:1701298.6215789518
+]
+2.864010806

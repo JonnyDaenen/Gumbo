@@ -63,23 +63,23 @@ public class GumboCostModel implements CostModel {
 
 		// convert to MegaBytes
 		double input = inputBytes / (double)(1024*1024);
-		double intermedate = intermedateBytes / (double)(1024*1024);
+		double intermediate = intermedateBytes / (double)(1024*1024);
 
 		// read cost
 		double read_cost = settings.getLocalReadCost() * input;
 
 		// sort cost
 		double mappers = Math.ceil((double)input / settings.getMapChunkSizeMB());
-		double one_map_output_size = (double)intermedate / mappers;
+		double one_map_output_size = (double)intermediate / mappers;
 		double one_map_sort_chunks = one_map_output_size / settings.getMapSortBufferMB();
 		double sort_cost = one_map_sort_chunks * settings.getMapChunkSizeMB() * settings.getSortCost();
 
 		// merge cost
 		double map_merge_levels = Math.ceil(Math.log10(one_map_sort_chunks)/Math.log10(settings.getMapMergeFactor()));
-		double merge_cost = map_merge_levels * intermedate * (settings.getLocalReadCost() + settings.getLocalWriteCost());
+		double merge_cost = map_merge_levels * intermediate * (settings.getLocalReadCost() + settings.getLocalWriteCost());
 
 		// store cost
-		double store_cost = intermedate * settings.getLocalWriteCost();
+		double store_cost = intermediate * settings.getLocalWriteCost();
 
 		return read_cost + sort_cost + merge_cost + store_cost;
 	}

@@ -131,6 +131,7 @@ public class Gumbo extends Configured implements Tool {
 
 
 		if (groupOnly) {
+			
 			long start = System.nanoTime();
 			FileMappingExtractor fme = new FileMappingExtractor(false);
 			RelationFileMapping mapping2 = fme.extractFileMapping(plan.getFileManager());

@@ -96,6 +96,20 @@ public class MRSettings {
 	}
 
 
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("MRSettings:" + System.lineSeparator());
+		sb.append("mapChunkSizeMB:" + mapChunkSizeMB + System.lineSeparator());
+		sb.append("mapSortBufferMB:" + mapSortBufferMB + System.lineSeparator());
+		sb.append("mapMergeFactor:" + mapMergeFactor + System.lineSeparator());
+		sb.append("redChunkSizeMB:" + redChunkSizeMB + System.lineSeparator());
+		sb.append("redSortBufferMB:" + redSortBufferMB + System.lineSeparator());
+		sb.append("redMergeFactor:" + redMergeFactor + System.lineSeparator());
+		
+		return sb.toString();
+		
+		
+	}
 
 
 
