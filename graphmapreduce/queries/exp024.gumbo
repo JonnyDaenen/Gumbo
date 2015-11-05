@@ -23,12 +23,12 @@ A,1 <- input/experiments/EXP_024/2/A, CSV
 
 #Out11(x)&R(x,y)S(x);
 #Out12(x)&R(x,y)T(x);
-//#Out13(x)&R(x,y)U(x);
-//#Out14(x)&R(x,y)V(x);
-//#Out16(x)&R(x,y)W(x);
+#Out13(x)&R(x,y)U(x);
+#Out14(x)&R(x,y)V(x);
+#Out16(x)&R(x,y)W(x);
 
 #Out21(x)&R(x,y)S(y); // be careful with adding this one
-#Out22(x)&R(x,y)T(y);
+//#Out22(x)&R(x,y)T(y);
 //#Out23(x)&R(x,y)U(y);
 //#Out24(x)&R(x,y)V(y);
 //#Out25(x)&R(x,y)W(y);

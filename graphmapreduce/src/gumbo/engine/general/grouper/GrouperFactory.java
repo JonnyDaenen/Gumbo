@@ -9,6 +9,7 @@ import gumbo.engine.general.grouper.costmodel.IOCostModel;
 import gumbo.engine.general.grouper.costmodel.MRSettings;
 import gumbo.engine.general.grouper.costmodel.PaperCostModel;
 import gumbo.engine.general.grouper.policies.AllGrouper;
+import gumbo.engine.general.grouper.policies.BestCostBasedGrouper;
 import gumbo.engine.general.grouper.policies.CostBasedGrouper;
 import gumbo.engine.general.grouper.policies.GuardedAtomGrouper;
 import gumbo.engine.general.grouper.policies.NoneGrouper;
@@ -45,6 +46,19 @@ public class GrouperFactory {
 		case COSTGROUP_IO:
 			g = new Grouper(new CostBasedGrouper(rfm, new IOCostModel(), systemSettings));
 			break;
+			
+		case BESTCOSTGROUP_GUMBO:
+			g = new Grouper(new BestCostBasedGrouper(rfm, new GumboCostModel(new MRSettings(systemSettings)), systemSettings));
+			break;
+
+		case BESTCOSTGROUP_PAPER:
+			g = new Grouper(new BestCostBasedGrouper(rfm, new PaperCostModel(new MRSettings(systemSettings)), systemSettings));
+			break;
+
+		case BESTCOSTGROUP_IO:
+			g = new Grouper(new BestCostBasedGrouper(rfm, new IOCostModel(), systemSettings));
+			break;
+			
 		case GUARDEDATOMGROUP:
 			g = new Grouper(new GuardedAtomGrouper());
 			break;
