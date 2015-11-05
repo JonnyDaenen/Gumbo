@@ -3,7 +3,11 @@ package gumbo.engine.general.grouper.policies;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.engine.general.algorithms.Red1Algorithm;
 import gumbo.engine.general.grouper.costmodel.CostModel;
 import gumbo.engine.general.grouper.sample.RelationSampleContainer;
 import gumbo.engine.general.grouper.sample.RelationSampler;
@@ -21,13 +25,14 @@ import gumbo.utils.estimation.SamplingException;
  * It is also possible to use this grouper to select a specific grouping. This can be done by providing
  * the {@link AbstractExecutorSettings.BESTGROUP_STOPINDICATOR} setting. When this value is different from 0,
  * the grouper will pick it up and use it as an offset. E.g. when there are 52 partitions (for 4 items),
- * a value of 3 will select the third partition generated (in a determinitic fashion).
+ * a value of 3 will select the third partition generated (in a deterministic fashion).
  * 
  * @author Jonny Daenen
  *
  */
 public class BestCostBasedGrouper implements GroupingPolicy {
 
+	private static final Log LOG = LogFactory.getLog(BestCostBasedGrouper.class);
 
 	private RelationFileMapping rfm;
 	private CostModel costModel;
@@ -110,7 +115,7 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 			nr++;
 			if (stopIndicator == 0 || nr == stopIndicator) {
 				double newCost = totalCost(candidate);
-//				System.out.println("Candidate solution found! " + nr + " " + newCost);
+				LOG.info("Candidate solution found! " + nr + " " + newCost);
 				
 				if (newCost < bestTotalCost) {
 					bestTotalCost = newCost;
@@ -174,7 +179,6 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 	private void estimateParameters(CalculationGroup calcJob) {
 		// execute algorithm on sample
 		SimulatorReport report = simulator.execute(calcJob);
-
 
 		// fill in parameters 
 		calcJob.setGuardInBytes(report.getGuardInBytes());
