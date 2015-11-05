@@ -15,6 +15,17 @@ import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
 import gumbo.utils.estimation.SamplingException;
 
+/**
+ * Round 1 grouper that selects the best partitioning based on a given cost model.
+ * The grouper traverses all possible partitionings recursively and keeps track of the best option.
+ * It is also possible to use this grouper to select a specific grouping. This can be done by providing
+ * the {@link AbstractExecutorSettings.BESTGROUP_STOPINDICATOR} setting. When this value is different from 0,
+ * the grouper will pick it up and use it as an offset. E.g. when there are 52 partitions (for 4 items),
+ * a value of 3 will select the third partition generated (in a determinitic fashion).
+ * 
+ * @author Jonny Daenen
+ *
+ */
 public class BestCostBasedGrouper implements GroupingPolicy {
 
 
@@ -24,14 +35,19 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 
 	private RelationTupleSampleContainer samples;
 	private Simulator simulator;
-	
+
 	private List<CalculationGroup> bestGrouping;
 	private double bestTotalCost;
+	private int nr;
+	private int stopIndicator = 0;
 
 	public BestCostBasedGrouper(RelationFileMapping rfm, CostModel costModel, AbstractExecutorSettings execSettings) {
 		this.rfm = rfm;
 		this.costModel = costModel;
 		this.execSettings = execSettings;
+
+		this.stopIndicator = (int) execSettings.getNumProperty(execSettings.BESTGROUP_STOPINDICATOR, 0);
+
 	}
 
 
@@ -41,13 +57,13 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 		try {
 			// sample relations
 			fetchSamples();
-			
+
 			// find best grouping
 			findBest(group);
-			
+
 			// return best grouping
 			return bestGrouping;
-			
+
 		} catch (SamplingException e) {
 			// FIXME exception
 			return null;
@@ -68,63 +84,80 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 			unitjobs.add(calcJob);
 
 		}
-		
 
+		nr = 0;
 		bestTotalCost = totalCost(unitjobs);
 		bestGrouping = unitjobs;
-		
-		
+
+
 		findBestGroupingRec(unitjobs, new LinkedList<CalculationGroup>());
-		
+
 	}
-	
+
 
 
 	private void findBestGroupingRec(List<CalculationGroup> unitjobs, List<CalculationGroup> candidate) {
-		
+
+		if (stopIndicator != 0 && nr >= stopIndicator) {
+			return;
+		}
+
 		if (unitjobs.size() == 0){
-			double newCost = totalCost(candidate);
-			System.out.println("Candidate solution found! " + " " + newCost);
-			if (newCost < bestTotalCost) {
-				bestTotalCost = newCost;
-				bestGrouping = candidate;
+
+			// we only calculate something when
+			// a. stop == 0, which means we will compare all
+			// b. stop == nr, which means we are interested only in the current solution
+			nr++;
+			if (stopIndicator == 0 || nr == stopIndicator) {
+				double newCost = totalCost(candidate);
+//				System.out.println("Candidate solution found! " + nr + " " + newCost);
+				
+				if (newCost < bestTotalCost) {
+					bestTotalCost = newCost;
+					bestGrouping = candidate;
+				}
+				
+				if (nr == stopIndicator) {
+					bestTotalCost = newCost;
+					bestGrouping = candidate;
+					return;
+				}
 			}
+
 		} else {
 			CalculationGroup head = unitjobs.remove(0);
-			
+
 			// add separately
 			List<CalculationGroup> newSolution = new LinkedList<CalculationGroup>(candidate);
 			newSolution.add(head);
 			findBestGroupingRec(unitjobs, newSolution);
-			
+
 			// merge with each existing group
 			for (CalculationGroup cg : candidate) {
 				CalculationGroup newCg = cg.merge(head);
-				
+
 				newSolution = new LinkedList<CalculationGroup>(candidate);
 				newSolution.remove(cg);
-				newSolution.add(newCg);
-				
+				newSolution.add(candidate.indexOf(cg), newCg);
+
 				findBestGroupingRec(unitjobs, newSolution);
 			}
-			
-			
+
+
 			unitjobs.add(0, head);
 		}
-		
-		
 	}
 
 
 	private double totalCost(List<CalculationGroup> jobs) {
-		
+
 		double totalCost = 0;
 		for (CalculationGroup cg : jobs) {
 			// estimate intermediate data and calculate cost
 			estimateParameters(cg);
 			totalCost += cg.getCost();
 		}
-		
+
 		return totalCost;
 	}
 
@@ -136,9 +169,6 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 
 		simulator = new Simulator(samples, rfm, execSettings);
 	}
-
-
-	
 
 
 	private void estimateParameters(CalculationGroup calcJob) {

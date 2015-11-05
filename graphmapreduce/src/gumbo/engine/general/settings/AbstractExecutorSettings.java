@@ -53,6 +53,7 @@ public abstract class AbstractExecutorSettings {
 	
 	// constants
 	public static final String REDUCER_SIZE_MB = "gumbo.engine.hadoop.reducersize_mb";
+	public static final String BESTGROUP_STOPINDICATOR = "gumbo.engine.grouper.beststopindicator";
 	
 
 	/**
