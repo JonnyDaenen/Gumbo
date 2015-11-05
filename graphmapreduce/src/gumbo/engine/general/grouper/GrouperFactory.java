@@ -10,6 +10,7 @@ import gumbo.engine.general.grouper.costmodel.MRSettings;
 import gumbo.engine.general.grouper.costmodel.PaperCostModel;
 import gumbo.engine.general.grouper.policies.AllGrouper;
 import gumbo.engine.general.grouper.policies.CostBasedGrouper;
+import gumbo.engine.general.grouper.policies.GuardedAtomGrouper;
 import gumbo.engine.general.grouper.policies.NoneGrouper;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.hadoop.converter.GumboHadoopConverter;
@@ -44,7 +45,9 @@ public class GrouperFactory {
 		case COSTGROUP_IO:
 			g = new Grouper(new CostBasedGrouper(rfm, new IOCostModel(), systemSettings));
 			break;
-
+		case GUARDEDATOMGROUP:
+			g = new Grouper(new GuardedAtomGrouper());
+			break;
 		default:
 			LOG.warn("Grouping policy not found, turning off grouping.");
 			g = new Grouper(new NoneGrouper());

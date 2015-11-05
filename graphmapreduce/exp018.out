@@ -10,24 +10,24 @@ gumbo.engine.reduceOutputGroupingOptimizationOn=true
 gumbo.engine.mapOutputGroupingOptimizationOn=true
 gumbo.engine.requestAtomIdOptimizationOn=true
 gumbo.engine.guardKeepAliveOptimizationOn=true
-[INFO] 15/11/05 13:28:14 gumbo.Gumbo: Input: 
+[INFO] 15/11/05 15:11:31 gumbo.Gumbo: Input: 
 A(x0);input/experiments/EXP_024/2/A;csv;'R(x0,x1);input/experiments/EXP_024/2/R;csv;'S(x0);input/experiments/EXP_024/2/S;csv;'T(x0);input/experiments/EXP_024/2/T;csv;'U(x0);input/experiments/EXP_024/2/U;csv;'V(x0);input/experiments/EXP_024/2/V;csv;'W(x0);input/experiments/EXP_024/2/W;csv;'G(x0,x1);input/experiments/EXP_024/2/G;csv;
 Output: output/EXP_018
 Scratch: scratch/EXP_018
 Queries: 
-[(Out1(x) : R(x,y) & (S(y) & (T(y) & (U(y) & (V(y) & W(y)))))), (Out2(x) : R(x,y) & (S(x) & (T(x) & (U(x) & (V(x) & W(x)))))), (Out3(x) : G(x,y) & (S(x) & A(x)))]
+[(Out11(x) : R(x,y) & S(x)), (Out22(x) : R(x,y) & T(y)), (Out12(x) : R(x,y) & T(x)), (Out21(x) : R(x,y) & S(y)), (Out32(x) : G(x,y) & A(x)), (Out31(x) : G(x,y) & S(x))]
 
-[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Adding suffix to scratch and output paths: /20151105_132814
-[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
-[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Number of BGFEs: 3
-[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
-[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Number of CUs: 3
-[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Linking Calculation Units (CUs)...
-[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Creating initial file mapping...
-[INFO] 15/11/05 13:28:14 compiler.GFCompiler: file mapping:
-Out root: output/EXP_018/20151105_132814
-Scratch root: scratch/EXP_018/20151105_132814
-Temp root: scratch/EXP_018/20151105_132814/tmp
+[INFO] 15/11/05 15:11:31 compiler.GFCompiler: Adding suffix to scratch and output paths: /20151105_151131
+[INFO] 15/11/05 15:11:31 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
+[INFO] 15/11/05 15:11:31 compiler.GFCompiler: Number of BGFEs: 6
+[INFO] 15/11/05 15:11:31 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
+[INFO] 15/11/05 15:11:31 compiler.GFCompiler: Number of CUs: 6
+[INFO] 15/11/05 15:11:31 compiler.GFCompiler: Linking Calculation Units (CUs)...
+[INFO] 15/11/05 15:11:31 compiler.GFCompiler: Creating initial file mapping...
+[INFO] 15/11/05 15:11:31 compiler.GFCompiler: file mapping:
+Out root: output/EXP_018/20151105_151131
+Scratch root: scratch/EXP_018/20151105_151131
+Temp root: scratch/EXP_018/20151105_151131/tmp
 A(x0) <- [input/experiments/EXP_024/2/A]
 R(x0,x1) <- [input/experiments/EXP_024/2/R]
 S(x0) <- [input/experiments/EXP_024/2/S]
@@ -36,13 +36,16 @@ U(x0) <- [input/experiments/EXP_024/2/U]
 V(x0) <- [input/experiments/EXP_024/2/V]
 W(x0) <- [input/experiments/EXP_024/2/W]
 G(x0,x1) <- [input/experiments/EXP_024/2/G]
-Out3(x0) -> [output/EXP_018/20151105_132814/OUT_0_Out3]
-Out2(x0) -> [output/EXP_018/20151105_132814/OUT_1_Out2]
-Out1(x0) -> [output/EXP_018/20151105_132814/OUT_2_Out1]
+Out31(x0) -> [output/EXP_018/20151105_151131/OUT_0_Out31]
+Out32(x0) -> [output/EXP_018/20151105_151131/OUT_1_Out32]
+Out21(x0) -> [output/EXP_018/20151105_151131/OUT_2_Out21]
+Out11(x0) -> [output/EXP_018/20151105_151131/OUT_3_Out11]
+Out22(x0) -> [output/EXP_018/20151105_151131/OUT_4_Out22]
+Out12(x0) -> [output/EXP_018/20151105_151131/OUT_5_Out12]
 Temp dirs: 
 
-[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Partitioning...
-[INFO] 15/11/05 13:28:14 compiler.GFCompiler: Number of partitions: 1
+[INFO] 15/11/05 15:11:31 compiler.GFCompiler: Partitioning...
+[INFO] 15/11/05 15:11:31 compiler.GFCompiler: Number of partitions: 1
 
 Query:
 exp024.gumbo
@@ -50,13 +53,13 @@ exp024.gumbo
 Partitions:
 -----------
 Calculation Unit Partitions: {
-{id : 0 Depends on: None. - (Out1(x) : R(x,y) & (S(y) & (T(y) & (U(y) & (V(y) & W(y))))))id : 1 Depends on: None. - (Out2(x) : R(x,y) & (S(x) & (T(x) & (U(x) & (V(x) & W(x))))))id : 2 Depends on: None. - (Out3(x) : G(x,y) & (S(x) & A(x)))}
+{id : 0 Depends on: None. - (Out11(x) : R(x,y) & S(x))id : 1 Depends on: None. - (Out12(x) : R(x,y) & T(x))id : 2 Depends on: None. - (Out32(x) : G(x,y) & A(x))id : 3 Depends on: None. - (Out22(x) : R(x,y) & T(y))id : 4 Depends on: None. - (Out21(x) : R(x,y) & S(y))id : 5 Depends on: None. - (Out31(x) : G(x,y) & S(x))}
 }
 Folders:
 -------
-Out root: output/EXP_018/20151105_132814
-Scratch root: scratch/EXP_018/20151105_132814
-Temp root: scratch/EXP_018/20151105_132814/tmp
+Out root: output/EXP_018/20151105_151131
+Scratch root: scratch/EXP_018/20151105_151131
+Temp root: scratch/EXP_018/20151105_151131/tmp
 A(x0) <- [input/experiments/EXP_024/2/A]
 R(x0,x1) <- [input/experiments/EXP_024/2/R]
 S(x0) <- [input/experiments/EXP_024/2/S]
@@ -65,34 +68,22 @@ U(x0) <- [input/experiments/EXP_024/2/U]
 V(x0) <- [input/experiments/EXP_024/2/V]
 W(x0) <- [input/experiments/EXP_024/2/W]
 G(x0,x1) <- [input/experiments/EXP_024/2/G]
-Out3(x0) -> [output/EXP_018/20151105_132814/OUT_0_Out3]
-Out2(x0) -> [output/EXP_018/20151105_132814/OUT_1_Out2]
-Out1(x0) -> [output/EXP_018/20151105_132814/OUT_2_Out1]
+Out31(x0) -> [output/EXP_018/20151105_151131/OUT_0_Out31]
+Out32(x0) -> [output/EXP_018/20151105_151131/OUT_1_Out32]
+Out21(x0) -> [output/EXP_018/20151105_151131/OUT_2_Out21]
+Out11(x0) -> [output/EXP_018/20151105_151131/OUT_3_Out11]
+Out22(x0) -> [output/EXP_018/20151105_151131/OUT_4_Out22]
+Out12(x0) -> [output/EXP_018/20151105_151131/OUT_5_Out12]
 Temp dirs: 
 
-[WARN] 15/11/05 13:28:14 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-[INFO] 15/11/05 13:28:14 grouper.GrouperFactory: Creating a grouper with policy COSTGROUP_GUMBO
-[WARN] 15/11/05 13:28:14 settings.AbstractExecutorSettings: Failed to find setting with key 'mapreduce.reduce.memory.mb', reverting to default value 1024.0
-MRSettings:
-mapChunkSizeMB:128.0
-mapSortBufferMB:100.0
-mapMergeFactor:10.0
-redChunkSizeMB:1024.0
-redSortBufferMB:716.8
-redMergeFactor:10.0
-
-[WARN] 15/11/05 13:28:14 settings.AbstractExecutorSettings: Failed to find setting with key 'mapreduce.reduce.memory.mb', reverting to default value 1024.0
-[INFO] 15/11/05 13:28:14 grouper.Grouper: Decomposition complete: 	R(x,y) |X S(y)
-	R(x,y) |X S(x)
-	R(x,y) |X U(y)
-	R(x,y) |X U(x)
-	R(x,y) |X T(y)
+[WARN] 15/11/05 15:11:32 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[INFO] 15/11/05 15:11:32 grouper.GrouperFactory: Creating a grouper with policy COSTGROUP_GUMBO
+[WARN] 15/11/05 15:11:32 settings.AbstractExecutorSettings: Failed to find setting with key 'mapreduce.reduce.memory.mb', reverting to default value 1024.0
+[INFO] 15/11/05 15:11:32 grouper.Grouper: Decomposition complete: 	R(x,y) |X S(x)
+	R(x,y) |X S(y)
 	R(x,y) |X T(x)
 	G(x,y) |X A(x)
-	R(x,y) |X W(y)
-	R(x,y) |X W(x)
-	R(x,y) |X V(y)
-	R(x,y) |X V(x)
+	R(x,y) |X T(y)
 	G(x,y) |X S(x)
 	Guard In Bytes0
 	Guarded In Bytes0
@@ -100,23 +91,17 @@ redMergeFactor:10.0
 	Guarded Out Bytes0
 	Cost:0.0
 
-[INFO] 15/11/05 13:28:16 grouper.Grouper: Grouping complete: 1 group(s)
-[INFO] 15/11/05 13:28:16 grouper.Grouper: Grouping: [	R(x,y) |X S(y)
-	R(x,y) |X S(x)
-	R(x,y) |X U(y)
-	R(x,y) |X U(x)
-	R(x,y) |X T(y)
+[INFO] 15/11/05 15:11:33 grouper.Grouper: Grouping complete: 1 group(s)
+[INFO] 15/11/05 15:11:33 grouper.Grouper: Grouping: [	R(x,y) |X S(x)
+	R(x,y) |X S(y)
 	R(x,y) |X T(x)
+	R(x,y) |X T(y)
 	G(x,y) |X A(x)
-	R(x,y) |X W(x)
-	R(x,y) |X W(y)
-	R(x,y) |X V(x)
-	R(x,y) |X V(y)
 	G(x,y) |X S(x)
-	Guard In Bytes27556208000
-	Guarded In Bytes41332725000
-	Guard Out Bytes63475172000
-	Guarded Out Bytes66357275000
-	Cost:1701298.6215789518
+	Guard In Bytes27556208
+	Guarded In Bytes20666185
+	Guard Out Bytes48439589
+	Guarded Out Bytes30670443
+	Cost:5708.609640076507
 ]
-2.864010806
+1.185684462

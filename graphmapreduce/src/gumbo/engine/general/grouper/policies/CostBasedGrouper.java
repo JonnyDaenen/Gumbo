@@ -107,6 +107,7 @@ public class CostBasedGrouper implements GroupingPolicy {
 
 
 		}
+//		costMatrix.printMatrix(false); // TODO remove
 
 
 
@@ -137,7 +138,7 @@ public class CostBasedGrouper implements GroupingPolicy {
 
 		while (costMatrix.hasPositiveCost()) {
 //			costMatrix.printMatrix(true);
-			//			costMatrix.printGroups();
+//			costMatrix.printGroups();
 
 			// pick best merge option
 			Pair<CalculationGroup, CalculationGroup> oldGroups = costMatrix.getBestOldGroups();

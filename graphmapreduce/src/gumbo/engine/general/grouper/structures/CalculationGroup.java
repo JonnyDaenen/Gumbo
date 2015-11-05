@@ -122,7 +122,7 @@ public class CalculationGroup {
 
 
 	public long getGuardInBytes() {
-		return guardInBytes * scale;
+		return (long) (guardInBytes * scale);
 	}
 
 
@@ -132,7 +132,7 @@ public class CalculationGroup {
 
 
 	public long getGuardedInBytes() {
-		return guardedInBytes * scale;
+		return (long) (guardedInBytes * scale);
 	}
 
 
@@ -142,7 +142,7 @@ public class CalculationGroup {
 
 
 	public long getGuardOutBytes() {
-		return guardOutBytes * scale;
+		return (long) (guardOutBytes * scale);
 	}
 
 
@@ -152,7 +152,7 @@ public class CalculationGroup {
 
 
 	public long getGuardedOutBytes() {
-		return guardedOutBytes * scale;
+		return (long) (guardedOutBytes * scale);
 	}
 
 

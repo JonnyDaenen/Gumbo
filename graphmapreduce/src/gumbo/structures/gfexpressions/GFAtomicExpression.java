@@ -325,4 +325,12 @@ public class GFAtomicExpression extends GFExpression implements Comparable<Objec
 		return s1.compareTo(s2);
 	}
 
+	public String getVariableString(String prefix) {
+		StringBuilder sb = new StringBuilder(variables.length*5);
+		for(String s : variables) {
+			sb.append(prefix + s + ",");
+		}
+		return sb.toString();
+	}
+
 }
