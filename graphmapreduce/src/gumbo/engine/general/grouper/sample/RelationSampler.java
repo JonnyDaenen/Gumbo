@@ -1,12 +1,14 @@
 package gumbo.engine.general.grouper.sample;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.engine.general.grouper.policies.BestCostBasedGrouper;
 import gumbo.structures.data.RelationSchema;
 import gumbo.utils.estimation.Sampler;
 import gumbo.utils.estimation.SamplingException;
 
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.Path;
-import org.mortbay.log.Log;
+import org.apache.commons.logging.Log;
 
 
 /**
@@ -16,6 +18,8 @@ import org.mortbay.log.Log;
  *
  */
 public class RelationSampler {
+	
+	private static final Log LOG = LogFactory.getLog(RelationSampler.class);
 
 	RelationFileMapping mapping;
 	int blocksPerFile;
@@ -37,7 +41,7 @@ public class RelationSampler {
 		RelationSampleContainer rsc = new RelationSampleContainer();
 		
 		for (RelationSchema rs: mapping.getSchemas()) {
-			Log.info("Fetching samples for relation " + rs);
+			LOG.info("Fetching samples for relation " + rs);
 			
 			byte [][] allSamples = new byte [mapping.getPaths(rs).size()*blocksPerFile][];
 			int k = 0;

@@ -3,6 +3,7 @@ package gumbo.engine.hadoop.reporter;
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.engine.general.grouper.sample.RelationSampleContainer;
+import gumbo.engine.general.grouper.sample.RelationSampler;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.Tuple;
 
@@ -13,9 +14,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.util.LineReader;
-import org.mortbay.log.Log;
 
 
 /**
@@ -26,6 +28,7 @@ import org.mortbay.log.Log;
  *
  */
 public class RelationTupleSampleContainer {
+	private static final Log LOG = LogFactory.getLog(RelationTupleSampleContainer.class);
 
 	Map<RelationSchema, List<Tuple>> smallset;
 	Map<RelationSchema, List<Tuple>> bigset;
@@ -70,7 +73,7 @@ public class RelationTupleSampleContainer {
 	 */
 	private void initStrings(RelationSchema rs, RelationSampleContainer rsc) {
 
-		Log.info("Parsing samples for relation " + rs);
+		LOG.info("Parsing samples for relation " + rs);
 
 		Text t = new Text();
 		byte [][] rawbytes = rsc.getSamples(rs);
@@ -79,8 +82,8 @@ public class RelationTupleSampleContainer {
 		long bigbytes = 0;
 		
 		int bound = (int)(pctSmall * rawbytes.length);
-		Log.info("Number of bytes: " + rawbytes.length);
-		Log.info("Number of bytes used for small sample: " + bound);
+		LOG.info("Number of bytes: " + rawbytes.length);
+		LOG.info("Number of bytes used for small sample: " + bound);
 		
 		
 		for (int i = 0; i < rawbytes.length; i++) {
