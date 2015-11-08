@@ -70,7 +70,7 @@ public class Simulator {
 			for (RelationSchema r : calcJob.getInputRelations()) {
 
 //				if (LOG.isDebugEnabled())
-				LOG.info("Simulating relation " + r);
+//				LOG.info("Simulating relation " + r);
 				
 				// calculate size
 				long byteSize = mapping.getRelationSize(r);
