@@ -1,6 +1,6 @@
 gumbo.engine.guardAddressOptimizationOn=true
 gumbo.engine.proofsymbol=#
-gumbo.engine.mapOutputGroupingPolicy=BESTCOSTGROUP_GUMBO
+gumbo.engine.mapOutputGroupingPolicy=COSTGROUP_GUMBO
 gumbo.engine.guardedCombinerOptimizationOn=false
 gumbo.engine.assertConstantOptimizationOn=true
 gumbo.compiler.partitioner=gumbo.compiler.partitioner.HeightPartitioner
@@ -8,44 +8,44 @@ gumbo.engine.round1FiniteMemoryOptimizationOn=false
 gumbo.engine.hadoop.reducersize_mb=1024
 gumbo.engine.reduceOutputGroupingOptimizationOn=true
 gumbo.engine.mapOutputGroupingOptimizationOn=true
-gumbo.engine.grouper.beststopindicator=38
+gumbo.engine.grouper.beststopindicator=0
 gumbo.engine.requestAtomIdOptimizationOn=true
 gumbo.engine.guardKeepAliveOptimizationOn=true
-[INFO] 15/11/05 16:41:10 gumbo.Gumbo: Input: 
-A(x0);input/experiments/EXP_024/6/A;csv;'R(x0,x1);input/experiments/EXP_024/6/R;csv;'S(x0);input/experiments/EXP_024/6/S;csv;'T(x0);input/experiments/EXP_024/6/T;csv;'U(x0);input/experiments/EXP_024/6/U;csv;'V(x0);input/experiments/EXP_024/6/V;csv;'W(x0);input/experiments/EXP_024/6/W;csv;'G(x0,x1);input/experiments/EXP_024/6/G;csv;
+[INFO] 15/11/05 21:09:26 gumbo.Gumbo: Input: 
+A(x0);input/experiments/EXP_024/2/A;csv;'R(x0,x1);input/experiments/EXP_024/2/R;csv;'S(x0);input/experiments/EXP_024/2/S;csv;'T(x0);input/experiments/EXP_024/2/T;csv;'U(x0);input/experiments/EXP_024/2/U;csv;'V(x0);input/experiments/EXP_024/2/V;csv;'W(x0);input/experiments/EXP_024/2/W;csv;'G(x0,x1);input/experiments/EXP_024/2/G;csv;
 Output: output/EXP_018
 Scratch: scratch/EXP_018
 Queries: 
 [(Out13(x) : R(x,y) & U(x)), (Out32(x) : G(x,y) & A(x)), (Out12(x) : R(x,y) & T(x)), (Out21(x) : R(x,y) & S(y)), (Out11(x) : R(x,y) & S(x))]
 
-[INFO] 15/11/05 16:41:10 compiler.GFCompiler: Adding suffix to scratch and output paths: /20151105_164110
-[INFO] 15/11/05 16:41:10 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
-[INFO] 15/11/05 16:41:10 compiler.GFCompiler: Number of BGFEs: 5
-[INFO] 15/11/05 16:41:10 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
-[INFO] 15/11/05 16:41:10 compiler.GFCompiler: Number of CUs: 5
-[INFO] 15/11/05 16:41:10 compiler.GFCompiler: Linking Calculation Units (CUs)...
-[INFO] 15/11/05 16:41:10 compiler.GFCompiler: Creating initial file mapping...
-[INFO] 15/11/05 16:41:10 compiler.GFCompiler: file mapping:
-Out root: output/EXP_018/20151105_164110
-Scratch root: scratch/EXP_018/20151105_164110
-Temp root: scratch/EXP_018/20151105_164110/tmp
-A(x0) <- [input/experiments/EXP_024/6/A]
-R(x0,x1) <- [input/experiments/EXP_024/6/R]
-S(x0) <- [input/experiments/EXP_024/6/S]
-T(x0) <- [input/experiments/EXP_024/6/T]
-U(x0) <- [input/experiments/EXP_024/6/U]
-V(x0) <- [input/experiments/EXP_024/6/V]
-W(x0) <- [input/experiments/EXP_024/6/W]
-G(x0,x1) <- [input/experiments/EXP_024/6/G]
-Out13(x0) -> [output/EXP_018/20151105_164110/OUT_0_Out13]
-Out32(x0) -> [output/EXP_018/20151105_164110/OUT_1_Out32]
-Out21(x0) -> [output/EXP_018/20151105_164110/OUT_2_Out21]
-Out11(x0) -> [output/EXP_018/20151105_164110/OUT_3_Out11]
-Out12(x0) -> [output/EXP_018/20151105_164110/OUT_4_Out12]
+[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Adding suffix to scratch and output paths: /20151105_210926
+[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
+[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Number of BGFEs: 5
+[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
+[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Number of CUs: 5
+[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Linking Calculation Units (CUs)...
+[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Creating initial file mapping...
+[INFO] 15/11/05 21:09:26 compiler.GFCompiler: file mapping:
+Out root: output/EXP_018/20151105_210926
+Scratch root: scratch/EXP_018/20151105_210926
+Temp root: scratch/EXP_018/20151105_210926/tmp
+A(x0) <- [input/experiments/EXP_024/2/A]
+R(x0,x1) <- [input/experiments/EXP_024/2/R]
+S(x0) <- [input/experiments/EXP_024/2/S]
+T(x0) <- [input/experiments/EXP_024/2/T]
+U(x0) <- [input/experiments/EXP_024/2/U]
+V(x0) <- [input/experiments/EXP_024/2/V]
+W(x0) <- [input/experiments/EXP_024/2/W]
+G(x0,x1) <- [input/experiments/EXP_024/2/G]
+Out13(x0) -> [output/EXP_018/20151105_210926/OUT_0_Out13]
+Out32(x0) -> [output/EXP_018/20151105_210926/OUT_1_Out32]
+Out21(x0) -> [output/EXP_018/20151105_210926/OUT_2_Out21]
+Out11(x0) -> [output/EXP_018/20151105_210926/OUT_3_Out11]
+Out12(x0) -> [output/EXP_018/20151105_210926/OUT_4_Out12]
 Temp dirs: 
 
-[INFO] 15/11/05 16:41:10 compiler.GFCompiler: Partitioning...
-[INFO] 15/11/05 16:41:10 compiler.GFCompiler: Number of partitions: 1
+[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Partitioning...
+[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Number of partitions: 1
 
 Query:
 exp024.gumbo
@@ -57,28 +57,28 @@ Calculation Unit Partitions: {
 }
 Folders:
 -------
-Out root: output/EXP_018/20151105_164110
-Scratch root: scratch/EXP_018/20151105_164110
-Temp root: scratch/EXP_018/20151105_164110/tmp
-A(x0) <- [input/experiments/EXP_024/6/A]
-R(x0,x1) <- [input/experiments/EXP_024/6/R]
-S(x0) <- [input/experiments/EXP_024/6/S]
-T(x0) <- [input/experiments/EXP_024/6/T]
-U(x0) <- [input/experiments/EXP_024/6/U]
-V(x0) <- [input/experiments/EXP_024/6/V]
-W(x0) <- [input/experiments/EXP_024/6/W]
-G(x0,x1) <- [input/experiments/EXP_024/6/G]
-Out13(x0) -> [output/EXP_018/20151105_164110/OUT_0_Out13]
-Out32(x0) -> [output/EXP_018/20151105_164110/OUT_1_Out32]
-Out21(x0) -> [output/EXP_018/20151105_164110/OUT_2_Out21]
-Out11(x0) -> [output/EXP_018/20151105_164110/OUT_3_Out11]
-Out12(x0) -> [output/EXP_018/20151105_164110/OUT_4_Out12]
+Out root: output/EXP_018/20151105_210926
+Scratch root: scratch/EXP_018/20151105_210926
+Temp root: scratch/EXP_018/20151105_210926/tmp
+A(x0) <- [input/experiments/EXP_024/2/A]
+R(x0,x1) <- [input/experiments/EXP_024/2/R]
+S(x0) <- [input/experiments/EXP_024/2/S]
+T(x0) <- [input/experiments/EXP_024/2/T]
+U(x0) <- [input/experiments/EXP_024/2/U]
+V(x0) <- [input/experiments/EXP_024/2/V]
+W(x0) <- [input/experiments/EXP_024/2/W]
+G(x0,x1) <- [input/experiments/EXP_024/2/G]
+Out13(x0) -> [output/EXP_018/20151105_210926/OUT_0_Out13]
+Out32(x0) -> [output/EXP_018/20151105_210926/OUT_1_Out32]
+Out21(x0) -> [output/EXP_018/20151105_210926/OUT_2_Out21]
+Out11(x0) -> [output/EXP_018/20151105_210926/OUT_3_Out11]
+Out12(x0) -> [output/EXP_018/20151105_210926/OUT_4_Out12]
 Temp dirs: 
 
-[WARN] 15/11/05 16:41:10 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-[INFO] 15/11/05 16:41:10 grouper.GrouperFactory: Creating a grouper with policy BESTCOSTGROUP_GUMBO
-[WARN] 15/11/05 16:41:10 settings.AbstractExecutorSettings: Failed to find setting with key 'mapreduce.reduce.memory.mb', reverting to default value 1024.0
-[INFO] 15/11/05 16:41:10 grouper.Grouper: Decomposition complete: 	R(x,y) |X S(y)
+[WARN] 15/11/05 21:09:26 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[INFO] 15/11/05 21:09:26 grouper.GrouperFactory: Creating a grouper with policy COSTGROUP_GUMBO
+[WARN] 15/11/05 21:09:26 settings.AbstractExecutorSettings: Failed to find setting with key 'mapreduce.reduce.memory.mb', reverting to default value 1024.0
+[INFO] 15/11/05 21:09:26 grouper.Grouper: Decomposition complete: 	R(x,y) |X S(y)
 	R(x,y) |X S(x)
 	R(x,y) |X U(x)
 	G(x,y) |X A(x)
@@ -89,32 +89,21 @@ Temp dirs:
 	Guarded Out Bytes0
 	Cost:0.0
 
-Candidate solution found! 38 650.5248005166671
-[INFO] 15/11/05 16:41:10 grouper.Grouper: Grouping complete: 4 group(s)
-[INFO] 15/11/05 16:41:10 grouper.Grouper: Grouping: [	R(x,y) |X S(y)
-	R(x,y) |X S(x)
-	Guard In Bytes7772
-	Guarded In Bytes3889
-	Guard Out Bytes22184
-	Guarded Out Bytes7886
-	Cost:6.974499134367312
-, 	R(x,y) |X U(x)
-	Guard In Bytes7772
-	Guarded In Bytes3900
-	Guard Out Bytes11104
-	Guarded Out Bytes5898
-	Cost:6.118508001803254
+[INFO] 15/11/05 21:09:27 grouper.Grouper: Grouping complete: 2 group(s)
+[INFO] 15/11/05 21:09:27 grouper.Grouper: Grouping: [	R(x,y) |X S(x)
+	R(x,y) |X S(y)
+	R(x,y) |X U(x)
+	R(x,y) |X T(x)
+	Guard In Bytes13777593
+	Guarded In Bytes20666161
+	Guard Out Bytes32267431
+	Guarded Out Bytes28675544
+	Cost:4396.236782504265
 , 	G(x,y) |X A(x)
-	Guard In Bytes7781
-	Guarded In Bytes3882
-	Guard Out Bytes11110
-	Guarded Out Bytes5881
-	Cost:6.117808111815992
-, 	R(x,y) |X T(x)
-	Guard In Bytes7772
-	Guarded In Bytes6888863
-	Guard Out Bytes11104
-	Guarded Out Bytes8892682
-	Cost:631.3139852686805
+	Guard In Bytes13778615
+	Guarded In Bytes6888817
+	Guard Out Bytes14162290
+	Guarded Out Bytes8889636
+	Cost:1656.3324461542857
 ]
-0.695749756
+0.932115262

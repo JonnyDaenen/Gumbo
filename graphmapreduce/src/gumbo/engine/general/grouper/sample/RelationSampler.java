@@ -6,6 +6,7 @@ import gumbo.utils.estimation.Sampler;
 import gumbo.utils.estimation.SamplingException;
 
 import org.apache.hadoop.fs.Path;
+import org.mortbay.log.Log;
 
 
 /**
@@ -36,6 +37,7 @@ public class RelationSampler {
 		RelationSampleContainer rsc = new RelationSampleContainer();
 		
 		for (RelationSchema rs: mapping.getSchemas()) {
+			Log.info("Fetching samples for relation " + rs);
 			
 			byte [][] allSamples = new byte [mapping.getPaths(rs).size()*blocksPerFile][];
 			int k = 0;

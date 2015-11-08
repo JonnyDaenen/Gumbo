@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.util.LineReader;
+import org.mortbay.log.Log;
 
 
 /**
@@ -68,6 +69,8 @@ public class RelationTupleSampleContainer {
 	 * @return the set of lines in the sample
 	 */
 	private void initStrings(RelationSchema rs, RelationSampleContainer rsc) {
+
+		Log.info("Parsing samples for relation " + rs);
 
 		Text t = new Text();
 		byte [][] rawbytes = rsc.getSamples(rs);
