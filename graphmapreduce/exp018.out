@@ -1,6 +1,6 @@
 gumbo.engine.guardAddressOptimizationOn=true
 gumbo.engine.proofsymbol=#
-gumbo.engine.mapOutputGroupingPolicy=COSTGROUP_GUMBO
+gumbo.engine.mapOutputGroupingPolicy=BESTCOSTGROUP_GUMBO
 gumbo.engine.guardedCombinerOptimizationOn=false
 gumbo.engine.assertConstantOptimizationOn=true
 gumbo.compiler.partitioner=gumbo.compiler.partitioner.HeightPartitioner
@@ -11,24 +11,24 @@ gumbo.engine.mapOutputGroupingOptimizationOn=true
 gumbo.engine.grouper.beststopindicator=0
 gumbo.engine.requestAtomIdOptimizationOn=true
 gumbo.engine.guardKeepAliveOptimizationOn=true
-[INFO] 15/11/05 21:09:26 gumbo.Gumbo: Input: 
+[INFO] 15/11/08 13:15:47 gumbo.Gumbo: Input: 
 A(x0);input/experiments/EXP_024/2/A;csv;'R(x0,x1);input/experiments/EXP_024/2/R;csv;'S(x0);input/experiments/EXP_024/2/S;csv;'T(x0);input/experiments/EXP_024/2/T;csv;'U(x0);input/experiments/EXP_024/2/U;csv;'V(x0);input/experiments/EXP_024/2/V;csv;'W(x0);input/experiments/EXP_024/2/W;csv;'G(x0,x1);input/experiments/EXP_024/2/G;csv;
 Output: output/EXP_018
 Scratch: scratch/EXP_018
 Queries: 
 [(Out13(x) : R(x,y) & U(x)), (Out32(x) : G(x,y) & A(x)), (Out12(x) : R(x,y) & T(x)), (Out21(x) : R(x,y) & S(y)), (Out11(x) : R(x,y) & S(x))]
 
-[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Adding suffix to scratch and output paths: /20151105_210926
-[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
-[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Number of BGFEs: 5
-[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
-[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Number of CUs: 5
-[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Linking Calculation Units (CUs)...
-[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Creating initial file mapping...
-[INFO] 15/11/05 21:09:26 compiler.GFCompiler: file mapping:
-Out root: output/EXP_018/20151105_210926
-Scratch root: scratch/EXP_018/20151105_210926
-Temp root: scratch/EXP_018/20151105_210926/tmp
+[INFO] 15/11/08 13:15:47 compiler.GFCompiler: Adding suffix to scratch and output paths: /20151108_131547
+[INFO] 15/11/08 13:15:47 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
+[INFO] 15/11/08 13:15:47 compiler.GFCompiler: Number of BGFEs: 5
+[INFO] 15/11/08 13:15:47 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
+[INFO] 15/11/08 13:15:47 compiler.GFCompiler: Number of CUs: 5
+[INFO] 15/11/08 13:15:47 compiler.GFCompiler: Linking Calculation Units (CUs)...
+[INFO] 15/11/08 13:15:47 compiler.GFCompiler: Creating initial file mapping...
+[INFO] 15/11/08 13:15:47 compiler.GFCompiler: file mapping:
+Out root: output/EXP_018/20151108_131547
+Scratch root: scratch/EXP_018/20151108_131547
+Temp root: scratch/EXP_018/20151108_131547/tmp
 A(x0) <- [input/experiments/EXP_024/2/A]
 R(x0,x1) <- [input/experiments/EXP_024/2/R]
 S(x0) <- [input/experiments/EXP_024/2/S]
@@ -37,15 +37,15 @@ U(x0) <- [input/experiments/EXP_024/2/U]
 V(x0) <- [input/experiments/EXP_024/2/V]
 W(x0) <- [input/experiments/EXP_024/2/W]
 G(x0,x1) <- [input/experiments/EXP_024/2/G]
-Out13(x0) -> [output/EXP_018/20151105_210926/OUT_0_Out13]
-Out32(x0) -> [output/EXP_018/20151105_210926/OUT_1_Out32]
-Out21(x0) -> [output/EXP_018/20151105_210926/OUT_2_Out21]
-Out11(x0) -> [output/EXP_018/20151105_210926/OUT_3_Out11]
-Out12(x0) -> [output/EXP_018/20151105_210926/OUT_4_Out12]
+Out13(x0) -> [output/EXP_018/20151108_131547/OUT_0_Out13]
+Out32(x0) -> [output/EXP_018/20151108_131547/OUT_1_Out32]
+Out21(x0) -> [output/EXP_018/20151108_131547/OUT_2_Out21]
+Out11(x0) -> [output/EXP_018/20151108_131547/OUT_3_Out11]
+Out12(x0) -> [output/EXP_018/20151108_131547/OUT_4_Out12]
 Temp dirs: 
 
-[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Partitioning...
-[INFO] 15/11/05 21:09:26 compiler.GFCompiler: Number of partitions: 1
+[INFO] 15/11/08 13:15:47 compiler.GFCompiler: Partitioning...
+[INFO] 15/11/08 13:15:47 compiler.GFCompiler: Number of partitions: 1
 
 Query:
 exp024.gumbo
@@ -57,9 +57,9 @@ Calculation Unit Partitions: {
 }
 Folders:
 -------
-Out root: output/EXP_018/20151105_210926
-Scratch root: scratch/EXP_018/20151105_210926
-Temp root: scratch/EXP_018/20151105_210926/tmp
+Out root: output/EXP_018/20151108_131547
+Scratch root: scratch/EXP_018/20151108_131547
+Temp root: scratch/EXP_018/20151108_131547/tmp
 A(x0) <- [input/experiments/EXP_024/2/A]
 R(x0,x1) <- [input/experiments/EXP_024/2/R]
 S(x0) <- [input/experiments/EXP_024/2/S]
@@ -68,17 +68,17 @@ U(x0) <- [input/experiments/EXP_024/2/U]
 V(x0) <- [input/experiments/EXP_024/2/V]
 W(x0) <- [input/experiments/EXP_024/2/W]
 G(x0,x1) <- [input/experiments/EXP_024/2/G]
-Out13(x0) -> [output/EXP_018/20151105_210926/OUT_0_Out13]
-Out32(x0) -> [output/EXP_018/20151105_210926/OUT_1_Out32]
-Out21(x0) -> [output/EXP_018/20151105_210926/OUT_2_Out21]
-Out11(x0) -> [output/EXP_018/20151105_210926/OUT_3_Out11]
-Out12(x0) -> [output/EXP_018/20151105_210926/OUT_4_Out12]
+Out13(x0) -> [output/EXP_018/20151108_131547/OUT_0_Out13]
+Out32(x0) -> [output/EXP_018/20151108_131547/OUT_1_Out32]
+Out21(x0) -> [output/EXP_018/20151108_131547/OUT_2_Out21]
+Out11(x0) -> [output/EXP_018/20151108_131547/OUT_3_Out11]
+Out12(x0) -> [output/EXP_018/20151108_131547/OUT_4_Out12]
 Temp dirs: 
 
-[WARN] 15/11/05 21:09:26 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-[INFO] 15/11/05 21:09:26 grouper.GrouperFactory: Creating a grouper with policy COSTGROUP_GUMBO
-[WARN] 15/11/05 21:09:26 settings.AbstractExecutorSettings: Failed to find setting with key 'mapreduce.reduce.memory.mb', reverting to default value 1024.0
-[INFO] 15/11/05 21:09:26 grouper.Grouper: Decomposition complete: 	R(x,y) |X S(y)
+[WARN] 15/11/08 13:15:47 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[INFO] 15/11/08 13:15:47 grouper.GrouperFactory: Creating a grouper with policy BESTCOSTGROUP_GUMBO
+[WARN] 15/11/08 13:15:47 settings.AbstractExecutorSettings: Failed to find setting with key 'mapreduce.reduce.memory.mb', reverting to default value 1024.0
+[INFO] 15/11/08 13:15:47 grouper.Grouper: Decomposition complete: 	R(x,y) |X S(y)
 	R(x,y) |X S(x)
 	R(x,y) |X U(x)
 	G(x,y) |X A(x)
@@ -89,21 +89,565 @@ Temp dirs:
 	Guarded Out Bytes0
 	Cost:0.0
 
-[INFO] 15/11/05 21:09:27 grouper.Grouper: Grouping complete: 2 group(s)
-[INFO] 15/11/05 21:09:27 grouper.Grouper: Grouping: [	R(x,y) |X S(x)
-	R(x,y) |X S(y)
+[INFO] 15/11/08 13:15:47 policies.BestCostBasedGrouper: A(x0);file:/Users/jonny/Develop/Gumbo/graphmapreduce/input/experiments/EXP_024/2/A/A.txt;csv;'R(x0,x1);file:/Users/jonny/Develop/Gumbo/graphmapreduce/input/experiments/EXP_024/2/R/R.txt;csv;'S(x0);file:/Users/jonny/Develop/Gumbo/graphmapreduce/input/experiments/EXP_024/2/S/S.txt;csv;'T(x0);file:/Users/jonny/Develop/Gumbo/graphmapreduce/input/experiments/EXP_024/2/T/T.txt;csv;'U(x0);file:/Users/jonny/Develop/Gumbo/graphmapreduce/input/experiments/EXP_024/2/U/U.txt;csv;'V(x0);file:/Users/jonny/Develop/Gumbo/graphmapreduce/input/experiments/EXP_024/2/V/V.txt;csv;'W(x0);file:/Users/jonny/Develop/Gumbo/graphmapreduce/input/experiments/EXP_024/2/W/W.txt;csv;'G(x0,x1);file:/Users/jonny/Develop/Gumbo/graphmapreduce/input/experiments/EXP_024/2/G/G.txt;csv;
+[INFO] 15/11/08 13:15:47 sample.RelationSampler: Fetching samples for relation A(x0)
+[INFO] 15/11/08 13:15:47 sample.RelationSampler: Fetching samples for relation R(x0,x1)
+[INFO] 15/11/08 13:15:47 sample.RelationSampler: Fetching samples for relation S(x0)
+[INFO] 15/11/08 13:15:47 sample.RelationSampler: Fetching samples for relation T(x0)
+[INFO] 15/11/08 13:15:47 sample.RelationSampler: Fetching samples for relation U(x0)
+[INFO] 15/11/08 13:15:47 sample.RelationSampler: Fetching samples for relation V(x0)
+[INFO] 15/11/08 13:15:47 sample.RelationSampler: Fetching samples for relation W(x0)
+[INFO] 15/11/08 13:15:48 sample.RelationSampler: Fetching samples for relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Parsing samples for relation A(x0)
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Number of bytes: 10
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Small tuples: 597
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Big tuples: 5352
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Parsing samples for relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Number of bytes: 10
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Small tuples: 298
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Big tuples: 2676
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Parsing samples for relation S(x0)
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Number of bytes: 10
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Small tuples: 594
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Big tuples: 5349
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Parsing samples for relation T(x0)
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Number of bytes: 10
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Small tuples: 596
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Big tuples: 5348
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Parsing samples for relation U(x0)
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Number of bytes: 10
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Small tuples: 595
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Big tuples: 5359
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Parsing samples for relation V(x0)
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Number of bytes: 10
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Small tuples: 593
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Big tuples: 5349
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Parsing samples for relation W(x0)
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Number of bytes: 10
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Small tuples: 595
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Big tuples: 5354
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Parsing samples for relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Number of bytes: 10
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Small tuples: 296
+[INFO] 15/11/08 13:15:48 reporter.RelationTupleSampleContainer: Big tuples: 2674
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 1 8277.698234484904
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 2 8293.473938868754
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 3 7424.941974772151
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 4 7424.950140131648
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 5 8306.613367007487
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 6 8306.615055011027
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 7 8305.432394908183
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 8 7453.858795298274
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 9 7453.866960657771
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 10 8306.615055011027
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 11 8322.390759394877
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 12 7436.90043081158
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 13 7453.866960657771
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 14 8306.623220370524
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 15 8322.398924754374
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 16 7453.8669606577705
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 17 7436.908596171077
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 18 8293.483792231791
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:48 policies.BestCostBasedGrouper: Candidate solution found! 19 7423.769239548194
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:48 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 20 7440.7275325190385
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 21 8322.398924754374
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 22 8305.44224827122
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 23 7435.727695587622
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 24 7452.685988558466
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 25 8322.400612757914
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 26 7452.686060074317
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 27 7452.685988558467
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 28 7424.951828135188
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 29 7440.7275325190385
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 30 6555.237203935741
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 31 7453.86696065777
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 32 7453.868648661311
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 33 7452.685988558466
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 34 6584.154024461863
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 35 7436.910284174617
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 36 7452.685988558467
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 37 6567.195659975169
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 38 7794.16360339013
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 39 6924.449050706533
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 40 6941.415509036874
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 41 7823.078735912712
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 42 7806.122059429559
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 43 6936.407506745963
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 44 6953.373965076303
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 45 7823.088589275749
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 46 6953.374036592152
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 47 6953.373965076304
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 48 6924.45890406957
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 49 6054.744279870122
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 50 6953.374036592152
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 51 6936.417360108999
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation A(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation R(x0,x1)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation S(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation T(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation U(x0)
+[INFO] 15/11/08 13:15:49 sample.Simulator: Simulating relation G(x0,x1)
+[INFO] 15/11/08 13:15:49 policies.BestCostBasedGrouper: Candidate solution found! 52 6066.702735909551
+[INFO] 15/11/08 13:15:49 grouper.Grouper: Grouping complete: 2 group(s)
+[INFO] 15/11/08 13:15:49 grouper.Grouper: Grouping: [	R(x,y) |X S(y)
+	R(x,y) |X S(x)
 	R(x,y) |X U(x)
 	R(x,y) |X T(x)
 	Guard In Bytes13777593
 	Guarded In Bytes20666161
-	Guard Out Bytes32267431
-	Guarded Out Bytes28675544
-	Cost:4396.236782504265
+	Guard Out Bytes32291454
+	Guarded Out Bytes28677686
+	Cost:4398.107994719643
 , 	G(x,y) |X A(x)
 	Guard In Bytes13778615
 	Guarded In Bytes6888817
-	Guard Out Bytes14162290
-	Guarded Out Bytes8889636
-	Cost:1656.3324461542857
+	Guard Out Bytes14165099
+	Guarded Out Bytes8891115
+	Cost:1656.636285150479
 ]
-0.932115262
+2.188217026
