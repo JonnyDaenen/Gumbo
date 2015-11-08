@@ -80,6 +80,8 @@ public class RelationTupleSampleContainer {
 		
 		long smallbytes = 0;
 		long bigbytes = 0;
+		long smalltuples = 0;
+		long bigtuples = 0;
 		
 		int bound = (int)(pctSmall * rawbytes.length);
 		LOG.info("Number of bytes: " + rawbytes.length);
@@ -112,9 +114,11 @@ public class RelationTupleSampleContainer {
 					if (i < bound) {
 						smallbytes += bytesread;
 						smallset.get(rs).add(tuple);
+						smalltuples++;
 					} else {
 						bigbytes += bytesread;
 						bigset.get(rs).add(tuple);
+						bigtuples++;
 					}
 				}
 			} catch (IOException e) {
@@ -122,6 +126,10 @@ public class RelationTupleSampleContainer {
 				e.printStackTrace();
 			}
 		}
+		
+
+		LOG.info("Small tuples: " + smalltuples);
+		LOG.info("Big tuples: " + bigtuples);
 		
 		smallBytes.put(rs, smallbytes);
 		bigBytes.put(rs, bigbytes);
