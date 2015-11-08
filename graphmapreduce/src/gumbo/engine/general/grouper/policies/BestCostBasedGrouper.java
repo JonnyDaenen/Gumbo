@@ -51,7 +51,7 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 		this.costModel = costModel;
 		this.execSettings = execSettings;
 
-		this.stopIndicator = (int) execSettings.getNumProperty(execSettings.BESTGROUP_STOPINDICATOR, 0);
+		this.stopIndicator = (int) execSettings.getNumProperty(AbstractExecutorSettings.BESTGROUP_STOPINDICATOR, 0);
 
 	}
 

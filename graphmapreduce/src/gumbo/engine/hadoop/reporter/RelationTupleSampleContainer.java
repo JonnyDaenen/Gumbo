@@ -79,6 +79,9 @@ public class RelationTupleSampleContainer {
 		long bigbytes = 0;
 		
 		int bound = (int)(pctSmall * rawbytes.length);
+		Log.info("Number of bytes: " + rawbytes.length);
+		Log.info("Number of bytes used for small sample: " + bound);
+		
 		
 		for (int i = 0; i < rawbytes.length; i++) {
 			// read text lines
