@@ -80,6 +80,10 @@ public class FileManager {
 		return out;
 
 	}
+	
+	public Path getOutputRoot() {
+		return outputroot;
+	}
 
 
 

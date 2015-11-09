@@ -501,8 +501,10 @@ public class GumboHadoopConverter {
 			hadoopJob.setNumReduceTasks(redestimator.getNumReducers(eso.getExpressionSet(),mapping));
 
 			// create dummy output path, as individual relations are sent to specific locations
-			Path dummyPath = fileManager.getNewTmpPath(getName(cug,2));
+//			Path dummyPath = fileManager.getNewTmpPath(getName(cug,2));
+			Path dummyPath = fileManager.getOutputRoot();
 			FileOutputFormat.setOutputPath(hadoopJob, dummyPath);
+//			System.out.println("Jonny: " + dummyPath);
 
 
 
