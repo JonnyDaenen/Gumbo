@@ -116,11 +116,11 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 			if (stopIndicator == 0 || nr == stopIndicator) {
 				double newCost = totalCost(candidate);
 				LOG.info("Candidate solution found! " + nr + " " + newCost);
+				LOG.info(candidate);
 				
 				if (newCost < bestTotalCost) {
 					bestTotalCost = newCost;
 					bestGrouping = candidate;
-					LOG.info(candidate);
 				}
 				
 				if (nr == stopIndicator) {
