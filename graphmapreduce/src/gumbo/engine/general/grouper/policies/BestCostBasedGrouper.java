@@ -168,7 +168,6 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 
 
 	private void fetchSamples() throws SamplingException {
-		LOG.info(rfm);
 		RelationSampler sampler = new RelationSampler(rfm);
 		RelationSampleContainer rawSamples = sampler.sample();
 		samples = new RelationTupleSampleContainer(rawSamples, 0.1);
