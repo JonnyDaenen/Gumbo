@@ -120,6 +120,7 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 				if (newCost < bestTotalCost) {
 					bestTotalCost = newCost;
 					bestGrouping = candidate;
+					LOG.info(candidate);
 				}
 				
 				if (nr == stopIndicator) {
