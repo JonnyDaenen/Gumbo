@@ -37,4 +37,10 @@ public class SparkPartitionQueue extends PartitionQueue {
 		finishedCUGs.add(group);
 	}
 
+	@Override
+	protected void cleanup(CalculationUnitGroup group) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

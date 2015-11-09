@@ -8,6 +8,7 @@ import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -25,7 +26,6 @@ public class Red2MessageFactory implements Red2MessageFactoryInterface {
 	
 	Text keyText;
 	Text valueText;
-
 
 	protected MultipleOutputs<Text, Text> mos;
 
@@ -121,12 +121,14 @@ public class Red2MessageFactory implements Red2MessageFactoryInterface {
 
 	protected String generateFileName(Tuple t) {
 		RelationSchema rs = new RelationSchema(t.getName(),t.size());
-		// OPTIMIZE add cache
-		Set<Path> paths = eso.getFileMapping().getPaths(rs);
-		for (Path path: paths) {
-			return path.toString() + "/" + rs.getName();
-		}
-		return ""; // FIXME fallback system + duplicate code in other reducer2
+		
+		return rs.getName();
+//		// OPTIMIZE add cache
+//		Set<Path> paths = eso.getFileMapping().getPaths(rs);
+//		for (Path path: paths) {
+//			return path.toString() + "/" + rs.getName();
+//		}
+//		return ""; // FIXME fallback system + duplicate code in other reducer2
 
 	}
 
@@ -179,6 +181,7 @@ public class Red2MessageFactory implements Red2MessageFactoryInterface {
 	public void incrementTuples(long incr) {
 		TUPLES.increment(incr);
 	}
+
 
 
 }

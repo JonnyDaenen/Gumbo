@@ -54,7 +54,7 @@ public class HadoopEngine {
 			
 		GumboHadoopConverter jobConverter = new GumboHadoopConverter(plan.getName(), plan.getFileManager(), conf);
 
-		executeJobs(plan, jobConverter);
+		executeJobs(plan, jobConverter, conf);
 		cleanup();
 
 	}
@@ -76,12 +76,13 @@ public class HadoopEngine {
 	 * 
 	 * @param plan a Gumbo plan
 	 * @param jobConverter a converter
+	 * @param conf 
 	 * 
 	 * @return <code>true</code> when all jobs have finished successfully, <code>false</code> otherwise
 	 * 
 	 * @throws ExecutionException when the execution of the plan fails
 	 */
-	private boolean executeJobs(GumboPlan plan, GumboHadoopConverter jobConverter) throws ExecutionException {
+	private boolean executeJobs(GumboPlan plan, GumboHadoopConverter jobConverter, Configuration conf) throws ExecutionException {
 
 		boolean success = false;
 		stats = "";
@@ -104,7 +105,8 @@ public class HadoopEngine {
 			// 3. execute jobs
 
 			// for each partition from bottom to top
-			HadoopPartitionQueue queue = new HadoopPartitionQueue(plan.getPartitions());
+			
+			HadoopPartitionQueue queue = new HadoopPartitionQueue(plan.getPartitions(), plan.getFileManager(), conf);
 
 			LOG.info("Processing partition queue.");
 			// while not all completed or the jobcontrol is still running
@@ -128,7 +130,7 @@ public class HadoopEngine {
 					jc.addJobCollection(jobs);
 
 					// update the queue
-					queue.addJobs(partition, jobs.get(0), jobs.get(1));
+					queue.addJobs(partition, jobs.get(0), jobs.get(jobs.size()-1)); // TODO only 1 round-one job is there!
 
 				}
 

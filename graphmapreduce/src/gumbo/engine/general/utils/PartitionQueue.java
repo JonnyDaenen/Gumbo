@@ -50,7 +50,7 @@ public abstract class PartitionQueue {
 	 * @return <code>true</code> if there are no partitions left to process, <code>false</code> otherwise.
 	 */
 	public boolean isEmpty() {
-		return queue.isEmpty();
+		return queue.isEmpty() && active.isEmpty();
 	}
 
 	/**
@@ -70,6 +70,7 @@ public abstract class PartitionQueue {
 		for (CalculationUnitGroup group: active) {
 			// check if it is ready and mark it if so
 			if (isReady(group)) {
+				cleanup(group);
 				ready.add(group);
 			}
 		}
@@ -120,6 +121,9 @@ public abstract class PartitionQueue {
 			
 		return depsReady;
 	}
+	
+	
+	protected abstract void cleanup(CalculationUnitGroup group);
 
 	/**
 	 * Checks whether all dependencies are finished
