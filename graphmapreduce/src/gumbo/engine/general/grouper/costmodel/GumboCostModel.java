@@ -36,7 +36,7 @@ public class GumboCostModel implements CostModel {
 		// transfer startup penalty
 		double red_tasks = Math.ceil((float)total_interm / settings.getRedChunkSizeMB());
 		double map_tasks = Math.ceil((float)total_input / settings.getMapChunkSizeMB());
-		double penalty_cost = red_tasks * map_tasks * settings.getTransferCost();
+		double penalty_cost = red_tasks * map_tasks * settings.getTransferPenaltyCost();
 
 		// merge cost
 		int red_inmem_correction = 1;
@@ -47,6 +47,7 @@ public class GumboCostModel implements CostModel {
 		// reduce cost
 		double reduce_cost = total_interm * settings.getReduceCost();
 		//reduce_cost += guard_interm * mr_settings.cost_hdfs_w
+		reduce_cost = 0;
 
 		return transfer_cost + penalty_cost + merge_cost + reduce_cost;
 	}
@@ -73,6 +74,7 @@ public class GumboCostModel implements CostModel {
 		double one_map_output_size = (double)intermediate / mappers;
 		double one_map_sort_chunks = one_map_output_size / settings.getMapSortBufferMB();
 		double sort_cost = one_map_sort_chunks * settings.getMapChunkSizeMB() * settings.getSortCost();
+		sort_cost = 0;
 
 		// merge cost
 		double map_merge_levels = Math.ceil(Math.log10(one_map_sort_chunks)/Math.log10(settings.getMapMergeFactor()));
