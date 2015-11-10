@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class CalculationGroup {
 	
-	long scale = 20; // FIXME this should remain 1 in release versions!
+	long scale = 1; // FIXME this should remain 1 in release versions!
 
 	Set<GuardedSemiJoinCalculation> semijoins;
 	

@@ -11,34 +11,34 @@ gumbo.engine.mapOutputGroupingOptimizationOn=true
 gumbo.engine.grouper.beststopindicator=0
 gumbo.engine.requestAtomIdOptimizationOn=true
 gumbo.engine.guardKeepAliveOptimizationOn=true
-[INFO] 15/11/10 13:40:37 gumbo.Gumbo: Input: 
+[INFO] 15/11/10 13:42:03 gumbo.Gumbo: Input: 
 R(x0,x1);input/experiments/EXP_024/3/R;csv;'S(x0);input/experiments/EXP_024/3/S;csv;'T(x0);input/experiments/EXP_024/3/T;csv;'U(x0);input/experiments/EXP_024/3/U;csv;'G(x0,x1);input/experiments/EXP_024/3/G;csv;
 Output: output/EXP_026
 Scratch: scratch/EXP_026
 Queries: 
 [(Out1(x) : R(x,y) & (S(x) & T(y)))]
 
-[INFO] 15/11/10 13:40:37 compiler.GFCompiler: Adding suffix to scratch and output paths: /20151110_134037
-[INFO] 15/11/10 13:40:37 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
-[INFO] 15/11/10 13:40:37 compiler.GFCompiler: Number of BGFEs: 1
-[INFO] 15/11/10 13:40:37 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
-[INFO] 15/11/10 13:40:37 compiler.GFCompiler: Number of CUs: 1
-[INFO] 15/11/10 13:40:37 compiler.GFCompiler: Linking Calculation Units (CUs)...
-[INFO] 15/11/10 13:40:37 compiler.GFCompiler: Creating initial file mapping...
-[INFO] 15/11/10 13:40:37 compiler.GFCompiler: file mapping:
-Out root: output/EXP_026/20151110_134037
-Scratch root: scratch/EXP_026/20151110_134037
-Temp root: scratch/EXP_026/20151110_134037/tmp
+[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Adding suffix to scratch and output paths: /20151110_134203
+[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
+[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Number of BGFEs: 1
+[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
+[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Number of CUs: 1
+[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Linking Calculation Units (CUs)...
+[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Creating initial file mapping...
+[INFO] 15/11/10 13:42:03 compiler.GFCompiler: file mapping:
+Out root: output/EXP_026/20151110_134203
+Scratch root: scratch/EXP_026/20151110_134203
+Temp root: scratch/EXP_026/20151110_134203/tmp
 R(x0,x1) <- [input/experiments/EXP_024/3/R]
 S(x0) <- [input/experiments/EXP_024/3/S]
 T(x0) <- [input/experiments/EXP_024/3/T]
 U(x0) <- [input/experiments/EXP_024/3/U]
 G(x0,x1) <- [input/experiments/EXP_024/3/G]
-Out1(x0) -> [output/EXP_026/20151110_134037/OUT_0_Out1]
+Out1(x0) -> [output/EXP_026/20151110_134203/OUT_0_Out1]
 Temp dirs: 
 
-[INFO] 15/11/10 13:40:37 compiler.GFCompiler: Partitioning...
-[INFO] 15/11/10 13:40:37 compiler.GFCompiler: Number of partitions: 1
+[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Partitioning...
+[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Number of partitions: 1
 
 Query:
 exp025.gumbo
@@ -50,21 +50,21 @@ Calculation Unit Partitions: {
 }
 Folders:
 -------
-Out root: output/EXP_026/20151110_134037
-Scratch root: scratch/EXP_026/20151110_134037
-Temp root: scratch/EXP_026/20151110_134037/tmp
+Out root: output/EXP_026/20151110_134203
+Scratch root: scratch/EXP_026/20151110_134203
+Temp root: scratch/EXP_026/20151110_134203/tmp
 R(x0,x1) <- [input/experiments/EXP_024/3/R]
 S(x0) <- [input/experiments/EXP_024/3/S]
 T(x0) <- [input/experiments/EXP_024/3/T]
 U(x0) <- [input/experiments/EXP_024/3/U]
 G(x0,x1) <- [input/experiments/EXP_024/3/G]
-Out1(x0) -> [output/EXP_026/20151110_134037/OUT_0_Out1]
+Out1(x0) -> [output/EXP_026/20151110_134203/OUT_0_Out1]
 Temp dirs: 
 
-[WARN] 15/11/10 13:40:37 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-[INFO] 15/11/10 13:40:37 grouper.GrouperFactory: Creating a grouper with policy BESTCOSTGROUP_GUMBO
-[WARN] 15/11/10 13:40:37 settings.AbstractExecutorSettings: Failed to find setting with key 'mapreduce.reduce.memory.mb', reverting to default value 1024.0
-[INFO] 15/11/10 13:40:37 grouper.Grouper: Decomposition complete: 	R(x,y) |X S(x)
+[WARN] 15/11/10 13:42:04 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[INFO] 15/11/10 13:42:04 grouper.GrouperFactory: Creating a grouper with policy BESTCOSTGROUP_GUMBO
+[WARN] 15/11/10 13:42:04 settings.AbstractExecutorSettings: Failed to find setting with key 'mapreduce.reduce.memory.mb', reverting to default value 1024.0
+[INFO] 15/11/10 13:42:04 grouper.Grouper: Decomposition complete: 	R(x,y) |X S(x)
 	R(x,y) |X T(y)
 	Guard In Bytes0
 	Guarded In Bytes0
@@ -72,66 +72,66 @@ Temp dirs:
 	Guarded Out Bytes0
 	Cost:0.0
 
-[INFO] 15/11/10 13:40:37 reporter.RelationTupleSampleContainer: Parsing samples for relation R(x0,x1)
-[INFO] 15/11/10 13:40:37 reporter.RelationTupleSampleContainer: Number of bytes: 10
-[INFO] 15/11/10 13:40:37 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Small tuples: 261
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Big tuples: 2334
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Parsing samples for relation S(x0)
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Number of bytes: 10
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Small tuples: 518
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Big tuples: 4669
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Parsing samples for relation T(x0)
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Number of bytes: 10
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Small tuples: 520
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Big tuples: 4668
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Parsing samples for relation U(x0)
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Number of bytes: 10
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Small tuples: 518
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Big tuples: 4667
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Parsing samples for relation G(x0,x1)
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Number of bytes: 10
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Small tuples: 260
-[INFO] 15/11/10 13:40:38 reporter.RelationTupleSampleContainer: Big tuples: 2335
-[INFO] 15/11/10 13:40:38 policies.BestCostBasedGrouper: Candidate solution found! 1 124943.38702111224
-[INFO] 15/11/10 13:40:38 policies.BestCostBasedGrouper: [	R(x,y) |X S(x)
-	Guard In Bytes3155515880
-	Guarded In Bytes1577801640
-	Guard Out Bytes2999740420
-	Guarded Out Bytes1978302660
-	Cost:62459.134725194985
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Parsing samples for relation R(x0,x1)
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes: 10
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Small tuples: 260
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Big tuples: 2334
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Parsing samples for relation S(x0)
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes: 10
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Small tuples: 520
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Big tuples: 4673
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Parsing samples for relation T(x0)
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes: 10
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Small tuples: 520
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Big tuples: 4675
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Parsing samples for relation U(x0)
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes: 10
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Small tuples: 519
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Big tuples: 4670
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Parsing samples for relation G(x0,x1)
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes: 10
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Small tuples: 258
+[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Big tuples: 2333
+[INFO] 15/11/10 13:42:04 policies.BestCostBasedGrouper: Candidate solution found! 1 4599.69775339143
+[INFO] 15/11/10 13:42:04 policies.BestCostBasedGrouper: [	R(x,y) |X S(x)
+	Guard In Bytes157775794
+	Guarded In Bytes78890082
+	Guard Out Bytes150200785
+	Guarded Out Bytes98922294
+	Cost:2299.9643498559863
 , 	R(x,y) |X T(y)
-	Guard In Bytes3155515880
-	Guarded In Bytes1577765400
-	Guard Out Bytes3002537460
-	Guarded Out Bytes1978063760
-	Cost:62484.25229591726
+	Guard In Bytes157775794
+	Guarded In Bytes78888270
+	Guard Out Bytes150171838
+	Guarded Out Bytes98922317
+	Cost:2299.7334035354434
 ]
-[INFO] 15/11/10 13:40:38 policies.BestCostBasedGrouper: Candidate solution found! 2 127934.05276798808
-[INFO] 15/11/10 13:40:38 policies.BestCostBasedGrouper: [	R(x,y) |X S(x)
+[INFO] 15/11/10 13:42:04 policies.BestCostBasedGrouper: Candidate solution found! 2 4972.146342716381
+[INFO] 15/11/10 13:42:04 policies.BestCostBasedGrouper: [	R(x,y) |X S(x)
 	R(x,y) |X T(y)
-	Guard In Bytes3155515880
-	Guarded In Bytes3155567040
-	Guard Out Bytes6002277900
-	Guarded Out Bytes3956366420
-	Cost:127934.05276798808
+	Guard In Bytes157775794
+	Guarded In Bytes157778352
+	Guard Out Bytes300372623
+	Guarded Out Bytes197844611
+	Cost:4972.146342716381
 ]
-[INFO] 15/11/10 13:40:38 grouper.Grouper: Grouping complete: 2 group(s)
-[INFO] 15/11/10 13:40:38 grouper.Grouper: Grouping: [	R(x,y) |X S(x)
-	Guard In Bytes3155515880
-	Guarded In Bytes1577801640
-	Guard Out Bytes2999740420
-	Guarded Out Bytes1978302660
-	Cost:62459.134725194985
+[INFO] 15/11/10 13:42:04 grouper.Grouper: Grouping complete: 2 group(s)
+[INFO] 15/11/10 13:42:04 grouper.Grouper: Grouping: [	R(x,y) |X S(x)
+	Guard In Bytes157775794
+	Guarded In Bytes78890082
+	Guard Out Bytes150200785
+	Guarded Out Bytes98922294
+	Cost:2299.9643498559863
 , 	R(x,y) |X T(y)
-	Guard In Bytes3155515880
-	Guarded In Bytes1577765400
-	Guard Out Bytes3002537460
-	Guarded Out Bytes1978063760
-	Cost:62484.25229591726
+	Guard In Bytes157775794
+	Guarded In Bytes78888270
+	Guard Out Bytes150171838
+	Guarded Out Bytes98922317
+	Cost:2299.7334035354434
 ]
-0.565333582
+0.58434349
