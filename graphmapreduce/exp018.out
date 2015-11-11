@@ -1,6 +1,6 @@
 gumbo.engine.guardAddressOptimizationOn=true
 gumbo.engine.proofsymbol=#
-gumbo.engine.mapOutputGroupingPolicy=BESTCOSTGROUP_GUMBO
+gumbo.engine.mapOutputGroupingPolicy=ALLGROUP
 gumbo.engine.guardedCombinerOptimizationOn=false
 gumbo.engine.assertConstantOptimizationOn=true
 gumbo.compiler.partitioner=gumbo.compiler.partitioner.HeightPartitioner
@@ -11,127 +11,95 @@ gumbo.engine.mapOutputGroupingOptimizationOn=true
 gumbo.engine.grouper.beststopindicator=0
 gumbo.engine.requestAtomIdOptimizationOn=true
 gumbo.engine.guardKeepAliveOptimizationOn=true
-[INFO] 15/11/10 13:42:03 gumbo.Gumbo: Input: 
-R(x0,x1);input/experiments/EXP_024/3/R;csv;'S(x0);input/experiments/EXP_024/3/S;csv;'T(x0);input/experiments/EXP_024/3/T;csv;'U(x0);input/experiments/EXP_024/3/U;csv;'G(x0,x1);input/experiments/EXP_024/3/G;csv;
-Output: output/EXP_026
-Scratch: scratch/EXP_026
+[INFO] 15/11/11 16:12:04 gumbo.Gumbo: Input: 
+R(x0,x1);input/experiments/EXP_024/5/R;csv;'S(x0);input/experiments/EXP_024/5/S;csv;
+Output: output/EXP_027
+Scratch: scratch/EXP_027
 Queries: 
-[(Out1(x) : R(x,y) & (S(x) & T(y)))]
+[(out1(x) : R(x,y) & (S(x) & S(y)))]
 
-[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Adding suffix to scratch and output paths: /20151110_134203
-[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
-[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Number of BGFEs: 1
-[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
-[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Number of CUs: 1
-[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Linking Calculation Units (CUs)...
-[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Creating initial file mapping...
-[INFO] 15/11/10 13:42:03 compiler.GFCompiler: file mapping:
-Out root: output/EXP_026/20151110_134203
-Scratch root: scratch/EXP_026/20151110_134203
-Temp root: scratch/EXP_026/20151110_134203/tmp
-R(x0,x1) <- [input/experiments/EXP_024/3/R]
-S(x0) <- [input/experiments/EXP_024/3/S]
-T(x0) <- [input/experiments/EXP_024/3/T]
-U(x0) <- [input/experiments/EXP_024/3/U]
-G(x0,x1) <- [input/experiments/EXP_024/3/G]
-Out1(x0) -> [output/EXP_026/20151110_134203/OUT_0_Out1]
+[INFO] 15/11/11 16:12:04 compiler.GFCompiler: Adding suffix to scratch and output paths: /20151111_161204
+[INFO] 15/11/11 16:12:04 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
+[INFO] 15/11/11 16:12:04 compiler.GFCompiler: Number of BGFEs: 1
+[INFO] 15/11/11 16:12:04 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
+[INFO] 15/11/11 16:12:04 compiler.GFCompiler: Number of CUs: 1
+[INFO] 15/11/11 16:12:04 compiler.GFCompiler: Linking Calculation Units (CUs)...
+[INFO] 15/11/11 16:12:04 compiler.GFCompiler: Creating initial file mapping...
+[INFO] 15/11/11 16:12:04 compiler.GFCompiler: file mapping:
+Out root: output/EXP_027/20151111_161204
+Scratch root: scratch/EXP_027/20151111_161204
+Temp root: scratch/EXP_027/20151111_161204/tmp
+R(x0,x1) <- [input/experiments/EXP_024/5/R]
+S(x0) <- [input/experiments/EXP_024/5/S]
+out1(x0) -> [output/EXP_027/20151111_161204/OUT_0_out1]
 Temp dirs: 
 
-[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Partitioning...
-[INFO] 15/11/10 13:42:03 compiler.GFCompiler: Number of partitions: 1
+[INFO] 15/11/11 16:12:04 compiler.GFCompiler: Partitioning...
+[INFO] 15/11/11 16:12:04 compiler.GFCompiler: Number of partitions: 1
 
 Query:
-exp025.gumbo
+exp_027.gumbo
 
 Partitions:
 -----------
 Calculation Unit Partitions: {
-{id : 0 Depends on: None. - (Out1(x) : R(x,y) & (S(x) & T(y)))}
+{id : 0 Depends on: None. - (out1(x) : R(x,y) & (S(x) & S(y)))}
 }
 Folders:
 -------
-Out root: output/EXP_026/20151110_134203
-Scratch root: scratch/EXP_026/20151110_134203
-Temp root: scratch/EXP_026/20151110_134203/tmp
-R(x0,x1) <- [input/experiments/EXP_024/3/R]
-S(x0) <- [input/experiments/EXP_024/3/S]
-T(x0) <- [input/experiments/EXP_024/3/T]
-U(x0) <- [input/experiments/EXP_024/3/U]
-G(x0,x1) <- [input/experiments/EXP_024/3/G]
-Out1(x0) -> [output/EXP_026/20151110_134203/OUT_0_Out1]
+Out root: output/EXP_027/20151111_161204
+Scratch root: scratch/EXP_027/20151111_161204
+Temp root: scratch/EXP_027/20151111_161204/tmp
+R(x0,x1) <- [input/experiments/EXP_024/5/R]
+S(x0) <- [input/experiments/EXP_024/5/S]
+out1(x0) -> [output/EXP_027/20151111_161204/OUT_0_out1]
 Temp dirs: 
 
-[WARN] 15/11/10 13:42:04 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-[INFO] 15/11/10 13:42:04 grouper.GrouperFactory: Creating a grouper with policy BESTCOSTGROUP_GUMBO
-[WARN] 15/11/10 13:42:04 settings.AbstractExecutorSettings: Failed to find setting with key 'mapreduce.reduce.memory.mb', reverting to default value 1024.0
-[INFO] 15/11/10 13:42:04 grouper.Grouper: Decomposition complete: 	R(x,y) |X S(x)
-	R(x,y) |X T(y)
+[WARN] 15/11/11 16:12:04 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[INFO] 15/11/11 16:12:04 hadoop.HadoopEngine: Creating Job Control for: exp_027.gumbo
+[INFO] 15/11/11 16:12:04 hadoop.HadoopEngine: Starting Job-control thread: Gumbo-Workflow-Thread_exp_027.gumbo
+[INFO] 15/11/11 16:12:04 hadoop.HadoopEngine: Processing partition queue.
+[INFO] 15/11/11 16:12:04 utils.PartitionQueue: Dependencies: []
+[INFO] 15/11/11 16:12:04 utils.PartitionQueue: Calculation group {
+id : 0 Depends on: None. - (out1(x) : R(x,y) & (S(x) & S(y)))
+} is ready to be scheduled.
+[INFO] 15/11/11 16:12:04 grouper.GrouperFactory: Creating a grouper with policy ALLGROUP
+[INFO] 15/11/11 16:12:04 grouper.Grouper: Decomposition complete: 	R(x,y) |X S(x)
+	R(x,y) |X S(y)
 	Guard In Bytes0
 	Guarded In Bytes0
 	Guard Out Bytes0
 	Guarded Out Bytes0
 	Cost:0.0
 
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Parsing samples for relation R(x0,x1)
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes: 10
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Small tuples: 260
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Big tuples: 2334
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Parsing samples for relation S(x0)
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes: 10
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Small tuples: 520
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Big tuples: 4673
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Parsing samples for relation T(x0)
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes: 10
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Small tuples: 520
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Big tuples: 4675
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Parsing samples for relation U(x0)
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes: 10
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Small tuples: 519
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Big tuples: 4670
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Parsing samples for relation G(x0,x1)
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes: 10
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Number of bytes used for small sample: 1
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Small tuples: 258
-[INFO] 15/11/10 13:42:04 reporter.RelationTupleSampleContainer: Big tuples: 2333
-[INFO] 15/11/10 13:42:04 policies.BestCostBasedGrouper: Candidate solution found! 1 4599.69775339143
-[INFO] 15/11/10 13:42:04 policies.BestCostBasedGrouper: [	R(x,y) |X S(x)
-	Guard In Bytes157775794
-	Guarded In Bytes78890082
-	Guard Out Bytes150200785
-	Guarded Out Bytes98922294
-	Cost:2299.9643498559863
-, 	R(x,y) |X T(y)
-	Guard In Bytes157775794
-	Guarded In Bytes78888270
-	Guard Out Bytes150171838
-	Guarded Out Bytes98922317
-	Cost:2299.7334035354434
+[INFO] 15/11/11 16:12:04 grouper.Grouper: Grouping complete: 1 group(s)
+[INFO] 15/11/11 16:12:04 grouper.Grouper: Grouping: [	R(x,y) |X S(x)
+	R(x,y) |X S(y)
+	Guard In Bytes0
+	Guarded In Bytes0
+	Guard Out Bytes0
+	Guarded Out Bytes0
+	Cost:0.0
 ]
-[INFO] 15/11/10 13:42:04 policies.BestCostBasedGrouper: Candidate solution found! 2 4972.146342716381
-[INFO] 15/11/10 13:42:04 policies.BestCostBasedGrouper: [	R(x,y) |X S(x)
-	R(x,y) |X T(y)
-	Guard In Bytes157775794
-	Guarded In Bytes157778352
-	Guard Out Bytes300372623
-	Guarded Out Bytes197844611
-	Cost:4972.146342716381
-]
-[INFO] 15/11/10 13:42:04 grouper.Grouper: Grouping complete: 2 group(s)
-[INFO] 15/11/10 13:42:04 grouper.Grouper: Grouping: [	R(x,y) |X S(x)
-	Guard In Bytes157775794
-	Guarded In Bytes78890082
-	Guard Out Bytes150200785
-	Guarded Out Bytes98922294
-	Cost:2299.9643498559863
-, 	R(x,y) |X T(y)
-	Guard In Bytes157775794
-	Guarded In Bytes78888270
-	Guard Out Bytes150171838
-	Guarded Out Bytes98922317
-	Cost:2299.7334035354434
-]
-0.58434349
+[WARN] 15/11/11 16:12:04 settings.AbstractExecutorSettings: Failed to find setting with key 'mapreduce.reduce.memory.mb', reverting to default value 1024.0
+[INFO] 15/11/11 16:12:04 converter.GumboHadoopConverter: Missing size estimates, sampling data.
+[INFO] 15/11/11 16:12:05 reporter.RelationTupleSampleContainer: Parsing samples for relation R(x0,x1)
+[INFO] 15/11/11 16:12:05 reporter.RelationTupleSampleContainer: Number of blocks: 10
+[INFO] 15/11/11 16:12:05 reporter.RelationTupleSampleContainer: Number of blocks used for small sample: 1
+[INFO] 15/11/11 16:12:05 reporter.RelationTupleSampleContainer: Small tuples: 297
+[INFO] 15/11/11 16:12:05 reporter.RelationTupleSampleContainer: Big tuples: 2671
+[INFO] 15/11/11 16:12:05 reporter.RelationTupleSampleContainer: Parsing samples for relation S(x0)
+[INFO] 15/11/11 16:12:05 reporter.RelationTupleSampleContainer: Number of blocks: 10
+[INFO] 15/11/11 16:12:05 reporter.RelationTupleSampleContainer: Number of blocks used for small sample: 1
+[INFO] 15/11/11 16:12:05 reporter.RelationTupleSampleContainer: Small tuples: 901
+[INFO] 15/11/11 16:12:05 reporter.RelationTupleSampleContainer: Big tuples: 4984
+[INFO] 15/11/11 16:12:05 converter.GumboHadoopConverter: Intermediate data size: 27.00061798095703 MB
+[INFO] 15/11/11 16:12:05 converter.GumboHadoopConverter: Num reducers: 1
+[INFO] 15/11/11 16:12:05 converter.GumboHadoopConverter: R(x0,x1);file:/Users/jonny/Develop/Gumbo/graphmapreduce/input/experiments/EXP_024/5/R/R.txt;csv;'S(x0);file:/Users/jonny/Develop/Gumbo/graphmapreduce/input/experiments/EXP_024/5/S/S.txt;csv;'out1(x0);output/EXP_027/20151111_161204/OUT_0_out1;rel;
+[INFO] 15/11/11 16:12:05 converter.GumboHadoopConverter: Setting M1 guarded path to file:/Users/jonny/Develop/Gumbo/graphmapreduce/input/experiments/EXP_024/5/S/S.txt using mapper gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardedCsv
+[INFO] 15/11/11 16:12:05 converter.GumboHadoopConverter: Setting M1 guard path to file:/Users/jonny/Develop/Gumbo/graphmapreduce/input/experiments/EXP_024/5/R/R.txt using mapper gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1GuardCsv
+[INFO] 15/11/11 16:12:05 converter.GumboHadoopConverter: Setting Reduce tasks to 1
+[INFO] 15/11/11 16:12:05 converter.GumboHadoopConverter: Adding M2 guard path file:/Users/jonny/Develop/Gumbo/graphmapreduce/input/experiments/EXP_024/5/R/R.txt using mapper gumbo.engine.hadoop.mrcomponents.round2.mappers.GFMapper2GuardCsv
+[INFO] 15/11/11 16:12:05 converter.GumboHadoopConverter: Adding M2 normal path file:/Users/jonny/Develop/Gumbo/graphmapreduce/scratch/EXP_027/20151111_161204/tmp/TMP_1_exp_027.gumbo_R+_1 using identity mapper 
+[INFO] 15/11/11 16:12:05 converter.Round2ReduceJobEstimator: Output estimate 100663296
+[INFO] 15/11/11 16:12:05 converter.Round2ReduceJobEstimator: Reducer estimate 1

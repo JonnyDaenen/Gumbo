@@ -84,8 +84,8 @@ public class RelationTupleSampleContainer {
 		long bigtuples = 0;
 		
 		int bound = (int)(pctSmall * rawbytes.length);
-		LOG.info("Number of bytes: " + rawbytes.length);
-		LOG.info("Number of bytes used for small sample: " + bound);
+		LOG.info("Number of blocks: " + rawbytes.length);
+		LOG.info("Number of blocks used for small sample: " + bound);
 		
 		
 		for (int i = 0; i < rawbytes.length; i++) {

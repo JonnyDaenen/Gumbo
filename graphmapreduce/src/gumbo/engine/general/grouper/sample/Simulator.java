@@ -93,6 +93,7 @@ public class Simulator {
 			// FIXME throw error
 			e.printStackTrace();
 		}
+//		System.out.println(report);
 		return report;
 	}
 

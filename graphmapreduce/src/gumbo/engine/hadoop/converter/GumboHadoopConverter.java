@@ -184,11 +184,11 @@ public class GumboHadoopConverter {
 
 			if (!group.hasInfo()) {
 				LOG.info("Missing size estimates, sampling data.");
-				addInfo(group,mapping1,settings);
+				addInfo(group, mapping1, settings);
 			}
 
 			// get number of reducers 
-			double mbytes = (group.getGuardedOutBytes() + group.getGuardedOutBytes()) / (1024.0*1024);
+			double mbytes = (group.getGuardOutBytes() + group.getGuardedOutBytes()) / (1024.0*1024);
 			LOG.info("Intermediate data size: " + mbytes + " MB");
 			int numReducers = (int)Math.max(1,Math.ceil(( mbytes / mrSettings.getRedChunkSizeMB())));
 			LOG.info("Num reducers: " + numReducers);
