@@ -56,6 +56,10 @@ public abstract class CalculationUnit {
 
 
 
+	/**
+	 * Constructs a set of relations this calculation depends on.
+	 * @return
+	 */
 	abstract public Set<RelationSchema> getInputRelations();
 
 

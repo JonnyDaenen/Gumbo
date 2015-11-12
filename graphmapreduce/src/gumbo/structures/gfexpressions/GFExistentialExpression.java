@@ -52,7 +52,7 @@ public class GFExistentialExpression extends GFExpression {
 
 	
 	/**
-	 * 
+	 * Constructs a set containing the relations schemas this expression depends on.
 	 * @return the set of relation schemas this expressions depends on.
 	 */
 	public Set<RelationSchema> getRelationDependencies() {
