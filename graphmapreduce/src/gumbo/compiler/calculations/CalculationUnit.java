@@ -135,4 +135,14 @@ public abstract class CalculationUnit {
 		return id;
 	}
 
+	public boolean hasDescendant(CalculationUnit cu) {
+		
+		for (CalculationUnit dep : getDependencies()) {
+			if (dep.equals(cu) || dep.hasDescendant(cu)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

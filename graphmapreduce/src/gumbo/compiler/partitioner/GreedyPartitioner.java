@@ -99,7 +99,7 @@ public class GreedyPartitioner implements CalculationPartitioner {
 					p.add(cu);
 				}
 					
-				// addpartition as new level
+				// add partition as new level
 				if (p.size() != 0) {
 					result.addNewLevel(p);
 				}
@@ -111,27 +111,77 @@ public class GreedyPartitioner implements CalculationPartitioner {
 		
 		public Pair<CalculationUnit, Integer> findBestLevelAssignment(Set<CalculationUnit> active) {
 			
-			int bestOverlap = 0;
-			Pair<CalculationUnit, Integer> best = null;
 			
 			// default assignment
-			best = new Pair<>(active.iterator().next(), lastLevel+1);
+			Pair<CalculationUnit, Integer> best = null;
+			int bestOverlap = 0;
+			int bestFutureOverlap = 0;
 			
 			// each calculation
 			for (CalculationUnit cu : active) {
+				int futureOverlap = getFutureOverlap(cu);
+				
+				int newOverlap = 0;
+				int newLevel = lastLevel+1;
 				
 				// get effect of putting it in a level
-				for (int level = 0; level <= lastLevel; level++) {
+				for (int level = lastLevel; level >= 0; level--) {
+					
+					// respect dependencies
+					if (dependencyPresent(cu, level))
+						break;
+					
+					// calculate overlaps
 					int overlap = getOverlap(level, cu);
 					
-					// keep track of best
-					if (overlap > bestOverlap) {
-						bestOverlap = overlap;
-						best = new Pair<CalculationUnit, Integer>(cu, level);
+					if (overlap > newOverlap) {
+						newOverlap = overlap;
+						newLevel = level;
 					}
+	
 				}
+				
+				// keep track of best option
+				// better overlap is good
+				// equal overlap, but lower future overlap is also good
+				if (	best == null ||
+						newOverlap > bestOverlap ||
+						(newOverlap == bestOverlap && futureOverlap < bestFutureOverlap)) {
+					bestOverlap = newOverlap;
+					bestFutureOverlap = futureOverlap;
+					best = new Pair<CalculationUnit, Integer>(cu, newLevel);
+				}
+				
 			}
 			return best;
+		}
+
+		/**
+		 * Get overlap of a CalculationUnit with the non-active part of queue that is not connected to it by a directed path.
+		 * This is a measure of the opportunities we miss
+		 * @param cu
+		 * @return
+		 */
+		private int getFutureOverlap(CalculationUnit cu) {
+			int overlap = 0;
+			Set<CalculationUnit> active = getActive();
+			for (CalculationUnit futureCU : queue) {
+				if (active.contains(futureCU) || futureCU.hasDescendant(cu) || cu == futureCU)
+					continue;
+				Set<RelationSchema> rels = futureCU.getInputRelations();
+				rels.retainAll(cu.getInputRelations());
+				overlap += rels.size();
+			}
+			return overlap;
+		}
+
+		private boolean dependencyPresent(CalculationUnit cu, int level) {
+			Set<CalculationUnit> levset = levels.get(level);
+			for (CalculationUnit dep : cu.getDependencies()){
+				if (levset.contains(dep))
+					return true;
+			}
+			return false;
 		}
 
 		private int getOverlap(int level, CalculationUnit cu) {
@@ -151,11 +201,11 @@ public class GreedyPartitioner implements CalculationPartitioner {
 			StringBuilder sb = new StringBuilder();
 			sb.append("Queue: ");
 			sb.append(System.lineSeparator());
-			sb.append("queue");
+			sb.append(queue);
 			sb.append(System.lineSeparator());
 			sb.append("Levels: ");
 			sb.append(System.lineSeparator());
-			sb.append("levels");
+			sb.append(levels);
 			sb.append(System.lineSeparator());
 			
 			return sb.toString();
@@ -180,7 +230,7 @@ public class GreedyPartitioner implements CalculationPartitioner {
 			
 			// find best one
 			Pair<CalculationUnit, Integer> la = q.findBestLevelAssignment(a);
-			LOG.debug("Best assignment: " + la);
+			LOG.debug("Best assignment: " + la.fst);
 			
 			q.level(la.fst, la.snd);
 			LOG.debug(q);

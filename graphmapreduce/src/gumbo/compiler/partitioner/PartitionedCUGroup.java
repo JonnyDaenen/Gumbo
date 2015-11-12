@@ -5,6 +5,7 @@ package gumbo.compiler.partitioner;
 
 import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.structures.data.RelationSchema;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -235,6 +236,49 @@ public class PartitionedCUGroup {
 		return counter;
 	}
 	
+	private int getSpread(RelationSchema rs) {
+		boolean [] levels = new boolean[currentPartition+1];
+
+		// for each possible parent
+		for (CalculationUnit p : group) {
+
+			// if it is a parent
+			if (p.getInputRelations().contains(rs)) {
+
+				// keep track of level
+				Integer level = levelAssignmment.get(p);
+				if (level != null)
+					levels[level] = true;
+			}
+		}
+
+		// count used levels
+		int counter = 0;
+		for (int i = 0; i < levels.length; i++) {
+			if (levels[i])
+				counter++;
+		}
+
+		return counter;
+	}
+	
+	public int getSpread() {
+		int totalSpread = 0;
+		for (CalculationUnit c : getCalculationUnits()) {
+			totalSpread += getSpread(c); // * weight of calculation;
+		}
+		
+//		System.out.println("Relations:");
+		for (RelationSchema rs : this.getCalculationUnits().getInputRelations()) {
+//			System.out.println(rs);
+			totalSpread += getSpread(rs);
+		}
+		
+		return totalSpread;
+	}
+	
+	
+
 	/**
 	 * TODO make it a copy?
 	 * @return the collection of {@link CalculationUnit}s

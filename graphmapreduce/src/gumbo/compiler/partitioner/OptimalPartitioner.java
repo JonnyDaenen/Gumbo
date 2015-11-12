@@ -66,10 +66,7 @@ public class OptimalPartitioner implements CalculationPartitioner {
 	 */
 	private double calculateScore(PartitionedCUGroup candidate) {
 
-		int totalSpread = 0;
-		for (CalculationUnit c : candidate.getCalculationUnits()) {
-			totalSpread += candidate.getSpread(c); // * weight of calculation;
-		}
+		int totalSpread = candidate.getSpread();
 
 		System.out.println(candidate);
 		System.out.println(totalSpread);
@@ -80,7 +77,7 @@ public class OptimalPartitioner implements CalculationPartitioner {
 	protected PartitionedCUGroup findBestLevelAssignment(CalculationUnitGroup set, CalculationUnit [] calculations, int [] levelassignment, int nextItem, int minLevel, int maxLevel, PartitionedCUGroup currentBest) {
 
 		if(nextItem == levelassignment.length) {
-			System.out.println(Arrays.toString(levelassignment));
+//			System.out.println(Arrays.toString(levelassignment));
 			return getBest(calculations, levelassignment, currentBest);
 		} else {
 			CalculationUnit c = calculations[nextItem];
