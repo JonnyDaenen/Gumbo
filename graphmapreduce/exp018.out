@@ -3,7 +3,7 @@ gumbo.engine.proofsymbol=#
 gumbo.engine.mapOutputGroupingPolicy=ALLGROUP
 gumbo.engine.guardedCombinerOptimizationOn=false
 gumbo.engine.assertConstantOptimizationOn=true
-gumbo.compiler.partitioner=gumbo.compiler.partitioner.GreedyPartitioner
+gumbo.compiler.partitioner=gumbo.compiler.partitioner.DepthPartitioner
 gumbo.engine.round1FiniteMemoryOptimizationOn=false
 gumbo.engine.hadoop.reducersize_mb=1024
 gumbo.engine.reduceOutputGroupingOptimizationOn=true
@@ -11,39 +11,39 @@ gumbo.engine.mapOutputGroupingOptimizationOn=true
 gumbo.engine.grouper.beststopindicator=0
 gumbo.engine.requestAtomIdOptimizationOn=true
 gumbo.engine.guardKeepAliveOptimizationOn=true
-[INFO] 15/11/12 21:59:48 gumbo.Gumbo: Input: 
+[INFO] 15/11/12 22:03:19 gumbo.Gumbo: Input: 
 R(x0,x1);input/experiments/EXP_028/1/R;csv;'S(x0);input/experiments/EXP_028/1/S;csv;'T(x0);input/experiments/EXP_028/1/T;csv;'U(x0);input/experiments/EXP_028/1/U;csv;'G(x0,x1);input/experiments/EXP_028/1/G;csv;'H(x0,x1);input/experiments/EXP_028/1/H;csv;
 Output: output/EXP_028
 Scratch: scratch/EXP_028
 Queries: 
 [(O5(x,y,z) : O3(x,y,z) & S(z)), (O2(x,y,z) : G(x,y,z) & T(x)), (O1(x,y,z) : R(x,y,z) & S(x)), (O4(x,y,z) : O1(x,y,z) & T(z)), (O3(x,y,z) : H(x,y,z) & U(x))]
 
-[INFO] 15/11/12 21:59:48 compiler.GFCompiler: Adding suffix to scratch and output paths: /20151112_215948
-[INFO] 15/11/12 21:59:48 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
-[INFO] 15/11/12 21:59:48 compiler.GFCompiler: Number of BGFEs: 5
-[INFO] 15/11/12 21:59:48 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
-[INFO] 15/11/12 21:59:48 compiler.GFCompiler: Number of CUs: 5
-[INFO] 15/11/12 21:59:48 compiler.GFCompiler: Linking Calculation Units (CUs)...
-[INFO] 15/11/12 21:59:48 compiler.GFCompiler: Creating initial file mapping...
-[INFO] 15/11/12 21:59:48 compiler.GFCompiler: file mapping:
-Out root: output/EXP_028/20151112_215948
-Scratch root: scratch/EXP_028/20151112_215948
-Temp root: scratch/EXP_028/20151112_215948/tmp
+[INFO] 15/11/12 22:03:19 compiler.GFCompiler: Adding suffix to scratch and output paths: /20151112_220319
+[INFO] 15/11/12 22:03:19 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
+[INFO] 15/11/12 22:03:19 compiler.GFCompiler: Number of BGFEs: 5
+[INFO] 15/11/12 22:03:19 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
+[INFO] 15/11/12 22:03:19 compiler.GFCompiler: Number of CUs: 5
+[INFO] 15/11/12 22:03:19 compiler.GFCompiler: Linking Calculation Units (CUs)...
+[INFO] 15/11/12 22:03:19 compiler.GFCompiler: Creating initial file mapping...
+[INFO] 15/11/12 22:03:19 compiler.GFCompiler: file mapping:
+Out root: output/EXP_028/20151112_220319
+Scratch root: scratch/EXP_028/20151112_220319
+Temp root: scratch/EXP_028/20151112_220319/tmp
 R(x0,x1) <- [input/experiments/EXP_028/1/R]
 S(x0) <- [input/experiments/EXP_028/1/S]
 T(x0) <- [input/experiments/EXP_028/1/T]
 U(x0) <- [input/experiments/EXP_028/1/U]
 G(x0,x1) <- [input/experiments/EXP_028/1/G]
 H(x0,x1) <- [input/experiments/EXP_028/1/H]
-O1(x0,x1,x2) -> [output/EXP_028/20151112_215948/OUT_0_O1]
-O2(x0,x1,x2) -> [output/EXP_028/20151112_215948/OUT_2_O2]
-O3(x0,x1,x2) -> [output/EXP_028/20151112_215948/OUT_1_O3]
-O4(x0,x1,x2) -> [output/EXP_028/20151112_215948/OUT_3_O4]
-O5(x0,x1,x2) -> [output/EXP_028/20151112_215948/OUT_4_O5]
+O1(x0,x1,x2) -> [output/EXP_028/20151112_220319/OUT_0_O1]
+O2(x0,x1,x2) -> [output/EXP_028/20151112_220319/OUT_2_O2]
+O3(x0,x1,x2) -> [output/EXP_028/20151112_220319/OUT_1_O3]
+O4(x0,x1,x2) -> [output/EXP_028/20151112_220319/OUT_3_O4]
+O5(x0,x1,x2) -> [output/EXP_028/20151112_220319/OUT_4_O5]
 Temp dirs: 
 
-[INFO] 15/11/12 21:59:48 compiler.GFCompiler: Partitioning...
-[INFO] 15/11/12 21:59:48 compiler.GFCompiler: Number of partitions: 3
+[INFO] 15/11/12 22:03:19 compiler.GFCompiler: Partitioning...
+[INFO] 15/11/12 22:03:19 compiler.GFCompiler: Number of partitions: 2
 
 Query:
 query1.gumbo
@@ -51,43 +51,44 @@ query1.gumbo
 Partitions:
 -----------
 Calculation Unit Partitions: {
-{id : 4 Depends on: None. - (O3(x,y,z) : H(x,y,z) & U(x))}
-{id : 2 Depends on: None. - (O1(x,y,z) : R(x,y,z) & S(x))id : 3 Depends on: 4, - (O5(x,y,z) : O3(x,y,z) & S(z))}
-{id : 0 Depends on: None. - (O2(x,y,z) : G(x,y,z) & T(x))id : 1 Depends on: 2, - (O4(x,y,z) : O1(x,y,z) & T(z))}
+{id : 2 Depends on: None. - (O1(x,y,z) : R(x,y,z) & S(x))id : 4 Depends on: None. - (O3(x,y,z) : H(x,y,z) & U(x))}
+{id : 0 Depends on: None. - (O2(x,y,z) : G(x,y,z) & T(x))id : 1 Depends on: 2, - (O4(x,y,z) : O1(x,y,z) & T(z))id : 3 Depends on: 4, - (O5(x,y,z) : O3(x,y,z) & S(z))}
 }
 Folders:
 -------
-Out root: output/EXP_028/20151112_215948
-Scratch root: scratch/EXP_028/20151112_215948
-Temp root: scratch/EXP_028/20151112_215948/tmp
+Out root: output/EXP_028/20151112_220319
+Scratch root: scratch/EXP_028/20151112_220319
+Temp root: scratch/EXP_028/20151112_220319/tmp
 R(x0,x1) <- [input/experiments/EXP_028/1/R]
 S(x0) <- [input/experiments/EXP_028/1/S]
 T(x0) <- [input/experiments/EXP_028/1/T]
 U(x0) <- [input/experiments/EXP_028/1/U]
 G(x0,x1) <- [input/experiments/EXP_028/1/G]
 H(x0,x1) <- [input/experiments/EXP_028/1/H]
-O1(x0,x1,x2) -> [output/EXP_028/20151112_215948/OUT_0_O1]
-O2(x0,x1,x2) -> [output/EXP_028/20151112_215948/OUT_2_O2]
-O3(x0,x1,x2) -> [output/EXP_028/20151112_215948/OUT_1_O3]
-O4(x0,x1,x2) -> [output/EXP_028/20151112_215948/OUT_3_O4]
-O5(x0,x1,x2) -> [output/EXP_028/20151112_215948/OUT_4_O5]
+O1(x0,x1,x2) -> [output/EXP_028/20151112_220319/OUT_0_O1]
+O2(x0,x1,x2) -> [output/EXP_028/20151112_220319/OUT_2_O2]
+O3(x0,x1,x2) -> [output/EXP_028/20151112_220319/OUT_1_O3]
+O4(x0,x1,x2) -> [output/EXP_028/20151112_220319/OUT_3_O4]
+O5(x0,x1,x2) -> [output/EXP_028/20151112_220319/OUT_4_O5]
 Temp dirs: 
 
-[WARN] 15/11/12 21:59:48 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-[INFO] 15/11/12 21:59:48 grouper.GrouperFactory: Creating a grouper with policy ALLGROUP
-[INFO] 15/11/12 21:59:48 grouper.Grouper: Decomposition complete: 	H(x,y,z) |X U(x)
+[WARN] 15/11/12 22:03:19 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[INFO] 15/11/12 22:03:20 grouper.GrouperFactory: Creating a grouper with policy ALLGROUP
+[INFO] 15/11/12 22:03:20 grouper.Grouper: Decomposition complete: 	R(x,y,z) |X S(x)
+	H(x,y,z) |X U(x)
 	Guard In Bytes0
 	Guarded In Bytes0
 	Guard Out Bytes0
 	Guarded Out Bytes0
 	Cost:0.0
 
-[INFO] 15/11/12 21:59:48 grouper.Grouper: Grouping complete: 1 group(s)
-[INFO] 15/11/12 21:59:48 grouper.Grouper: Grouping: [	H(x,y,z) |X U(x)
+[INFO] 15/11/12 22:03:20 grouper.Grouper: Grouping complete: 1 group(s)
+[INFO] 15/11/12 22:03:20 grouper.Grouper: Grouping: [	R(x,y,z) |X S(x)
+	H(x,y,z) |X U(x)
 	Guard In Bytes0
 	Guarded In Bytes0
 	Guard Out Bytes0
 	Guarded Out Bytes0
 	Cost:0.0
 ]
-0.244263896
+0.226326983
