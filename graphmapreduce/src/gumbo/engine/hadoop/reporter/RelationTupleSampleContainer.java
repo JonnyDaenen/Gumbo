@@ -107,6 +107,9 @@ public class RelationTupleSampleContainer {
 					String s = t.toString();
 					if (format == InputFormat.CSV) {
 						s = rs.getName() + "(" + s + ")";
+					} else {
+						if (!s.contains(")"))
+							continue;
 					}
 					
 					Tuple tuple = new Tuple(s);

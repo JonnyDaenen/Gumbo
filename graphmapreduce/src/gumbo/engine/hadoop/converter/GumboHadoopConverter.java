@@ -77,7 +77,7 @@ import gumbo.utils.estimation.SamplingException;
  * 
  */
 public class GumboHadoopConverter {
-	
+
 
 	private static final Log LOG = LogFactory.getLog(GumboHadoopConverter.class);
 
@@ -167,10 +167,15 @@ public class GumboHadoopConverter {
 		extractor.setIncludeOutputDirs(false); // TODO the grouper should filter out the non-existing files
 		RelationFileMapping mapping1 = extractor.extractFileMapping(fileManager);
 
+		extractor.setIncludeOutputDirs(true); // TODO the grouper should filter out the non-existing files
+		RelationFileMapping mapping2 = extractor.extractFileMapping(fileManager);
+		System.out.println("Mapping2:" + mapping2);
+
 		// get the correct grouper
-		Grouper grouper = GrouperFactory.createGrouper(mapping1, settings);
+		Grouper grouper = GrouperFactory.createGrouper(mapping1, settings); // FIXME correct mapping
 
 		// apply grouping
+		// we need to pass all paths for correct atom ids
 		extractor.setIncludeOutputDirs(true);
 		RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
 		List<CalculationGroup> groups = grouper.group(cug);
@@ -184,7 +189,7 @@ public class GumboHadoopConverter {
 
 			if (!group.hasInfo()) {
 				LOG.info("Missing size estimates, sampling data.");
-				addInfo(group, mapping1, settings);
+				addInfo(group, mapping2, settings);
 			}
 
 			// get number of reducers 
@@ -206,6 +211,7 @@ public class GumboHadoopConverter {
 		// CLEAN this can be extracted in a separate module, since this is cuplicate code from the CostBasedGrouper
 		try {
 			// create simulator
+			// OPTIMIZE just add new samples for missing relations
 			if (this.samples == null) {
 				RelationSampler sampler = new RelationSampler(rfm);
 				RelationSampleContainer rawSamples;
@@ -215,7 +221,6 @@ public class GumboHadoopConverter {
 				samples = new RelationTupleSampleContainer(rawSamples, 0.1);
 			}
 
-			
 			// execute algorithm on sample
 			Simulator simulator = new Simulator(samples, rfm, settings);
 			SimulatorReport report = simulator.execute(group);
@@ -501,10 +506,11 @@ public class GumboHadoopConverter {
 			hadoopJob.setNumReduceTasks(redestimator.getNumReducers(eso.getExpressionSet(),mapping));
 
 			// create dummy output path, as individual relations are sent to specific locations
-//			Path dummyPath = fileManager.getNewTmpPath(getName(cug,2));
-			Path dummyPath = fileManager.getOutputRoot();
+			//			Path dummyPath = fileManager.getNewTmpPath(getName(cug,2));
+			Path dummyPath = fileManager.getOutputRoot().suffix("/"+hadoopJob.getJobName());
+			
 			FileOutputFormat.setOutputPath(hadoopJob, dummyPath);
-//			System.out.println("Jonny: " + dummyPath);
+//						System.out.println("Jonny: " + dummyPath);
 
 
 

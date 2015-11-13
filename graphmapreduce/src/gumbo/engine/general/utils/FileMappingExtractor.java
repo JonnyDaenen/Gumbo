@@ -5,6 +5,7 @@ package gumbo.engine.general.utils;
 
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.structures.data.RelationSchema;
 
 import java.util.Collection;
@@ -25,7 +26,7 @@ public class FileMappingExtractor {
 
 	InputPathExpander expander;
 	private boolean includeOut;
-	
+
 	public FileMappingExtractor() {
 		this(true);
 	}
@@ -34,7 +35,7 @@ public class FileMappingExtractor {
 		expander = new InputPathExpander();
 		setIncludeOutputDirs(includeOutputDirs);
 	}
-	
+
 	public void setIncludeOutputDirs(boolean includeOutputDirs){
 		includeOut = includeOutputDirs;
 	}
@@ -52,10 +53,11 @@ public class FileMappingExtractor {
 		RelationFileMapping outs = fm.getOutFileMapping();
 
 		RelationFileMapping expandedIns = expand(ins);
-		
-		if (includeOut)
-			expandedIns.putAll(outs);
 
+		if (includeOut) {
+			System.out.println("Adding output paths");
+			expandedIns.putAll(expand(outs));
+		}
 		return expandedIns;
 	}
 
@@ -67,17 +69,40 @@ public class FileMappingExtractor {
 	 * @return a new expanded mapping
 	 */
 	private RelationFileMapping expand(RelationFileMapping ins) {
-		
+
 		RelationFileMapping newMapping = new RelationFileMapping();
-		
+
 		for (RelationSchema rs : ins.getSchemas()){
 			Collection<Path> expandedPaths = expander.expand(ins.getPaths(rs));
 			for (Path p : expandedPaths) {
 				newMapping.addPath(rs, p);
 			}
 			newMapping.setFormat(rs, ins.getFormat(rs));
+//			System.out.println(rs + " " + ins.getFormat(rs));
 		}
 		return newMapping;
+	}
+
+	
+	public RelationFileMapping extractFileMapping(FileManager fm, CalculationUnitGroup cug) {
+		RelationFileMapping ins = fm.getInFileMapping();
+		RelationFileMapping outs = fm.getOutFileMapping();
+
+		RelationFileMapping all = expand(ins);
+
+		if (includeOut)
+			all.putAll(outs);
+
+		RelationFileMapping result = new RelationFileMapping();
+		for (RelationSchema rs : all.getSchemas()){
+			if (cug.getInputRelations().contains(rs)) {
+				for (Path p : all.getPaths(rs)) {
+					result.addPath(rs, p, all.getInputFormat(rs));
+				}
+			}
+		}
+
+		return result;
 	}
 
 }

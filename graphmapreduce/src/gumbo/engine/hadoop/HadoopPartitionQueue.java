@@ -114,14 +114,15 @@ public class HadoopPartitionQueue extends PartitionQueue {
 
 			ControlledJob job2 = calc2secondjob.get(group);
 			
-			Path from = Path.mergePaths(fileManager.getOutputRoot(), new Path("/"+rs.getName()+ "*"));
+			
+			Path from = Path.mergePaths(fileManager.getOutputRoot(), new Path("/" + job2.getJobName()+"/"+rs.getName()+ "*"));
 			System.out.println("To: " + to );
-				
+			LOG.info("Moving to:  " + to);
 
 			try {
 				dfs.mkdirs(to);
 				FileStatus[] files = dfs.globStatus(from);
-				System.out.println(files.length);
+//				System.out.println(files.length);
 				for(FileStatus file: files) {
 					System.out.println("From: " + file.getPath());
 					if (!file.isDirectory()) {

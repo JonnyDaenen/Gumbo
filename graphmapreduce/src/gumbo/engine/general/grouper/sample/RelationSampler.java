@@ -41,7 +41,7 @@ public class RelationSampler {
 		RelationSampleContainer rsc = new RelationSampleContainer();
 		
 		for (RelationSchema rs: mapping.getSchemas()) {
-//			LOG.info("Fetching samples for relation " + rs);
+			LOG.info("Fetching samples for relation " + rs);
 			
 			byte [][] allSamples = new byte [mapping.getPaths(rs).size()*blocksPerFile][];
 			int k = 0;

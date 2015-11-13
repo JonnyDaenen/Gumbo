@@ -72,6 +72,7 @@ public class TupleIDCreator {
 	 */
 	public long getPathID(Path filePath) {
 //		System.out.println(mapping + " " + filePath); 
+//		System.out.println(mapping.get(filePath)); 
 		return mapping.get(filePath);
 	}
 

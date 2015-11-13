@@ -112,7 +112,8 @@ public abstract class PartitionQueue {
 		
 		Collection<CalculationUnitGroup> deps = partitions.getDependentPartitions(cug);
 		
-		LOG.info("Dependencies: " + deps);
+		if (LOG.isTraceEnabled())
+			LOG.trace("Dependencies: " + deps);
 		// check their jobs
 		boolean depsReady = true;
 		for (CalculationUnitGroup dep : deps) {
