@@ -105,6 +105,7 @@ public class GumboHadoopConverter {
 
 	private String queryName;
 	private RelationTupleSampleContainer samples;
+	private RelationSampleContainer rawSamples;
 
 
 	/**
@@ -162,17 +163,14 @@ public class GumboHadoopConverter {
 
 		Set<ControlledJob> jobs = new HashSet<>();
 
-		// extract file mapping where input paths are made specific
-		// TODO also filter out non-related relations
-		extractor.setIncludeOutputDirs(false); // TODO the grouper should filter out the non-existing files
-		RelationFileMapping mapping1 = extractor.extractFileMapping(fileManager);
-
 		extractor.setIncludeOutputDirs(true); // TODO the grouper should filter out the non-existing files
 		RelationFileMapping mapping2 = extractor.extractFileMapping(fileManager);
-		System.out.println("Mapping2:" + mapping2);
+		//		System.out.println("Mapping2:" + mapping2);
+		
+		updateSamples(mapping2);
 
 		// get the correct grouper
-		Grouper grouper = GrouperFactory.createGrouper(mapping1, settings); // FIXME correct mapping
+		Grouper grouper = GrouperFactory.createGrouper(mapping2, settings); // FIXME correct mapping
 
 		// apply grouping
 		// we need to pass all paths for correct atom ids
@@ -180,9 +178,6 @@ public class GumboHadoopConverter {
 		RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
 		List<CalculationGroup> groups = grouper.group(cug);
 		MRSettings mrSettings = new MRSettings(settings);
-
-		// reset samples for this job conversion
-		this.samples = null;
 
 		// create a job for each group
 		for (CalculationGroup group : groups) {
@@ -207,33 +202,38 @@ public class GumboHadoopConverter {
 	}
 
 
-	private void addInfo(CalculationGroup group, RelationFileMapping rfm, AbstractExecutorSettings settings) {
-		// CLEAN this can be extracted in a separate module, since this is cuplicate code from the CostBasedGrouper
+	private void updateSamples(RelationFileMapping rfm) {
 		try {
-			// create simulator
-			// OPTIMIZE just add new samples for missing relations
+			if (this.rawSamples == null) 
+				rawSamples = new RelationSampleContainer();
+
+			RelationSampler sampler = new RelationSampler(rfm);
+			sampler.sample(rawSamples);
+
 			if (this.samples == null) {
-				RelationSampler sampler = new RelationSampler(rfm);
-				RelationSampleContainer rawSamples;
-
-				rawSamples = sampler.sample();
-
 				samples = new RelationTupleSampleContainer(rawSamples, 0.1);
+			} else {
+				samples.update(rawSamples);
 			}
-
-			// execute algorithm on sample
-			Simulator simulator = new Simulator(samples, rfm, settings);
-			SimulatorReport report = simulator.execute(group);
-
-			// fill in parameters 
-			group.setGuardInBytes(report.getGuardInBytes());
-			group.setGuardedInBytes(report.getGuardedInBytes());
-			group.setGuardOutBytes(report.getGuardOutBytes());
-			group.setGuardedOutBytes(report.getGuardedOutBytes());
 		} catch (SamplingException e) {
 			LOG.error("Could not sample: " + e.getMessage());
 			LOG.warn("Trying to continue without sampling, possibly too few reducers will be allocated.");
 		}
+	}
+
+	private void addInfo(CalculationGroup group, RelationFileMapping rfm, AbstractExecutorSettings settings) {
+
+
+		// execute algorithm on sample
+		Simulator simulator = new Simulator(samples, rfm, settings);
+		SimulatorReport report = simulator.execute(group);
+
+		// fill in parameters 
+		group.setGuardInBytes(report.getGuardInBytes());
+		group.setGuardedInBytes(report.getGuardedInBytes());
+		group.setGuardOutBytes(report.getGuardOutBytes());
+		group.setGuardedOutBytes(report.getGuardedOutBytes());
+
 
 
 
@@ -508,9 +508,9 @@ public class GumboHadoopConverter {
 			// create dummy output path, as individual relations are sent to specific locations
 			//			Path dummyPath = fileManager.getNewTmpPath(getName(cug,2));
 			Path dummyPath = fileManager.getOutputRoot().suffix("/"+hadoopJob.getJobName());
-			
+
 			FileOutputFormat.setOutputPath(hadoopJob, dummyPath);
-//						System.out.println("Jonny: " + dummyPath);
+			//						System.out.println("Jonny: " + dummyPath);
 
 
 

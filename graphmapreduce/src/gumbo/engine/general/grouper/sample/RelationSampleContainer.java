@@ -50,7 +50,9 @@ public class RelationSampleContainer {
 			return new byte [0][];
 	}
 	
-
+	public boolean hasSamplesFor(RelationSchema rs) {
+		return samples.containsKey(rs);
+	}
 
 	public Collection<RelationSchema> getRelationSchemas() {
 		return samples.keySet();

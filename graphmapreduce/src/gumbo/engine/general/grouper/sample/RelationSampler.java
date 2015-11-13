@@ -37,10 +37,20 @@ public class RelationSampler {
 	}
 	
 	public RelationSampleContainer sample() throws SamplingException {
-		
 		RelationSampleContainer rsc = new RelationSampleContainer();
+		sample(rsc);
+		return rsc;
+	}
+	
+	public void sample(RelationSampleContainer rsc) throws SamplingException {
 		
 		for (RelationSchema rs: mapping.getSchemas()) {
+			
+			if (rsc.hasSamplesFor(rs)) {
+				LOG.info("Avoiding re-sample for " + rs);
+				continue;
+			}
+			
 			LOG.info("Fetching samples for relation " + rs);
 			
 			byte [][] allSamples = new byte [mapping.getPaths(rs).size()*blocksPerFile][];
@@ -55,12 +65,13 @@ public class RelationSampler {
 				
 			}
 			
-			rsc.setSamples(rs, allSamples);
+			// add samples to collection
+			if (k > 0)
+				rsc.setSamples(rs, allSamples);
 		}
 		
 		rsc.setMapping(mapping);
 		
-		return rsc;
 	}
 
 }

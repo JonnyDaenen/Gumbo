@@ -61,6 +61,20 @@ public class RelationTupleSampleContainer {
 		}
 		
 	}
+	
+	public void update(RelationSampleContainer rsc) {
+		for (RelationSchema rs: rsc.getRelationSchemas()) {
+			
+			// avoid re-sampling
+			if (smallset.containsKey(rs) && bigset.containsKey(rs))
+				continue;
+			
+			smallset.put(rs,new LinkedList<Tuple>());
+			bigset.put(rs,new LinkedList<Tuple>());
+			
+			initStrings(rs,rsc);
+		}
+	}
 
 
 	/**
