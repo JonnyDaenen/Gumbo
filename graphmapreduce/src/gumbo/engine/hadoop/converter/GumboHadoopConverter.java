@@ -170,7 +170,7 @@ public class GumboHadoopConverter {
 		updateSamples(mapping2);
 
 		// get the correct grouper
-		Grouper grouper = GrouperFactory.createGrouper(mapping2, settings); // FIXME correct mapping
+		Grouper grouper = GrouperFactory.createGrouper(mapping2, settings, samples); // FIXME correct mapping
 
 		// apply grouping
 		// we need to pass all paths for correct atom ids

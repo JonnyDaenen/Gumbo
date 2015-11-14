@@ -46,10 +46,11 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 	private int nr;
 	private int stopIndicator = 0;
 
-	public BestCostBasedGrouper(RelationFileMapping rfm, CostModel costModel, AbstractExecutorSettings execSettings) {
+	public BestCostBasedGrouper(RelationFileMapping rfm, CostModel costModel, AbstractExecutorSettings execSettings, RelationTupleSampleContainer samples2) {
 		this.rfm = rfm;
 		this.costModel = costModel;
 		this.execSettings = execSettings;
+		this.samples = samples;
 
 		this.stopIndicator = (int) execSettings.getNumProperty(AbstractExecutorSettings.BESTGROUP_STOPINDICATOR, 0);
 
@@ -117,12 +118,12 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 				double newCost = totalCost(candidate);
 				LOG.info("Candidate solution found! " + nr + " " + newCost);
 				LOG.info(candidate);
-				
+
 				if (newCost < bestTotalCost) {
 					bestTotalCost = newCost;
 					bestGrouping = candidate;
 				}
-				
+
 				if (nr == stopIndicator) {
 					bestTotalCost = newCost;
 					bestGrouping = candidate;
@@ -169,11 +170,13 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 
 
 	private void fetchSamples() throws SamplingException {
-		RelationSampler sampler = new RelationSampler(rfm);
-		RelationSampleContainer rawSamples = sampler.sample();
-		samples = new RelationTupleSampleContainer(rawSamples, 0.1);
+		if (samples == null) {
+			RelationSampler sampler = new RelationSampler(rfm);
+			RelationSampleContainer rawSamples = sampler.sample();
+			samples = new RelationTupleSampleContainer(rawSamples, 0.1);
 
-		simulator = new Simulator(samples, rfm, execSettings);
+			simulator = new Simulator(samples, rfm, execSettings);
+		}
 	}
 
 

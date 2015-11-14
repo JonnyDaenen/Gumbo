@@ -33,10 +33,11 @@ public class CostBasedGrouper implements GroupingPolicy {
 	private CostMatrix costMatrix;
 
 
-	public CostBasedGrouper(RelationFileMapping rfm, CostModel costModel, AbstractExecutorSettings execSettings) {
+	public CostBasedGrouper(RelationFileMapping rfm, CostModel costModel, AbstractExecutorSettings execSettings, RelationTupleSampleContainer samples2) {
 		this.rfm = rfm;
 		this.costModel = costModel;
 		this.execSettings = execSettings;
+		this.samples = samples;
 	}
 
 
@@ -61,11 +62,13 @@ public class CostBasedGrouper implements GroupingPolicy {
 
 
 	private void fetchSamples() throws SamplingException {
-		RelationSampler sampler = new RelationSampler(rfm);
-		RelationSampleContainer rawSamples = sampler.sample();
-		samples = new RelationTupleSampleContainer(rawSamples, 0.1);
+		if (samples == null) {
+			RelationSampler sampler = new RelationSampler(rfm);
+			RelationSampleContainer rawSamples = sampler.sample();
+			samples = new RelationTupleSampleContainer(rawSamples, 0.1);
 
-		simulator = new Simulator(samples, rfm, execSettings);
+			simulator = new Simulator(samples, rfm, execSettings);
+		}
 	}
 
 
@@ -107,7 +110,7 @@ public class CostBasedGrouper implements GroupingPolicy {
 
 
 		}
-//		costMatrix.printMatrix(false); // TODO remove
+		//		costMatrix.printMatrix(false); // TODO remove
 
 
 
@@ -137,8 +140,8 @@ public class CostBasedGrouper implements GroupingPolicy {
 		// greedy approach
 
 		while (costMatrix.hasPositiveCost()) {
-//			costMatrix.printMatrix(true);
-//			costMatrix.printGroups();
+			//			costMatrix.printMatrix(true);
+			//			costMatrix.printGroups();
 
 			// pick best merge option
 			Pair<CalculationGroup, CalculationGroup> oldGroups = costMatrix.getBestOldGroups();

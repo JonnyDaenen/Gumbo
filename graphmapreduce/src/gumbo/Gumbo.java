@@ -135,7 +135,7 @@ public class Gumbo extends Configured implements Tool {
 			long start = System.nanoTime();
 			FileMappingExtractor fme = new FileMappingExtractor(false);
 			RelationFileMapping mapping2 = fme.extractFileMapping(plan.getFileManager());
-			Grouper grouper = GrouperFactory.createGrouper(mapping2, settings);
+			Grouper grouper = GrouperFactory.createGrouper(mapping2, settings, null);
 			grouper.group(plan.getPartitions().getPartition(0));
 //
 			System.out.println((System.nanoTime() - start)/(1000000000.0D));

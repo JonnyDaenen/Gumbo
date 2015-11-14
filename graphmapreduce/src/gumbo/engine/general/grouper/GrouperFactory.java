@@ -15,13 +15,14 @@ import gumbo.engine.general.grouper.policies.GuardedAtomGrouper;
 import gumbo.engine.general.grouper.policies.NoneGrouper;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.hadoop.converter.GumboHadoopConverter;
+import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
 
 public class GrouperFactory {
 
 
 	private static final Log LOG = LogFactory.getLog(GrouperFactory.class);
 
-	public static Grouper createGrouper(GroupingPolicies p, RelationFileMapping rfm, AbstractExecutorSettings systemSettings) {
+	public static Grouper createGrouper(GroupingPolicies p, RelationFileMapping rfm, AbstractExecutorSettings systemSettings, RelationTupleSampleContainer samples) {
 
 		Grouper g = null;
 
@@ -36,27 +37,27 @@ public class GrouperFactory {
 			break;
 
 		case COSTGROUP_GUMBO:
-			g = new Grouper(new CostBasedGrouper(rfm, new GumboCostModel(new MRSettings(systemSettings)), systemSettings));
+			g = new Grouper(new CostBasedGrouper(rfm, new GumboCostModel(new MRSettings(systemSettings)), systemSettings, samples));
 			break;
 
 		case COSTGROUP_PAPER:
-			g = new Grouper(new CostBasedGrouper(rfm, new PaperCostModel(new MRSettings(systemSettings)), systemSettings));
+			g = new Grouper(new CostBasedGrouper(rfm, new PaperCostModel(new MRSettings(systemSettings)), systemSettings, samples));
 			break;
 
 		case COSTGROUP_IO:
-			g = new Grouper(new CostBasedGrouper(rfm, new IOCostModel(), systemSettings));
+			g = new Grouper(new CostBasedGrouper(rfm, new IOCostModel(), systemSettings, samples));
 			break;
 			
 		case BESTCOSTGROUP_GUMBO:
-			g = new Grouper(new BestCostBasedGrouper(rfm, new GumboCostModel(new MRSettings(systemSettings)), systemSettings));
+			g = new Grouper(new BestCostBasedGrouper(rfm, new GumboCostModel(new MRSettings(systemSettings)), systemSettings, samples));
 			break;
 
 		case BESTCOSTGROUP_PAPER:
-			g = new Grouper(new BestCostBasedGrouper(rfm, new PaperCostModel(new MRSettings(systemSettings)), systemSettings));
+			g = new Grouper(new BestCostBasedGrouper(rfm, new PaperCostModel(new MRSettings(systemSettings)), systemSettings, samples));
 			break;
 
 		case BESTCOSTGROUP_IO:
-			g = new Grouper(new BestCostBasedGrouper(rfm, new IOCostModel(), systemSettings));
+			g = new Grouper(new BestCostBasedGrouper(rfm, new IOCostModel(), systemSettings, samples));
 			break;
 			
 		case GUARDEDATOMGROUP:
@@ -72,12 +73,12 @@ public class GrouperFactory {
 
 	}
 
-	public static Grouper createGrouper(RelationFileMapping rfm, AbstractExecutorSettings systemSettings) {
+	public static Grouper createGrouper(RelationFileMapping rfm, AbstractExecutorSettings systemSettings, RelationTupleSampleContainer samples) {
 
 		String policyName = systemSettings.getProperty(AbstractExecutorSettings.mapOutputGroupingPolicy);
 		GroupingPolicies policy = Enum.valueOf(GroupingPolicies.class, policyName);
 		
-		return createGrouper(policy, rfm, systemSettings);
+		return createGrouper(policy, rfm, systemSettings, samples);
 	}
 
 }
