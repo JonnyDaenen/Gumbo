@@ -8,6 +8,10 @@ import gumbo.utils.estimation.SamplingException;
 
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.Path;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.commons.logging.Log;
 
 
@@ -53,12 +57,12 @@ public class RelationSampler {
 			
 			LOG.info("Fetching samples for relation " + rs);
 			
+			Set<Path> paths = selectPaths(mapping.getPaths(rs), 10);
 			
-			
-			byte [][] allSamples = new byte [mapping.getPaths(rs).size()*blocksPerFile][];
+			byte [][] allSamples = new byte [paths.size()*blocksPerFile][];
 			int k = 0;
 			
-			for (Path p : mapping.getPaths(rs)) {
+			for (Path p : paths) {
 				
 				byte [][] samples = Sampler.getRandomBlocks(p, blocksPerFile, blockSize);
 				for (int i = 0; i < samples.length; i++) {
@@ -74,6 +78,27 @@ public class RelationSampler {
 		
 		rsc.setMapping(mapping);
 		
+	}
+
+	/**
+	 * Selects a subset of paths with an upper bound max.
+	 * @param paths
+	 * @param i
+	 * @return
+	 */
+	private Set<Path> selectPaths(Set<Path> paths, int max) {
+		
+		if (paths.size() <= max)
+			return paths;
+
+		Set<Path> resultSet = new HashSet<Path>();
+		Path[] patharray = paths.toArray(new Path[0]);
+		for (int i = 0; i < max; i++) {
+			Path p = patharray[(int) (Math.random()*patharray.length)];
+			resultSet.add(p);
+		}
+		
+		return resultSet;
 	}
 
 }
