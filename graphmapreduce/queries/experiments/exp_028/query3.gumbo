@@ -11,9 +11,9 @@ T,1 <- input/experiments/EXP_028/1/T, CSV
 U,1 <- input/experiments/EXP_028/1/U, CSV
 
 
-#O1(x,y,z)&R(x,y,z)S(x);
-#O2(x,y,z)&G(x,y,z)T(x);
-#O3(x,y,z)&H(x,y,z)U(x);
+#O1(x)&R(x,y,z)S(x);
+#O2(x)&G(x,y,z)T(x);
+#O3(x)&H(x,y,z)U(x);
 
-#O4(x,y,z)&O1(x,y,z)T(z);
-#O5(x,y,z)&O3(x,y,z)S(z);
+#O4(x,y,z)&G(x,y,z)O1(z);
+#O5(x,y,z)&R(x,y,z)O3(z);

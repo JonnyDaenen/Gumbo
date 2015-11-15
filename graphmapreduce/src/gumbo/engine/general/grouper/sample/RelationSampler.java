@@ -53,6 +53,8 @@ public class RelationSampler {
 			
 			LOG.info("Fetching samples for relation " + rs);
 			
+			
+			
 			byte [][] allSamples = new byte [mapping.getPaths(rs).size()*blocksPerFile][];
 			int k = 0;
 			

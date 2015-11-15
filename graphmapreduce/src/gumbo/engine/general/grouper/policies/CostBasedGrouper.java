@@ -33,7 +33,7 @@ public class CostBasedGrouper implements GroupingPolicy {
 	private CostMatrix costMatrix;
 
 
-	public CostBasedGrouper(RelationFileMapping rfm, CostModel costModel, AbstractExecutorSettings execSettings, RelationTupleSampleContainer samples2) {
+	public CostBasedGrouper(RelationFileMapping rfm, CostModel costModel, AbstractExecutorSettings execSettings, RelationTupleSampleContainer samples) {
 		this.rfm = rfm;
 		this.costModel = costModel;
 		this.execSettings = execSettings;
@@ -66,9 +66,8 @@ public class CostBasedGrouper implements GroupingPolicy {
 			RelationSampler sampler = new RelationSampler(rfm);
 			RelationSampleContainer rawSamples = sampler.sample();
 			samples = new RelationTupleSampleContainer(rawSamples, 0.1);
-
-			simulator = new Simulator(samples, rfm, execSettings);
 		}
+		simulator = new Simulator(samples, rfm, execSettings);
 	}
 
 

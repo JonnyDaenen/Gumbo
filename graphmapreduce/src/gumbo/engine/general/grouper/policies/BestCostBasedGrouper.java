@@ -46,7 +46,7 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 	private int nr;
 	private int stopIndicator = 0;
 
-	public BestCostBasedGrouper(RelationFileMapping rfm, CostModel costModel, AbstractExecutorSettings execSettings, RelationTupleSampleContainer samples2) {
+	public BestCostBasedGrouper(RelationFileMapping rfm, CostModel costModel, AbstractExecutorSettings execSettings, RelationTupleSampleContainer samples) {
 		this.rfm = rfm;
 		this.costModel = costModel;
 		this.execSettings = execSettings;
@@ -174,9 +174,9 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 			RelationSampler sampler = new RelationSampler(rfm);
 			RelationSampleContainer rawSamples = sampler.sample();
 			samples = new RelationTupleSampleContainer(rawSamples, 0.1);
-
-			simulator = new Simulator(samples, rfm, execSettings);
 		}
+		
+		simulator = new Simulator(samples, rfm, execSettings);
 	}
 
 
