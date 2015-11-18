@@ -1,5 +1,8 @@
 package gumbo.structures.gfexpressions.operations;
 
+import org.apache.directory.api.util.ByteBuffer;
+
+import gumbo.structures.data.QuickTuple;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
@@ -16,7 +19,9 @@ public class GFAtomProjection {
 	GFAtomicExpression target;
 
 
-	int [] arrayMapping; 
+	int [] arrayMapping;
+	private ByteBuffer bb;
+	byte [] nameBytes;
 
 	/**
 	 * Creates a projection to transform a guard tuple to a guarded tuple.
@@ -30,6 +35,7 @@ public class GFAtomProjection {
 
 		this.source = source;
 		this.target = target;
+		bb = new ByteBuffer(100);
 
 		// initialize mapping
 		arrayMapping = new int[target.getNumVariables()];
@@ -80,6 +86,7 @@ public class GFAtomProjection {
 			}
 
 		}
+		nameBytes = target.getName().getBytes();
 	}
 
 
@@ -123,30 +130,77 @@ public class GFAtomProjection {
 	 */
 	public String projectString(Tuple t, boolean csv) throws NonMatchingTupleException {
 
-		StringBuilder sb = new StringBuilder(target.getName().length()+t.toString().length());
-
+		bb.clear();
 
 		// head
 		if (!csv) {
-			sb.append(target.getName());
-			sb.append('(');
+			bb.append(nameBytes);
+			bb.append('(');
 		}
 
 		// middle
 		int i;
 		int fields = target.getNumFields()-1;
 		for (i = 0; i < fields; i++) {
-			sb.append(t.get(arrayMapping[i]));
-			sb.append(',');
+			bb.append(t.get(arrayMapping[i]).getBytes());
+			bb.append(',');
 		}
-		sb.append(t.get(arrayMapping[i]));
+		bb.append(t.get(arrayMapping[i]).getBytes());
 
 		// tail
 		if (!csv) {
-			sb.append(')');
+			bb.append(')');
 		}
+		String s = new String(bb.copyOfUsedBytes());
+//		System.out.println(s);
+		return s;
 
-		return sb.toString();
+	}
+	
+	public String projectString(QuickTuple t, boolean csv) throws NonMatchingTupleException {
+
+		
+		
+
+		int i;
+		int fields = target.getNumFields()-1;
+		int totalBytes = 0;
+		for (i = 0; i < fields+1; i++) {
+			int index = arrayMapping[i];
+			totalBytes += t.getLength(index) + 1;
+		}
+		totalBytes -= 1;
+		
+		byte [] result = new byte[totalBytes];
+
+		// middle
+		int pos = 0;
+		for (i = 0; i < fields; i++) {
+			int index = arrayMapping[i];
+			int length = t.getLength(index);
+			int start = t.getStart(index);
+			System.arraycopy(t.getData(), start, result, pos, length);
+			result[pos + length] = ',';
+			pos += length + 1;
+		}
+		int index = arrayMapping[i];
+		int length = t.getLength(index);
+		int start = t.getStart(index);
+		System.arraycopy(t.getData(), start, result, pos, length);
+		pos += length;
+
+		// csv wrapping
+		if (!csv) {
+			bb.clear();
+			bb.append(nameBytes);
+			bb.append('(');
+			bb.append(result);
+			bb.append(')');
+			result = bb.copyOfUsedBytes();
+		}
+		String s = new String(result);
+//		System.out.println(s);
+		return s;
 
 	}
 

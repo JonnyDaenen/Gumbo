@@ -92,7 +92,7 @@ public class Rank1Test {
 
 			Object [] oneOnTest = {hc.getConf(), key};
 //			if (key.contains("Group"))
-			confs.add(oneOnTest);
+//			confs.add(oneOnTest);
 		}
 		
 		return confs;

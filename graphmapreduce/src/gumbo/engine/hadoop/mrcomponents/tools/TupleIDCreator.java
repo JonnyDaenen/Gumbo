@@ -7,6 +7,7 @@ import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.utils.LongBase64Converter;
 
 import java.lang.reflect.Method;
+import org.apache.directory.api.util.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ public class TupleIDCreator {
 	
 	InputSplit prevSplit = null;
 	long prevPathID = 0;
+	ByteBuffer globBf;
 	
 	StringBuilder sb;
 
@@ -44,12 +46,15 @@ public class TupleIDCreator {
 
 	private RelationFileMapping rm;
 	Map<Path, Integer> mapping;
+	private byte[] pathBytes;
 
 	public TupleIDCreator(RelationFileMapping rm) {
 		this.rm = rm;
 		longConverter = new LongBase64Converter();
 		createIds();
 		sb = new StringBuilder(20);
+		globBf = new ByteBuffer(200);
+		pathBytes = "-0".getBytes();
 	}
 
 	/**
@@ -90,10 +95,9 @@ public class TupleIDCreator {
 	 * @throws TupleIDError when no ID can be determined
 	 * 
 	 */
-	public String getTupleID(Context context, long offset) throws TupleIDError  {
+	public byte[] getTupleID(Context context, long offset) throws TupleIDError  {
 		
 		try {
-			
 			
 			InputSplit is = context.getInputSplit();
 			
@@ -124,6 +128,11 @@ public class TupleIDCreator {
 
 				prevSplit = is;
 				prevPathID = pathID;
+				
+				globBf.clear();
+				globBf.append("-".getBytes());
+				globBf.append((""+pathID).getBytes());
+				pathBytes = globBf.copyOfUsedBytes();
 			}
 			
 			
@@ -132,11 +141,17 @@ public class TupleIDCreator {
 //			byte [] pathIdEnc = longConverter.long2byte(pathID);
 //			System.out.println(" filename: " + filePath + " match:" +match + " fileid:" + pathID +  "Offset: " + offset + " id: " + new String(offsetEnc) + "-" + pathID);
 
-			sb.setLength(0);
-			sb.append(new String(offsetEnc)); // OPTIMIZE ?
-			sb.append("-");
-			sb.append(pathID);
-			return sb.toString();
+//			sb.setLength(0);
+//			sb.append(new String(offsetEnc)); // OPTIMIZE ?
+//			sb.append("-");
+//			sb.append(pathID);
+			
+
+			globBf.clear();
+			globBf.append(offsetEnc);
+			globBf.append(pathBytes);
+			
+			return globBf.copyOfUsedBytes();
 			
 		} catch (Exception e) {
 			throw new TupleIDError("Unable to determine tuple id. ", e);

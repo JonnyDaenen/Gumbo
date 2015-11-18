@@ -58,7 +58,7 @@ public class GFCombinerGuarded extends Reducer<Text, Text, Text, Text> {
 		// loop through given values
 		for (Text t : values) {
 			String value = t.toString();
-			System.out.println(value);
+//			System.out.println(value);
 			
 			// only continue if value is an ASSERT message, i.e: contains no ';' 
 			if (!value.contains(";")) {

@@ -36,6 +36,8 @@ public class GFMapper1GuardedCsv extends GFMapper1GuardedRelOptimized {
 	private Text buffer;
 	private byte[] open;
 	private byte[] close;
+	private String namebytes;
+	private Tuple tup;
 
 	@Override
 	protected void setup(Mapper<LongWritable, Text, Text, Text>.Context context)
@@ -55,6 +57,13 @@ public class GFMapper1GuardedCsv extends GFMapper1GuardedRelOptimized {
 
 			open = "(".getBytes();
 			close = ")".getBytes();
+			
+
+			tup = new Tuple("_",new String[0]);
+
+			// find out relation name
+			RelationSchema rs = resolver.extractRelationSchema(context);
+			namebytes = rs.getName();
 
 		} catch (Exception e) {
 			throw new InterruptedException(e.getMessage());
@@ -74,20 +83,10 @@ public class GFMapper1GuardedCsv extends GFMapper1GuardedRelOptimized {
 
 		try {
 
-			// find out relation name
-			RelationSchema rs = resolver.extractRelationSchema(context);
-			byte [] namebytes = rs.getName().getBytes();
-			
-			// wrap tuple in relation name
-			buffer.clear();
-			buffer.append(namebytes,0,namebytes.length);
-			buffer.append(open,0,open.length);
-			buffer.append(value.getBytes(),0,value.getLength());
-			buffer.append(close,0,close.length);
 
 			//			super.map(key, value, context);
-			Tuple t = new Tuple(buffer.getBytes(),buffer.getLength());
-			algo.run(t, key.get());
+			tup.initialize(namebytes, value.getBytes(), value.getLength());
+			algo.run(tup, key.get());
 
 		} catch (Exception e) {
 			LOG.error(e.getMessage());

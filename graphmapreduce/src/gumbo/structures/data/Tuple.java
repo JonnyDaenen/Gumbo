@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.directory.api.util.ByteBuffer;
 import org.apache.hadoop.io.Text;
 
 /**
@@ -21,10 +22,15 @@ public class Tuple {
 	//	private static Pattern p = Pattern.compile("\\(|,|\\)");
 
 	private static final Log LOG = LogFactory.getLog(Tuple.class);
-	
+
 	String name;
 	String[] data;
 	String representationCache;
+	private String csvrepresentationCache;
+	LinkedList<String> bufferlist;
+
+
+	StringBuilder sb;
 
 
 	/**
@@ -129,20 +135,67 @@ public class Tuple {
 
 	}
 
-	private void initialize(byte [] b, int length) {
-		StringBuilder sb = new StringBuilder(length);
-		LinkedList<String> list = new LinkedList<>();
+	public void clear() {
+		if (sb == null) {
+			sb = new StringBuilder(200);
+		}
+		if (bufferlist == null)
+			bufferlist = new LinkedList<>();
+
+		sb.setLength(0);
+
+		bufferlist.clear();
+
+		representationCache = null;
+		csvrepresentationCache = null;
+		data = null;
+	}
+
+	public void initialize(String name, byte [] b, int length) {
+		clear();
+		
+		int start = 0;
+		int bytelength = 0;
+		String s;
+
+		for (int i = 0; i < length; i++) {
+			char c = (char) b[i];
+			if (c == ',' ) {
+				s = new String(b, start, bytelength);
+				bufferlist.add(s);
+				
+				bytelength = 0;
+				start = i+1;
+			} else {
+				bytelength++;
+			}
+		}
+
+		if (bytelength > 0) {
+			s = new String(b, start, bytelength);
+			bufferlist.add(s);
+		}
+		this.name = name;
+		data = bufferlist.toArray(new String [0]);
+//		csvrepresentationCache = new String(b,0,length);
+
+	}
+
+	public void initialize(byte [] b, int length) {
+		clear();
+
+
 		for (int i = 0; i < length; i++) {
 			char c = (char) b[i];
 			if (c == '(') {
 				this.name = sb.toString();
 				sb.setLength(0);
 			} else if (c == ',' ) {
-				list.add(sb.toString());
+				bufferlist.add(sb.toString());
 				sb.setLength(0);
 			} else if (c == ')') { // do this separately
 				//				if (sb.length() > 0) TODO skip empty lines in calling function
-				list.add(sb.toString());
+				bufferlist.add(sb.toString());
 				sb.setLength(0);
 				break; // Text can contain extra garbage
 			} else if (c == ' ') { // skip spaces
@@ -155,8 +208,9 @@ public class Tuple {
 			// System.out.print((char)b[i]);
 		}
 
-		representationCache = new String(b,0,length).trim();
-		data = list.toArray(new String [0]);
+		//		representationCache = new String(b,0,length).substring(first, last); //.trim();
+		//		csvrepresentationCache = representationCache.substring(firstcsv, lastcsv); //.trim();
+		data = bufferlist.toArray(new String [0]);
 	}
 
 	/**
@@ -170,23 +224,29 @@ public class Tuple {
 	public String generateString(boolean csv) {
 
 		if (representationCache == null) {
-			int numChars = 0;
-			for (String d : data)
-				numChars += d.length();
-			numChars += name.length() + data.length + 2; // name,  comma's and brackets
+			//			int numChars = 0;
+			//			for (String d : data)
+			//				numChars += d.length();
+			//			numChars += name.length() + data.length + 2; // name,  comma's and brackets
 
+			if (sb == null) {
+				sb = new StringBuilder(100);
+			}
 
-			StringBuilder sb = new StringBuilder(numChars);
+			sb.setLength(0);
 
 			sb.append(name);
 			sb.append('(');
 
-			int i;
-			for (i = 0; i < data.length-1; i++) {
+
+			if (data.length > 0) {
+				int i;
+				for (i = 0; i < data.length-1; i++) {
+					sb.append(data[i]);
+					sb.append(',');
+				}
 				sb.append(data[i]);
-				sb.append(',');
 			}
-			sb.append(data[i]);
 
 			sb.append(')');
 
@@ -196,8 +256,12 @@ public class Tuple {
 			representationCache = sb.toString();
 		}
 
+		if (csvrepresentationCache == null) {
+			csvrepresentationCache = representationCache.substring(representationCache.indexOf('(')+1, representationCache.lastIndexOf(')'));
+		}
+
 		if (csv) {
-			return representationCache.substring(representationCache.indexOf('(')+1, representationCache.lastIndexOf(')'));
+			return csvrepresentationCache;
 		} else {
 			return representationCache;
 		}

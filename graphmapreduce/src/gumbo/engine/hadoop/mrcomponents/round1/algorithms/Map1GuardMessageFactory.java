@@ -124,12 +124,13 @@ public class Map1GuardMessageFactory implements Map1GuardMessageFactoryInterface
 	public void loadGuardValue(Tuple t, long offset) throws TupleIDError {
 
 		this.t = t;
-		tbytes = t.toString().getBytes();
+		tbytes = null;
+		
 		// replace value with pointer when optimization is on
 		if (guardTuplePointerOptimizationOn) {
-			tRef = pathids.getTupleID(context, offset).getBytes(); // key indicates offset in TextInputFormat
+			tRef = pathids.getTupleID(context, offset); // key indicates offset in TextInputFormat
 		} else
-			tRef = tbytes;
+			tRef = getTBytes();
 
 		if (sampleCounter) {
 			context.getCounter(CounterMeasures.IN_TUPLES).increment(1);
@@ -137,15 +138,22 @@ public class Map1GuardMessageFactory implements Map1GuardMessageFactoryInterface
 		}
 	}
 
+	private byte[] getTBytes() {
+
+		if (tbytes == null)
+			tbytes = t.toString().getBytes();
+		return tbytes;
+	}
+
 	/* (non-Javadoc)
 	 * @see gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactoryInterface#sendGuardKeepAliveRequest(gumbo.structures.gfexpressions.GFAtomicExpression)
 	 */
 	@Override
 	public void sendGuardKeepAliveRequest(GFAtomicExpression guard) throws MessageFailedException {
+		// output guard
+		if (!guardKeepaliveOptimizationOn) {
+			try {
 
-		try {
-			// output guard
-			if (!guardKeepaliveOptimizationOn) {
 
 				// CLEAN duplicate code, reuse standard request message
 				byte [] guardRef;
@@ -165,9 +173,10 @@ public class Map1GuardMessageFactory implements Map1GuardMessageFactoryInterface
 				KARB.increment(keyText.getLength() + valueText.getLength());
 
 				sendMessage();
+
+			} catch(GFOperationInitException e) {
+				throw new MessageFailedException(e);
 			}
-		} catch(GFOperationInitException e) {
-			throw new MessageFailedException(e);
 		}
 	}
 
@@ -191,9 +200,10 @@ public class Map1GuardMessageFactory implements Map1GuardMessageFactoryInterface
 			// proof representation optimization
 			if (guardedIdOptimizationOn)
 				valueText.append(proofBytes,0,proofBytes.length);
-			else
-				valueText.append(tbytes,0,tbytes.length);
-
+			else{
+				byte[] bytes = getTBytes();
+				valueText.append(bytes,0,bytes.length);
+			}
 			if (mapOutputGroupingOptimizationOn) {
 				for (int id : ids) {
 					valueText.append(commaBytes,0,commaBytes.length);
@@ -271,7 +281,7 @@ public class Map1GuardMessageFactory implements Map1GuardMessageFactoryInterface
 	protected void sendMessage() throws MessageFailedException{
 		try {
 
-//			LOG.error(keyText + ": " + valueText);
+			//			LOG.error(keyText + ": " + valueText);
 			context.write(keyText, valueText);
 
 			//			LOG.info("<" + keyText.toString() + " : " + valueText.toString() + ">");
@@ -283,6 +293,7 @@ public class Map1GuardMessageFactory implements Map1GuardMessageFactoryInterface
 				context.getCounter(CounterMeasures.OUT_VALUE_BYTES).increment(valueText.getLength());
 			}
 
+			// not necessary:
 			keyText.clear();
 			valueText.clear();
 
@@ -312,11 +323,17 @@ public class Map1GuardMessageFactory implements Map1GuardMessageFactoryInterface
 	@Override
 	public void finish() throws MessageFailedException {
 
+		long r = 0;
+		long rb = 0;
+		long rkb = 0;
+		long rvb = 0;
 		// group buffered messages on their key
 		for ( String key: messageBuffer.keySet() ){
 
-			keyText.set(key);
-
+			byte[] keyBytes = key.getBytes();
+			keyText.set(keyBytes, 0, keyBytes.length);
+			
+			
 			valueText.set(tRef);
 			valueText.append(sepBytes,0,sepBytes.length);
 			for (String val : messageBuffer.get(key)) {
@@ -326,17 +343,19 @@ public class Map1GuardMessageFactory implements Map1GuardMessageFactoryInterface
 			}
 
 			// update counters
-			R.increment(1);
-			RB.increment(keyText.getLength() + valueText.getLength());
-			RKB.increment(keyText.getLength());
-			RVB.increment(valueText.getLength());
+			r++;
+			rb += keyText.getLength() + valueText.getLength();
+			rkb += keyText.getLength();
+			rvb += valueText.getLength();
 
 			// send them out
 			sendMessage();
 		}
-
-
-
+		
+		R.increment(r);
+		RB.increment(rb);
+		RKB.increment(rkb);
+		RVB.increment(rvb);
 
 		messageBuffer.clear();
 	}

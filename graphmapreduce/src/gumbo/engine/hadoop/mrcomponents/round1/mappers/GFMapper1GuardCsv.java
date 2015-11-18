@@ -7,6 +7,7 @@ import gumbo.engine.general.algorithms.Map1GuardAlgorithm;
 import gumbo.engine.general.messagefactories.Map1GuardMessageFactoryInterface;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.RelationResolver;
+import gumbo.structures.data.QuickTuple;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.Tuple;
 
@@ -35,8 +36,15 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 	private Text buffer;
 	private byte [] open;
 	private byte [] close;
+	private Tuple t;
 
 	private Map1GuardAlgorithm algo;
+
+
+	private String namebytes;
+
+
+	private QuickTuple qt;
 
 	@Override
 	protected void setup(Mapper<LongWritable, Text, Text, Text>.Context context)
@@ -56,6 +64,13 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 
 			open = "(".getBytes();
 			close = ")".getBytes();
+
+			t = new Tuple("_",new String[0]);
+//			qt = new QuickTuple(new byte[0], new byte[0]);
+
+			// find out relation name
+			RelationSchema rs = resolver.extractRelationSchema(context);
+			namebytes = rs.getName();
 		} catch (Exception e) {
 			throw new InterruptedException(e.getMessage());
 		}
@@ -76,19 +91,8 @@ public class GFMapper1GuardCsv extends GFMapper1GuardRelOptimized {
 
 		try {
 
-			// find out relation name
-			RelationSchema rs = resolver.extractRelationSchema(context);
-			byte [] namebytes = rs.getName().getBytes();
-
-
-			// wrap tuple in relation name
-			buffer.clear();
-			buffer.append(namebytes,0,namebytes.length);
-			buffer.append(open,0,open.length);
-			buffer.append(value.getBytes(),0,value.getLength());
-			buffer.append(close,0,close.length);
-
-			Tuple t = new Tuple(buffer.getBytes(),buffer.getLength());
+//			qt.initialize(namebytes.getBytes(), value.getBytes()); OPTIMIZE use quick tuples
+			t.initialize(namebytes, value.getBytes(), value.getLength());
 			algo.run(t, key.get());
 
 
