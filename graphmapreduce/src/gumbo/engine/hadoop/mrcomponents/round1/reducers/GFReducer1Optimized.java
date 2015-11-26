@@ -34,7 +34,7 @@ public class GFReducer1Optimized extends Reducer<BytesWritable, Text, Text, Text
 
 
 	private Red1Algorithm algo;
-	Text t;
+	Text tkey;
 
 
 	/**
@@ -50,7 +50,7 @@ public class GFReducer1Optimized extends Reducer<BytesWritable, Text, Text, Text
 				context.getTaskAttemptID().getId());
 		LOG.info(s);
 		
-		t = new Text();
+		tkey = new Text();
 
 
 
@@ -92,9 +92,8 @@ public class GFReducer1Optimized extends Reducer<BytesWritable, Text, Text, Text
 	protected void reduce(BytesWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
 		try {
-			t.set(key.getBytes(),0,key.getLength());
-			algo.initialize(t.toString());
-			System.out.println(t.toString());
+//			tkey.set(key.getBytes(),0,key.getLength());
+			algo.initialize(null);
 
 			// WARNING Text object will be reused by Hadoop!
 			for (Text t : values) {
