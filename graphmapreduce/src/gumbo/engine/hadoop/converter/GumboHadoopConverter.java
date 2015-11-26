@@ -58,6 +58,7 @@ import gumbo.engine.hadoop.mrcomponents.round2.mappers.GFMapper2GuardRelOptimize
 import gumbo.engine.hadoop.mrcomponents.round2.reducers.GFReducer2Optimized;
 import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.engine.hadoop2.datatypes.GumboByteComparer;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
@@ -332,6 +333,8 @@ public class GumboHadoopConverter {
 			hadoopJob.setOutputKeyClass(Text.class);
 			hadoopJob.setOutputValueClass(Text.class);
 
+
+			hadoopJob.setSortComparatorClass(GumboByteComparer.class);
 			// finite memory by sorting
 			if (settings.getBooleanProperty(AbstractExecutorSettings.round1FiniteMemoryOptimizationOn)) {
 				hadoopJob.setGroupingComparatorClass(Round1GroupComparator.class);
