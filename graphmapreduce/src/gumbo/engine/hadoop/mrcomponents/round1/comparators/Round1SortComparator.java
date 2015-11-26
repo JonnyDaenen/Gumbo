@@ -72,6 +72,8 @@ public class Round1SortComparator extends WritableComparator {
 	@Override
 	public int compare(byte[] b1, int s1, int l1, byte[] b2, int s2, int l2) {
 		try {
+			// FIXME see hadoop book for this! 
+			// int firstL1 = WritableUtils.decodeVIntSize(b1[s1]) + readVInt(b1, s1);
 			ByteBuffer bb1 = ByteBuffer.wrap(b1,s1+1,l1-1); // first byte is length, so we skip it
 			CharBuffer charbuf1 = decoder.decode(bb1);
 
