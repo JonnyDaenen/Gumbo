@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -54,7 +55,7 @@ public class Red1MessageFactory implements Red1MessageFactoryInterface {
 	StringBuilder sb;
 
 
-	public Red1MessageFactory(Reducer<Text, Text, Text, Text>.Context context, HadoopExecutorSettings settings, ExpressionSetOperations eso, String filename) {
+	public Red1MessageFactory(Reducer<BytesWritable, Text, Text, Text>.Context context, HadoopExecutorSettings settings, ExpressionSetOperations eso, String filename) {
 		keyText = new Text();
 		valueText = new Text();
 

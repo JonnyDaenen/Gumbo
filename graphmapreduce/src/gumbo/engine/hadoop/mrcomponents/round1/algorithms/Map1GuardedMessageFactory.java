@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
@@ -35,19 +36,21 @@ public class Map1GuardedMessageFactory implements Map1GuardedMessageFactoryInter
 	private boolean round1FiniteMemoryOptimizationOn;
 	private boolean mapOutputGroupingOptimizationOn;
 
-	private Mapper<LongWritable, Text, Text, Text>.Context context;
+	private Mapper<LongWritable, Text, BytesWritable, Text>.Context context;
 
 
 	// data
 	Tuple t;
 	String tKey;
+	BytesWritable bw;
 	byte [] proofBytes;
 
 	private byte[] separatorBytes;
 
-	public Map1GuardedMessageFactory(Mapper<LongWritable, Text, Text, Text>.Context context, AbstractExecutorSettings settings, ExpressionSetOperations eso) {
+	public Map1GuardedMessageFactory(Mapper<LongWritable, Text, BytesWritable, Text>.Context context, AbstractExecutorSettings settings, ExpressionSetOperations eso) {
 		keyText = new Text();
 		valueText = new Text();
+		bw = new BytesWritable();
 
 		// ---
 		this.context = context;
@@ -133,7 +136,8 @@ public class Map1GuardedMessageFactory implements Map1GuardedMessageFactoryInter
 	protected void sendMessage() throws MessageFailedException {
 		try {
 //			LOG.error(keyText + ": " + valueText);
-			context.write(keyText, valueText);
+			bw.set(keyText.getBytes(), 0, keyText.getLength());
+			context.write(bw, valueText);
 
 			//			LOG.info("<" + keyText.toString() + " : " + valueText.toString() + ">");
 

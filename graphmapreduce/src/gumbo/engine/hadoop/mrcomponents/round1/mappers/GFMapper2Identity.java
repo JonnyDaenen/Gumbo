@@ -23,9 +23,9 @@ import org.apache.hadoop.mapreduce.Mapper;
  * @author Jonny Daenen
  * 
  */
-public class GFMapper1Identity extends Mapper<LongWritable, Text, BytesWritable, Text> {
+public class GFMapper2Identity extends Mapper<LongWritable, Text, BytesWritable, Text> {
 
-	private static final Log LOG = LogFactory.getLog(GFMapper1Identity.class);
+	private static final Log LOG = LogFactory.getLog(GFMapper2Identity.class);
 
 	protected ExpressionSetOperations eso;
 	protected HadoopExecutorSettings settings;

@@ -15,6 +15,7 @@ import java.io.IOException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
@@ -24,7 +25,7 @@ import org.apache.hadoop.mapreduce.Reducer;
  * @author Jonny Daenen
  * 
  */
-public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
+public class GFReducer1Optimized extends Reducer<BytesWritable, Text, Text, Text> {
 
 	private final static String FILENAME = "round1";
 
@@ -33,6 +34,7 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 
 
 	private Red1Algorithm algo;
+	Text t;
 
 
 	/**
@@ -47,6 +49,8 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 				context.getTaskAttemptID().getTaskID().getId(),
 				context.getTaskAttemptID().getId());
 		LOG.info(s);
+		
+		t = new Text();
 
 
 
@@ -85,11 +89,12 @@ public class GFReducer1Optimized extends Reducer<Text, Text, Text, Text> {
 	 *      java.lang.Iterable, org.apache.hadoop.mapreduce.Reducer.Context)
 	 */
 	@Override
-	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+	protected void reduce(BytesWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
 		try {
-			
-			algo.initialize(key.toString());
+			t.set(key.getBytes(),0,key.getLength());
+			algo.initialize(t.toString());
+			System.out.println(t.toString());
 
 			// WARNING Text object will be reused by Hadoop!
 			for (Text t : values) {

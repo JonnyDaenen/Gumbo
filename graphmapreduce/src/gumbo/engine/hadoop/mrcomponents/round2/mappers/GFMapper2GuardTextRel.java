@@ -4,6 +4,7 @@
 package gumbo.engine.hadoop.mrcomponents.round2.mappers;
 
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1Identity;
+import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1IdentityText;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator;
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
@@ -24,7 +25,7 @@ import org.apache.hadoop.io.Text;
  * @author Jonny Daenen
  * 
  */
-public class GFMapper2GuardTextRel extends GFMapper1Identity {
+public class GFMapper2GuardTextRel extends GFMapper1IdentityText {
 
 	private static final Log LOG = LogFactory.getLog(GFMapper2GuardTextRel.class);
 

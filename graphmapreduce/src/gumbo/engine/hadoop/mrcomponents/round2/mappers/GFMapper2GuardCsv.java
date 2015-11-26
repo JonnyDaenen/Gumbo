@@ -6,6 +6,7 @@ package gumbo.engine.hadoop.mrcomponents.round2.mappers;
 import gumbo.engine.general.algorithms.Map2GuardAlgorithm;
 import gumbo.engine.general.messagefactories.Map2GuardMessageInterface;
 import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1Identity;
+import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1IdentityText;
 import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Map2GuardMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.tools.RelationResolver;
 import gumbo.structures.data.RelationSchema;
@@ -24,7 +25,7 @@ import org.apache.hadoop.io.Text;
  * @author Jonny Daenen
  * 
  */
-public class GFMapper2GuardCsv extends GFMapper1Identity {
+public class GFMapper2GuardCsv extends GFMapper1IdentityText {
 
 	private static final Log LOG = LogFactory.getLog(GFMapper2GuardCsv.class);
 

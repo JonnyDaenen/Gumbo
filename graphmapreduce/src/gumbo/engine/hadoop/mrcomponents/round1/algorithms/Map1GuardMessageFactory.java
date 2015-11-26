@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
@@ -49,7 +50,7 @@ public class Map1GuardMessageFactory implements Map1GuardMessageFactoryInterface
 	private boolean guardIdOptimizationOn;
 	private boolean guardedIdOptimizationOn;
 	private boolean mapOutputGroupingOptimizationOn;
-	private Mapper<LongWritable, Text, Text, Text>.Context context;
+	private Mapper<LongWritable, Text, BytesWritable, Text>.Context context;
 
 	// components
 	private TupleIDCreator pathids;
@@ -68,9 +69,13 @@ public class Map1GuardMessageFactory implements Map1GuardMessageFactoryInterface
 
 	private Map<String, Set<String>> messageBuffer;
 
-	public Map1GuardMessageFactory(Mapper<LongWritable, Text, Text, Text>.Context context, AbstractExecutorSettings settings, ExpressionSetOperations eso) {
+	private BytesWritable bw;
+
+	public Map1GuardMessageFactory(Mapper<LongWritable, Text, BytesWritable, Text>.Context context, AbstractExecutorSettings settings, ExpressionSetOperations eso) {
 		keyText = new Text();
 		valueText = new Text();
+
+		bw = new BytesWritable();
 		// ---
 		this.context = context;
 		this.eso = eso;
@@ -282,7 +287,9 @@ public class Map1GuardMessageFactory implements Map1GuardMessageFactoryInterface
 		try {
 
 			//			LOG.error(keyText + ": " + valueText);
-			context.write(keyText, valueText);
+
+			bw.set(keyText.getBytes(), 0, keyText.getLength());
+			context.write(bw, valueText);
 
 			//			LOG.info("<" + keyText.toString() + " : " + valueText.toString() + ">");
 

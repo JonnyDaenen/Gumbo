@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -40,7 +41,7 @@ public class GFMapper1GuardedCsv extends GFMapper1GuardedRelOptimized {
 	private Tuple tup;
 
 	@Override
-	protected void setup(Mapper<LongWritable, Text, Text, Text>.Context context)
+	protected void setup(Mapper<LongWritable, Text, BytesWritable, Text>.Context context)
 			throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		super.setup(context);

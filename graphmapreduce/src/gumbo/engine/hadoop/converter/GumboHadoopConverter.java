@@ -14,6 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputFormat;
@@ -308,7 +309,7 @@ public class GumboHadoopConverter {
 			FileOutputFormat.setOutputPath(hadoopJob, intermediatePath);
 
 			// set intermediate/mapper output
-			hadoopJob.setMapOutputKeyClass(Text.class);
+			hadoopJob.setMapOutputKeyClass(BytesWritable.class);
 			hadoopJob.setMapOutputValueClass(Text.class);
 
 			/* COMBINER */

@@ -23,15 +23,14 @@ import org.apache.hadoop.mapreduce.Mapper;
  * @author Jonny Daenen
  * 
  */
-public class GFMapper1Identity extends Mapper<LongWritable, Text, BytesWritable, Text> {
+public class GFMapper1IdentityText extends Mapper<LongWritable, Text, Text, Text> {
 
-	private static final Log LOG = LogFactory.getLog(GFMapper1Identity.class);
+	private static final Log LOG = LogFactory.getLog(GFMapper1IdentityText.class);
 
 	protected ExpressionSetOperations eso;
 	protected HadoopExecutorSettings settings;
 	
 	Text t;
-	BytesWritable bw;
 
 
 	/**
@@ -62,7 +61,6 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, BytesWritable,
 		}
 		
 		t = new Text();
-		bw = new BytesWritable();
 	}
 
 	/**
@@ -83,8 +81,7 @@ public class GFMapper1Identity extends Mapper<LongWritable, Text, BytesWritable,
 //		LOG.error("File Name Processing "+filePath);
 //		
 		t.set(key.toString());
-		bw.set(t.getBytes(), 0, t.getLength());
-		context.write(bw, value);
+		context.write(t, value);
 	}
 
 }

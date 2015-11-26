@@ -11,6 +11,7 @@ import java.util.HashMap;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configuration.IntegerRanges;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.RawComparator;
 import org.apache.hadoop.io.Text;
@@ -26,7 +27,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.TaskAttemptID;
 import org.apache.hadoop.security.Credentials;
 
-public class FakeMapper extends Mapper<LongWritable, Text, Text, Text> {
+public class FakeMapper extends Mapper<LongWritable, Text, BytesWritable, Text> {
 
 	public class FakeCounter implements Counter {
 		long c;
@@ -94,7 +95,7 @@ public class FakeMapper extends Mapper<LongWritable, Text, Text, Text> {
 		context = new FakeContext();
 	}
 
-	public class FakeContext extends Mapper<LongWritable, Text, Text, Text>.Context{
+	public class FakeContext extends Mapper<LongWritable, Text, BytesWritable, Text>.Context{
 
 		HashMap<Enum<?>,Counter> counters;
 		HashMap<Pair<String, String>,Counter> counters_p;
@@ -127,7 +128,7 @@ public class FakeMapper extends Mapper<LongWritable, Text, Text, Text> {
 		}
 
 		@Override
-		public void write(Text key, Text value) throws IOException,
+		public void write(BytesWritable key, Text value) throws IOException,
 		InterruptedException {
 
 		}
