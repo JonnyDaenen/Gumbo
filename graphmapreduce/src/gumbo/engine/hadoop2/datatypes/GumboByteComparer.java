@@ -63,7 +63,7 @@ public class GumboByteComparer extends WritableComparator {
 		return (x1 + Long.MIN_VALUE) < (x2 + Long.MIN_VALUE);
 	}
 
-	public int compare(byte[] buffer1, int offset1, int length1,
+	public int compare1(byte[] buffer1, int offset1, int length1,
 			byte[] buffer2, int offset2, int length2) {
 		// Short circuit equal case
 		if (buffer1 == buffer2 &&
@@ -85,7 +85,7 @@ public class GumboByteComparer extends WritableComparator {
 	}
 
 
-	public int compare2(byte[] buffer1, int offset1, int length1,
+	public int compare(byte[] buffer1, int offset1, int length1,
 			byte[] buffer2, int offset2, int length2) {
 
 		// Short circuit equal case
