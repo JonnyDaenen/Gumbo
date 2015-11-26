@@ -1,0 +1,20 @@
+
+
+#Goal: graph query / constant query
+
+OUTPUT -> output/EXP_010/
+SCRATCH -> scratch/EXP_010/
+
+V,1 <- input/experiments/EXP_010/V, CSV;
+E,2 <- input/experiments/EXP_010/E, CSV;
+
+Sym(x,y) : E(x,y) & E(y,x) ;
+
+Refl(x) : V(x) & E(x,x) ; # !!!
+
+Z1(x) : V(x) 
+Z2(x) : R(x,y) & R(y,'z') ;
+Z3(x) : R(x,y) & Z2(y);
+Z4(x) : R(x,y) & Z3(y);
+Z5(x) : R(x,y) & Z4(y);
+Out1(x,y) : R(x,y) & R(y,x) ;

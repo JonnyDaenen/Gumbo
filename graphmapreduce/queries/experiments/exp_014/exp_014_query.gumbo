@@ -1,0 +1,22 @@
+
+
+# Goal: multiquery evaluation speedup
+# queries: add one query at a time
+# datasets: 1
+# opts: default
+
+OUTPUT -> output/EXP_010/
+SCRATCH -> scratch/EXP_010/
+
+R,5 <- input/experiments/EXP_010/R, CSV;
+S,1 <- input/experiments/EXP_010/S, CSV;
+T,1 <- input/experiments/EXP_010/T, CSV;
+U,1 <- input/experiments/EXP_010/U, CSV;
+V,1 <- input/experiments/EXP_010/V, CSV;
+W,1 <- input/experiments/EXP_010/W, CSV;
+
+Out1(z) : R(x,y,z,v,w) & (!S(x) & !T(y)) ;
+Out1(z) : R(x,y,z,v,w) & (!T(x) & !U(z)) ;
+Out1(z) : R(x,y,z,v,w) & (!U(x) & !V(v) & W(w)) ;
+Out1(z) : R(x,y,z,v,w) & (!W(w) & S(x)) ;
+Out1(z) : R(x,y,z,v,w) & (!W(w) & U(u)) ;

@@ -1,0 +1,10 @@
+
+
+#Goal: 1-round disjunction
+
+OUTPUT -> output/EXP_010/
+SCRATCH -> scratch/EXP_010/
+
+R,5 <- input/experiments/EXP_010/R, CSS;
+S,1 <- input/experiments/EXP_010/S, CSS;
+
