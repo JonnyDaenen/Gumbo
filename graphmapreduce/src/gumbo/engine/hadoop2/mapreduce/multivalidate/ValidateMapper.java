@@ -8,11 +8,14 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-import gumbo.engine.hadoop2.datastructures.QuickWrappedTuple;
-import gumbo.engine.hadoop2.datastructures.TupleProjection;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
+import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
+import gumbo.engine.hadoop2.mapreduce.tools.ProjectionFactory;
+import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
+import gumbo.engine.hadoop2.mapreduce.tools.TupleProjection;
 import gumbo.structures.data.QuickTuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 public class ValidateMapper extends Mapper<LongWritable, Text, BytesWritable, GumboMessageWritable> {
 
@@ -32,14 +35,19 @@ public class ValidateMapper extends Mapper<LongWritable, Text, BytesWritable, Gu
 		bw = new BytesWritable();
 		gw = new GumboMessageWritable();
 		
-		// get filename
+		
+		ContextInspector inspector = new ContextInspector(context);
+		// get fileid
+		long fileid = inspector.getFileId();
 		
 		// get relation
+		String relation = inspector.getRelationName(fileid);
 		
-		// get atoms
+		// get queries
+		Set<GFExistentialExpression> queries = inspector.getQueries();
 		
 		// get projections
-		
+		projections = ProjectionFactory.createGuardProjections(relation, fileid, queries);
 		
 	}
 	

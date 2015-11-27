@@ -208,4 +208,9 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		return false;
 	}
 
+	public boolean isAssert() {
+		return type.get() == GumboMessageType.ASSERT;
+	}
+
+
 }

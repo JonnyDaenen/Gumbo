@@ -1,4 +1,4 @@
-package gumbo.engine.hadoop2.datastructures;
+package gumbo.engine.hadoop2.mapreduce.tools;
 
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 

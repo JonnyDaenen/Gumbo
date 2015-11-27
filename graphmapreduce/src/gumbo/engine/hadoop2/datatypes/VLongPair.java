@@ -19,9 +19,6 @@ public class VLongPair implements WritableComparable<VLongPair> {
 	private VLongWritable l1;
 	private VLongWritable l2;
 	
-	private BytesWritable bw;
-	
-	private boolean extracted;
 	private long first;
 	private long second;
 
@@ -128,6 +125,22 @@ public class VLongPair implements WritableComparable<VLongPair> {
 
 	public long getSecond() {
 		return second;
+	}
+
+	public void setFirst(long l1) {
+		this.l1.set(l1);
+	}
+	
+	public void setSecond(long l2) {
+		this.l2.set(l2);
+	}
+	
+	public void setFirst(VLongWritable l) {
+		l1 = l;
+	}
+	
+	public void setSecond(VLongWritable l) {
+		l2 = l;
 	}
 
 
