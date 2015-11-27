@@ -1,45 +1,102 @@
 package gumbo.engine.hadoop2.mapreduce.evaluate;
 
 import java.io.IOException;
+import java.util.Set;
 
 import org.apache.hadoop.io.BytesWritable;
+import org.apache.hadoop.io.DataOutputBuffer;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.VLongWritable;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VLongPair;
+import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
+import gumbo.engine.hadoop2.mapreduce.tools.FilterFactory;
+import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
+import gumbo.engine.hadoop2.mapreduce.tools.TupleFilter;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
 
-public class EvaluateMapper extends Mapper<LongWritable, Text, VLongPair, GumboMessageWritable> {
+public class EvaluateMapper extends Mapper<LongWritable, Text, BytesWritable, GumboMessageWritable> {
 
-	
-	private VLongPair lw;
+
+	private BytesWritable bw;
 	private GumboMessageWritable gw;
+	
+	// intermediate key buffers
+	private VLongWritable lw1;
+	private VLongWritable lw2;
+	private long offset;
+	
+	private QuickWrappedTuple qt;
+	private TupleFilter filter;
+	private DataOutputBuffer buffer;
 
 	@Override
-	protected void setup(Mapper<LongWritable, Text, VLongPair, GumboMessageWritable>.Context context)
+	protected void setup(Mapper<LongWritable, Text, BytesWritable, GumboMessageWritable>.Context context)
 			throws IOException, InterruptedException {
 		super.setup(context);
 
-		lw = new VLongPair();
+		bw = new BytesWritable();
 		gw = new GumboMessageWritable();
-	
-		// TODO determine file id
-		long fileid = 0;
-		lw.setFirst(fileid);
+		qt = new QuickWrappedTuple();
+
+
+		// buffer for output key bytes
+		buffer = new DataOutputBuffer();
+
+		ContextInspector inspector = new ContextInspector(context);
+
+
+		// get fileid
+		long fileid = inspector.getFileId();
+		lw1 = new VLongWritable();
+		lw2 = new VLongWritable();
+		lw1.set(fileid);
+
+		// get relation
+		String relation = inspector.getRelationName(fileid);
+		
+		// get guarded atoms
+		Set<GFAtomicExpression> atoms = inspector.getGuardedAtoms();
+
+		// create filter
+		filter = FilterFactory.createMap2Filter(atoms, relation);
+		
 	}
-	
+
 	@Override
 	protected void map(LongWritable key, Text value,
-			Mapper<LongWritable, Text, VLongPair, GumboMessageWritable>.Context context)
+			Mapper<LongWritable, Text, BytesWritable, GumboMessageWritable>.Context context)
 					throws IOException, InterruptedException {
+
 		
-		// TODO apply tuple check: should match at least one
+
+		qt.initialize(value);
 		
-		lw.setSecond(key.get());
+		// tuple should match at least one guard atom
+		if (!filter.check(qt))
+			return;
+		
+		
+		// prepare key bytes
+		offset = key.get();
+		lw2.set(offset);
+		
+		buffer.reset();
+		lw1.write(buffer);
+		lw2.write(buffer);
+		byte[] data = buffer.getData();
+		int dataLength = buffer.getLength();
+		bw.set(data, 0, dataLength);
+		
+		// prepare message
+		// OPTIMIZE cut out irrelevant attributes
 		gw.setContent(value.getBytes(), value.getLength());
-		
-		context.write(lw, gw);
-		
+
+		// write to output
+		context.write(bw, gw);
+
 	}
 }

@@ -35,7 +35,7 @@ public class ValidateReducer extends Reducer<BytesWritable, GumboMessageWritable
 		gw = new GumboMessageWritable();
 		bw = new BytesWritable();
 		
-		// TODO initialize buffer
+		buffer = new RequestBuffer();
 		
 	}
 
@@ -49,11 +49,11 @@ public class ValidateReducer extends Reducer<BytesWritable, GumboMessageWritable
 			Reducer<BytesWritable, GumboMessageWritable, BytesWritable, GumboMessageWritable>.Context context)
 					throws IOException, InterruptedException {
 		
+
+		buffer.reset();
 		
 		// consider all incoming messages
 		for (GumboMessageWritable value : values) {
-			
-			buffer.clearAtomsIds();
 			
 			// check atoms ids that are present
 			if (value.isAssert()) {
@@ -66,7 +66,10 @@ public class ValidateReducer extends Reducer<BytesWritable, GumboMessageWritable
 			
 		}
 		
+		// for all buffered messages
 		for (int i = 0; i < buffer.size(); i++) {
+			
+			// process and output them if necessary
 			if (buffer.load(i, bw, gw)) {
 				context.write(bw, gw);
 			}

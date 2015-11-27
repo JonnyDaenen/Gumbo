@@ -212,5 +212,22 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		return type.get() == GumboMessageType.ASSERT;
 	}
 
+	public void setContent(byte[] bytes, int length) {
+		// TODO implement		
+	}
+
+	public boolean isData() {
+		return type.get() == GumboMessageType.DATA;
+	}
+
+	public BytesWritable getAtomIDBytes() {
+		return atomids;
+	}
+
+	public BytesWritable getContent() {
+		// TODO implement
+		return null;
+	}
+
 
 }

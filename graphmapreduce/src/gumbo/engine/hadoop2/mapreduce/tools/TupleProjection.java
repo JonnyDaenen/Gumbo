@@ -4,16 +4,12 @@ import org.apache.hadoop.io.BytesWritable;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 
-public class TupleProjection {
+public interface TupleProjection {
 
-	public void project(QuickWrappedTuple qt, BytesWritable bw, GumboMessageWritable gw) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void project(QuickWrappedTuple qt, BytesWritable bw, GumboMessageWritable gw);
 
-	public boolean matches(QuickWrappedTuple qt) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	public boolean matches(QuickWrappedTuple qt);
+
+	public String getFilename();
 
 }

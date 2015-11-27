@@ -31,4 +31,9 @@ public class RequestBuffer {
 		return 0;
 	}
 
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

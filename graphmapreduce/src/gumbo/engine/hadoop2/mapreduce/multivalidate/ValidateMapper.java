@@ -37,6 +37,7 @@ public class ValidateMapper extends Mapper<LongWritable, Text, BytesWritable, Gu
 		
 		
 		ContextInspector inspector = new ContextInspector(context);
+		
 		// get fileid
 		long fileid = inspector.getFileId();
 		
@@ -47,7 +48,7 @@ public class ValidateMapper extends Mapper<LongWritable, Text, BytesWritable, Gu
 		Set<GFExistentialExpression> queries = inspector.getQueries();
 		
 		// get projections
-		projections = ProjectionFactory.createGuardProjections(relation, fileid, queries);
+		projections = ProjectionFactory.createMap1Projections(relation, fileid, queries);
 		
 	}
 	

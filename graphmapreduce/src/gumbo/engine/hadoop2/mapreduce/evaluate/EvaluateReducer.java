@@ -1,31 +1,54 @@
 package gumbo.engine.hadoop2.mapreduce.evaluate;
 
 import java.io.IOException;
+import java.util.Set;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VLongPair;
 import gumbo.engine.hadoop2.mapreduce.tools.ConfirmBuffer;
+import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
+import gumbo.engine.hadoop2.mapreduce.tools.ProjectionFactory;
 import gumbo.engine.hadoop2.mapreduce.tools.TupleProjection;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 public class EvaluateReducer extends Reducer<VLongPair, GumboMessageWritable, Text, Text> {
 
+	private Text output;
 	
 	private ConfirmBuffer buffer;
-	private Object projections;
+	private TupleProjection [] projections;
+
+	private MultipleOutputs<Text, Text> mos;
 
 	@Override
 	protected void setup(Reducer<VLongPair, GumboMessageWritable, Text, Text>.Context context)
 			throws IOException, InterruptedException {
 		
+		output = new Text();
+
+		mos = new MultipleOutputs<>(context);
 		
-		// TODO get relation name
-		// TODO get filename
-		// TODO get bsgf queries for this guard
-		// TODO get projections
 		
+		ContextInspector inspector = new ContextInspector(context);
+		
+		// get queries
+		Set<GFExistentialExpression> queries = inspector.getQueries();
+		
+		// get projections
+		projections = ProjectionFactory.createRed2Projections(queries);
+		
+		
+	}
+	
+	@Override
+	protected void cleanup(Reducer<VLongPair, GumboMessageWritable, Text, Text>.Context context)
+			throws IOException, InterruptedException {
+		super.cleanup(context);
+		mos.close();
 	}
 	
 	@Override
@@ -33,18 +56,24 @@ public class EvaluateReducer extends Reducer<VLongPair, GumboMessageWritable, Te
 			Reducer<VLongPair, GumboMessageWritable, Text, Text>.Context context)
 					throws IOException, InterruptedException {
 		
+		
+		buffer.reset();
+		
 		for (GumboMessageWritable value : values) {
-			
+		
+			// extract data message
 			if (value.isData()){
-				buffer.addMessage(value);
+				buffer.setMessage(value);
+			
+			// keep track of confirmed atoms
 			} else {
 				buffer.addAtomIDs(value);
 			}
 		}
 		
 		for (TupleProjection pi : projections) {
-			if (buffer.eval(pi)) {
-				mos.write(NULL, output, pi.getFilename());
+			if (buffer.load(pi, output)) {
+				mos.write((Text)null, output, pi.getFilename());
 			}
 		}
 		
