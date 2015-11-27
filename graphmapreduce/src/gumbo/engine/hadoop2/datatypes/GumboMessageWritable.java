@@ -81,7 +81,7 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof GumboMessageType) {
+		if (obj instanceof GumboMessageWritable) {
 			GumboMessageWritable m2 = (GumboMessageWritable) obj;
 			return type.equals(m2.type) && offset.equals(m2.offset)
 					&& fileid.equals(m2.fileid) && atomids.equals(m2.atomids);
@@ -119,6 +119,7 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		public static final byte ASSERT = 1;
 		public static final byte REQUEST = 2;
 		public static final byte CONFIRM = 3;
+		public static final byte DATA = 4;
 	}
 
 
@@ -187,6 +188,24 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		fileid.set(fileid2);
 		offset.set(offset2);
 		atomids.set(atomids1, 0, atomids1.length);
+	}
+
+	public long getFileId() {
+		return fileid.get();
+	}
+	
+	public long getOffset() {
+		return offset.get();
+	}
+	
+	public boolean containsAtomId(byte needle) {
+		
+		byte[] atoms = atomids.getBytes();
+		for (int i = 0; i < atomids.getLength(); i++) {
+			if (atoms[i] == needle)
+				return true;
+		}
+		return false;
 	}
 
 }

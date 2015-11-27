@@ -1,3 +1,6 @@
+import org.apache.hadoop.io.Text;
+
+import gumbo.engine.hadoop2.datastructures.QuickWrappedTuple;
 import gumbo.structures.data.QuickTuple;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
@@ -12,7 +15,7 @@ public class TuplePerformanceTest {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		GFAtomProjection pi = new GFAtomProjection(new GFAtomicExpression("R", "x","y","z","w"), new GFAtomicExpression("Out", "w","z","x"));
+		GFAtomProjection pi = null; //new GFAtomProjection(new GFAtomicExpression("R", "x","y","z","w"), new GFAtomicExpression("Out", "w","z","x"));
 		
 		Thread.sleep(10000);
 		System.out.println("Test1");
@@ -27,6 +30,9 @@ public class TuplePerformanceTest {
 		test5(pi);
 		System.out.println("Test6");
 		test6(pi);
+		System.out.println("Test7");
+		test7(pi);
+		System.out.println("done");
 		
 		
 
@@ -34,6 +40,18 @@ public class TuplePerformanceTest {
 
 
 
+
+	}
+	
+	private static void test7(GFAtomProjection pi) {
+		// bytes re-use, no string input
+		Text t = new Text(s);
+		QuickWrappedTuple qt = new QuickWrappedTuple(t);
+		for (int i = 0; i < NUM_TESTS; i++) {
+			qt.initialize(t);
+//			if (pi != null)
+//				project(qt, pi);
+		}
 
 	}
 	
