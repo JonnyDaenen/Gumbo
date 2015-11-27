@@ -1,0 +1,10 @@
+Output -> output/EXP_021/
+Scratch -> scratch/EXP_021/
+
+R,6 <- input/experiments/EXP_021/R, CSV
+S,1 <- input/experiments/EXP_021/S, CSV
+T,1 <- input/experiments/EXP_021/T, CSV
+U,1 <- input/experiments/EXP_021/U, CSV
+
+
+#Out1(x,y,z,u,v,w)&R(x,y,z,u,v,w)||&S(x)&!T(x)!U(x)|&!S(x)&T(x)!U(x)&!S(x)&!T(x)U(x)|&!S(x)&T(x)U(x)|&S(x)&!T(x)U(x)&S(x)&T(x)!U(x);

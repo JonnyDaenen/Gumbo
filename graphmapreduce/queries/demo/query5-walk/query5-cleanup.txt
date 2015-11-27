@@ -1,0 +1,19 @@
+
+
+
+drop table if exists Walk1;
+drop table if exists Walk2;
+drop table if exists Walk3;
+drop table if exists Walk4;
+
+drop table if exists WExact1;
+drop table if exists WExact2;
+drop table if exists WExact3;
+
+drop view if exists EW1;
+drop view if exists EW2;
+drop view if exists EW3;
+drop view if exists EW4;
+
+drop view if exists EWExact1;
+drop view if exists EWExact2;

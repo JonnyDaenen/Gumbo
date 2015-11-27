@@ -1,0 +1,13 @@
+// Goal: test atom repetition
+
+Output -> output/EXP_013/
+Scratch -> scratch/EXP_013/
+
+R,5 <- input/experiments/EXP_013/R, CSV
+S,1 <- input/experiments/EXP_013/S, CSV
+T,1 <- input/experiments/EXP_013/T, CSV
+U,1 <- input/experiments/EXP_013/U, CSV
+V,1 <- input/experiments/EXP_013/V, CSV
+W,1 <- input/experiments/EXP_013/W, CSV
+
+#Out1(x,y,z,v,w)&R(x,y,z,v,w)|&S(x)&!T(y)&!U(z)&!V(v)!W(w)|&!S(x)&T(y)&!U(z)&!V(v)!W(w)|&!S(x)&!T(y)&U(z)&!V(v)!W(w)|&!S(x)&!T(y)&!U(z)&V(v)!W(w)&!S(x)&!T(y)&!U(z)&!V(v)W(w);

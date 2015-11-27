@@ -1,0 +1,74 @@
+
+
+
+
+E = load '/user/cloudera/input/query5/E' using PigStorage(',') as (x:int,y:int);
+
+
+Walk1 = foreach E generate x;
+
+X0 = cogroup E by y, Walk1 by x;
+Y0 = filter X0 by NOT IsEmpty(Walk1);
+Z0 = foreach Y0 generate flatten(E);
+Walk2 = foreach Z0 generate E.x;
+
+
+
+I0 = cogroup E by x, Walk2 by x;
+J0 = foreach I0 generate flatten(E), (IsEmpty(Walk2)? null : 0) as SI0;
+
+K0 = cogroup E by y, Walk1 by x;
+L0 = foreach K0 generate flatten(E), (IsEmpty(Walk1)? null : 0) as SK0;
+
+M0 = cogroup J0 by (x,y), L0 by (x,y);
+N0 = foreach M0 generate group, flatten(J0.SI0),flatten(L0.SK0);
+O0 = filter  N0 by (SI0 is null and SK0 is null);
+WalkExact1 = foreach O0 generate E.x;
+
+
+X1 = cogroup E by y, Walk2 by x;
+Y1 = filter X1 by NOT IsEmpty(Walk2);
+Z1 = foreach Y1 generate flatten(E);
+Walk3 = foreach Z1 generate E.x;
+
+
+
+I1 = cogroup E by x, Walk3 by x;
+J1 = foreach I1 generate flatten(E), (IsEmpty(Walk3)? null : 0) as SI1;
+
+K1 = cogroup E by y, WalkExact1 by x;
+L1 = foreach K1 generate flatten(E), (IsEmpty(WalkExact1)? null : 0) as SK1;
+
+M1 = cogroup J1 by (x,y), L1 by (x,y);
+N1 = foreach M1 generate group, flatten(J1.SI1),flatten(L1.SK1);
+O1 = filter  N1 by (SI1 is null and SK1 is NOT null);
+WalkExact2 = foreach O1 generate E.x;
+
+
+X2 = cogroup E by y, Walk3 by x;
+Y2 = filter X2 by NOT IsEmpty(Walk3);
+Z2 = foreach Y2 generate flatten(E);
+Walk4 = foreach Z2 generate E.x;
+
+
+I2 = cogroup E by x, Walk4 by x;
+J2 = foreach I2 generate flatten(E), (IsEmpty(Walk4)? null : 0) as SI2;
+
+K2 = cogroup E by y, WalkExact2 by x;
+L2 = foreach K2 generate flatten(E), (IsEmpty(WalkExact2)? null : 0) as SK2;
+
+M2 = cogroup J2 by (x,y), L2 by (x,y);
+N2 = foreach M2 generate group, flatten(J2.SI2),flatten(L2.SK2);
+O2 = filter  N2 by (SI2 is null and SK2 is NOT null);
+WalkExact3 = foreach O2 generate E.x;
+
+
+Store Walk1 into '/user/cloudera/output/demo/pig/query5/Walk1';  
+Store Walk2 into '/user/cloudera/output/demo/pig/query5/Walk2';  
+Store Walk3 into '/user/cloudera/output/demo/pig/query5/Walk3';  
+Store Walk4 into '/user/cloudera/output/demo/pig/query5/Walk4';  
+
+Store WalkExact1 into '/user/cloudera/output/demo/pig/query5/WalkExact1';  
+Store WalkExact2 into '/user/cloudera/output/demo/pig/query5/WalkExact2';  
+Store WalkExact3 into '/user/cloudera/output/demo/pig/query5/WalkExact3';  
+

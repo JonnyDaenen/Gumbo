@@ -1,0 +1,8 @@
+Output -> output/EXP_027/
+Scratch -> scratch/EXP_027/
+
+R,2 <- input/experiments/EXP_024/5/R, CSV
+S,1 <- input/experiments/EXP_024/5/S, CSV
+
+
+#out1(x)&R(x,y)&S(x)S(y);

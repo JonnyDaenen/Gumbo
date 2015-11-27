@@ -1,0 +1,37 @@
+
+Output -> output/EXP_018/
+Scratch -> scratch/EXP_018/
+
+// All relations point to S dir, because they are the same anyway
+// this way we save some hdfs space.
+// Please check if the system uses file grouping,
+// to make sure the resulting measurements are correct!
+
+R,2 <- input/experiments/EXP_024/4/R, CSV
+S,1 <- input/experiments/EXP_024/4/S, CSV
+T,1 <- input/experiments/EXP_024/4/T, CSV
+U,1 <- input/experiments/EXP_024/4/U, CSV
+V,1 <- input/experiments/EXP_024/4/V, CSV
+W,1 <- input/experiments/EXP_024/4/W, CSV
+G,2 <- input/experiments/EXP_024/4/G, CSV
+A,1 <- input/experiments/EXP_024/4/A, CSV
+
+
+//#Out1(x)&R(x,y)&S(y)&T(y)&U(y)&V(y)W(y);
+//#Out2(x)&R(x,y)&S(x)&T(x)&U(x)&V(x)W(x);
+//#Out3(x)&G(x,y)&S(x)A(x);
+
+#Out11(x)&R(x,y)S(x);
+#Out12(x)&R(x,y)T(x);
+#Out13(x)&R(x,y)U(x);
+//#Out14(x)&R(x,y)V(x);
+//#Out16(x)&R(x,y)W(x);
+
+#Out21(x)&R(x,y)S(y); // be careful with adding this one
+//#Out22(x)&R(x,y)T(y);
+//#Out23(x)&R(x,y)U(y);
+//#Out24(x)&R(x,y)V(y);
+//#Out25(x)&R(x,y)W(y);
+
+//#Out31(x)&G(x,y)S(x);
+#Out32(x)&G(x,y)A(x);

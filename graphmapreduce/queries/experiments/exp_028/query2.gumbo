@@ -1,0 +1,20 @@
+
+Output -> output/EXP_028/
+Scratch -> scratch/EXP_028/
+
+R,3 <- input/experiments/EXP_028/1/R, CSV
+G,3 <- input/experiments/EXP_028/1/G, CSV
+H,3 <- input/experiments/EXP_028/1/H, CSV
+
+S,1 <- input/experiments/EXP_028/1/S, CSV
+T,1 <- input/experiments/EXP_028/1/T, CSV
+U,1 <- input/experiments/EXP_028/1/U, CSV
+
+
+#O11(x,y,z)&R(x,y,z)S(x);
+#O12(x,y,z)&G(x,y,z)T(x);
+#O13(x,y,z)&H(x,y,z)U(x);
+
+#O21(x,y,z)&O11(x,y,z)T(z);
+#O22(x,y,z)&O12(x,y,z)U(z);
+#O23(x,y,z)&O13(x,y,z)S(z);

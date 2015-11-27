@@ -1,0 +1,18 @@
+SET OUTPUT DIR 'output/grammartest';
+SET SCRATCH DIR 'scratch/grammartest';
+
+R = LOAD CSV 'input/experiments/EXP_008/R' ARITY 10;
+S = LOAD CSV 'input/experiments/EXP_008/S' ARITY 1;
+
+Out = SELECT $0, $1, $2, $3, $4, $5, $6, $7, $8, $9 
+	  FROM R
+	  WHERE NOT $0 IN S
+	  	AND NOT $1 IN S
+	    AND NOT $2 IN S
+	    AND NOT $3 IN S
+	    AND NOT $4 IN S
+	    AND NOT $5 IN S
+	    AND NOT $6 IN S
+	    AND NOT $7 IN S
+	    AND NOT $8 IN S
+	    AND NOT $9 IN S;
