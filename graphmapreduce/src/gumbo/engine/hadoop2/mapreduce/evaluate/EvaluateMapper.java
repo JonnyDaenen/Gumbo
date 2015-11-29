@@ -11,11 +11,10 @@ import org.apache.hadoop.io.VLongWritable;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
-import gumbo.engine.hadoop2.datatypes.VLongPair;
 import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
-import gumbo.engine.hadoop2.mapreduce.tools.FilterFactory;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
-import gumbo.engine.hadoop2.mapreduce.tools.TupleFilter;
+import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleFilter;
+import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleOpFactory;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 
 public class EvaluateMapper extends Mapper<LongWritable, Text, BytesWritable, GumboMessageWritable> {
@@ -62,7 +61,7 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, BytesWritable, Gu
 		Set<GFAtomicExpression> atoms = inspector.getGuardedAtoms();
 
 		// create filter
-		filter = FilterFactory.createMap2Filter(atoms, relation);
+		filter = TupleOpFactory.createMap2Filter(atoms, relation);
 		
 	}
 

@@ -9,10 +9,11 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VLongPair;
-import gumbo.engine.hadoop2.mapreduce.tools.ConfirmBuffer;
 import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
-import gumbo.engine.hadoop2.mapreduce.tools.ProjectionFactory;
-import gumbo.engine.hadoop2.mapreduce.tools.TupleProjection;
+import gumbo.engine.hadoop2.mapreduce.tools.buffers.ConfirmBuffer;
+import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleEvaluator;
+import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleOpFactory;
+import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleProjection;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 public class EvaluateReducer extends Reducer<VLongPair, GumboMessageWritable, Text, Text> {
@@ -20,7 +21,7 @@ public class EvaluateReducer extends Reducer<VLongPair, GumboMessageWritable, Te
 	private Text output;
 	
 	private ConfirmBuffer buffer;
-	private TupleProjection [] projections;
+	private TupleEvaluator [] projections;
 
 	private MultipleOutputs<Text, Text> mos;
 
@@ -39,7 +40,7 @@ public class EvaluateReducer extends Reducer<VLongPair, GumboMessageWritable, Te
 		Set<GFExistentialExpression> queries = inspector.getQueries();
 		
 		// get projections
-		projections = ProjectionFactory.createRed2Projections(queries);
+		projections = TupleOpFactory.createRed2Projections(queries);
 		
 		
 	}
@@ -71,7 +72,7 @@ public class EvaluateReducer extends Reducer<VLongPair, GumboMessageWritable, Te
 			}
 		}
 		
-		for (TupleProjection pi : projections) {
+		for (TupleEvaluator pi : projections) {
 			if (buffer.load(pi, output)) {
 				mos.write((Text)null, output, pi.getFilename());
 			}
