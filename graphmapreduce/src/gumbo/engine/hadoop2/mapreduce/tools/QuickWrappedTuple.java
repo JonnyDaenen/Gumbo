@@ -45,9 +45,17 @@ public class QuickWrappedTuple {
 
 
 	public void initialize(Text t) {
-
 		this.data = t.getBytes();
-
+		initialize();
+	}
+		
+	
+	public void initialize(byte[] data2) {
+		this.data = data2;
+		initialize();
+	}
+	
+	private void initialize() {
 		int start = 0;
 		int bytelength = 0;
 		startList.clear();
@@ -135,5 +143,7 @@ public class QuickWrappedTuple {
 		}
 		return true;
 	}
+
+	
 
 }
