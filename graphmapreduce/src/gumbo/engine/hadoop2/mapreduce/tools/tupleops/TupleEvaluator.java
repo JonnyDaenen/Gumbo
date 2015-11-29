@@ -7,6 +7,9 @@ import org.apache.hadoop.io.Text;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
 import gumbo.structures.booleanexpressions.BEvaluationContext;
 import gumbo.structures.booleanexpressions.BExpression;
+import gumbo.structures.conversion.GFBooleanMapping;
+import gumbo.structures.conversion.GFtoBooleanConversionException;
+import gumbo.structures.conversion.GFtoBooleanConvertor;
 import gumbo.structures.data.QuickTuple;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 
@@ -21,14 +24,25 @@ import gumbo.structures.gfexpressions.GFExistentialExpression;
  */
 public class TupleEvaluator {
 
-	BExpression be;
-	BEvaluationContext context;
-	List<Integer> fields;
-	String filename;
+	private BExpression be;
+	private BEvaluationContext context;
+	private List<Integer> fields;
+	private String filename;
+	private GFBooleanMapping mapping;
 	
 	public TupleEvaluator(GFExistentialExpression e, String filename) {
-		// TODO implement
 		this.filename = filename;
+		
+		try {
+			GFtoBooleanConvertor convertor = new GFtoBooleanConvertor();
+			be = convertor.convert(e.getChild());
+			this.mapping = convertor.getMapping();
+			
+		} catch (GFtoBooleanConversionException e1) {
+			// should not happen
+			e1.printStackTrace();
+		}
+		
 	}
 
 	/**
@@ -41,7 +55,7 @@ public class TupleEvaluator {
 
 		// set correct atoms ids to true
 		for (int i = 0; i < atomids.length; i++) {
-			context.setValue(i, atomids[i]);
+			context.setValue(i, atomids[i]); // FIXME find correct id!
 		}
 		return be.evaluate(context);
 	}

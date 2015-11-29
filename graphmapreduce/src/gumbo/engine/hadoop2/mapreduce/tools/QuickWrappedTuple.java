@@ -270,6 +270,11 @@ public class QuickWrappedTuple {
 		output.set(extra_buffer, 0, extra_length);
 	}
 
+	public void project(byte[] keyFields, BytesWritable bw) {
+		// TODO implement
+		
+	}
+
 
 
 }
