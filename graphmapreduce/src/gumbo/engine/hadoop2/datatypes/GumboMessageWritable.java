@@ -229,5 +229,25 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		return null;
 	}
 
+	/**
+	 * Returns fileid and offset bytes.
+	 * @return
+	 */
+	public BytesWritable getAddressBytes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void setConfirm(byte[] array, int length) {
+		type.set(GumboMessageType.CONFIRM);
+		atomids.set(array, 0, length);
+		
+	}
+
+	public GumboMessageWritable duplicate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }
