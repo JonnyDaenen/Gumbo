@@ -5,19 +5,21 @@ import java.lang.reflect.Method;
 import java.util.Set;
 
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
-import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
-import gumbo.engine.hadoop2.datatypes.VLongPair;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 
+/**
+ * Wrapper class for mapper and reducer context.
+ * The class enabled Gumbo-specific parameter extraction on contexts.
+ * 
+ * @author Jonny Daenen
+ *
+ */
 public class ContextInspector {
 
 	private Context contextMap;

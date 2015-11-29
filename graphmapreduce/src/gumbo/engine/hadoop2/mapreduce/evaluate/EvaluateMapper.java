@@ -11,6 +11,7 @@ import org.apache.hadoop.io.VLongWritable;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
+import gumbo.engine.hadoop2.datatypes.GumboMessageWritable.GumboMessageType;
 import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleFilter;
@@ -39,11 +40,12 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, BytesWritable, Gu
 
 		bw = new BytesWritable();
 		gw = new GumboMessageWritable();
+		gw.setType(GumboMessageType.DATA);
 		qt = new QuickWrappedTuple();
 
 
 		// buffer for output key bytes
-		buffer = new DataOutputBuffer();
+		buffer = new DataOutputBuffer(32);
 
 		ContextInspector inspector = new ContextInspector(context);
 
@@ -92,7 +94,7 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, BytesWritable, Gu
 		
 		// prepare message
 		// OPTIMIZE cut out irrelevant attributes
-		gw.setContent(value.getBytes(), value.getLength());
+		gw.setDataBytes(value.getBytes(), value.getLength());
 
 		// write to output
 		context.write(bw, gw);

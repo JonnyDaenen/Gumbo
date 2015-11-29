@@ -39,7 +39,7 @@ public class ConfirmBuffer {
 	 */
 	public void setMessage(GumboMessageWritable value) {
 		// copy content data to local buffer
-		BytesWritable bw = value.getContent();
+		BytesWritable bw = value.getData();
 		setCapacity(bw.getLength());
 		System.arraycopy(bw.getBytes(), 0, data, 0, length);
 	}
@@ -50,7 +50,7 @@ public class ConfirmBuffer {
 	 */
 	public void addAtomIDs(GumboMessageWritable value) {
 		
-		BytesWritable bw = value.getAtomIDBytes();
+		BytesWritable bw = value.getData();
 		byte [] ids = bw.getBytes();
 		int size = bw.getLength();
 		
@@ -88,11 +88,10 @@ public class ConfirmBuffer {
 		boolean eval = pi.eval(atomids);
 		
 		if (eval) {
-			qt.initialize(data);
-			pi.project(data, output);
+			qt.initialize(data, length);
+			pi.project(qt, output);
 		}
 		
-		// TODO implement
 		return eval;
 	}
 

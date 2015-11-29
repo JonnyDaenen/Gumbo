@@ -31,7 +31,8 @@ public class RequestBuffer {
 	 */
 	public void addAtomIds(GumboMessageWritable value) {
 		
-		BytesWritable bw = value.getAtomIDBytes();
+		// get Atom id bytes
+		BytesWritable bw = value.getData();
 		byte [] ids = bw.getBytes();
 		int size = bw.getLength();
 		
@@ -55,7 +56,7 @@ public class RequestBuffer {
 		
 		// create tuple id
 		// OPTIMIZE use internal bytewritable
-		bw.set(current.getAddressBytes());
+		current.getAddressBytes(bw);
 		
 		// filter atom ids and put result in atombytes
 		if (filter(current)) {
@@ -77,7 +78,7 @@ public class RequestBuffer {
 	 */
 	private boolean filter(GumboMessageWritable current) {
 		
-		BytesWritable bw = current.getAtomIDBytes();
+		BytesWritable bw = current.getData();
 		byte [] ids = bw.getBytes();
 		int size = bw.getLength();
 		

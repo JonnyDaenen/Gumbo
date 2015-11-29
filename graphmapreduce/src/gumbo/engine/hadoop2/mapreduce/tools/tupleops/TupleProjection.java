@@ -5,12 +5,14 @@ import org.apache.hadoop.io.BytesWritable;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
 
+/**
+ * Interface for tuple projection operation.
+ * 
+ * @author Jonny Daenen
+ *
+ */
 public interface TupleProjection {
 
-	public void project(QuickWrappedTuple qt, BytesWritable bw, GumboMessageWritable gw);
-
-	public boolean matches(QuickWrappedTuple qt);
-
-	public String getFilename();
+	public boolean load(QuickWrappedTuple qt, long offset, BytesWritable bw, GumboMessageWritable gw);
 
 }

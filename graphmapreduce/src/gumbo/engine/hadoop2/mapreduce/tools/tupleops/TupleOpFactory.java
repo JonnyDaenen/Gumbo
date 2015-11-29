@@ -5,6 +5,12 @@ import java.util.Set;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 
+/**
+ * Collection of factory methods to construct tuple operations to be used in mappers and reducers.
+ * 
+ * @author Jonny Daenen
+ *
+ */
 public class TupleOpFactory {
 
 	public static TupleProjection[] createMap1Projections(String relation, long fileid,
@@ -14,12 +20,12 @@ public class TupleOpFactory {
 	}
 
 	public static TupleEvaluator[] createRed2Projections(Set<GFExistentialExpression> queries) {
-		// TODO Auto-generated method stub
+		// TODO implement
 		return null;
 	}
 	
 	public static TupleFilter createMap2Filter(Set<GFAtomicExpression> atoms, String relation) {
-		// TODO Auto-generated method stub
+		// TODO implement
 		return null;
 	}
 

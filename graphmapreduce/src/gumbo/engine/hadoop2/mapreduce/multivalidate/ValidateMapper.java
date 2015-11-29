@@ -65,13 +65,10 @@ public class ValidateMapper extends Mapper<LongWritable, Text, BytesWritable, Gu
 			
 			TupleProjection pi = projections[i];
 			
-			// if matches
-			if (pi.matches(qt)){
+			// if matches. store the output in writables
+			if (pi.load(qt, key.get(), bw, gw)){
 				
-				// project to message
-				pi.project(qt, bw, gw);
-		
-				// send output
+				// and write output
 				context.write(bw, gw);
 			}
 			
