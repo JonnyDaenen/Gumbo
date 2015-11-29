@@ -13,6 +13,7 @@ public class RequestBuffer {
 	boolean [] atomids;
 	
 	List<GumboMessageWritable> buffer;
+	
 
 	private ByteBuffer atombytes;
 
@@ -23,6 +24,11 @@ public class RequestBuffer {
 		atombytes = ByteBuffer.wrap(new byte[numAtoms]);
 	}
 
+	/**
+	 * Tracks the atom ids present in the message.
+	 * 
+	 * @param value a message
+	 */
 	public void addAtomIds(GumboMessageWritable value) {
 		
 		BytesWritable bw = value.getAtomIDBytes();
@@ -36,18 +42,12 @@ public class RequestBuffer {
 	}
 
 	/**
-	 * Loads buffer item i in two writables.
-	 * The bytes object will contain the key and the
-	 * message will be a Confirm message containing the atom ids.
-	 * 
-	 * Warning: the message is backed by a local byte array to save
-	 * space and should <b>not</b> be changed. It will remain valid until
-	 * the internal object is recycled, which can only happen after a reset.
+	 * Loads buffer item i into two writables.
 	 * 
 	 * @param i buffer item position
-	 * @param bw target key bytes
-	 * @param gw target value message
-	 * @return TODO
+	 * @param bw key bytes to be filled
+	 * @param gw value message to be filled
+	 * @return true iff the writables were set, false if the writables should not be written to output
 	 */
 	public boolean load(int i, BytesWritable bw, GumboMessageWritable gw) {
 		
@@ -67,6 +67,14 @@ public class RequestBuffer {
 		return false; 
 	}
 
+	/**
+	 * Updates internal byte buffer with matching atom ids.
+	 * Atom ids are taken from the given matches and 
+	 * intersected with the internal atom id buffer.
+	 * 
+	 * @param current the message containing the atom ids
+	 * @return true iff the intersection is non-empty
+	 */
 	private boolean filter(GumboMessageWritable current) {
 		
 		BytesWritable bw = current.getAtomIDBytes();
@@ -89,6 +97,11 @@ public class RequestBuffer {
 		
 	}
 
+	/**
+	 * Buffers a copy of the message.
+	 * 
+	 * @param value the message
+	 */
 	public void addMessage(GumboMessageWritable value) {
 		// OPTIMIZE re-use older buffer elements
 		
@@ -96,15 +109,27 @@ public class RequestBuffer {
 		buffer.add(val);
 	}
 
+	
+	/**
+	 * Calculates the number of buffered messages.
+	 * @return size of the message buffer
+	 */
 	public int size() {
 		return buffer.size();
 	}
 
+	/**
+	 * Deactivates the internal atom ids and clears the message buffer.
+	 */
 	public void reset() {
 		clearAtomIds();	
 		buffer.clear();
 	}
 	
+	
+	/**
+	 * Clears the internal atom id buffer.
+	 */
 	private void clearAtomIds() {
 		for (int i = 0; i < atomids.length; i++) { 
 			this.atomids[i] = false;
