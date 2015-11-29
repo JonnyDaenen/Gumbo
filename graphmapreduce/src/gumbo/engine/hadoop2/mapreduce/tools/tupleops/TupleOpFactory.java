@@ -24,13 +24,48 @@ import gumbo.structures.gfexpressions.GFExistentialExpression;
 public class TupleOpFactory {
 
 	public static TupleProjection[] createMap1Projections(String relation, long fileid,
-			Set<ConditionalProjection> queries) {
+			Set<GFExistentialExpression> queries) {
 
 		List<TupleProjection> projections = new ArrayList<>();
 
+
+		// GUARD
+
+		// for each guard that matches
+		for (GFExistentialExpression query : queries) {
+			GFAtomicExpression guard = query.getGuard();
+			if (guard.getName().equals(relation)) {
+
+				// for each guarded
+				for (GFAtomicExpression guarded : query.getGuardedRelations()) {
+					// create projection
+					GuardProjection pi = new GuardProjection(relation, fileid, guard, guarded, (byte) 0); // FIXME correct id
+					projections.add(pi);
+
+				}
+			}
+		}
+
+		// GUARDED
 		
-	
-		
+		for (GFExistentialExpression query : queries) {
+			// for each guarded
+			for (GFAtomicExpression guarded : query.getGuardedRelations()) {
+				if (guarded.getName().equals(relation)) {
+					// create projection
+					GuardedProjection pi = new GuardedProjection(relation, guarded, (byte) 0); // FIXME correct id
+					projections.add(pi);
+				}
+
+			}
+
+		}
+
+
+		// TODO merge where possible
+
+		// OPTIMIZE projection dependencies
+
 		return (TupleProjection[]) projections.toArray();
 	}
 
@@ -49,7 +84,7 @@ public class TupleOpFactory {
 			String filename = filemap.get(query.getOutputRelation().getName());
 			TupleEvaluator te = new TupleEvaluator(query, filename);
 			projections.add(te);
-			
+
 		}
 
 		return (TupleEvaluator[]) projections.toArray();

@@ -30,7 +30,7 @@ public class EqualityFilter implements TupleFilter {
 		set(guard);
 	}
 	
-	public EqualityFilter(byte [] eq) {
+	public EqualityFilter(int [] eq) { // TODO change into equality type
 		comparisons = new ArrayList<>(10);
 		set(eq);
 	}
@@ -112,7 +112,7 @@ public class EqualityFilter implements TupleFilter {
 	}
 	
 	
-	public void set(byte [] eq) {
+	public void set(int [] eq) {
 		clear();
 		sizeRequirement = eq.length;
 		

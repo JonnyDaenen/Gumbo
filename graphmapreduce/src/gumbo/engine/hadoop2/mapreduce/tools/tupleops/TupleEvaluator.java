@@ -26,12 +26,17 @@ public class TupleEvaluator {
 
 	private BExpression be;
 	private BEvaluationContext context;
-	private List<Integer> fields;
-	private String filename;
 	private GFBooleanMapping mapping;
 	
+	private List<Integer> fields;
+	private String filename;
+	
 	public TupleEvaluator(GFExistentialExpression e, String filename) {
+		
 		this.filename = filename;
+		
+		// TODO get output fields
+		e.getOutputRelation();
 		
 		try {
 			GFtoBooleanConvertor convertor = new GFtoBooleanConvertor();

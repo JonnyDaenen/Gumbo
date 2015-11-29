@@ -1,5 +1,7 @@
 package gumbo.engine.hadoop2.mapreduce.tools.tupleops;
 
+import java.util.Arrays;
+
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 
@@ -12,25 +14,43 @@ import gumbo.structures.gfexpressions.GFAtomicExpression;
  */
 public class EqualityType {
 
-	int size;
 	int [] equality;
 
 
 
-	public EqualityType(GFAtomicExpression guard) {
-		init(guard);
+	public EqualityType(GFAtomicExpression atom) {
+		init(atom);
 	}
 
-	public EqualityType(QuickWrappedTuple guard) {
-		init(guard);
+	public EqualityType(QuickWrappedTuple tuple) {
+		init(tuple);
+	}
+
+
+	public EqualityType(int[] convert) {
+		init(convert);
+	}
+
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(equality);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof EqualityType){
+			EqualityType et = (EqualityType) obj;
+			return Arrays.equals(equality, et.equality);
+		}
+		return false;
 	}
 
 
 	public boolean matches (EqualityType e) {
-		if (e.size != size)
+		if (e.equality.length != equality.length)
 			return false;
 
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < equality.length; i++) {
 			if (equality[i] != e.equality[i])
 				return false;
 		}
@@ -38,11 +58,10 @@ public class EqualityType {
 	}
 
 	private void init(GFAtomicExpression guard) {
-		size = guard.getNumFields();
-		equality = new int[size];
+		equality = new int[guard.getNumFields()];
 
 		//init
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < equality.length; i++) {
 			equality[i] = i;
 		}
 
@@ -67,21 +86,46 @@ public class EqualityType {
 
 
 	}
-
-	private void init(QuickWrappedTuple qt) {
-		size = qt.size();
-		equality = new int[size];
+	
+	private void init(int [] values) {
+		equality = new int[values.length];
 
 		//init
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < equality.length; i++) {
 			equality[i] = i;
 		}
 
 		// for each var
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < equality.length; i++) {
 
 			// find first match, next matches will be solved by next i
-			for (int j = i; j < size; j++) {
+			for (int j = i; j < equality.length; j++) {
+				if (values[i] == values[j]) {
+					equality[j] = equality[i];
+					break;
+				}
+			}
+
+		}
+
+		// FUTURE support for constants!
+
+
+	}
+
+	private void init(QuickWrappedTuple qt) {
+		equality = new int[qt.size()];
+
+		//init
+		for (int i = 0; i < equality.length; i++) {
+			equality[i] = i;
+		}
+
+		// for each var
+		for (int i = 0; i < equality.length; i++) {
+
+			// find first match, next matches will be solved by next i
+			for (int j = i; j < equality.length; j++) {
 				if (qt.equals(i, j)) {
 					equality[j] = equality[i];
 					break;
@@ -93,6 +137,18 @@ public class EqualityType {
 		// FUTURE support for constants!
 
 
+	}
+
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer(equality.length);
+		int i;
+		for (i = 0; i < equality.length; i++)
+			sb.append(equality[i] + ",");
+		if (i > 0)
+			sb.deleteCharAt(i-1);
+
+		return sb.toString();
 	}
 
 }

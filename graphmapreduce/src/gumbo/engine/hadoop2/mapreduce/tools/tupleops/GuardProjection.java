@@ -13,27 +13,56 @@ import gumbo.structures.gfexpressions.io.Pair;
 
 
 /**
- * Tuple filter that checks equality between fields.
  * 
  * @author Jonny Daenen
  *
  */
-public class ConditionalProjection implements TupleProjection {
+public class GuardProjection implements TupleProjection {
 
 
 	long fileid;
 	String name;
 	byte [] keyEt;
-	byte [] fields;
+	EqualityType fields;
 	byte [] atomIds;
 	
 	EqualityFilter ef;
 	
 
-	public ConditionalProjection() {
+	public GuardProjection() {
 		ef = new EqualityFilter(0);
 	}
 	
+
+	public GuardProjection(String relationname, long fileid, GFAtomicExpression guard, GFAtomicExpression guarded, byte guardedAtomid) {
+		
+		this.name = relationname;
+		this.fileid = fileid;
+		fields = new EqualityType(guard);
+		
+		// extract key
+		loadKey(guard, guarded);
+		
+		// extract atom id
+		atomIds = new byte[1];
+		atomIds[0] = guardedAtomid;
+		
+	}
+
+
+	private void loadKey(GFAtomicExpression guard, GFAtomicExpression guarded) {
+		String [] gvars = guard.getVars();
+		String [] vars = guarded.getVars();
+		keyEt = new byte[vars.length];
+		int i = 0;
+		for (String var : vars) {
+			for (int j = 0; j < gvars.length; j++)
+				if (gvars[j] == var){
+					keyEt[i] = (byte) fields.equality[i];
+				}
+		}
+	}
+
 
 	public void initialize(String representation) {
 		String[] parts = representation.split(":");
@@ -41,12 +70,22 @@ public class ConditionalProjection implements TupleProjection {
 		name = parts[0];
 
 		keyEt = convert(parts[1]);
-		fields = convert(parts[1]);
-		atomIds = convert(parts[1]);
+		fields = new EqualityType(convertInt(parts[2]));
+		atomIds = convert(parts[3]);
 		
-		ef.set(fields);
+		ef.set(fields.equality);
 	}
+	
 
+	private int[] convertInt(String s) {
+		String[] parts = s.split(",");
+		int [] result = new int[parts.length];
+		int i = 0;
+		for (String part : parts) {
+			result[i++] = Integer.parseInt(part);
+		}
+		return result;
+	}
 
 	private byte[] convert(String s) {
 		String[] parts = s.split(",");
@@ -64,7 +103,7 @@ public class ConditionalProjection implements TupleProjection {
 		sb.append(":");
 		addArray(sb, keyEt);
 		sb.append(":");
-		addArray(sb, fields);
+		sb.append(fields);
 		sb.append(":");
 		addArray(sb, atomIds);
 		
@@ -86,14 +125,14 @@ public class ConditionalProjection implements TupleProjection {
 
 	@Override
 	public int hashCode() {
-		return name.hashCode() ^ Arrays.hashCode(fields) ^ Arrays.hashCode(keyEt) ^ Arrays.hashCode(atomIds); 
+		return name.hashCode() ^ fields.hashCode() ^ Arrays.hashCode(keyEt) ^ Arrays.hashCode(atomIds); 
 	}
 	
 	
 	public boolean equals(Object obj) {
-		if (obj instanceof ConditionalProjection) {
-			ConditionalProjection et = (ConditionalProjection) obj;
-			return Arrays.equals(fields,et.fields) &&
+		if (obj instanceof GuardProjection) {
+			GuardProjection et = (GuardProjection) obj;
+			return fields.equals(et.fields) &&
 					Arrays.equals(keyEt,et.keyEt) &&
 					Arrays.equals(atomIds,et.atomIds) &&
 					name.equals(et.name);
@@ -120,7 +159,7 @@ public class ConditionalProjection implements TupleProjection {
 			return false;
 		
 		// output key
-		qt.project(fields, bw);
+		qt.project(keyEt, bw);
 		
 		// output atom ids
 		gw.setRequest(fileid, offset, atomIds, atomIds.length);

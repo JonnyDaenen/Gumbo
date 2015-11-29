@@ -199,17 +199,7 @@ public class QuickWrappedTuple {
 		return true;
 	}
 
-	/**
-	 * Projects correct fields to output.
-	 * @param fields field indices
-	 * @param bw writable
-	 */
-	public void project(List<Integer> fields, BytesWritable bw) {
-
-		project(fields);
-		bw.set(extra_buffer, 0, extra_length);
-
-	}
+	
 
 	/**
 	 * Checks whether two fields are equal in size and content.
@@ -245,7 +235,7 @@ public class QuickWrappedTuple {
 	private void project(List<Integer> fields2) {
 		// set extra_buffer limits to full tuple
 		setCapacity(length);
-		
+
 		// OPTIMIZE make ByteBuffer a field
 		ByteBuffer buffer = ByteBuffer.wrap(extra_buffer);
 
@@ -254,7 +244,7 @@ public class QuickWrappedTuple {
 			buffer.put(data, startList.get(i), lengthList.get(i));
 			buffer.put(commabytes, 0, commabytes.length);
 		}
-		
+
 		// remove trailing comma
 		extra_length = buffer.position() - 1;
 	}
@@ -270,9 +260,23 @@ public class QuickWrappedTuple {
 		output.set(extra_buffer, 0, extra_length);
 	}
 
-	public void project(byte[] keyFields, BytesWritable bw) {
-		// TODO implement
-		
+	public void project(byte[] keyFields, BytesWritable output) {
+		// set extra_buffer limits to full tuple
+		setCapacity(length);
+
+		// OPTIMIZE make ByteBuffer a field
+		ByteBuffer buffer = ByteBuffer.wrap(extra_buffer);
+
+		// project all fields in order
+		for (byte i : keyFields) {
+			buffer.put(data, startList.get(i), lengthList.get(i));
+			buffer.put(commabytes, 0, commabytes.length);
+		}
+
+		// remove trailing comma
+		extra_length = buffer.position() - 1;
+		output.set(extra_buffer, 0, extra_length);
+
 	}
 
 
