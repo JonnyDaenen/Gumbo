@@ -1,4 +1,4 @@
-package gumbo.engine.hadoop2.mapreduce.tools;
+package gumbo.engine.hadoop2.mapreduce.tools.buffers;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

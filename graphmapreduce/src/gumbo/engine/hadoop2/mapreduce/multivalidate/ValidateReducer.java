@@ -9,7 +9,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import gumbo.engine.hadoop.mrcomponents.round1.reducers.GFReducer1Optimized;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
-import gumbo.engine.hadoop2.mapreduce.tools.RequestBuffer;
+import gumbo.engine.hadoop2.mapreduce.tools.buffers.RequestBuffer;
 
 public class ValidateReducer extends Reducer<BytesWritable, GumboMessageWritable, BytesWritable, GumboMessageWritable> {
 

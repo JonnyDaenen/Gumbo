@@ -1,9 +1,11 @@
-package gumbo.engine.hadoop2.mapreduce.tools;
+package gumbo.engine.hadoop2.mapreduce.tools.buffers;
 
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
+import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
+import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleEvaluator;
 
 public class ConfirmBuffer {
 	
@@ -82,7 +84,7 @@ public class ConfirmBuffer {
 	 * @param output
 	 * @return
 	 */
-	public boolean load(GuardEvaluator pi, Text output) {
+	public boolean load(TupleEvaluator pi, Text output) {
 		boolean eval = pi.eval(atomids);
 		
 		if (eval) {

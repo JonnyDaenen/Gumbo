@@ -10,9 +10,9 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
-import gumbo.engine.hadoop2.mapreduce.tools.ProjectionFactory;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
-import gumbo.engine.hadoop2.mapreduce.tools.TupleProjection;
+import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleOpFactory;
+import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleProjection;
 import gumbo.structures.data.QuickTuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
@@ -48,7 +48,7 @@ public class ValidateMapper extends Mapper<LongWritable, Text, BytesWritable, Gu
 		Set<GFExistentialExpression> queries = inspector.getQueries();
 		
 		// get projections
-		projections = ProjectionFactory.createMap1Projections(relation, fileid, queries);
+		projections = TupleOpFactory.createMap1Projections(relation, fileid, queries);
 		
 	}
 	
