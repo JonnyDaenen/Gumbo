@@ -40,7 +40,8 @@ public class EvaluateReducer extends Reducer<VLongPair, GumboMessageWritable, Te
 		Set<GFExistentialExpression> queries = inspector.getQueries();
 		
 		// get projections
-		projections = TupleOpFactory.createRed2Projections(queries);
+		
+		projections = TupleOpFactory.createRed2Projections(queries, inspector.getOutMapping());
 		
 		
 	}

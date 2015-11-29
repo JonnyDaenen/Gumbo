@@ -30,7 +30,7 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, BytesWritable, Gu
 	private long offset;
 	
 	private QuickWrappedTuple qt;
-	private TupleFilter filter;
+	private TupleFilter[] filters;
 	private DataOutputBuffer buffer;
 
 	@Override
@@ -63,7 +63,7 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, BytesWritable, Gu
 		Set<GFAtomicExpression> atoms = inspector.getGuardedAtoms();
 
 		// create filter
-		filter = TupleOpFactory.createMap2Filter(atoms, relation);
+		filters = TupleOpFactory.createMap2Filter(atoms, relation);
 		
 	}
 
@@ -77,7 +77,15 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, BytesWritable, Gu
 		qt.initialize(value);
 		
 		// tuple should match at least one guard atom
-		if (!filter.check(qt))
+		boolean match = false;
+		for (TupleFilter filter : filters) {
+			if (filter.check(qt)) {
+				match = true;
+				break;
+			}
+		}
+		
+		if (!match)
 			return;
 		
 		

@@ -2,6 +2,7 @@ package gumbo.engine.hadoop2.mapreduce.tools;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.hadoop.fs.Path;
@@ -102,6 +103,11 @@ public class ContextInspector {
 
 	public Set<GFAtomicExpression> getGuardedAtoms() {
 		// TODO implement
+		return null;
+	}
+
+	public Map<String, String> getOutMapping() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 	

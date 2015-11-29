@@ -19,7 +19,7 @@ import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
 public class Projection implements TupleProjection {
 
 	long fileid;
-	Set<EqualityType> eqts;
+	Set<ConditionalProjection> eqts;
 	byte [] atombuffer;
 	int maxatoms;
 
@@ -52,7 +52,7 @@ public class Projection implements TupleProjection {
 		// assemble atoms
 		int i = 0;
 		byte [] keyFields = null;
-		for (EqualityType et : eqts) {
+		for (ConditionalProjection et : eqts) {
 
 			// if equality type is satisfied, add its atoms
 			if (et.check(qt)) {

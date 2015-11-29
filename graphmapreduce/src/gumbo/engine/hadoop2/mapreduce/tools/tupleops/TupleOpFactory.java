@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.mesos.Protos.Filters;
+
 import gumbo.structures.booleanexpressions.BExpression;
 import gumbo.structures.conversion.GFtoBooleanConvertor;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
@@ -22,13 +24,11 @@ import gumbo.structures.gfexpressions.GFExistentialExpression;
 public class TupleOpFactory {
 
 	public static TupleProjection[] createMap1Projections(String relation, long fileid,
-			Set<EqualityType> queries) {
+			Set<ConditionalProjection> queries) {
 
 		List<TupleProjection> projections = new ArrayList<>();
 
-
-
-		// GUARD
+		
 	
 		
 		return (TupleProjection[]) projections.toArray();
@@ -63,17 +63,18 @@ public class TupleOpFactory {
 	 * @param relation the relation name
 	 * @return a filter for guard tuples
 	 */
-	public static TupleFilter createMap2Filter(Set<GFAtomicExpression> atoms, String relation) {
+	public static TupleFilter []  createMap2Filter(Set<GFAtomicExpression> atoms, String relation) {
 
-		EqualityType eqt = new EqualityType(0);
+		List<TupleFilter> filters = new ArrayList<>(atoms.size());
 
 		for (GFAtomicExpression guard : atoms) {
 			if (guard.getName().equals(relation)) {
-				eqt.add(guard);
+				EqualityFilter eqt = new EqualityFilter(guard);
+				filters.add(eqt);
 			}
 		}
 
-		return eqt;
+		return (TupleFilter[]) filters.toArray();
 	}
 
 }

@@ -14,16 +14,27 @@ import gumbo.structures.gfexpressions.io.Pair;
  * @author Jonny Daenen
  *
  */
-public class EqualityType2 implements TupleFilter {
+public class EqualityFilter implements TupleFilter {
 
 	int sizeRequirement;
 	
 	List<Pair<Integer,Integer>> comparisons;
 	
-	public EqualityType2(int sizeRequirement) {
+	public EqualityFilter(int sizeRequirement) {
 		this.sizeRequirement = sizeRequirement;
 		comparisons = new ArrayList<>(10);
 	}
+
+	public EqualityFilter(GFAtomicExpression guard) {
+		comparisons = new ArrayList<>(10);
+		set(guard);
+	}
+	
+	public EqualityFilter(byte [] eq) {
+		comparisons = new ArrayList<>(10);
+		set(eq);
+	}
+
 
 	/**
 	 * Checks whether the tuple conforms to the comparisons.
@@ -74,7 +85,8 @@ public class EqualityType2 implements TupleFilter {
 	 * 
 	 * @param guard a guard atom
 	 */
-	public void add(GFAtomicExpression guard) {
+	public void set(GFAtomicExpression guard) {
+		clear();
 		sizeRequirement = guard.getNumFields();
 		
 		String[] vars = guard.getVars();
@@ -98,5 +110,30 @@ public class EqualityType2 implements TupleFilter {
 		
 		
 	}
+	
+	
+	public void set(byte [] eq) {
+		clear();
+		sizeRequirement = eq.length;
+		
+		
+		// for each var
+		for (int i = 0; i < sizeRequirement; i++) {
+			// find first match, next matches will be solved by next i
+			for (int j = i; j < sizeRequirement; j++) {
+				
+				if (eq[i] == eq[j]) {
+					add(i,j);
+					break;
+				}
+				
+			}
 
+		}
+		
+		// FUTURE support for constants!
+		
+		
+	}
+	
 }
