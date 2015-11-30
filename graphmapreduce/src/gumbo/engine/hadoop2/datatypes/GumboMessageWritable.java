@@ -4,6 +4,8 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.ByteWritable;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.DataOutputBuffer;
@@ -14,7 +16,13 @@ import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
 import org.apache.hadoop.io.WritableUtils;
 
+import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactory;
+
+
 public class GumboMessageWritable implements WritableComparable<GumboMessageWritable> {
+
+
+	private static final Log LOG = LogFactory.getLog(GumboMessageWritable.class);
 	
 	public class GumboMessageType {
 		public static final byte ASSERT = 1;
@@ -327,7 +335,8 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 			fileid.write(buffer);
 			offset.write(buffer);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// should not fail
+			LOG.error("IO error!" + System.lineSeparator() + e.getMessage() );
 			e.printStackTrace();
 		}
 		byte[] data = buffer.getData();

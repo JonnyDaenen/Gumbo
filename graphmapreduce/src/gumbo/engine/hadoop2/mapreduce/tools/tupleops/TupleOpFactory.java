@@ -24,7 +24,7 @@ import gumbo.structures.gfexpressions.GFExistentialExpression;
 public class TupleOpFactory {
 
 	public static TupleProjection[] createMap1Projections(String relation, long fileid,
-			Set<GFExistentialExpression> queries) {
+			Set<GFExistentialExpression> queries, Map<GFAtomicExpression, Integer> atomidmap) {
 
 		List<TupleProjection> projections = new ArrayList<>();
 
@@ -39,7 +39,7 @@ public class TupleOpFactory {
 				// for each guarded
 				for (GFAtomicExpression guarded : query.getGuardedAtoms()) {
 					// create projection
-					GuardProjection pi = new GuardProjection(relation, fileid, guard, guarded, (byte) 0); // FIXME correct id
+					GuardProjection pi = new GuardProjection(relation, fileid, guard, guarded, (byte) atomidmap.get(guarded).intValue()); 
 					projections.add(pi);
 
 				}
@@ -53,7 +53,7 @@ public class TupleOpFactory {
 			for (GFAtomicExpression guarded : query.getGuardedAtoms()) {
 				if (guarded.getName().equals(relation)) {
 					// create projection
-					GuardedProjection pi = new GuardedProjection(relation, guarded, (byte) 0); // FIXME correct id
+					GuardedProjection pi = new GuardedProjection(relation, guarded, (byte) atomidmap.get(guarded).intValue()); 
 					projections.add(pi);
 				}
 

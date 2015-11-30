@@ -30,7 +30,7 @@ public class EqualityFilter implements TupleFilter {
 		set(guard);
 	}
 	
-	public EqualityFilter(int [] eq) { // TODO change into equality type
+	public EqualityFilter(int [] eq) {
 		comparisons = new ArrayList<>(10);
 		set(eq);
 	}

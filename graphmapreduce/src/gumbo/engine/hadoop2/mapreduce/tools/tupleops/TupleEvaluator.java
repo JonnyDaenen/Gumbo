@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.Text;
 
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
@@ -30,6 +32,9 @@ import gumbo.structures.gfexpressions.GFExistentialExpression;
  */
 public class TupleEvaluator {
 
+
+	private static final Log LOG = LogFactory.getLog(TupleEvaluator.class);
+	
 	private BExpression be;
 	private BEvaluationContext context;
 	private Map<Integer,Integer> mapping;
@@ -75,7 +80,7 @@ public class TupleEvaluator {
 			
 			
 		} catch (GFtoBooleanConversionException e1) {
-			// should not happen
+			LOG.error("Boolean conversion problem!" + System.lineSeparator() + e1.getMessage() );
 			e1.printStackTrace();
 		}
 		
@@ -100,6 +105,8 @@ public class TupleEvaluator {
 		try {
 			return be.evaluate(context);
 		} catch (VariableNotFoundException e) {
+
+			LOG.error("Unexpected variable problem during evaluation!" + System.lineSeparator() + e.getMessage() );
 			// should not happen
 			e.printStackTrace();
 		}

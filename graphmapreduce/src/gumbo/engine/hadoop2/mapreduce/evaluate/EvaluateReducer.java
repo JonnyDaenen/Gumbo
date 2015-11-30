@@ -47,7 +47,9 @@ public class EvaluateReducer extends Reducer<VLongPair, GumboMessageWritable, Te
 		// get projections
 		projections = TupleOpFactory.createRed2Projections(queries, inspector.getOutMapping(), atomidmap);
 		
-		// TODO create buffer
+		// create buffer
+		int maxatomid = inspector.getMaxAtomID();
+		buffer = new ConfirmBuffer(maxatomid);
 		
 		
 	}

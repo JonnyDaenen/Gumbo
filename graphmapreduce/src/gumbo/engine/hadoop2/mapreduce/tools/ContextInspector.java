@@ -16,6 +16,8 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 
 /**
  * Wrapper class for mapper and reducer context.
@@ -38,6 +40,7 @@ public class ContextInspector {
 	private int maxatomid;
 	
 
+
 	public ContextInspector(Context c) {
 		this.contextMap = c;
 		conf = c.getConfiguration();
@@ -51,7 +54,10 @@ public class ContextInspector {
 	public void fetchParameters() {
 
 		// queries
-		conf.get("gumbo.queries");
+		String queryString = conf.get("gumbo.queries");
+		GFPrefixSerializer serializer = new GFPrefixSerializer();
+		queries = serializer.deserializeExSet(queryString);
+
 		
 		// output mapping
 		conf.get("gumbo.outmap");
@@ -73,7 +79,7 @@ public class ContextInspector {
 	 */
 	public long getFileId()  {
 		
-		// FIXME check the following, if it failes, use underscores
+		// FIXME check the following, if it fails, use underscores
 		String path = System.getenv("mapreduce.map.input.file");
 		System.out.println("path: " + path);
 
