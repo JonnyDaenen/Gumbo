@@ -227,6 +227,20 @@ public class CalculationGroup {
 	}
 
 
+	public String getCanonicalName() {
+		
+		StringBuffer sb = new StringBuffer(semijoins.size()*20);
+		
+		for (GuardedSemiJoinCalculation semijoin : semijoins) {
+			sb.append(semijoin.getGuard());
+			sb.append(semijoin.getGuarded());
+			sb.append(";");
+		}
+		
+		return sb.toString();
+	}
+
+
 	
 
 }

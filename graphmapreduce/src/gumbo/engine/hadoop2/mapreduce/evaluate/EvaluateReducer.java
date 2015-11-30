@@ -14,7 +14,6 @@ import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
 import gumbo.engine.hadoop2.mapreduce.tools.buffers.ConfirmBuffer;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleEvaluator;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleOpFactory;
-import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleProjection;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 

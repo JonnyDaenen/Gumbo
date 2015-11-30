@@ -368,4 +368,13 @@ public class CalculationUnitGroup implements Iterable<CalculationUnit> {
 	    }
 	    return hashcode;
     }
+
+
+	public String getCanonicalOutString() {
+		StringBuffer sb = new StringBuffer();
+		for (CalculationUnit cu : calculations) {
+			sb.append(cu.getOutputSchema());	
+		}
+		return sb.toString();
+	}
 }
