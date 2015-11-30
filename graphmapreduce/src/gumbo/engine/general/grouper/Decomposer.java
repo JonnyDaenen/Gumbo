@@ -38,7 +38,7 @@ public class Decomposer {
 			// make combinations of guard atom with all guarded atoms
 			if(e.isBasicGF()) {
 				GFAtomicExpression guard = e.getGuard();
-				for (GFAtomicExpression guarded : e.getGuardedRelations()) {
+				for (GFAtomicExpression guarded : e.getGuardedAtoms()) {
 					result.add(new GuardedSemiJoinCalculation(guard,guarded));
 				}
 			}

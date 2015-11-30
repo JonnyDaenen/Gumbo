@@ -89,7 +89,7 @@ public class Round1ReduceJobEstimator {
 	 */
 	private long estimateSize(GFExistentialExpression e, RelationFileMapping rfm) {
 		RelationSchema guard = e.getGuard().getRelationSchema();
-		Collection<GFAtomicExpression> guardedAtoms = e.getGuardedRelations();
+		Collection<GFAtomicExpression> guardedAtoms = e.getGuardedAtoms();
 
 
 		long totalBytes = 0;

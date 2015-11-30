@@ -2,9 +2,12 @@ package gumbo.engine.hadoop2.mapreduce.tools;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Mapper.Context;
@@ -25,13 +28,40 @@ public class ContextInspector {
 
 	private Context contextMap;
 	private org.apache.hadoop.mapreduce.Reducer.Context contextRed;
+	
+	
+	private Configuration conf;
+
+	private Set<GFExistentialExpression> queries;
+	private Map<String, String> outmap;
+	private Map<GFAtomicExpression, Integer> atomidmap;
+	private int maxatomid;
+	
 
 	public ContextInspector(Context c) {
 		this.contextMap = c;
+		conf = c.getConfiguration();
 	}
 
 	public ContextInspector(Reducer.Context c) {
 		this.contextRed = c;
+		conf = c.getConfiguration();
+	}
+	
+	public void fetchParameters() {
+
+		// queries
+		conf.get("gumbo.queries");
+		
+		// output mapping
+		conf.get("gumbo.outmap");
+		
+		// atom-id mapping
+		conf.get("gumbo.atomids");
+		
+		// atom-id mapping
+		maxatomid = conf.getInt("gumbo.maxatomid", 32);
+		
 	}
 
 	/**
@@ -42,6 +72,10 @@ public class ContextInspector {
 	 * @return the id of the file that contains the current input split
 	 */
 	public long getFileId()  {
+		
+		// FIXME check the following, if it failes, use underscores
+		String path = System.getenv("mapreduce.map.input.file");
+		System.out.println("path: " + path);
 
 		InputSplit is = contextMap.getInputSplit();
 
@@ -97,23 +131,38 @@ public class ContextInspector {
 	}
 
 	public Set<GFExistentialExpression> getQueries() {
-		// TODO implement
-		return null;
+		return queries;
 	}
 
 	public Set<GFAtomicExpression> getGuardedAtoms() {
-		// TODO implement
-		return null;
+		HashSet<GFAtomicExpression> atoms = new HashSet<>();
+		for (GFExistentialExpression query : queries){
+			atoms.addAll(query.getGuardedAtoms());
+		}
+		return atoms;
 	}
 
+	/**
+	 * Returns the mapping from out relation names to filenames.
+	 * @return mapping from out relation names to filenames
+	 */
 	public Map<String, String> getOutMapping() {
-		// TODO Auto-generated method stub
-		return null;
+		return outmap;
 	}
 
+	/**
+	 * Returns the mapping from atoms to their ids.
+	 * @return mapping from atoms to their ids
+	 */
 	public Map<GFAtomicExpression, Integer> getAtomIdMap() {
-		// TODO Auto-generated method stub
-		return null;
+		return atomidmap;
+	}
+
+	/**
+	 * @return highest atom number
+	 */
+	public int getMaxAtomID() {
+		return maxatomid;
 	}
 	
 	

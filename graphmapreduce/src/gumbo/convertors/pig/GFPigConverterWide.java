@@ -46,7 +46,7 @@ public class GFPigConverterWide extends GFPigConverter implements GFVisitor<Stri
 		
 		String query = "";
 
-		for (GFAtomicExpression child : gfe.getGuardedRelations()) {
+		for (GFAtomicExpression child : gfe.getGuardedAtoms()) {
 			String guardedGroupSchema = getGuardedGroupSchema(child.getName(), rfm);
 			String guardGroupSchema = getGuardGroupSchema(gfe.getGuard().getRelationSchema(), gfe.getGuard().getVars(), rfm, child.getVars());
 			String childId = generateAlias(child.toString());

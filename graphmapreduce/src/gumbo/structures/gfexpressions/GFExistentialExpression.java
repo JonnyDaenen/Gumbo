@@ -164,7 +164,7 @@ public class GFExistentialExpression extends GFExpression {
 	 * Creates a set of atomics on the "right" side.
 	 * @return the set of guarded relations
 	 */
-	public Collection<GFAtomicExpression> getGuardedRelations() {
+	public Collection<GFAtomicExpression> getGuardedAtoms() {
 		return child.getAtomic();
 	}
 

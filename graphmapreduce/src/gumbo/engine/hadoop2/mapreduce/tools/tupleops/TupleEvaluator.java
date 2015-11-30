@@ -68,7 +68,7 @@ public class TupleEvaluator {
 			context = new BEvaluationContext();
 			mapping = new HashMap<Integer, Integer>();
 			
-			for (GFAtomicExpression atom : e.getGuardedRelations()) {
+			for (GFAtomicExpression atom : e.getGuardedAtoms()) {
 				BVariable var = varmapping.getVariable(atom);
 				mapping.put(atomids.get(atom), var.getID());
 			}

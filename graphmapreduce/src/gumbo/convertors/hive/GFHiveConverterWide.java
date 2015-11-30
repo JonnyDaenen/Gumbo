@@ -41,7 +41,7 @@ public class GFHiveConverterWide extends GFHiveConverter implements GFVisitor<St
 		
 		String query = "";
 
-		for (GFAtomicExpression child : gfe.getGuardedRelations()) {
+		for (GFAtomicExpression child : gfe.getGuardedAtoms()) {
 			String childId = generateAlias(child.toString());
 			childIds.add(childId);
 			

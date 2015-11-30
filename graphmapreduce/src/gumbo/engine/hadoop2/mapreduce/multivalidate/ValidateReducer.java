@@ -9,6 +9,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import gumbo.engine.hadoop.mrcomponents.round1.reducers.GFReducer1Optimized;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
+import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
 import gumbo.engine.hadoop2.mapreduce.tools.buffers.RequestBuffer;
 
 public class ValidateReducer extends Reducer<BytesWritable, GumboMessageWritable, BytesWritable, GumboMessageWritable> {
@@ -35,9 +36,12 @@ public class ValidateReducer extends Reducer<BytesWritable, GumboMessageWritable
 		gw = new GumboMessageWritable();
 		bw = new BytesWritable();
 		
-		// TODO get max atom id
+		// get max atom id
 		
-		buffer = new RequestBuffer();
+		ContextInspector ci = new ContextInspector(context);
+		int maxAtomID = ci.getMaxAtomID();
+		
+		buffer = new RequestBuffer(maxAtomID);
 		
 	}
 

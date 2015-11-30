@@ -37,7 +37,7 @@ public class TupleOpFactory {
 			if (guard.getName().equals(relation)) {
 
 				// for each guarded
-				for (GFAtomicExpression guarded : query.getGuardedRelations()) {
+				for (GFAtomicExpression guarded : query.getGuardedAtoms()) {
 					// create projection
 					GuardProjection pi = new GuardProjection(relation, fileid, guard, guarded, (byte) 0); // FIXME correct id
 					projections.add(pi);
@@ -50,7 +50,7 @@ public class TupleOpFactory {
 		
 		for (GFExistentialExpression query : queries) {
 			// for each guarded
-			for (GFAtomicExpression guarded : query.getGuardedRelations()) {
+			for (GFAtomicExpression guarded : query.getGuardedAtoms()) {
 				if (guarded.getName().equals(relation)) {
 					// create projection
 					GuardedProjection pi = new GuardedProjection(relation, guarded, (byte) 0); // FIXME correct id
