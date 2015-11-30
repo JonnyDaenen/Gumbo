@@ -36,6 +36,8 @@ public class FileManager {
 
 	RelationFileMapping inMapping;
 	RelationFileMapping outMapping; 
+	
+	// TODO add lookup structure
 
 
 	public FileManager(RelationFileMapping infiles, Path output, Path scratch) {

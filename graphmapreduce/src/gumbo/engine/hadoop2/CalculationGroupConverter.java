@@ -70,7 +70,7 @@ public class CalculationGroupConverter {
 			// REDUCER
 			hadoopJob.setReducerClass(ValidateReducer.class); 
 
-			int numRed =  (int) Math.max(1,group.getGuardedOutBytes() / (128*1024*1024.0) );// FIXME extract from settings
+			int numRed =  (int) Math.max(1,group.getGuardedOutBytes() / (128*1024*1024.0) ); // FIXME extract from settings
 			hadoopJob.setNumReduceTasks(numRed); 
 			LOG.info("Setting Reduce tasks to " + numRed);
 
