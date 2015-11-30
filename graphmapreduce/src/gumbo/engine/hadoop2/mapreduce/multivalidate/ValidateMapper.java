@@ -1,6 +1,7 @@
 package gumbo.engine.hadoop2.mapreduce.multivalidate;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.hadoop.io.BytesWritable;
@@ -47,8 +48,11 @@ public class ValidateMapper extends Mapper<LongWritable, Text, BytesWritable, Gu
 		// get queries
 		Set<GFExistentialExpression> queries = inspector.getQueries();
 		
+		// get atom id mapping
+		Map<GFAtomicExpression, Integer> atomidmap = inspector.getAtomIdMap();
+		
 		// get projections
-		projections = TupleOpFactory.createMap1Projections(relation, fileid, queries);
+		projections = TupleOpFactory.createMap1Projections(relation, fileid, queries, atomidmap);
 		
 	}
 	

@@ -2,6 +2,7 @@ package gumbo.engine.hadoop2.mapreduce.tools;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +18,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.DeserializeException;
 import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 
 /**
@@ -30,15 +32,17 @@ public class ContextInspector {
 
 	private Context contextMap;
 	private org.apache.hadoop.mapreduce.Reducer.Context contextRed;
-	
-	
+
+
 	private Configuration conf;
 
 	private Set<GFExistentialExpression> queries;
-	private Map<String, String> outmap;
-	private Map<GFAtomicExpression, Integer> atomidmap;
+	private HashMap<String, String> outmap;
+	private HashMap<String, Long> fileidmap;
+	private HashMap<Long, String> filerelationmap;
+	private HashMap<GFAtomicExpression, Integer> atomidmap;
 	private int maxatomid;
-	
+
 
 
 	public ContextInspector(Context c) {
@@ -50,24 +54,39 @@ public class ContextInspector {
 		this.contextRed = c;
 		conf = c.getConfiguration();
 	}
-	
+
 	public void fetchParameters() {
 
-		// queries
-		String queryString = conf.get("gumbo.queries");
-		GFPrefixSerializer serializer = new GFPrefixSerializer();
-		queries = serializer.deserializeExSet(queryString);
 
-		
-		// output mapping
-		conf.get("gumbo.outmap");
-		
-		// atom-id mapping
-		conf.get("gumbo.atomids");
-		
-		// atom-id mapping
-		maxatomid = conf.getInt("gumbo.maxatomid", 32);
-		
+		try {
+			// queries
+			GFPrefixSerializer serializer = new GFPrefixSerializer();
+			String queryString = conf.get("gumbo.queries");
+			queries = serializer.deserializeExSet(queryString);
+
+			// output mapping
+			String outmapString = conf.get("gumbo.outmap");
+			outmap = PropertySerializer.stringToObject(outmapString, outmap.getClass());
+
+			// file to id mapping
+			String filemapString = conf.get("gumbo.fileidmap");
+			fileidmap = PropertySerializer.stringToObject(filemapString, fileidmap.getClass());
+
+			// file id to relation name mapping
+			String filerelmap = conf.get("gumbo.filerelationmap");
+			filerelationmap = PropertySerializer.stringToObject(filerelmap, filerelationmap.getClass());
+
+			// atom-id mapping
+			String atomidMapString = conf.get("gumbo.atomidmap");
+			atomidmap = PropertySerializer.stringToObject(atomidMapString, atomidmap.getClass());
+
+			// highest id
+			maxatomid = conf.getInt("gumbo.maxatomid", 32);
+
+		} catch (DeserializeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -78,7 +97,7 @@ public class ContextInspector {
 	 * @return the id of the file that contains the current input split
 	 */
 	public long getFileId()  {
-		
+
 		// FIXME check the following, if it fails, use underscores
 		String path = System.getenv("mapreduce.map.input.file");
 		System.out.println("path: " + path);
@@ -88,7 +107,7 @@ public class ContextInspector {
 		Method method;
 		try {
 			method = is.getClass().getMethod("getInputSplit");
-			
+
 			method.setAccessible(true);
 			FileSplit fileSplit = (FileSplit) method.invoke(is);
 			Path filePath = fileSplit.getPath();
@@ -97,24 +116,23 @@ public class ContextInspector {
 
 			// OPTIMIZE try this:
 			// String filename= ((FileSplit)context.getInputSplit()).getPath().getName();
-			
+
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return 0;
 
-		
+
 
 	}
 
 	private long getPathID(Path filePath) {
-		// TODO implement
-		return 0;
+		return fileidmap.get(filePath.toString());
 	}
-	
-	
+
+
 	/**
 	 * Looks up the relation name this mapper is processing.
 	 * @return the current relation name
@@ -125,15 +143,13 @@ public class ContextInspector {
 		// convert
 		return getRelationName(fileid);
 	}
-	
+
 	/**
 	 * Looks up the relation name for a given id.
 	 * @return the current relation name
 	 */
 	public String getRelationName(long fileid) {
-		// TODO implement
-		// lookup relation for this file id
-		return null;
+		return filerelationmap.get(fileid);
 	}
 
 	public Set<GFExistentialExpression> getQueries() {
@@ -170,9 +186,9 @@ public class ContextInspector {
 	public int getMaxAtomID() {
 		return maxatomid;
 	}
-	
-	
-	
-	
+
+
+
+
 
 }
