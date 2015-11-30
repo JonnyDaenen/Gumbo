@@ -76,13 +76,15 @@ public class TupleOpFactory {
 	 * @param filemap mapping from output relations to file names
 	 * @return an array of evaluators
 	 */
-	public static TupleEvaluator[] createRed2Projections(Set<GFExistentialExpression> queries, Map<String, String> filemap) {
+	public static TupleEvaluator[] createRed2Projections(
+			Set<GFExistentialExpression> queries, Map<String, 
+			String> filemap, Map<GFAtomicExpression, Integer> atomids) {
 
 		List<TupleEvaluator> projections = new ArrayList<>(queries.size());
 
 		for (GFExistentialExpression query : queries) {
 			String filename = filemap.get(query.getOutputRelation().getName());
-			TupleEvaluator te = new TupleEvaluator(query, filename);
+			TupleEvaluator te = new TupleEvaluator(query, filename, atomids);
 			projections.add(te);
 
 		}

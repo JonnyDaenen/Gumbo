@@ -20,10 +20,6 @@ import gumbo.structures.gfexpressions.io.Pair;
 public class GuardedProjection extends GuardProjection {
 
 
-	public GuardedProjection() {
-		super();
-	}
-
 	public GuardedProjection(String relationname, GFAtomicExpression guarded, byte guardedAtomId) {
 		super(relationname, 0, guarded, guarded, guardedAtomId);
 	}
@@ -50,7 +46,7 @@ public class GuardedProjection extends GuardProjection {
 		// output atom ids
 		gw.setAssert(atomIds, atomIds.length);
 		
-		return false;
+		return true;
 	};
 	
 

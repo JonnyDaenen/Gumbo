@@ -8,16 +8,16 @@ import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleEvaluator;
 
 public class ConfirmBuffer {
-	
+
 	boolean [] atomids;
 	byte [] data;
 	int length;
 
 	QuickWrappedTuple qt;
-	
-	
-	public ConfirmBuffer(int numAtoms) {
-		atomids = new boolean[numAtoms];
+
+
+	public ConfirmBuffer(int maxAtomID) {
+		atomids = new boolean[maxAtomID+1];
 		qt = new QuickWrappedTuple();
 		setCapacity(64);
 	}
@@ -49,13 +49,15 @@ public class ConfirmBuffer {
 	 * @param value a message containing atom ids.
 	 */
 	public void addAtomIDs(GumboMessageWritable value) {
-		
+
 		BytesWritable bw = value.getData();
 		byte [] ids = bw.getBytes();
 		int size = bw.getLength();
-		
+
 		// activate atom ids that are provided
 		for (int i = 0; i < size; i++) {
+			if (ids[i] >= atomids.length)
+				continue;
 			this.atomids[ids[i]] = true;
 		}
 	}
@@ -68,7 +70,7 @@ public class ConfirmBuffer {
 		setCapacity(0);
 	}
 
-	
+
 	/**
 	 * Clears all atom ids.
 	 */
@@ -85,14 +87,16 @@ public class ConfirmBuffer {
 	 * @return
 	 */
 	public boolean load(TupleEvaluator pi, Text output) {
-		boolean eval = pi.eval(atomids);
-		
-		if (eval) {
-			qt.initialize(data, length);
-			pi.project(qt, output);
-		}
-		
-		return eval;
+
+		qt.initialize(data, length);
+		return pi.project(qt, output, atomids);
+
+	}
+
+	public boolean containsAtomID(int id) {
+		if (atomids.length <= id)
+			return false;
+		return atomids[id];
 	}
 
 }

@@ -35,6 +35,8 @@ public class ValidateReducer extends Reducer<BytesWritable, GumboMessageWritable
 		gw = new GumboMessageWritable();
 		bw = new BytesWritable();
 		
+		// TODO get max atom id
+		
 		buffer = new RequestBuffer();
 		
 	}

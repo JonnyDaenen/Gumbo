@@ -84,26 +84,23 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 	@Override
 	public void readFields(DataInput in) throws IOException {
 
+		type.readFields(in);
 		switch (type.get()) {
 		case GumboMessageType.REQUEST:
-			type.readFields(in);
 			fileid.readFields(in);
 			offset.readFields(in);
 			data.readFields(in);
 			break;
 
 		case GumboMessageType.ASSERT:
-			type.readFields(in);
 			data.readFields(in);
 			break;
 
 		case GumboMessageType.CONFIRM:
-			type.readFields(in);
 			data.readFields(in);
 			break;
 
 		case GumboMessageType.DATA:
-			type.readFields(in);
 			data.readFields(in);
 		default:
 			break;
@@ -338,6 +335,10 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		bw.set(data, 0, dataLength);
 		
 		return null;
+	}
+
+	public boolean containsAtomId(int i) {
+		return containsAtomId((byte) i);
 	}
 
 	

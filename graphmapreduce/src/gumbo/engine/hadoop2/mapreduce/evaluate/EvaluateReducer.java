@@ -1,6 +1,7 @@
 package gumbo.engine.hadoop2.mapreduce.evaluate;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.hadoop.io.Text;
@@ -14,6 +15,7 @@ import gumbo.engine.hadoop2.mapreduce.tools.buffers.ConfirmBuffer;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleEvaluator;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleOpFactory;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleProjection;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 public class EvaluateReducer extends Reducer<VLongPair, GumboMessageWritable, Text, Text> {
@@ -39,9 +41,13 @@ public class EvaluateReducer extends Reducer<VLongPair, GumboMessageWritable, Te
 		// get queries
 		Set<GFExistentialExpression> queries = inspector.getQueries();
 		
-		// get projections
+		// get mapping
+		Map<GFAtomicExpression, Integer> atomidmap = inspector.getAtomIdMap();
 		
-		projections = TupleOpFactory.createRed2Projections(queries, inspector.getOutMapping());
+		// get projections
+		projections = TupleOpFactory.createRed2Projections(queries, inspector.getOutMapping(), atomidmap);
+		
+		// TODO create buffer
 		
 		
 	}

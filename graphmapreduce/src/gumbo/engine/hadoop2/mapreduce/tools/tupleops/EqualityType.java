@@ -72,8 +72,8 @@ public class EqualityType {
 			String first = vars[i];
 
 			// find first match, next matches will be solved by next i
-			for (int j = i; j < vars.length; j++) {
-				String second = vars[i];
+			for (int j = i+1; j < vars.length; j++) {
+				String second = vars[j];
 				if (first.equals(second)) {
 					equality[j] = equality[i];
 					break;
@@ -99,7 +99,7 @@ public class EqualityType {
 		for (int i = 0; i < equality.length; i++) {
 
 			// find first match, next matches will be solved by next i
-			for (int j = i; j < equality.length; j++) {
+			for (int j = i+1; j < equality.length; j++) {
 				if (values[i] == values[j]) {
 					equality[j] = equality[i];
 					break;
@@ -125,7 +125,7 @@ public class EqualityType {
 		for (int i = 0; i < equality.length; i++) {
 
 			// find first match, next matches will be solved by next i
-			for (int j = i; j < equality.length; j++) {
+			for (int j = i+1; j < equality.length; j++) {
 				if (qt.equals(i, j)) {
 					equality[j] = equality[i];
 					break;
@@ -141,12 +141,12 @@ public class EqualityType {
 
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer(equality.length);
+		StringBuffer sb = new StringBuffer(equality.length*2);
 		int i;
 		for (i = 0; i < equality.length; i++)
 			sb.append(equality[i] + ",");
 		if (i > 0)
-			sb.deleteCharAt(i-1);
+			sb.deleteCharAt(sb.length()-1);
 
 		return sb.toString();
 	}

@@ -29,9 +29,6 @@ public class GuardProjection implements TupleProjection {
 	EqualityFilter ef;
 	
 
-	public GuardProjection() {
-		ef = new EqualityFilter(0);
-	}
 	
 
 	public GuardProjection(String relationname, long fileid, GFAtomicExpression guard, GFAtomicExpression guarded, byte guardedAtomid) {
@@ -47,6 +44,8 @@ public class GuardProjection implements TupleProjection {
 		atomIds = new byte[1];
 		atomIds[0] = guardedAtomid;
 		
+		ef = new EqualityFilter(fields);
+		
 	}
 
 
@@ -58,7 +57,8 @@ public class GuardProjection implements TupleProjection {
 		for (String var : vars) {
 			for (int j = 0; j < gvars.length; j++)
 				if (gvars[j] == var){
-					keyEt[i] = (byte) fields.equality[i];
+					keyEt[i++] = (byte) fields.equality[j];
+					break;
 				}
 		}
 	}
@@ -118,7 +118,7 @@ public class GuardProjection implements TupleProjection {
 			sb.append(",");
 		}
 		if (i > 0)
-			sb.deleteCharAt(i-1);
+			sb.deleteCharAt(sb.length() - 1);
 		
 	}
 
@@ -164,10 +164,11 @@ public class GuardProjection implements TupleProjection {
 		// output atom ids
 		gw.setRequest(fileid, offset, atomIds, atomIds.length);
 		
-		return false;
+		return true;
 	};
 	
 
+	
 
 	
 

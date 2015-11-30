@@ -9,19 +9,20 @@ import org.apache.hadoop.io.BytesWritable;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 
 public class RequestBuffer {
-	
-	boolean [] atomids;
-	
-	List<GumboMessageWritable> buffer;
-	
 
+	private boolean [] atomids;
+	private List<GumboMessageWritable> buffer;
 	private ByteBuffer atombytes;
 
-	public void clearAtomsIds(int numAtoms) {
-		atomids = new boolean[numAtoms];
+	public RequestBuffer(int maxAtomID) {
+		clearAtomsIds(maxAtomID + 1);
+	}
+
+	public void clearAtomsIds(int maxAtomID) {
+		atomids = new boolean[maxAtomID];
 		buffer = new ArrayList<>(32);
-		
-		atombytes = ByteBuffer.wrap(new byte[numAtoms]);
+
+		atombytes = ByteBuffer.wrap(new byte[maxAtomID]);
 	}
 
 	/**
@@ -30,14 +31,18 @@ public class RequestBuffer {
 	 * @param value a message
 	 */
 	public void addAtomIds(GumboMessageWritable value) {
-		
+
 		// get Atom id bytes
 		BytesWritable bw = value.getData();
 		byte [] ids = bw.getBytes();
 		int size = bw.getLength();
-		
+
 		// activate atom ids that are provided
 		for (int i = 0; i < size; i++) {
+
+			if (ids[i] >= atomids.length)
+				continue;
+
 			this.atomids[ids[i]] = true;
 		}
 	}
@@ -51,20 +56,20 @@ public class RequestBuffer {
 	 * @return true iff the writables were set, false if the writables should not be written to output
 	 */
 	public boolean load(int i, BytesWritable bw, GumboMessageWritable gw) {
-		
+
 		GumboMessageWritable current = buffer.get(i);
-		
+
 		// create tuple id
 		// OPTIMIZE use internal bytewritable
 		current.getAddressBytes(bw);
-		
+
 		// filter atom ids and put result in atombytes
 		if (filter(current)) {
 			// create confirm message
 			gw.setConfirm(atombytes.array(), atombytes.position());
 			return true;
 		}
-		
+
 		return false; 
 	}
 
@@ -77,15 +82,15 @@ public class RequestBuffer {
 	 * @return true iff the intersection is non-empty
 	 */
 	private boolean filter(GumboMessageWritable current) {
-		
+
 		BytesWritable bw = current.getData();
 		byte [] ids = bw.getBytes();
 		int size = bw.getLength();
-		
+
 		atombytes.clear();
-		
+
 		boolean remaining = false;
-		
+
 		// activate atom ids that are provided
 		for (int i = 0; i < size; i++) {
 			if (this.atomids[ids[i]]) {
@@ -93,9 +98,9 @@ public class RequestBuffer {
 				remaining = true;
 			}
 		}
-		
+
 		return remaining;
-		
+
 	}
 
 	/**
@@ -105,12 +110,12 @@ public class RequestBuffer {
 	 */
 	public void addMessage(GumboMessageWritable value) {
 		// OPTIMIZE re-use older buffer elements
-		
+
 		GumboMessageWritable val = value.duplicate();
 		buffer.add(val);
 	}
 
-	
+
 	/**
 	 * Calculates the number of buffered messages.
 	 * @return size of the message buffer
@@ -126,8 +131,8 @@ public class RequestBuffer {
 		clearAtomIds();	
 		buffer.clear();
 	}
-	
-	
+
+
 	/**
 	 * Clears the internal atom id buffer.
 	 */
@@ -135,6 +140,12 @@ public class RequestBuffer {
 		for (int i = 0; i < atomids.length; i++) { 
 			this.atomids[i] = false;
 		}
+	}
+
+	public boolean containsAtomID(int id) {
+		if (atomids.length <= id)
+			return false;
+		return atomids[id];
 	}
 
 }

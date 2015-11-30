@@ -110,6 +110,11 @@ public class ContextInspector {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public Map<GFAtomicExpression, Integer> getAtomIdMap() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	

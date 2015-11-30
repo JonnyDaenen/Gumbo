@@ -36,6 +36,10 @@ public class EqualityFilter implements TupleFilter {
 	}
 
 
+	public EqualityFilter(EqualityType fields) {
+		this(fields.equality);
+	}
+
 	/**
 	 * Checks whether the tuple conforms to the comparisons.
 	 * First, a size check is performed, then, all comparisons are checked.
@@ -96,8 +100,8 @@ public class EqualityFilter implements TupleFilter {
 			String first = vars[i];
 			
 			// find first match, next matches will be solved by next i
-			for (int j = i; j < vars.length; j++) {
-				String second = vars[i];
+			for (int j = i + 1; j < vars.length; j++) {
+				String second = vars[j];
 				if (first.equals(second)) {
 					add(i,j);
 					break;
@@ -120,7 +124,7 @@ public class EqualityFilter implements TupleFilter {
 		// for each var
 		for (int i = 0; i < sizeRequirement; i++) {
 			// find first match, next matches will be solved by next i
-			for (int j = i; j < sizeRequirement; j++) {
+			for (int j = i + 1; j < sizeRequirement; j++) {
 				
 				if (eq[i] == eq[j]) {
 					add(i,j);

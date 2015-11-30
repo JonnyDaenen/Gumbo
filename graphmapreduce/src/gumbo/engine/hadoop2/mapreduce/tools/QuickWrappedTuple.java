@@ -29,6 +29,7 @@ public class QuickWrappedTuple {
 
 	LinkedList<Integer> startList;
 	LinkedList<Integer> lengthList;
+	int maxlength;
 
 	static final byte [] commabytes = ",".getBytes();
 
@@ -39,6 +40,7 @@ public class QuickWrappedTuple {
 	public QuickWrappedTuple() {
 		startList = new LinkedList<>();
 		lengthList = new LinkedList<>();
+		maxlength = 0;
 	}
 
 	/**
@@ -99,6 +101,7 @@ public class QuickWrappedTuple {
 				fields++;
 				startList.add(start);
 				lengthList.add(bytelength);
+				maxlength = Math.max(maxlength, bytelength);
 
 				bytelength = 0;
 				start = i+1;
@@ -234,7 +237,7 @@ public class QuickWrappedTuple {
 	 */
 	private void project(List<Integer> fields2) {
 		// set extra_buffer limits to full tuple
-		setCapacity(length);
+		setCapacity(fields2.size() * (maxlength + 1));
 
 		// OPTIMIZE make ByteBuffer a field
 		ByteBuffer buffer = ByteBuffer.wrap(extra_buffer);
@@ -262,7 +265,7 @@ public class QuickWrappedTuple {
 
 	public void project(byte[] keyFields, BytesWritable output) {
 		// set extra_buffer limits to full tuple
-		setCapacity(length);
+		setCapacity(keyFields.length * (maxlength + 1));
 
 		// OPTIMIZE make ByteBuffer a field
 		ByteBuffer buffer = ByteBuffer.wrap(extra_buffer);
