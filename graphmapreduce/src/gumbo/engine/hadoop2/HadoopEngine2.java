@@ -1,5 +1,6 @@
 package gumbo.engine.hadoop2;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -7,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import gumbo.compiler.GumboPlan;
 import gumbo.compiler.linker.CalculationUnitGroup;
@@ -134,6 +136,12 @@ public class HadoopEngine2 {
 			
 			// wait for completion
 			waitForJC();
+			
+			try {
+				converter.moveOutputFiles(partition);
+			} catch (IOException e) {
+				throw new InterruptedException("Moving output files failed: " + e.getMessage());
+			}
 			
 		}
 		

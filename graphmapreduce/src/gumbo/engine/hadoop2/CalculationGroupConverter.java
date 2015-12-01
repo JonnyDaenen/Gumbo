@@ -13,6 +13,8 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.NullWritable;
@@ -274,7 +276,7 @@ public class CalculationGroupConverter {
 			// resolve paths
 			extractor.setIncludeOutputDirs(true);
 			RelationFileMapping mapping = extractor.extractFileMapping(fm);
-			
+
 			RelationSampler sampler = new RelationSampler(mapping);
 			sampler.sample(rawSamples);
 
@@ -361,6 +363,34 @@ public class CalculationGroupConverter {
 
 		// maximal atom id
 		conf.setInt("gumbo.maxatomid", maxatomid);
+	}
+
+	public void moveOutputFiles(CalculationUnitGroup partition) throws IOException {
+		
+		
+
+		FileSystem dfs = FileSystem.get(conf);
+		
+		for ( RelationSchema rs:  partition.getOutputRelations()) {
+			Path from = fm.getOutputRoot().suffix(Path.SEPARATOR + partition.getCanonicalOutString() + Path.SEPARATOR + rs.getName()+ "-r-*");
+			Path to = fm.getOutFileMapping().getPaths(rs).iterator().next();
+			
+			dfs.mkdirs(to);
+			FileStatus[] files = dfs.globStatus(from);
+			for(FileStatus file: files) {
+				if (!file.isDirectory()) {
+					LOG.info("Moving files: " + from + " " + to);
+					dfs.rename(file.getPath(), to);
+				}
+				// TODO perform merge
+			}
+			
+		}
+
+		
+
+
+
 	}
 
 

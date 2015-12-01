@@ -83,8 +83,8 @@ public class TupleOpFactory {
 		List<TupleEvaluator> projections = new ArrayList<>(queries.size());
 
 		for (GFExistentialExpression query : queries) {
-			String filename = filemap.get(query.getOutputRelation().getName());
-			TupleEvaluator te = new TupleEvaluator(query, filename, atomidmap);
+//			String filename = filemap.get(query.getOutputRelation().getName());
+			TupleEvaluator te = new TupleEvaluator(query, query.getOutputRelation().getName(), atomidmap);
 			projections.add(te);
 
 		}

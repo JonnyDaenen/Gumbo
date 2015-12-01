@@ -99,9 +99,11 @@ public class ContextInspector {
 	 */
 	public long getFileId()  {
 
-		// FIXME check the following, if it fails, use underscores
-		String path = System.getenv("mapreduce.map.input.file");
-		System.out.println("path: " + path);
+		// FUTURE check the following, if it fails, use underscores
+//		String path = System.getenv("mapreduce_map_input_file");
+//		System.out.println(conf.get("mapreduce_map_input_file"));
+//		System.out.println("path: " + path);
+		
 
 		InputSplit is = contextMap.getInputSplit();
 
