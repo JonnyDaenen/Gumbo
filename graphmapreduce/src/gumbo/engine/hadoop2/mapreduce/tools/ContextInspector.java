@@ -40,22 +40,24 @@ public class ContextInspector {
 	private HashMap<String, String> outmap;
 	private HashMap<String, Long> fileidmap;
 	private HashMap<Long, String> filerelationmap;
-	private HashMap<GFAtomicExpression, Integer> atomidmap;
+	private HashMap<String, Integer> atomidmap;
 	private int maxatomid;
 
 
 
-	public ContextInspector(Context c) {
+	public ContextInspector(Context c) throws InterruptedException {
 		this.contextMap = c;
 		conf = c.getConfiguration();
+		fetchParameters();
 	}
 
-	public ContextInspector(Reducer.Context c) {
+	public ContextInspector(Reducer.Context c) throws InterruptedException {
 		this.contextRed = c;
 		conf = c.getConfiguration();
+		fetchParameters();
 	}
 
-	public void fetchParameters() {
+	public void fetchParameters() throws InterruptedException {
 
 
 		try {
@@ -84,8 +86,7 @@ public class ContextInspector {
 			maxatomid = conf.getInt("gumbo.maxatomid", 32);
 
 		} catch (DeserializeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new InterruptedException("Error during parameter fetching: " + e.getMessage());
 		}
 	}
 
@@ -176,7 +177,7 @@ public class ContextInspector {
 	 * Returns the mapping from atoms to their ids.
 	 * @return mapping from atoms to their ids
 	 */
-	public Map<GFAtomicExpression, Integer> getAtomIdMap() {
+	public Map<String, Integer> getAtomIdMap() {
 		return atomidmap;
 	}
 

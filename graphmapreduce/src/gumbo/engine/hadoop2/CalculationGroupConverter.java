@@ -2,6 +2,11 @@ package gumbo.engine.hadoop2;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,16 +25,34 @@ import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import gumbo.compiler.GumboPlan;
+import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.filemapper.FileManager;
+import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.engine.general.grouper.Grouper;
+import gumbo.engine.general.grouper.GrouperFactory;
+import gumbo.engine.general.grouper.sample.RelationSampleContainer;
+import gumbo.engine.general.grouper.sample.RelationSampler;
+import gumbo.engine.general.grouper.sample.Simulator;
+import gumbo.engine.general.grouper.sample.SimulatorReport;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
+import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
+import gumbo.engine.general.utils.FileMappingExtractor;
+import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.mapreduce.evaluate.EvaluateMapper;
 import gumbo.engine.hadoop2.mapreduce.evaluate.EvaluateReducer;
 import gumbo.engine.hadoop2.mapreduce.multivalidate.ValidateMapper;
 import gumbo.engine.hadoop2.mapreduce.multivalidate.ValidateReducer;
+import gumbo.engine.hadoop2.mapreduce.tools.PropertySerializer;
 import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
+import gumbo.structures.gfexpressions.io.Pair;
+import gumbo.utils.estimation.SamplingException;
 
 public class CalculationGroupConverter {
 
@@ -38,15 +61,23 @@ public class CalculationGroupConverter {
 	private GumboPlan plan;
 	private Configuration conf;
 	private FileManager fm;
+	private FileMappingExtractor extractor;
+
+
+	private RelationTupleSampleContainer samples;
+	private RelationSampleContainer rawSamples;
+
+
 
 	public CalculationGroupConverter(GumboPlan plan, Configuration conf) {
 		this.plan = plan;
 		this.conf = conf;
 		this.fm = plan.getFileManager();
+
+		this.extractor = new FileMappingExtractor();
 	}
 
 	public ControlledJob createValidateJob(CalculationGroup group) {
-
 
 		Job hadoopJob = null;
 		try {
@@ -72,7 +103,7 @@ public class CalculationGroupConverter {
 
 			int numRed =  (int) Math.max(1,group.getGuardedOutBytes() / (128*1024*1024.0) ); // FIXME extract from settings
 			hadoopJob.setNumReduceTasks(numRed); 
-			LOG.info("Setting Reduce tasks to " + numRed);
+			LOG.info("Setting VAL Reduce tasks to " + numRed);
 
 
 			// SETTINGS
@@ -86,12 +117,23 @@ public class CalculationGroupConverter {
 
 
 			// set output path
-			Path intermediatePath = fm.getNewTmpPath(group.getCanonicalName());
-			// TODO register path for all semi-joins
+
+			// register path for all semi-joins
+			HashSet<String> labels = new HashSet<>();
+			Set<GFExistentialExpression> calculations = new HashSet<>();
+			for (GuardedSemiJoinCalculation sj : group.getAll()) {
+				String label = sj.getCanonicalString();
+				labels.add(label);
+
+				calculations.add(sj.getExpression());
+			}
+			Path intermediatePath = fm.getNewTmpPath(group.getCanonicalName(), labels);
+
 			FileOutputFormat.setOutputPath(hadoopJob, intermediatePath);
 
 
-			// TODO pass settings
+			// pass settings to mapper
+			configure(hadoopJob, calculations);
 
 
 			return new ControlledJob(hadoopJob, null);
@@ -111,22 +153,31 @@ public class CalculationGroupConverter {
 
 
 			hadoopJob.setJarByClass(getClass());
-			hadoopJob.setJobName(plan.getName() + "_EVAL_" + partition.getCanonicalOutString()); // TODO add more info
+			hadoopJob.setJobName(plan.getName() + "_EVAL_" + partition.getCanonicalOutString());
 
 			// MAPPER
 			// couple guard input files
+			Set<GFExistentialExpression> calculations = new HashSet<>();
 			for (CalculationUnit cu : partition.getCalculations()) {
 
-				Path path = null;
+				BasicGFCalculationUnit bgfcu = (BasicGFCalculationUnit) cu;
+				calculations.add(bgfcu.getBasicExpression());
 
-				// TODO guard input paths
-				MultipleInputs.addInputPath(hadoopJob, path, 
-						TextInputFormat.class, EvaluateMapper.class);
+				// guard input paths
+				RelationSchema rs = bgfcu.getGuardRelations().getRelationSchema();
+				Set<Path> paths = fm.getFileMapping().getPaths(rs);
+				for(Path path : paths) {
+					MultipleInputs.addInputPath(hadoopJob, path, 
+							TextInputFormat.class, EvaluateMapper.class);
+				}
 
-				// TODO intermediate semi-joins results
-				MultipleInputs.addInputPath(hadoopJob, path, 
-						TextInputFormat.class, Mapper.class);
-
+				// intermediate semi-joins results
+				for (GuardedSemiJoinCalculation sj : bgfcu.getSemiJoins()) {  
+					String canon = sj.getCanonicalString();
+					Path intermediatePath = fm.getReference(canon);
+					MultipleInputs.addInputPath(hadoopJob, intermediatePath, 
+							TextInputFormat.class, Mapper.class);
+				}
 			}
 
 
@@ -135,7 +186,7 @@ public class CalculationGroupConverter {
 
 			int numRed =  1; // FIXME calculate sum of sizes
 			hadoopJob.setNumReduceTasks(numRed); 
-			LOG.info("Setting Reduce tasks to " + numRed);
+			LOG.info("Setting EVAL Reduce tasks to " + numRed);
 
 			// SETTINGS
 			// set map output types
@@ -148,11 +199,13 @@ public class CalculationGroupConverter {
 
 
 			// set output path base (subdirs will be made)
-			Path dummyPath = fm.getOutputRoot().suffix("/"+hadoopJob.getJobName());
+			// FIXME this should be followed by a move when job is done
+			Path dummyPath = fm.getOutputRoot().suffix("/"+partition.getCanonicalOutString());
 			FileOutputFormat.setOutputPath(hadoopJob, dummyPath);
 
 
-			// TODO pass settings
+			// pass settings
+			configure(hadoopJob, calculations);
 
 			joblist.add(new ControlledJob(hadoopJob, null));
 
@@ -166,27 +219,137 @@ public class CalculationGroupConverter {
 	}
 
 	public List<CalculationGroup> group(CalculationUnitGroup partition) {
-		// TODO implement
-		return null;
+
+		// sample new relations
+		updateSamples();
+
+		// extract necessary files
+		// TODO why is this necessary?
+		extractor.setIncludeOutputDirs(true);
+		RelationFileMapping mapping = extractor.extractFileMapping(fm); 
+
+		// get the correct grouper
+		HadoopExecutorSettings settings = new HadoopExecutorSettings(conf);
+		Grouper grouper = GrouperFactory.createGrouper(mapping, settings, samples); // FIXME correct mapping
+
+		// apply grouping
+		List<CalculationGroup> groups = grouper.group(partition);
+
+		// add missing sample data if necessary
+		// create a job for each group
+		for (CalculationGroup group : groups) {
+
+			if (!group.hasInfo()) {
+				LOG.info("Missing size estimates, sampling data.");
+				addInfo(group, mapping, settings);
+			}
+		}
+
+		return groups;
 	}
 
-	private void configure(Job hadoopJob) {
+	private void addInfo(CalculationGroup group, RelationFileMapping mapping, HadoopExecutorSettings settings) {
+		// execute algorithm on sample
+		Simulator simulator = new Simulator(samples, fm.getFileMapping(), settings);
+		SimulatorReport report = simulator.execute(group);
+
+		// fill in parameters 
+		group.setGuardInBytes(report.getGuardInBytes());
+		group.setGuardedInBytes(report.getGuardedInBytes());
+		group.setGuardOutBytes(report.getGuardOutBytes());
+		group.setGuardedOutBytes(report.getGuardedOutBytes());
+	}
+
+	private void updateSamples() {
+		try {
+			if (this.rawSamples == null) 
+				rawSamples = new RelationSampleContainer();
+
+			RelationSampler sampler = new RelationSampler(fm.getFileMapping());
+			sampler.sample(rawSamples);
+
+			if (this.samples == null) {
+				samples = new RelationTupleSampleContainer(rawSamples, 0.1);
+			} else {
+				samples.update(rawSamples);
+			}
+		} catch (SamplingException e) {
+			LOG.error("Could not sample: " + e.getMessage());
+			LOG.warn("Trying to continue without sampling, possibly too few reducers will be allocated.");
+		}
+	}
+
+	private void configure(Job hadoopJob, Set<GFExistentialExpression> expressions) {
 		Configuration conf = hadoopJob.getConfiguration();
 
 		// queries
-		// TODO conf.set("gumbo.queries", value);
+		GFPrefixSerializer serializer = new GFPrefixSerializer();
+		conf.set("gumbo.queries", serializer.serializeSet(expressions));
 
 		// output mapping
-		// TODO conf.set("gumbo.outmap", value);
+		HashMap<String, String> outmap = new HashMap<>();
+		for (RelationSchema rs: fm.getOutFileMapping().getSchemas()) {
+			for (Path path : fm.getOutFileMapping().getPaths(rs)) {
+				outmap.put(rs.getName(), path.toString());
+			}
+		}
+		String outmapString = PropertySerializer.objectToString(outmap);
+		conf.set("gumbo.outmap", outmapString);
 
 		// file to id mapping
-		// TODO conf.set("gumbo.fileidmap", value);
+		HashMap<String, Long> fileidmap = new HashMap<>();
+		HashMap<Long, String> idrelmap = new HashMap<>();
+
+		// resolve paths
+		extractor.setIncludeOutputDirs(true);
+		RelationFileMapping mapping = extractor.extractFileMapping(fm);
+
+		List<Pair<RelationSchema, Path>> rspath = new ArrayList<>();
+		// for each rel
+		for (RelationSchema rs : mapping.getSchemas()) {
+			// determine paths
+			Set<Path> paths = mapping.getPaths(rs);
+			for (Path p : paths) {
+				rspath.add(new Pair<>(rs,p));
+			}
+
+		}
+
+		Comparator<Pair<RelationSchema, Path>> comp = new Comp();
+		Collections.sort(rspath, comp );
+
+		long i = 0;
+		for (Pair<RelationSchema, Path> p : rspath) {
+			fileidmap.put(p.snd.toString(), i);
+			idrelmap.put(i,p.fst.getName());
+			i++;
+		}
+
+		String fileidmapString = PropertySerializer.objectToString(fileidmap);
+		conf.set("gumbo.fileidmap", fileidmapString);
+
 
 		// file id to relation name mapping
-		// TODO conf.set("gumbo.filerelationmap", value);
+		String idrelmapString = PropertySerializer.objectToString(idrelmap);
+		conf.set("gumbo.filerelationmap", idrelmapString);
 
 		// atom-id mapping
-		// TODO conf.set("gumbo.atomidmap", value);
+		HashMap<String,Integer> atomidmap = new HashMap<>();
+		int maxatomid = 0;
+		for (GFExistentialExpression exp : expressions) {
+			for (GFAtomicExpression atom : exp.getAtomic()) {
+				int id = plan.getAtomId(atom);
+				atomidmap.put(atom.toString(), id);
+				maxatomid = Math.max(id, maxatomid);
+			}
+		}
+
+		String atomidmapString = PropertySerializer.objectToString(atomidmap);
+		conf.set("gumbo.atomidmap", atomidmapString);
+
+
+		// maximal atom id
+		conf.setInt("gumbo.maxatomid", maxatomid);
 	}
 
 

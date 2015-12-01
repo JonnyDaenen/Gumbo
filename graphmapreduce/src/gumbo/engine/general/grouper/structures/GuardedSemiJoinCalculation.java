@@ -52,6 +52,10 @@ public class GuardedSemiJoinCalculation {
 	
 	public GFExistentialExpression getExpression() {
 		return new GFExistentialExpression(guard, guarded, guard);
+	}
+
+	public String getCanonicalString() {
+		return guard + " |X " + guarded;
 	};
 	
 	

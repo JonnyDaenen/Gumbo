@@ -41,7 +41,7 @@ public class EvaluateReducer extends Reducer<VLongPair, GumboMessageWritable, Te
 		Set<GFExistentialExpression> queries = inspector.getQueries();
 		
 		// get mapping
-		Map<GFAtomicExpression, Integer> atomidmap = inspector.getAtomIdMap();
+		Map<String, Integer> atomidmap = inspector.getAtomIdMap();
 		
 		// get projections
 		projections = TupleOpFactory.createRed2Projections(queries, inspector.getOutMapping(), atomidmap);

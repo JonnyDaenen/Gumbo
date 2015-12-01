@@ -48,7 +48,7 @@ public class ValidateMapper extends Mapper<LongWritable, Text, BytesWritable, Gu
 		Set<GFExistentialExpression> queries = inspector.getQueries();
 		
 		// get atom id mapping
-		Map<GFAtomicExpression, Integer> atomidmap = inspector.getAtomIdMap();
+		Map<String, Integer> atomidmap = inspector.getAtomIdMap();
 		
 		// get projections
 		projections = TupleOpFactory.createMap1Projections(relation, fileid, queries, atomidmap);

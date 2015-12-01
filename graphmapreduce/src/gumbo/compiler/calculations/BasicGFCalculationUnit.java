@@ -3,9 +3,12 @@
  */
 package gumbo.compiler.calculations;
 
+import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -67,6 +70,22 @@ public class BasicGFCalculationUnit extends CalculationUnit {
 	@Override
 	public Set<RelationSchema> getInputRelations() {
 		return basicExpression.getRelationDependencies();
+	}
+
+	public GFAtomicExpression getGuardRelations() {
+		return basicExpression.getGuard();
+	}
+
+	// TODO this should be moved out!
+	public Set<GuardedSemiJoinCalculation> getSemiJoins() {
+		
+		HashSet<GuardedSemiJoinCalculation> result = new HashSet<>();
+		
+		GFAtomicExpression guard = basicExpression.getGuard();
+		for (GFAtomicExpression guarded : basicExpression.getGuardedAtoms()) {
+			result.add(new GuardedSemiJoinCalculation(guard, guarded));
+		}
+		return result;
 	}
 
 }

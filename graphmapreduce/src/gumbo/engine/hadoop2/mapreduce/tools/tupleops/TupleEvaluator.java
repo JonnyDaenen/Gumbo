@@ -44,7 +44,7 @@ public class TupleEvaluator {
 	
 	EqualityFilter ef;
 	
-	public TupleEvaluator(GFExistentialExpression e, String filename, Map<GFAtomicExpression, Integer> atomids) {
+	public TupleEvaluator(GFExistentialExpression e, String filename, Map<String, Integer> atomidmap) {
 		
 		this.filename = filename;
 		
@@ -75,7 +75,7 @@ public class TupleEvaluator {
 			
 			for (GFAtomicExpression atom : e.getGuardedAtoms()) {
 				BVariable var = varmapping.getVariable(atom);
-				mapping.put(atomids.get(atom), var.getID());
+				mapping.put(atomidmap.get(atom.toString()), var.getID());
 			}
 			
 			

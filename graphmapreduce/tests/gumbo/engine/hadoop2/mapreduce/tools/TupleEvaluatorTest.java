@@ -28,12 +28,12 @@ public class TupleEvaluatorTest {
 		
 		GFExistentialExpression e = new GFExistentialExpression(guard, child, out);
 		
-		Map<GFAtomicExpression, Integer> atomids;
-		atomids = new HashMap<GFAtomicExpression, Integer>();
-		atomids.put(guard, 1);
-		atomids.put(guarded1, 4);
-		atomids.put(guarded2, 6);
-		atomids.put(out, 5);
+		Map<String, Integer> atomids;
+		atomids = new HashMap<String, Integer>();
+		atomids.put(guard.toString(), 1);
+		atomids.put(guarded1.toString(), 4);
+		atomids.put(guarded2.toString(), 6);
+		atomids.put(out.toString(), 5);
 		
 		TupleEvaluator te = new TupleEvaluator(e, "outfile.txt", atomids);
 		
