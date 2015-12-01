@@ -182,7 +182,7 @@ public class CalculationGroupConverter {
 					Path intermediatePath = fm.getReference(canon);
 					LOG.info("Adding intermediate path:" + intermediatePath);
 					MultipleInputs.addInputPath(hadoopJob, intermediatePath, 
-							SequenceFileInputFormat.class, IdentityMapper.class);
+							SequenceFileInputFormat.class, Mapper.class);
 				}
 			}
 
