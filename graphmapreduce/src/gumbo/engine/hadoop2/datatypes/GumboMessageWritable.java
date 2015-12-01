@@ -324,7 +324,7 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		return new GumboMessageWritable(type.get(), fileid.get(), offset.get(), data.getBytes(), data.getLength());
 	}
 
-	public BytesWritable getAddressBytes(BytesWritable bw) {
+	public void getAddressBytes(BytesWritable bw) {
 		
 		if (buffer == null)
 			buffer = new DataOutputBuffer(32);
@@ -343,7 +343,6 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		int dataLength = buffer.getLength();
 		bw.set(data, 0, dataLength);
 		
-		return null;
 	}
 
 	public boolean containsAtomId(int i) {

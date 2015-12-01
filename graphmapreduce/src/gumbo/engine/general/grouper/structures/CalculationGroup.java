@@ -232,9 +232,9 @@ public class CalculationGroup {
 		StringBuffer sb = new StringBuffer(semijoins.size()*20);
 		
 		for (GuardedSemiJoinCalculation semijoin : semijoins) {
-			sb.append(semijoin.getGuard());
-			sb.append(semijoin.getGuarded());
-			sb.append(";");
+			sb.append(semijoin.getGuard().getRelationSchema().getCanonicalName());
+			sb.append(semijoin.getGuarded().getRelationSchema().getCanonicalName());
+			sb.append("-");
 		}
 		
 		return sb.toString();

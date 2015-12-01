@@ -66,7 +66,7 @@ public class TupleOpFactory {
 
 		// OPTIMIZE projection dependencies
 
-		return (TupleProjection[]) projections.toArray();
+		return projections.toArray(new TupleProjection[0]);
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class TupleOpFactory {
 
 		}
 
-		return (TupleEvaluator[]) projections.toArray();
+		return projections.toArray(new TupleEvaluator[0]);
 	}
 
 
@@ -111,7 +111,7 @@ public class TupleOpFactory {
 			}
 		}
 
-		return (TupleFilter[]) filters.toArray();
+		return filters.toArray(new TupleFilter[0]);
 	}
 
 }

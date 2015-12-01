@@ -126,6 +126,11 @@ public class RelationSchema {
 	public String getShortDescription() {
 		return getName() + getNumFields();
 	}
+
+
+	public String getCanonicalName() {
+		return getName() + getNumFields();
+	}
 	
 
 

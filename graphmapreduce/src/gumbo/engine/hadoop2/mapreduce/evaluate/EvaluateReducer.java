@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
@@ -17,7 +18,7 @@ import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleOpFactory;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 
-public class EvaluateReducer extends Reducer<VLongPair, GumboMessageWritable, Text, Text> {
+public class EvaluateReducer extends Reducer<BytesWritable, GumboMessageWritable, Text, Text> {
 
 	private Text output;
 	
@@ -27,7 +28,7 @@ public class EvaluateReducer extends Reducer<VLongPair, GumboMessageWritable, Te
 	private MultipleOutputs<Text, Text> mos;
 
 	@Override
-	protected void setup(Reducer<VLongPair, GumboMessageWritable, Text, Text>.Context context)
+	protected void setup(Reducer<BytesWritable, GumboMessageWritable, Text, Text>.Context context)
 			throws IOException, InterruptedException {
 		
 		output = new Text();
@@ -54,15 +55,15 @@ public class EvaluateReducer extends Reducer<VLongPair, GumboMessageWritable, Te
 	}
 	
 	@Override
-	protected void cleanup(Reducer<VLongPair, GumboMessageWritable, Text, Text>.Context context)
+	protected void cleanup(Reducer<BytesWritable, GumboMessageWritable, Text, Text>.Context context)
 			throws IOException, InterruptedException {
 		super.cleanup(context);
 		mos.close();
 	}
 	
 	@Override
-	protected void reduce(VLongPair key, Iterable<GumboMessageWritable> values,
-			Reducer<VLongPair, GumboMessageWritable, Text, Text>.Context context)
+	protected void reduce(BytesWritable key, Iterable<GumboMessageWritable> values,
+			Reducer<BytesWritable, GumboMessageWritable, Text, Text>.Context context)
 					throws IOException, InterruptedException {
 		
 		
@@ -80,6 +81,7 @@ public class EvaluateReducer extends Reducer<VLongPair, GumboMessageWritable, Te
 			}
 		}
 		
+		// TODO check if data value is missing
 		for (TupleEvaluator pi : projections) {
 			if (buffer.load(pi, output)) {
 				mos.write((Text)null, output, pi.getFilename());

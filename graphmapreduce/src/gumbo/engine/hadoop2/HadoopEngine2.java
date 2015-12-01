@@ -69,7 +69,7 @@ public class HadoopEngine2 {
 
 		}
 		
-		LOG.error("Stopping job control");
+		LOG.info("Stopping job control");
 		jc.stop();
 	}
 
@@ -141,6 +141,7 @@ public class HadoopEngine2 {
 	
 	private void waitForJC() throws InterruptedException{
 		while (!jc.allFinished()){
+			LOG.info("Waiting for jobs");
 			Thread.sleep(WAIT);
 		}
 	}

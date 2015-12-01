@@ -113,6 +113,7 @@ public class QuickWrappedTuple {
 		if (bytelength > 0) {
 			startList.add(start);
 			lengthList.add(bytelength);
+			maxlength = Math.max(maxlength, bytelength);
 		}
 
 	}
@@ -202,7 +203,7 @@ public class QuickWrappedTuple {
 		return true;
 	}
 
-	
+
 
 	/**
 	 * Checks whether two fields are equal in size and content.
@@ -265,7 +266,7 @@ public class QuickWrappedTuple {
 
 	public void project(byte[] keyFields, BytesWritable output) {
 		// set extra_buffer limits to full tuple
-		setCapacity(keyFields.length * (maxlength + 1));
+		setCapacity(keyFields.length * (maxlength + commabytes.length));
 
 		// OPTIMIZE make ByteBuffer a field
 		ByteBuffer buffer = ByteBuffer.wrap(extra_buffer);

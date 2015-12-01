@@ -20,9 +20,11 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
+import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 
 import gumbo.compiler.GumboPlan;
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
@@ -44,6 +46,7 @@ import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.mapreduce.evaluate.EvaluateMapper;
 import gumbo.engine.hadoop2.mapreduce.evaluate.EvaluateReducer;
+import gumbo.engine.hadoop2.mapreduce.evaluate.IdentityMapper;
 import gumbo.engine.hadoop2.mapreduce.multivalidate.ValidateMapper;
 import gumbo.engine.hadoop2.mapreduce.multivalidate.ValidateReducer;
 import gumbo.engine.hadoop2.mapreduce.tools.PropertySerializer;
@@ -114,6 +117,7 @@ public class CalculationGroupConverter {
 			// set reduce output types
 			hadoopJob.setOutputKeyClass(BytesWritable.class);
 			hadoopJob.setOutputValueClass(GumboMessageWritable.class);
+			hadoopJob.setOutputFormatClass(SequenceFileOutputFormat.class);
 
 
 			// set output path
@@ -167,6 +171,7 @@ public class CalculationGroupConverter {
 				RelationSchema rs = bgfcu.getGuardRelations().getRelationSchema();
 				Set<Path> paths = fm.getFileMapping().getPaths(rs);
 				for(Path path : paths) {
+					LOG.info("Adding guard path:" + path);
 					MultipleInputs.addInputPath(hadoopJob, path, 
 							TextInputFormat.class, EvaluateMapper.class);
 				}
@@ -175,8 +180,9 @@ public class CalculationGroupConverter {
 				for (GuardedSemiJoinCalculation sj : bgfcu.getSemiJoins()) {  
 					String canon = sj.getCanonicalString();
 					Path intermediatePath = fm.getReference(canon);
+					LOG.info("Adding intermediate path:" + intermediatePath);
 					MultipleInputs.addInputPath(hadoopJob, intermediatePath, 
-							TextInputFormat.class, Mapper.class);
+							SequenceFileInputFormat.class, IdentityMapper.class);
 				}
 			}
 
@@ -265,7 +271,11 @@ public class CalculationGroupConverter {
 			if (this.rawSamples == null) 
 				rawSamples = new RelationSampleContainer();
 
-			RelationSampler sampler = new RelationSampler(fm.getFileMapping());
+			// resolve paths
+			extractor.setIncludeOutputDirs(true);
+			RelationFileMapping mapping = extractor.extractFileMapping(fm);
+			
+			RelationSampler sampler = new RelationSampler(mapping);
 			sampler.sample(rawSamples);
 
 			if (this.samples == null) {
@@ -275,6 +285,7 @@ public class CalculationGroupConverter {
 			}
 		} catch (SamplingException e) {
 			LOG.error("Could not sample: " + e.getMessage());
+			e.printStackTrace();
 			LOG.warn("Trying to continue without sampling, possibly too few reducers will be allocated.");
 		}
 	}

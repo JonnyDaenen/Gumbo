@@ -59,8 +59,8 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, BytesWritable, Gu
 		// get relation
 		String relation = inspector.getRelationName(fileid);
 		
-		// get guarded atoms
-		Set<GFAtomicExpression> atoms = inspector.getGuardedAtoms();
+		// get guard atoms
+		Set<GFAtomicExpression> atoms = inspector.getGuardAtoms();
 
 		// create filter
 		filters = TupleOpFactory.createMap2Filter(atoms, relation);
@@ -72,7 +72,6 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, BytesWritable, Gu
 			Mapper<LongWritable, Text, BytesWritable, GumboMessageWritable>.Context context)
 					throws IOException, InterruptedException {
 
-		
 
 		qt.initialize(value);
 		

@@ -18,6 +18,7 @@ import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.general.utils.FileMappingExtractor;
 import gumbo.engine.hadoop.HadoopEngine;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.engine.hadoop2.HadoopEngine2;
 import gumbo.input.GumboFileParser;
 import gumbo.input.GumboQuery;
 
@@ -51,7 +52,7 @@ public class Gumbo extends Configured implements Tool {
 
 	public int run(String[] args) throws Exception {
 		
-		Thread.sleep(5000);
+//		Thread.sleep(5000);
 
 		String tmpdir = getConf().get("java.io.tmpdir");
 		if (tmpdir != null)
@@ -144,10 +145,10 @@ public class Gumbo extends Configured implements Tool {
 			System.exit(0);
 		} else {
 
-			HadoopEngine engine = new HadoopEngine();
+			HadoopEngine2 engine = new HadoopEngine2();
 			engine.executePlan(plan,settings.getConf());
 
-			System.out.println(engine.getCounters());
+//			System.out.println(engine.getCounters());
 		}
 		return 0;
 	}

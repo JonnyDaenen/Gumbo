@@ -68,19 +68,19 @@ public class ContextInspector {
 
 			// output mapping
 			String outmapString = conf.get("gumbo.outmap");
-			outmap = PropertySerializer.stringToObject(outmapString, outmap.getClass());
+			outmap = PropertySerializer.stringToObject(outmapString, HashMap.class);
 
 			// file to id mapping
 			String filemapString = conf.get("gumbo.fileidmap");
-			fileidmap = PropertySerializer.stringToObject(filemapString, fileidmap.getClass());
+			fileidmap = PropertySerializer.stringToObject(filemapString, HashMap.class);
 
 			// file id to relation name mapping
 			String filerelmap = conf.get("gumbo.filerelationmap");
-			filerelationmap = PropertySerializer.stringToObject(filerelmap, filerelationmap.getClass());
+			filerelationmap = PropertySerializer.stringToObject(filerelmap, HashMap.class);
 
 			// atom-id mapping
 			String atomidMapString = conf.get("gumbo.atomidmap");
-			atomidmap = PropertySerializer.stringToObject(atomidMapString, atomidmap.getClass());
+			atomidmap = PropertySerializer.stringToObject(atomidMapString, HashMap.class);
 
 			// highest id
 			maxatomid = conf.getInt("gumbo.maxatomid", 32);
@@ -164,6 +164,15 @@ public class ContextInspector {
 		}
 		return atoms;
 	}
+	
+	public Set<GFAtomicExpression> getGuardAtoms() {
+		HashSet<GFAtomicExpression> atoms = new HashSet<>();
+		for (GFExistentialExpression query : queries){
+			atoms.add(query.getGuard());
+		}
+		return atoms;
+	}
+
 
 	/**
 	 * Returns the mapping from out relation names to filenames.
@@ -188,6 +197,7 @@ public class ContextInspector {
 		return maxatomid;
 	}
 
+	
 
 
 
