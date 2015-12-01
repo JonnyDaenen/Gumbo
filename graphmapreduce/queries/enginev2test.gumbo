@@ -4,8 +4,8 @@ Scratch -> scratch/gumbov2
 Output -> output/gumbov2
 
 // input
-R,2 <- input/enginev2test/2/R, CSV
-S,1 <- input/enginev2test/2/S, CSV
+R,2 <- input/enginev2test/3/R, CSV
+S,1 <- input/enginev2test/3/S, CSV
 
 // queries
 #Out(x2)&R(x1,x2)S(x1);

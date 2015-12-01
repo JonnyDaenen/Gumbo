@@ -34,7 +34,7 @@ public class RequestBuffer {
 	public void addAtomIds(GumboMessageWritable value) {
 
 		// get Atom id bytes
-		BytesWritable bw = value.getData();
+		VBytesWritable bw = value.getData();
 		byte [] ids = bw.getBytes();
 		int size = bw.getLength();
 
@@ -84,7 +84,7 @@ public class RequestBuffer {
 	 */
 	private boolean filter(GumboMessageWritable current) {
 
-		BytesWritable bw = current.getData();
+		VBytesWritable bw = current.getData();
 		byte [] ids = bw.getBytes();
 		int size = bw.getLength();
 

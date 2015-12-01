@@ -4,6 +4,7 @@ import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
+import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleEvaluator;
 
@@ -39,7 +40,7 @@ public class ConfirmBuffer {
 	 */
 	public void setMessage(GumboMessageWritable value) {
 		// copy content data to local buffer
-		BytesWritable bw = value.getData();
+		VBytesWritable bw = value.getData();
 		setCapacity(bw.getLength());
 		System.arraycopy(bw.getBytes(), 0, data, 0, length);
 	}
@@ -50,7 +51,7 @@ public class ConfirmBuffer {
 	 */
 	public void addAtomIDs(GumboMessageWritable value) {
 
-		BytesWritable bw = value.getData();
+		VBytesWritable bw = value.getData();
 		byte [] ids = bw.getBytes();
 		int size = bw.getLength();
 
