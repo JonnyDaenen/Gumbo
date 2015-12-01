@@ -97,7 +97,7 @@ public class VLongPair implements WritableComparable<VLongPair> {
 		@Override
 		public int compare(byte[] b1, int s1, int l1, byte[] b2, int s2, int l2) {
 
-			return BYTES_COMPARATOR.compare(b1, s1, l1, b2, s2, l2); // FIXME compare sizes first
+			return BYTES_COMPARATOR.compare(b1, s1, l1, b2, s2, l2);
 			
 //			int firstL1 = WritableUtils.decodeVIntSize(b1[s1]); 
 //			int firstL2 = WritableUtils.decodeVIntSize(b2[s2]); 
