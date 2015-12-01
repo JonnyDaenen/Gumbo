@@ -28,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.io.SequenceFile.ValueBytes;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -52,7 +53,7 @@ public class Gumbo extends Configured implements Tool {
 
 	public int run(String[] args) throws Exception {
 		
-//		Thread.sleep(5000);
+		Thread.sleep(5000);
 
 		String tmpdir = getConf().get("java.io.tmpdir");
 		if (tmpdir != null)
@@ -151,6 +152,7 @@ public class Gumbo extends Configured implements Tool {
 //			System.out.println(engine.getCounters());
 		}
 		return 0;
+		
 	}
 
 

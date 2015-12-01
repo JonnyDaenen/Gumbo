@@ -10,6 +10,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
+import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.datatypes.VLongPair;
 import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
 import gumbo.engine.hadoop2.mapreduce.tools.buffers.ConfirmBuffer;
@@ -18,7 +19,7 @@ import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleOpFactory;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 
-public class EvaluateReducer extends Reducer<BytesWritable, GumboMessageWritable, Text, Text> {
+public class EvaluateReducer extends Reducer<VBytesWritable, GumboMessageWritable, Text, Text> {
 
 	private Text output;
 	
@@ -28,7 +29,7 @@ public class EvaluateReducer extends Reducer<BytesWritable, GumboMessageWritable
 	private MultipleOutputs<Text, Text> mos;
 
 	@Override
-	protected void setup(Reducer<BytesWritable, GumboMessageWritable, Text, Text>.Context context)
+	protected void setup(Reducer<VBytesWritable, GumboMessageWritable, Text, Text>.Context context)
 			throws IOException, InterruptedException {
 		
 		output = new Text();
@@ -55,15 +56,15 @@ public class EvaluateReducer extends Reducer<BytesWritable, GumboMessageWritable
 	}
 	
 	@Override
-	protected void cleanup(Reducer<BytesWritable, GumboMessageWritable, Text, Text>.Context context)
+	protected void cleanup(Reducer<VBytesWritable, GumboMessageWritable, Text, Text>.Context context)
 			throws IOException, InterruptedException {
 		super.cleanup(context);
 		mos.close();
 	}
 	
 	@Override
-	protected void reduce(BytesWritable key, Iterable<GumboMessageWritable> values,
-			Reducer<BytesWritable, GumboMessageWritable, Text, Text>.Context context)
+	protected void reduce(VBytesWritable key, Iterable<GumboMessageWritable> values,
+			Reducer<VBytesWritable, GumboMessageWritable, Text, Text>.Context context)
 					throws IOException, InterruptedException {
 		
 		

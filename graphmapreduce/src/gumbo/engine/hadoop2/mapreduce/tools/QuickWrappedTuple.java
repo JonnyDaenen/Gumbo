@@ -9,6 +9,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 
+import gumbo.engine.hadoop2.datatypes.VBytesWritable;
+
 /**
  * Wrapper for tuples in byte representation.
  * 
@@ -264,7 +266,7 @@ public class QuickWrappedTuple {
 		output.set(extra_buffer, 0, extra_length);
 	}
 
-	public void project(byte[] keyFields, BytesWritable output) {
+	public void project(byte[] keyFields, VBytesWritable output) {
 		// set extra_buffer limits to full tuple
 		setCapacity(keyFields.length * (maxlength + commabytes.length));
 
@@ -282,6 +284,8 @@ public class QuickWrappedTuple {
 		output.set(extra_buffer, 0, extra_length);
 
 	}
+
+	
 
 
 

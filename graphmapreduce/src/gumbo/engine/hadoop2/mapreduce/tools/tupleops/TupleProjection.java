@@ -3,6 +3,7 @@ package gumbo.engine.hadoop2.mapreduce.tools.tupleops;
 import org.apache.hadoop.io.BytesWritable;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
+import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
 
 /**
@@ -13,6 +14,6 @@ import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
  */
 public interface TupleProjection {
 
-	public boolean load(QuickWrappedTuple qt, long offset, BytesWritable bw, GumboMessageWritable gw);
+	public boolean load(QuickWrappedTuple qt, long offset, VBytesWritable bw, GumboMessageWritable gw);
 
 }

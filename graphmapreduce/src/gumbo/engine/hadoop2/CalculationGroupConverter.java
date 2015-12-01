@@ -46,6 +46,7 @@ import gumbo.engine.general.utils.FileMappingExtractor;
 import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
+import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.mapreduce.evaluate.EvaluateMapper;
 import gumbo.engine.hadoop2.mapreduce.evaluate.EvaluateReducer;
 import gumbo.engine.hadoop2.mapreduce.evaluate.IdentityMapper;
@@ -113,11 +114,11 @@ public class CalculationGroupConverter {
 
 			// SETTINGS
 			// set map output types
-			hadoopJob.setMapOutputKeyClass(BytesWritable.class);
+			hadoopJob.setMapOutputKeyClass(VBytesWritable.class);
 			hadoopJob.setMapOutputValueClass(GumboMessageWritable.class);
 
 			// set reduce output types
-			hadoopJob.setOutputKeyClass(BytesWritable.class);
+			hadoopJob.setOutputKeyClass(VBytesWritable.class);
 			hadoopJob.setOutputValueClass(GumboMessageWritable.class);
 			hadoopJob.setOutputFormatClass(SequenceFileOutputFormat.class);
 
@@ -198,7 +199,7 @@ public class CalculationGroupConverter {
 
 			// SETTINGS
 			// set map output types
-			hadoopJob.setMapOutputKeyClass(BytesWritable.class);
+			hadoopJob.setMapOutputKeyClass(VBytesWritable.class);
 			hadoopJob.setMapOutputValueClass(GumboMessageWritable.class);
 
 			// set reduce output types

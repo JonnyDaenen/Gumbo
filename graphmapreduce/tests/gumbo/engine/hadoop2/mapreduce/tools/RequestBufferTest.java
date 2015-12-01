@@ -11,6 +11,7 @@ import org.apache.hadoop.io.VLongWritable;
 import org.junit.Test;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
+import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.mapreduce.tools.buffers.RequestBuffer;
 
 public class RequestBufferTest {
@@ -45,7 +46,7 @@ public class RequestBufferTest {
 		assertFalse("OOB atom presence 6", rb.containsAtomID(6));
 		
 		
-		BytesWritable bw = new BytesWritable();
+		VBytesWritable bw = new VBytesWritable();
 		GumboMessageWritable gw = new GumboMessageWritable();
 		rb.load(1, bw, gw);
 		

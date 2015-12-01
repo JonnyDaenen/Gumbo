@@ -12,6 +12,7 @@ import org.apache.hadoop.io.VLongWritable;
 import org.junit.Test;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
+import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.GuardProjection;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.GuardedProjection;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
@@ -29,7 +30,7 @@ public class ProjectionTest {
 		QuickWrappedTuple qt = new QuickWrappedTuple();
 		qt.initialize(new Text("1,2,1"));
 
-		BytesWritable bw = new BytesWritable();
+		VBytesWritable bw = new VBytesWritable();
 		GumboMessageWritable gw = new GumboMessageWritable();
 
 		boolean result = gp.load(qt, 200, bw, gw);
@@ -65,7 +66,7 @@ public class ProjectionTest {
 		QuickWrappedTuple qt = new QuickWrappedTuple();
 		qt.initialize(new Text("1,2,1"));
 
-		BytesWritable bw = new BytesWritable();
+		VBytesWritable bw = new VBytesWritable();
 		GumboMessageWritable gw = new GumboMessageWritable();
 
 		boolean result = gp.load(qt, 0, bw, gw);

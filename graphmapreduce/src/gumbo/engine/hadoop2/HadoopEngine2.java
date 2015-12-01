@@ -86,7 +86,10 @@ public class HadoopEngine2 {
 		initJobControl(plan);
 		
 		try {
+			long start = System.nanoTime();
 			createAndExecuteJobs(plan, plan.getPartitions());
+			long stop = System.nanoTime();
+			LOG.info("Running time: " + (stop-start)/1000000 + "ms");
 		} catch (InterruptedException e) {
 			LOG.error("Plan execution was interrupted!");
 			e.printStackTrace();

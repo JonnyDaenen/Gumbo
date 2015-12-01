@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.hadoop.io.BytesWritable;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
+import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.io.Pair;
@@ -34,7 +35,7 @@ public class GuardedProjection extends GuardProjection {
 	 *  @return true iff writables should be written to output
 	 */
 	@Override
-	public boolean load(QuickWrappedTuple qt, long offset, BytesWritable bw, GumboMessageWritable gw) {
+	public boolean load(QuickWrappedTuple qt, long offset, VBytesWritable bw, GumboMessageWritable gw) {
 		
 		// if tuple conforms to fields
 		if (!ef.check(qt))

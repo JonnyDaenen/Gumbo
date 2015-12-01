@@ -9,19 +9,19 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import gumbo.engine.hadoop.mrcomponents.round1.reducers.GFReducer1Optimized;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
+import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
 import gumbo.engine.hadoop2.mapreduce.tools.buffers.RequestBuffer;
 
-public class ValidateReducer extends Reducer<BytesWritable, GumboMessageWritable, BytesWritable, GumboMessageWritable> {
+public class ValidateReducer extends Reducer<VBytesWritable, GumboMessageWritable, VBytesWritable, GumboMessageWritable> {
 
 	private static final Log LOG = LogFactory.getLog(GFReducer1Optimized.class);
 
 
 	private GumboMessageWritable gw;
-	private BytesWritable bw;
+	private VBytesWritable bw;
 
 	private RequestBuffer buffer;
-
 
 
 	/**
@@ -34,7 +34,7 @@ public class ValidateReducer extends Reducer<BytesWritable, GumboMessageWritable
 		super.setup(context);
 
 		gw = new GumboMessageWritable();
-		bw = new BytesWritable();
+		bw = new VBytesWritable();
 		
 		// get max atom id
 		
@@ -42,17 +42,13 @@ public class ValidateReducer extends Reducer<BytesWritable, GumboMessageWritable
 		int maxAtomID = ci.getMaxAtomID();
 		
 		buffer = new RequestBuffer(maxAtomID);
-		
+	
 	}
 
-	@Override
-	protected void cleanup(Context context) throws IOException, InterruptedException {
-		
-	}
 	
 	@Override
-	protected void reduce(BytesWritable key, Iterable<GumboMessageWritable> values,
-			Reducer<BytesWritable, GumboMessageWritable, BytesWritable, GumboMessageWritable>.Context context)
+	protected void reduce(VBytesWritable key, Iterable<GumboMessageWritable> values,
+			Reducer<VBytesWritable, GumboMessageWritable, VBytesWritable, GumboMessageWritable>.Context context)
 					throws IOException, InterruptedException {
 		
 

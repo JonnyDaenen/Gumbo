@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.hadoop.io.BytesWritable;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
+import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 
 public class RequestBuffer {
 
@@ -55,7 +56,7 @@ public class RequestBuffer {
 	 * @param gw value message to be filled
 	 * @return true iff the writables were set, false if the writables should not be written to output
 	 */
-	public boolean load(int i, BytesWritable bw, GumboMessageWritable gw) {
+	public boolean load(int i, VBytesWritable bw, GumboMessageWritable gw) {
 
 		GumboMessageWritable current = buffer.get(i);
 

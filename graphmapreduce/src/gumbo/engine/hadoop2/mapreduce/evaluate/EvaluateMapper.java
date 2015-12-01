@@ -12,16 +12,17 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable.GumboMessageType;
+import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleFilter;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleOpFactory;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 
-public class EvaluateMapper extends Mapper<LongWritable, Text, BytesWritable, GumboMessageWritable> {
+public class EvaluateMapper extends Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable> {
 
 
-	private BytesWritable bw;
+	private VBytesWritable bw;
 	private GumboMessageWritable gw;
 	
 	// intermediate key buffers
@@ -34,11 +35,11 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, BytesWritable, Gu
 	private DataOutputBuffer buffer;
 
 	@Override
-	protected void setup(Mapper<LongWritable, Text, BytesWritable, GumboMessageWritable>.Context context)
+	protected void setup(Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable>.Context context)
 			throws IOException, InterruptedException {
 		super.setup(context);
 
-		bw = new BytesWritable();
+		bw = new VBytesWritable();
 		gw = new GumboMessageWritable();
 		gw.setType(GumboMessageType.DATA);
 		qt = new QuickWrappedTuple();
@@ -69,7 +70,7 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, BytesWritable, Gu
 
 	@Override
 	protected void map(LongWritable key, Text value,
-			Mapper<LongWritable, Text, BytesWritable, GumboMessageWritable>.Context context)
+			Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable>.Context context)
 					throws IOException, InterruptedException {
 
 
