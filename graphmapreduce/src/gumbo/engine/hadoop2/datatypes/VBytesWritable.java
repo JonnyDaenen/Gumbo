@@ -258,6 +258,7 @@ implements WritableComparable<BinaryComparable> {
 				s2++;
 			}
 
+			// compare leftovers
 			if (i1 != i2)
 				return i1 - i2;
 
