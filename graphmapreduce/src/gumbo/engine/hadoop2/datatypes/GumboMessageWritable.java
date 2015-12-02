@@ -46,10 +46,12 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 
 	public GumboMessageWritable(byte type, long fileid, long offset, byte [] data, int length) {
 
+		VBytesWritable b = new VBytesWritable();
+		b.set(data, 0, length);
 		set(new ByteWritable(type),
 				new VLongWritable(fileid),
 				new VLongWritable(offset),
-				new VBytesWritable(data, length));
+				b);
 	}
 
 	public void set(ByteWritable type, VLongWritable fileid, VLongWritable offset, VBytesWritable data) {

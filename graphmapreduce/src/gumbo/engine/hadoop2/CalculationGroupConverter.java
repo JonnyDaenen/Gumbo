@@ -193,7 +193,7 @@ public class CalculationGroupConverter {
 			// REDUCER
 			hadoopJob.setReducerClass(EvaluateReducer.class); 
 
-			int numRed =  30; // FIXME calculate sum of sizes
+			int numRed =  1; // FIXME calculate sum of sizes
 			hadoopJob.setNumReduceTasks(numRed); 
 			LOG.info("Setting EVAL Reduce tasks to " + numRed);
 

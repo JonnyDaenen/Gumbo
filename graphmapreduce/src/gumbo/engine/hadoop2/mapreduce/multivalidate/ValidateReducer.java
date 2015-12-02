@@ -53,9 +53,12 @@ public class ValidateReducer extends Reducer<VBytesWritable, GumboMessageWritabl
 		
 
 		buffer.reset();
+
+		System.out.println("input key:\t" + key);
 		
 		// consider all incoming messages
 		for (GumboMessageWritable value : values) {
+			System.out.println("input val:\t" + value);
 			
 			// check atoms ids that are present
 			if (value.isAssert()) {

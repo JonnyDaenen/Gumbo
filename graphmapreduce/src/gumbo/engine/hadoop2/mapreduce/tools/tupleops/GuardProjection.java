@@ -57,7 +57,7 @@ public class GuardProjection implements TupleProjection {
 		int i = 0;
 		for (String var : vars) {
 			for (int j = 0; j < gvars.length; j++)
-				if (gvars[j] == var){
+				if (gvars[j].equals(var)){
 					keyEt[i++] = (byte) fields.equality[j];
 					break;
 				}
