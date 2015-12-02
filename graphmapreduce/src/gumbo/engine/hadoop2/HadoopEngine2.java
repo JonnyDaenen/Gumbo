@@ -151,10 +151,12 @@ public class HadoopEngine2 {
 	}
 	
 	private void waitForJC() throws InterruptedException{
+		LOG.info("Waiting for jobs");
 		while (!jc.allFinished()){
-			LOG.info("Waiting for jobs");
-			Thread.sleep(WAIT);
+			Thread.yield();
+//			Thread.sleep(WAIT);
 		}
+		LOG.info("Jobs are done.");
 	}
 
 	
