@@ -77,6 +77,8 @@ public class ValidateReducer extends Reducer<VBytesWritable, GumboMessageWritabl
 			// process and output them if necessary
 			if (buffer.load(i, bw, gw)) {
 				context.write(bw, gw);
+//				System.out.println("key:\t" + bw);
+//				System.out.println("val:\t" + gw);
 			}
 		}
 		
