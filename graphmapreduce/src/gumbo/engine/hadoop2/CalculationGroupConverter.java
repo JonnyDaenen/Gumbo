@@ -200,7 +200,7 @@ public class CalculationGroupConverter {
 
 			long size = calculateSize(inputPaths);
 
-			int numRed = (int)Math.max(1, size / 128 * 1024 * 1024); // FIXME use settings
+			int numRed = (int)Math.max(1, size / (128 * 1024 * 1024)); // FIXME use settings
 			hadoopJob.setNumReduceTasks(numRed); 
 			LOG.info("Setting EVAL Reduce tasks to " + numRed);
 

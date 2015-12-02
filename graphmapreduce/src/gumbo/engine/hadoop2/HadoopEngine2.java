@@ -154,7 +154,7 @@ public class HadoopEngine2 {
 		LOG.info("Waiting for jobs");
 		while (!jc.allFinished()){
 			Thread.yield();
-//			Thread.sleep(WAIT);
+			Thread.sleep(WAIT);
 		}
 		LOG.info("Jobs are done.");
 	}
