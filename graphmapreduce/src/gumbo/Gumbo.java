@@ -146,7 +146,7 @@ public class Gumbo extends Configured implements Tool {
 			System.exit(0);
 		} else {
 
-			HadoopEngine engine = new HadoopEngine();
+			HadoopEngine2 engine = new HadoopEngine2();
 			engine.executePlan(plan,settings.getConf());
 
 //			System.out.println(engine.getCounters());
