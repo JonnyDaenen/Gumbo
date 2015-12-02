@@ -234,62 +234,49 @@ implements WritableComparable<BinaryComparable> {
 			if (l1 != l2)
 				return l1 - l2;
 
-			// compare first 4 bytes
-			if (l1 >= 4){
-				int i1 = 0;
+			int i1 = 0; 
+			int i2 = 0;
+
+			// compare until 8-multiple remains
+			// so that underlying overflow is not called
+
+			int extra = l1 % 8;
+			for (int i = 0; i < extra; i++){
+
 				i1 = (i1 << 8) | b1[s1];
-				i1 = (i1 << 8) | b1[s1+1];
-				i1 = (i1 << 8) | b1[s1+2];
-				i1 = (i1 << 8) | b1[s1+3];
-				int i2 = 0;
 				i2 = (i2 << 8) | b2[s2];
-				i2 = (i2 << 8) | b2[s2+1];
-				i2 = (i2 << 8) | b2[s2+2];
-				i2 = (i2 << 8) | b2[s2+3];
-				
-				if (i1 != i2)
-					return i1 - i2;
-				else {
-					// adjust buffer
-					s1 += 4;
-					s2 += 4;
-					l1 -= 4;
-					l2 = l1;
-					
 
-					// TODO compare until 8-multiple remains
-					// so that underlying overflow is not called
-					int extra = l1 % 8;
-					for (int i = 0; i < extra; i++){
-						i1 = b1[s1+i];
-						i2 = b2[s2+i];
-						if (i1 != i2)
-							return i1 - i2;
-					}
-
-					// adjust buffer	
-					s1 += extra;
-					s2 += extra;
-					l1 -= extra;
-					l2 = l1;
-					
-					// full compare the rest
-					return compareBytes(b1, s1, l1, 
-							b2, s2, l2);
-				}
-			} else {
-				for (int i = 0; i < l1; i++){
-					int i1 = b1[s1+i];
-					int i2 = b2[s2+i];
+				// when int is full, we compare and reset
+				if ( i == 3) {
 					if (i1 != i2)
 						return i1 - i2;
+					i1 = 0;
+					i2 = 0;
 				}
-				return 0;
+
+				s1++;
+				s2++;
 			}
+
+			if (i1 != i2)
+				return i1 - i2;
+
+			if (l1 == extra)
+				return 0;
+
+			// adjust buffer sizes	
+			l1 -= extra;
+			l2 = l1;
+
+			// full compare the rest
+			return compareBytes(b1, s1, l1, 
+					b2, s2, l2);
 		}
+
+
+		
 	}
 	
-
 	static {                                        // register this comparator
 		WritableComparator.define(VBytesWritable.class, new Comparator());
 	}
