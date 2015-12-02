@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.hadoop.fs.ContentSummary;
 import org.apache.hadoop.fs.Path;
 
 /**

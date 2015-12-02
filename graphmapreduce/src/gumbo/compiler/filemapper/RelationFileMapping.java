@@ -54,6 +54,7 @@ public class RelationFileMapping {
 		//		Path cp = new Path("data/jonny1");
 
 
+//		System.out.println(rm.getInputSize(new Path("input/")));
 		System.out.println(rm);
 
 

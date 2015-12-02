@@ -13,6 +13,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.ContentSummary;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -164,6 +165,7 @@ public class CalculationGroupConverter {
 
 			// MAPPER
 			// couple guard input files
+			Set<Path> inputPaths = new HashSet<Path>();
 			Set<GFExistentialExpression> calculations = new HashSet<>();
 			for (CalculationUnit cu : partition.getCalculations()) {
 
@@ -177,6 +179,7 @@ public class CalculationGroupConverter {
 					LOG.info("Adding guard path:" + path);
 					MultipleInputs.addInputPath(hadoopJob, path, 
 							TextInputFormat.class, EvaluateMapper.class);
+					inputPaths.add(path);
 				}
 
 				// intermediate semi-joins results
@@ -186,6 +189,8 @@ public class CalculationGroupConverter {
 					LOG.info("Adding intermediate path:" + intermediatePath);
 					MultipleInputs.addInputPath(hadoopJob, intermediatePath, 
 							SequenceFileInputFormat.class, Mapper.class);
+
+					inputPaths.add(intermediatePath);
 				}
 			}
 
@@ -193,7 +198,9 @@ public class CalculationGroupConverter {
 			// REDUCER
 			hadoopJob.setReducerClass(EvaluateReducer.class); 
 
-			int numRed =  1; // FIXME calculate sum of sizes
+			long size = calculateSize(inputPaths);
+
+			int numRed = (int)Math.max(1, size / 128 * 1024 * 1024); // FIXME use settings
 			hadoopJob.setNumReduceTasks(numRed); 
 			LOG.info("Setting EVAL Reduce tasks to " + numRed);
 
@@ -208,8 +215,7 @@ public class CalculationGroupConverter {
 
 
 			// set output path base (subdirs will be made)
-			// FIXME this should be followed by a move when job is done
-			Path dummyPath = fm.getOutputRoot().suffix("/"+partition.getCanonicalOutString());
+			Path dummyPath = fm.getOutputRoot().suffix(Path.SEPARATOR +partition.getCanonicalOutString());
 			FileOutputFormat.setOutputPath(hadoopJob, dummyPath);
 
 
@@ -225,6 +231,21 @@ public class CalculationGroupConverter {
 		} 
 		return joblist;
 
+	}
+
+	private long calculateSize(Set<Path> inputPaths) {
+		long size = 0;
+		for (Path path : inputPaths) {
+			FileSystem hdfs;
+			try {
+				hdfs = path.getFileSystem(conf);
+				ContentSummary cSummary = hdfs.getContentSummary(path);
+				size += cSummary.getLength();
+			} catch (IOException e) {
+				LOG.warn("Could not determine size of path " + path + " reducer estimate may be wrong.", e);
+			}
+		}
+		return size;
 	}
 
 	public List<CalculationGroup> group(CalculationUnitGroup partition) {
@@ -367,15 +388,15 @@ public class CalculationGroupConverter {
 	}
 
 	public void moveOutputFiles(CalculationUnitGroup partition) throws IOException {
-		
-		
+
+
 
 		FileSystem dfs = FileSystem.get(conf);
-		
+
 		for ( RelationSchema rs:  partition.getOutputRelations()) {
 			Path from = fm.getOutputRoot().suffix(Path.SEPARATOR + partition.getCanonicalOutString() + Path.SEPARATOR + rs.getName()+ "-r-*");
 			Path to = fm.getOutFileMapping().getPaths(rs).iterator().next();
-			
+
 			dfs.mkdirs(to);
 			FileStatus[] files = dfs.globStatus(from);
 			for(FileStatus file: files) {
@@ -385,10 +406,10 @@ public class CalculationGroupConverter {
 				}
 				// TODO perform merge
 			}
-			
+
 		}
 
-		
+
 
 
 
