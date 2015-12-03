@@ -72,6 +72,7 @@ public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 		// create QuickTuple
 		qt.initialize(value);
 		
+		
 		// for each guard atom
 		for (int i = 0; i < projections.length; i++) {
 			
@@ -91,6 +92,7 @@ public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 		for (Pair<VBytesWritable, GumboMessageWritable> kvpair : packer.pack()) {
 			context.write(kvpair.fst, kvpair.snd);
 		}
+		packer.clear();
 		
 		
 	}

@@ -398,13 +398,17 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 
 			if (buffer == null)
 				buffer = new DataOutputBuffer(32);
-
+			else {
+				buffer.reset();
+			}
 			buffer.write(data.getBytes(), 0, data.getLength());
-
 			buffer.write(gw.data.getBytes(), 0, gw.data.getLength());
+
 			data.set(buffer.getData(), 0, buffer.getLength());
 		} catch (IOException e) {
 			throw new MessageMergeException();
+		} catch ( NegativeArraySizeException e) {
+			throw e;
 		}
 
 
