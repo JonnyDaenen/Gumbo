@@ -17,13 +17,21 @@ import org.apache.hadoop.io.WritableComparator;
 import org.apache.hadoop.io.WritableUtils;
 
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactory;
+import gumbo.engine.hadoop2.datatypes.GumboMessageWritable.MessageMergeException;
+import gumbo.engine.hadoop2.mapreduce.tools.buffers.Recyclable;
 
 
-public class GumboMessageWritable implements WritableComparable<GumboMessageWritable> {
+public class GumboMessageWritable implements WritableComparable<GumboMessageWritable>, Recyclable<GumboMessageWritable> {
+
+
+	public class MessageMergeException extends Exception {
+		private static final long serialVersionUID = 1L;
+	}
+
 
 
 	private static final Log LOG = LogFactory.getLog(GumboMessageWritable.class);
-	
+
 	public class GumboMessageType {
 		public static final byte ASSERT = 1;
 		public static final byte REQUEST = 2;
@@ -31,13 +39,17 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		public static final byte DATA = 4;
 	}
 
-	
+
 
 	private ByteWritable type;
 	private VLongWritable fileid;
 	private VLongWritable offset;
 	private VBytesWritable data;
+
+	private ByteWritable mergeCount;
+
 	private DataOutputBuffer buffer;
+
 
 
 	public GumboMessageWritable() {
@@ -179,7 +191,7 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 	}
 
 
-	
+
 
 	public static class Comparator extends WritableComparator {
 		private static final BytesWritable.Comparator BYTES_COMPARATOR = new BytesWritable.Comparator();
@@ -191,48 +203,48 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		@Override
 		public int compare(byte[] b1, int s1, int l1, byte[] b2, int s2, int l2) {
 			return BYTES_COMPARATOR.compare(b1, s1, l1, b2, s2, l2);
-//			try {
-//				// compare message types
-//				if (b1[0] < b2[0])
-//					return -1;
-//				else if (b1[0] != b2[0])
-//					return 1;
-//
-//				int offset1 = s1+1;
-//				int offset2 = s2+1;
-//
-//				offset1 += WritableUtils.decodeVIntSize(b1[offset1]);
-//				long fileid1 = readVLong(b1, s1+1);
-//
-//				offset2 += WritableUtils.decodeVIntSize(b2[offset2]);
-//				long fileid2 = readVLong(b2, s2+1);
-//
-//				if (fileid1 != fileid2) {
-//					if (fileid1 < fileid2)
-//						return -1;
-//					else
-//						return 1;
-//				}
-//
-//				offset1 += WritableUtils.decodeVIntSize(b1[offset1]);
-//				long fileoffset1 = readVLong(b1, s1+1);
-//
-//				offset2 += WritableUtils.decodeVIntSize(b2[offset2]);
-//				long fileoffset2 = readVLong(b2, s2+1);
-//
-//				if (fileoffset1 != fileoffset2) {
-//					if (fileoffset1 < fileoffset2)
-//						return -1;
-//					else
-//						return 1;
-//				}
-//
-//				return BYTES_COMPARATOR.compare(b1, offset1, l1 + offset1 - s1 , b2, offset2, l2 + offset2 - s2);
-//
-//
-//			} catch (IOException e) {
-//				throw new IllegalArgumentException(e);
-//			} 
+			//			try {
+			//				// compare message types
+			//				if (b1[0] < b2[0])
+			//					return -1;
+			//				else if (b1[0] != b2[0])
+			//					return 1;
+			//
+			//				int offset1 = s1+1;
+			//				int offset2 = s2+1;
+			//
+			//				offset1 += WritableUtils.decodeVIntSize(b1[offset1]);
+			//				long fileid1 = readVLong(b1, s1+1);
+			//
+			//				offset2 += WritableUtils.decodeVIntSize(b2[offset2]);
+			//				long fileid2 = readVLong(b2, s2+1);
+			//
+			//				if (fileid1 != fileid2) {
+			//					if (fileid1 < fileid2)
+			//						return -1;
+			//					else
+			//						return 1;
+			//				}
+			//
+			//				offset1 += WritableUtils.decodeVIntSize(b1[offset1]);
+			//				long fileoffset1 = readVLong(b1, s1+1);
+			//
+			//				offset2 += WritableUtils.decodeVIntSize(b2[offset2]);
+			//				long fileoffset2 = readVLong(b2, s2+1);
+			//
+			//				if (fileoffset1 != fileoffset2) {
+			//					if (fileoffset1 < fileoffset2)
+			//						return -1;
+			//					else
+			//						return 1;
+			//				}
+			//
+			//				return BYTES_COMPARATOR.compare(b1, offset1, l1 + offset1 - s1 , b2, offset2, l2 + offset2 - s2);
+			//
+			//
+			//			} catch (IOException e) {
+			//				throw new IllegalArgumentException(e);
+			//			} 
 		}
 	}
 	static {
@@ -266,73 +278,73 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 	public boolean isAssert() {
 		return type.get() == GumboMessageType.ASSERT;
 	}
-	
+
 	public boolean isRequest() {
 		return type.get() == GumboMessageType.REQUEST;
 	}
-	
+
 	public boolean isConfirm() {
 		return type.get() == GumboMessageType.CONFIRM;
 	}
-	
+
 	public boolean isData() {
 		return type.get() == GumboMessageType.DATA;
 	}
-	
-	
+
+
 	public void setAssert(byte[] atomids, int length) {
 		this.type.set(GumboMessageType.ASSERT);
 		this.data.set(atomids, 0, length);
 
 	}
-	
+
 	public void setRequest(long fileid, long offset, byte[] atomids, int length) {
 		this.type.set(GumboMessageType.REQUEST);
 		this.fileid.set(fileid);
 		this.offset.set(offset);
 		this.data.set(atomids, 0, length);
 	}
-	
-	
+
+
 	public void setConfirm(byte[] atomids, int length) {
 		this.type.set(GumboMessageType.CONFIRM);
 		this.data.set(atomids, 0, length);
 
 	}
-	
+
 	public void setData(byte[] data, int length) {
 		this.type.set(GumboMessageType.DATA);
 		this.data.set(data, 0, length);
 	}
-	
-	
+
+
 	public void setType(byte type) {
 		this.type.set(type);
-		
+
 	}
-	
+
 	public void setDataBytes(byte[] data, int length) {
 		this.data.set(data, 0, length);
 	}
-	
+
 
 
 	public VBytesWritable getData() {
 		return data;
 	}
-	
+
 
 	public GumboMessageWritable duplicate() {
 		return new GumboMessageWritable(type.get(), fileid.get(), offset.get(), data.getBytes(), data.getLength());
 	}
 
 	public void getAddressBytes(VBytesWritable bw) {
-		
+
 		if (buffer == null)
 			buffer = new DataOutputBuffer(32);
 		else
 			buffer.reset();
-		
+
 		try {
 			fileid.write(buffer);
 			offset.write(buffer);
@@ -344,14 +356,64 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		byte[] data = buffer.getData();
 		int dataLength = buffer.getLength();
 		bw.set(data, 0, dataLength);
-		
+
 	}
 
 	public boolean containsAtomId(int i) {
 		return containsAtomId((byte) i);
 	}
 
-	
+
+	@Override
+	public void set(GumboMessageWritable obj) {
+		type.set(obj.type.get());
+		fileid.set(obj.fileid.get());
+		offset.set(obj.offset.get());
+		data.set(obj.data);
+
+	}
+
+
+	/**
+	 * Merges a message of the same type with this message.
+	 * 
+	 * @param gw
+	 * @throws MessageMergeException when messages are incompatible or when copying the data goes wrong
+	 */
+	public void merge(GumboMessageWritable gw) throws MessageMergeException {
+
+
+		// only merge messages of the same type
+		if (type.get() != gw.type.get())
+			throw new MessageMergeException();
+
+		// merging 2 different request messages
+		if (type.get() == GumboMessageType.REQUEST &&
+				(fileid.get() != gw.fileid.get() || offset.get() != gw.offset.get()))
+			throw new MessageMergeException();
+
+		// merge atom ids
+		// OPTIMIZE remove duplicates?
+		try {
+
+			if (buffer == null)
+				buffer = new DataOutputBuffer(32);
+
+			buffer.write(data.getBytes(), 0, data.getLength());
+
+			buffer.write(gw.data.getBytes(), 0, gw.data.getLength());
+			data.set(buffer.getData(), 0, buffer.getLength());
+		} catch (IOException e) {
+			throw new MessageMergeException();
+		}
+
+
+
+
+	}
+
+
+
 
 
 

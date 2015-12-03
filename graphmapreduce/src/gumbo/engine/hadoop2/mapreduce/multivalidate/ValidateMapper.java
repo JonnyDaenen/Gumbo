@@ -14,10 +14,12 @@ import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
+import gumbo.engine.hadoop2.mapreduce.tools.buffers.WritablePacker;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleOpFactory;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleProjection;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.io.Pair;
 
 public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable> {
 
@@ -26,6 +28,8 @@ public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 	private VBytesWritable bw;
 	private GumboMessageWritable gw;
 	private TupleProjection [] projections;
+	
+	private WritablePacker packer;
 	
 	
 	@Override
@@ -38,6 +42,7 @@ public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 		bw = new VBytesWritable();
 		gw = new GumboMessageWritable();
 		
+		packer = new WritablePacker(10);
 		
 		ContextInspector inspector = new ContextInspector(context);
 		
@@ -76,12 +81,16 @@ public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 			if (pi.load(qt, key.get(), bw, gw)){
 				
 				// and write output
-				context.write(bw, gw);
+				// TODO if packing is disabled: context.write(bw, gw);
+				packer.add(bw, gw);
 			}
 			
 		}
 		
-		// TODO implement over-message packing
+		// cross-message packing
+		for (Pair<VBytesWritable, GumboMessageWritable> kvpair : packer.pack()) {
+			context.write(kvpair.fst, kvpair.snd);
+		}
 		
 		
 	}

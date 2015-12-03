@@ -14,6 +14,8 @@ import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
 import org.apache.hadoop.io.WritableUtils;
 
+import gumbo.engine.hadoop2.mapreduce.tools.buffers.Recyclable;
+
 /** 
  * A byte sequence that is usable as a key or value.
  * It is resizable and distinguishes between the size of the sequence and
@@ -23,7 +25,7 @@ import org.apache.hadoop.io.WritableUtils;
 @InterfaceAudience.Public
 @InterfaceStability.Stable
 public class VBytesWritable extends BinaryComparable
-implements WritableComparable<BinaryComparable> {
+implements WritableComparable<BinaryComparable>, Recyclable<VBytesWritable>{
 	private static final int LENGTH_BYTES = 4; // FIXME this is wrong
 	private static final byte[] EMPTY_BYTES = {};
 
@@ -280,6 +282,13 @@ implements WritableComparable<BinaryComparable> {
 	
 	static {                                        // register this comparator
 		WritableComparator.define(VBytesWritable.class, new Comparator());
+	}
+
+	@Override
+	public VBytesWritable duplicate() {
+		VBytesWritable b = new VBytesWritable();
+		b.set(this);
+		return b;
 	}
 
 }
