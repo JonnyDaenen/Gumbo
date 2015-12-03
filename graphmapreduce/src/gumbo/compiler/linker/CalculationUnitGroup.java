@@ -377,4 +377,5 @@ public class CalculationUnitGroup implements Iterable<CalculationUnit> {
 		}
 		return sb.toString();
 	}
+
 }

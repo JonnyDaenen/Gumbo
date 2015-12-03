@@ -35,6 +35,7 @@ import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.engine.general.grouper.Grouper;
 import gumbo.engine.general.grouper.GrouperFactory;
 import gumbo.engine.general.grouper.sample.RelationSampleContainer;
@@ -50,9 +51,10 @@ import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.mapreduce.evaluate.EvaluateMapper;
 import gumbo.engine.hadoop2.mapreduce.evaluate.EvaluateReducer;
-import gumbo.engine.hadoop2.mapreduce.evaluate.IdentityMapper;
 import gumbo.engine.hadoop2.mapreduce.multivalidate.ValidateMapper;
 import gumbo.engine.hadoop2.mapreduce.multivalidate.ValidateReducer;
+import gumbo.engine.hadoop2.mapreduce.semijoin.MultiSemiJoinMapper;
+import gumbo.engine.hadoop2.mapreduce.semijoin.MultiSemiJoinReducer;
 import gumbo.engine.hadoop2.mapreduce.tools.PropertySerializer;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
@@ -61,9 +63,9 @@ import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.utils.estimation.SamplingException;
 
-public class CalculationGroupConverter {
+public class MultiRoundConverter {
 
-	private static final Log LOG = LogFactory.getLog(CalculationGroupConverter.class);
+	private static final Log LOG = LogFactory.getLog(MultiRoundConverter.class);
 
 	private GumboPlan plan;
 	private Configuration conf;
@@ -76,7 +78,7 @@ public class CalculationGroupConverter {
 
 
 
-	public CalculationGroupConverter(GumboPlan plan, Configuration conf) {
+	public MultiRoundConverter(GumboPlan plan, Configuration conf) {
 		this.plan = plan;
 		this.conf = conf;
 		this.fm = plan.getFileManager();
@@ -414,6 +416,117 @@ public class CalculationGroupConverter {
 
 
 	}
+
+	/**
+	 * Creates a 1-round job. Before calling this method, make sure
+	 * the partition is eligible for a 1-round job conversion by checking
+	 * this using {@link MultiRoundConverter#is1Round(CalculationUnitGroup)}.
+	 * 
+	 * @param partition the calculation to convert
+	 * @return a set containing one 1-round job
+	 */
+	public List<ControlledJob> createValEval(CalculationUnitGroup partition) {
+
+
+		List<ControlledJob> joblist = new ArrayList<>();
+		Job hadoopJob;
+		try {
+			hadoopJob = Job.getInstance(conf); // note: makes a copy of the conf
+
+
+			hadoopJob.setJarByClass(getClass());
+			hadoopJob.setJobName(plan.getName() + "_VALEVAL_" + partition.getCanonicalOutString());
+
+			// MAPPER
+			// couple all input files to mapper
+			Set<Path> inputPaths = new HashSet<>();
+			for (RelationSchema rs : partition.getInputRelations()) {
+				Set<Path> paths = fm.getFileMapping().getPaths(rs);
+				for (Path path : paths) {
+					LOG.info("Adding path " + path + " to mapper");
+					MultipleInputs.addInputPath(hadoopJob, path, 
+							TextInputFormat.class, MultiSemiJoinMapper.class);
+					inputPaths.add(path);
+				}
+			}
+
+			// REDUCER
+			hadoopJob.setReducerClass(MultiSemiJoinReducer.class); 
+
+			long size = calculateSize(inputPaths); // FIXME estimate INTERMEDIATE size
+
+			int numRed = (int)Math.max(1, size / (128 * 1024 * 1024)); // FIXME use settings
+			hadoopJob.setNumReduceTasks(numRed); 
+			LOG.info("Setting VALEVAL Reduce tasks to " + numRed);
+
+			// SETTINGS
+			// set map output types
+			hadoopJob.setMapOutputKeyClass(VBytesWritable.class);
+			hadoopJob.setMapOutputValueClass(GumboMessageWritable.class);
+
+			// set reduce output types
+			hadoopJob.setOutputKeyClass(NullWritable.class);
+			hadoopJob.setOutputValueClass(Text.class);
+
+
+			// set output path base (subdirs will be made)
+			Path dummyPath = fm.getOutputRoot().suffix(Path.SEPARATOR +partition.getCanonicalOutString());
+			FileOutputFormat.setOutputPath(hadoopJob, dummyPath);
+
+
+			// pass settings
+			Set<GFExistentialExpression> calculations = new HashSet<>();
+			for (CalculationUnit cu : partition.getCalculations()) {
+					calculations.add(((BasicGFCalculationUnit)cu).getBasicExpression());
+				
+			}
+			configure(hadoopJob, calculations);
+
+			joblist.add(new ControlledJob(hadoopJob, null));
+
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		return joblist;
+
+
+	}
+
+	/**
+	 * Checks whether all queries in the partition are eligible
+	 * for 1-round evaluation.
+	 * 
+	 * @param partition the partition to check
+	 * @return true iff 1-round evaluation is possible
+	 */
+	public boolean is1Round(CalculationUnitGroup partition) {
+		for (CalculationUnit cu : partition.getCalculations()) {
+			if (!is1Round(cu)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean is1Round(CalculationUnit cu) {
+
+		BasicGFCalculationUnit bcu = (BasicGFCalculationUnit) cu;
+		GFExistentialExpression exp = bcu.getBasicExpression();
+		GFAtomicExpression first = null;
+
+		for (GFAtomicExpression guarded : exp.getGuardedAtoms()) {
+			if (first == null) {
+				first = guarded;
+			} else if (!first.getVariableString("").equals(guarded.getVariableString(""))) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 
 
 }

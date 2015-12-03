@@ -26,10 +26,21 @@ public class TupleOpFactory {
 	public static TupleProjection[] createMap1Projections(String relation, long fileid,
 			Set<GFExistentialExpression> queries, Map<String, Integer> atomidmap) {
 
+
+		List<TupleProjection> projections = getGuardProjections(relation, fileid, queries, atomidmap);
+		projections.addAll(getGuardedProjections(relation, queries, atomidmap));
+
+
+		// TODO merge where possible
+
+		// OPTIMIZE projection dependencies
+
+		return projections.toArray(new TupleProjection[0]);
+	}
+
+	private static List<TupleProjection> getGuardProjections(String relation, long fileid,
+			Set<GFExistentialExpression> queries, Map<String, Integer> atomidmap) {
 		List<TupleProjection> projections = new ArrayList<>();
-
-
-		// GUARD
 
 		// for each guard that matches
 		for (GFExistentialExpression query : queries) {
@@ -45,12 +56,17 @@ public class TupleOpFactory {
 				}
 			}
 		}
+		return projections;
+	}
 
-		// GUARDED
-		
+	private static List<TupleProjection> getGuardedProjections(String relation, Set<GFExistentialExpression> queries, Map<String, Integer> atomidmap) {
+
+		List<TupleProjection> projections = new ArrayList<>();
 		for (GFExistentialExpression query : queries) {
+
 			// for each guarded
 			for (GFAtomicExpression guarded : query.getGuardedAtoms()) {
+
 				if (guarded.getName().equals(relation)) {
 					// create projection
 					GuardedProjection pi = new GuardedProjection(relation, guarded, (byte) atomidmap.get(guarded.toString()).intValue()); 
@@ -61,13 +77,9 @@ public class TupleOpFactory {
 
 		}
 
-
-		// TODO merge where possible
-
-		// OPTIMIZE projection dependencies
-
-		return projections.toArray(new TupleProjection[0]);
+		return projections;
 	}
+
 
 	/**
 	 * Creates a set of tupleevaluators, one for each query.
@@ -83,7 +95,7 @@ public class TupleOpFactory {
 		List<TupleEvaluator> projections = new ArrayList<>(queries.size());
 
 		for (GFExistentialExpression query : queries) {
-//			String filename = filemap.get(query.getOutputRelation().getName());
+			//			String filename = filemap.get(query.getOutputRelation().getName());
 			TupleEvaluator te = new TupleEvaluator(query, query.getOutputRelation().getName(), atomidmap);
 			projections.add(te);
 
@@ -112,6 +124,48 @@ public class TupleOpFactory {
 		}
 
 		return filters.toArray(new TupleFilter[0]);
+	}
+
+	public static TupleProjection[] createMapMSJProjections(String relation, long fileid,
+			Set<GFExistentialExpression> queries, Map<String, Integer> atomidmap) {
+
+		List<TupleProjection> projections = getGuardedProjections(relation, queries, atomidmap);
+		projections.addAll(getGuardedDataProjections(relation, queries, atomidmap));
+
+		return projections.toArray(new TupleProjection[0]);
+	}
+
+	/**
+	 * Also, when this relation is a guard, it creates data projections.
+	 * Also, when this relation is guarded, it creates the guarded projections.
+	 * For the guard, we assume each guarded atom has the same key.
+	 * 
+	 * @param relation relation name
+	 * @param queries set of queries
+	 * @param atomidmap atomstring-atomid mapping
+	 * 
+	 * @return projection array
+	 */
+	private static Collection<? extends TupleProjection> getGuardedDataProjections(String relation,
+			Set<GFExistentialExpression> queries, Map<String, Integer> atomidmap) {
+
+		List<TupleProjection> projections = new ArrayList<>();
+
+		// for each guard that matches
+		for (GFExistentialExpression query : queries) {
+			GFAtomicExpression guard = query.getGuard();
+			if (guard.getName().equals(relation)) {
+
+				GFAtomicExpression guarded = query.getGuardedAtoms().iterator().next();
+
+				// create projection
+				GuardDataProjection pi = new GuardDataProjection(relation, guard, guarded); 
+				projections.add(pi);
+
+
+			}
+		}
+		return projections;
 	}
 
 }

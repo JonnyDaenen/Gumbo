@@ -35,7 +35,7 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 	private DataOutputBuffer buffer;
 
 	@Override
-	protected void setup(Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable>.Context context)
+	public void setup(Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable>.Context context)
 			throws IOException, InterruptedException {
 		super.setup(context);
 
@@ -69,7 +69,7 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 	}
 
 	@Override
-	protected void map(LongWritable key, Text value,
+	public void map(LongWritable key, Text value,
 			Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable>.Context context)
 					throws IOException, InterruptedException {
 
