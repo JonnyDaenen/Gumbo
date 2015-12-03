@@ -1,5 +1,14 @@
 package gumbo.convertors.pig;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+
+import org.apache.hadoop.fs.Path;
+
 import gumbo.compiler.calculations.BGFE2CUConverter;
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnit;
@@ -15,15 +24,6 @@ import gumbo.convertors.GFConverter;
 import gumbo.input.GumboQuery;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
-
-import org.apache.hadoop.fs.Path;
 
 /**
  * A class that can be used to convert GF queries into aquivalent Pig Latin scripts

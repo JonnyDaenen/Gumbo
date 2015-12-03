@@ -1,5 +1,8 @@
 package gumbo.convertors.hive;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.convertors.GFConversionException;
@@ -15,9 +18,6 @@ import gumbo.structures.gfexpressions.GFNotExpression;
 import gumbo.structures.gfexpressions.GFOrExpression;
 import gumbo.structures.gfexpressions.GFVisitor;
 import gumbo.structures.gfexpressions.GFVisitorException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 

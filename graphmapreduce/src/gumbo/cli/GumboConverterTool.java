@@ -1,17 +1,5 @@
 package gumbo.cli;
 
-import gumbo.convertors.GFConversionException;
-import gumbo.convertors.GFConverter;
-import gumbo.convertors.hive.GFHiveConverterLong;
-import gumbo.convertors.hive.GFHiveConverterWide;
-import gumbo.convertors.pig.GFPigConverterLong;
-import gumbo.convertors.pig.GFPigConverterWide;
-import gumbo.input.GumboFileParser;
-import gumbo.input.GumboFileParser.MissingQueryComponentException;
-import gumbo.input.GumboQuery;
-import gumbo.input.parser.GumboScriptFileParser;
-import gumbo.input.parser.GumboScriptFileParser.GumboParseException;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,6 +12,18 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import gumbo.convertors.GFConversionException;
+import gumbo.convertors.GFConverter;
+import gumbo.convertors.hive.GFHiveConverterLong;
+import gumbo.convertors.hive.GFHiveConverterWide;
+import gumbo.convertors.pig.GFPigConverterLong;
+import gumbo.convertors.pig.GFPigConverterWide;
+import gumbo.input.GumboFileParser;
+import gumbo.input.GumboFileParser.MissingQueryComponentException;
+import gumbo.input.GumboQuery;
+import gumbo.input.parser.GumboScriptFileParser;
+import gumbo.input.parser.GumboScriptFileParser.GumboParseException;
 
 public class GumboConverterTool implements GumboCommandLineTool {
 

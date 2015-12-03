@@ -3,13 +3,6 @@
  */
 package tests;
 
-import gumbo.compiler.GFCompiler;
-import gumbo.compiler.GumboPlan;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.engine.spark.SparkEngine;
-import gumbo.input.GumboFileParser;
-import gumbo.input.GumboQuery;
-
 import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
@@ -18,6 +11,13 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+
+import gumbo.compiler.GFCompiler;
+import gumbo.compiler.GumboPlan;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.engine.spark.SparkEngine;
+import gumbo.input.GumboFileParser;
+import gumbo.input.GumboQuery;
 
 /**
  * Copy of Gumbo application to test Spark.

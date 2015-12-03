@@ -1,12 +1,14 @@
 package gumbo.engine.hadoop2.mapreduce.tools;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.VLongWritable;
 import org.junit.Test;
 

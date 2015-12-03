@@ -1,9 +1,5 @@
 package gumbo.engine.hadoop.mrcomponents.round1.combiners;
 
-import gumbo.engine.hadoop.mrcomponents.tools.ParameterPasser;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
-
 import java.io.IOException;
 
 import org.apache.commons.logging.Log;
@@ -11,6 +7,10 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+
+import gumbo.engine.hadoop.mrcomponents.tools.ParameterPasser;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 public class GFCombinerGuarded extends Reducer<Text, Text, Text, Text> {
 	

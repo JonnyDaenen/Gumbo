@@ -1,11 +1,11 @@
 package gumbo.structures.gfexpressions;
 
-import gumbo.structures.data.RelationSchema;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import gumbo.structures.data.RelationSchema;
 
 public class GFExistentialExpression extends GFExpression {
 	

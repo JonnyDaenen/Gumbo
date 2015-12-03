@@ -1,12 +1,12 @@
 package gumbo.engine.general.grouper.structures;
 
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.GFExistentialExpression;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 public class CalculationGroup {
 	

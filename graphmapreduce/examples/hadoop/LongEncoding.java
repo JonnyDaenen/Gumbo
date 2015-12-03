@@ -3,8 +3,6 @@
  */
 package hadoop;
 
-import gumbo.utils.LongBase64Converter;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -12,6 +10,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import org.apache.commons.codec.binary.Base64;
+
+import gumbo.utils.LongBase64Converter;
 
 /**
  * @author jonny

@@ -1,5 +1,11 @@
 package gumbo.engine.general.algorithms;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import gumbo.engine.general.messagefactories.Map1GuardMessageFactoryInterface;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.structures.data.Tuple;
@@ -7,12 +13,6 @@ import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.io.Triple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public class Map1GuardAlgorithm implements MapAlgorithm{
 	

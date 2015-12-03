@@ -3,10 +3,6 @@
  */
 package gumbo.compiler.filemapper;
 
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.data.RelationSchemaException;
-import gumbo.utils.estimation.TupleEstimator;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,6 +15,10 @@ import org.apache.hadoop.fs.ContentSummary;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.data.RelationSchemaException;
+import gumbo.utils.estimation.TupleEstimator;
 
 /**
  * Maps a set of relations to a specific set of files (no directories/globs are stored).

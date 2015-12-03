@@ -1,12 +1,5 @@
 package gumbo.cli;
 
-import gumbo.generator.GFGenerator;
-import gumbo.generator.GFGeneratorException;
-import gumbo.generator.GFGeneratorInput;
-import gumbo.generator.GFGeneratorInputParser;
-import gumbo.generator.QueryType;
-import gumbo.input.parser.GumboExporter;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,6 +16,13 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import gumbo.generator.GFGenerator;
+import gumbo.generator.GFGeneratorException;
+import gumbo.generator.GFGeneratorInput;
+import gumbo.generator.GFGeneratorInputParser;
+import gumbo.generator.QueryType;
+import gumbo.input.parser.GumboExporter;
 
 public class GumboGeneratorTool implements GumboCommandLineTool {
 

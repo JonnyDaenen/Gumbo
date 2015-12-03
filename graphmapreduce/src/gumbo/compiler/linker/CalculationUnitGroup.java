@@ -3,14 +3,14 @@
  */
 package gumbo.compiler.linker;
 
-import gumbo.compiler.calculations.CalculationUnit;
-import gumbo.structures.data.RelationSchema;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import gumbo.compiler.calculations.CalculationUnit;
+import gumbo.structures.data.RelationSchema;
 
 /**
  * Representation of a CalculationUnit DAG (may or may not be connected). 

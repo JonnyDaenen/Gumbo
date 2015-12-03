@@ -1,8 +1,5 @@
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
-import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.RawComparator;
@@ -11,7 +8,6 @@ import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableComparator;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
-import scala.tools.scalap.scalax.rules.ArrayInput;
 
 public class WritablePerformanceTest {
 

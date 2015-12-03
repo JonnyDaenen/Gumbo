@@ -31,7 +31,6 @@ import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.engine.general.grouper.Decomposer;
 import gumbo.engine.general.grouper.Grouper;
 import gumbo.engine.general.grouper.GrouperFactory;
 import gumbo.engine.general.grouper.costmodel.MRSettings;

@@ -1,5 +1,12 @@
 package gumbo.engine.hadoop.mrcomponents.round2.algorithms;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Counter;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
+
 import gumbo.engine.general.messagefactories.MessageFailedException;
 import gumbo.engine.general.messagefactories.Red2MessageFactoryInterface;
 import gumbo.engine.hadoop.mrcomponents.round2.reducers.GumboRed2Counter;
@@ -7,17 +14,6 @@ import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Counter;
-import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 public class Red2MessageFactory implements Red2MessageFactoryInterface {
 

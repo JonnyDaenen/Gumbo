@@ -1,8 +1,8 @@
 package gumbo.engine.general.grouper.policies;
 
-import gumbo.engine.general.grouper.structures.CalculationGroup;
-
 import java.util.List;
+
+import gumbo.engine.general.grouper.structures.CalculationGroup;
 
 public interface GroupingPolicy {
 	

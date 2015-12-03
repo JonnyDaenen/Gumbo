@@ -5,15 +5,16 @@ package gumbo.compiler;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import gumbo.compiler.decomposer.GFDecomposer;
-import gumbo.compiler.decomposer.GFDecomposerException;
-import gumbo.structures.gfexpressions.GFExistentialExpression;
-import gumbo.structures.gfexpressions.GFExpression;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Test;
+
+import gumbo.compiler.decomposer.GFDecomposer;
+import gumbo.compiler.decomposer.GFDecomposerException;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
 
 /**
  * @author Jonny Daenen

@@ -9,15 +9,10 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.ByteWritable;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.DataOutputBuffer;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.VIntWritable;
 import org.apache.hadoop.io.VLongWritable;
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
-import org.apache.hadoop.io.WritableUtils;
 
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactory;
-import gumbo.engine.hadoop2.datatypes.GumboMessageWritable.MessageMergeException;
 import gumbo.engine.hadoop2.mapreduce.tools.buffers.Recyclable;
 
 

@@ -3,25 +3,6 @@
  */
 package gumbo.engine.spark.converter;
 
-import gumbo.compiler.GumboPlan;
-import gumbo.compiler.calculations.BasicGFCalculationUnit;
-import gumbo.compiler.calculations.CalculationUnit;
-import gumbo.compiler.filemapper.FileManager;
-import gumbo.compiler.filemapper.InputFormat;
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.engine.general.settings.AbstractExecutorSettings;
-import gumbo.engine.general.utils.FileMappingExtractor;
-import gumbo.engine.spark.mrcomponents.GFSparkMapper1Guard;
-import gumbo.engine.spark.mrcomponents.GFSparkMapper1Guarded;
-import gumbo.engine.spark.mrcomponents.GFSparkReducer1;
-import gumbo.engine.spark.mrcomponents.GFSparkReducer2;
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.GFExistentialExpression;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,6 +22,24 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.PairFunction;
 
+import gumbo.compiler.GumboPlan;
+import gumbo.compiler.calculations.BasicGFCalculationUnit;
+import gumbo.compiler.calculations.CalculationUnit;
+import gumbo.compiler.filemapper.FileManager;
+import gumbo.compiler.filemapper.InputFormat;
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.engine.general.settings.AbstractExecutorSettings;
+import gumbo.engine.general.utils.FileMappingExtractor;
+import gumbo.engine.spark.mrcomponents.GFSparkMapper1Guard;
+import gumbo.engine.spark.mrcomponents.GFSparkMapper1Guarded;
+import gumbo.engine.spark.mrcomponents.GFSparkReducer1;
+import gumbo.engine.spark.mrcomponents.GFSparkReducer2;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 import scala.Tuple2;
 
 

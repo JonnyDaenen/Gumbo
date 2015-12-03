@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;

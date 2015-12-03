@@ -1,15 +1,9 @@
 package gumbo.structures.data;
 
-import gumbo.structures.gfexpressions.GFAtomicExpression;
-
-import java.nio.ByteBuffer;
-import java.util.HashMap;
 import java.util.LinkedList;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.io.Text;
 
 /**
  * 

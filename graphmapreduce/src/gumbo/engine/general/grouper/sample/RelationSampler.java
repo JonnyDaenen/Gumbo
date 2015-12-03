@@ -1,18 +1,16 @@
 package gumbo.engine.general.grouper.sample;
 
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.engine.general.grouper.policies.BestCostBasedGrouper;
-import gumbo.structures.data.RelationSchema;
-import gumbo.utils.estimation.Sampler;
-import gumbo.utils.estimation.SamplingException;
-
-import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.fs.Path;
-
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.fs.Path;
+
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.structures.data.RelationSchema;
+import gumbo.utils.estimation.Sampler;
+import gumbo.utils.estimation.SamplingException;
 
 
 /**

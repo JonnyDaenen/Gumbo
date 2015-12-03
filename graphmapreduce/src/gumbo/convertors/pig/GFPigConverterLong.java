@@ -1,5 +1,10 @@
 package gumbo.convertors.pig;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.convertors.GFConversionException;
@@ -16,11 +21,6 @@ import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.GFNotExpression;
 import gumbo.structures.gfexpressions.GFOrExpression;
 import gumbo.structures.gfexpressions.io.Pair;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Class that can be used to convert GF queries to Pig Latin scripts with a long execution plan

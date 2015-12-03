@@ -1,11 +1,5 @@
 package gumbo.engine.general.grouper.sample;
 
-import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -18,17 +12,13 @@ import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.messagefactories.Map1GuardMessageFactoryInterface;
 import gumbo.engine.general.messagefactories.Map1GuardedMessageFactoryInterface;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
-import gumbo.engine.hadoop.converter.GumboHadoopConverter;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactory;
 import gumbo.engine.hadoop.reporter.FakeMapper;
 import gumbo.engine.hadoop.reporter.LinearExtrapolator;
-import gumbo.engine.hadoop.reporter.RelationReport;
 import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.Tuple;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 

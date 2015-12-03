@@ -3,6 +3,14 @@
  */
 package gumbo.compiler;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import gumbo.compiler.calculations.BGFE2CUConverter;
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.decomposer.GFDecomposer;
@@ -16,14 +24,6 @@ import gumbo.compiler.partitioner.UnitPartitioner;
 import gumbo.input.GumboQuery;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Jonny Daenen

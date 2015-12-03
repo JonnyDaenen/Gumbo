@@ -12,16 +12,11 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;
-import gumbo.engine.hadoop2.datatypes.GumboMessageWritable.GumboMessageType;
-import gumbo.engine.hadoop2.mapreduce.evaluate.EvaluateMapper;
-import gumbo.engine.hadoop2.mapreduce.multivalidate.ValidateMapper;
 import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
-import gumbo.engine.hadoop2.mapreduce.tools.buffers.WritablePacker;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleFilter;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleOpFactory;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleProjection;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 public class MultiSemiJoinMapper extends Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable> {

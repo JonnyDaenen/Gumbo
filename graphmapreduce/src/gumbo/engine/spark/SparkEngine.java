@@ -3,13 +3,6 @@
  */
 package gumbo.engine.spark;
 
-import gumbo.compiler.GumboPlan;
-import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.engine.general.ExecutionException;
-import gumbo.engine.general.GFEngine;
-import gumbo.engine.general.settings.ExecutorSettings;
-import gumbo.engine.spark.converter.GumboSparkConverter;
-
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -17,6 +10,13 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
+
+import gumbo.compiler.GumboPlan;
+import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.engine.general.ExecutionException;
+import gumbo.engine.general.GFEngine;
+import gumbo.engine.general.settings.ExecutorSettings;
+import gumbo.engine.spark.converter.GumboSparkConverter;
 
 /**
  * Executes an MR-plan on Spark.

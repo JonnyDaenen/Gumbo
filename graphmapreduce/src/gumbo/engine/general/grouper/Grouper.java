@@ -1,5 +1,11 @@
 package gumbo.engine.general.grouper;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.calculations.CalculationUnitException;
@@ -8,12 +14,6 @@ import gumbo.engine.general.grouper.policies.GroupingPolicy;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 
 public class Grouper {

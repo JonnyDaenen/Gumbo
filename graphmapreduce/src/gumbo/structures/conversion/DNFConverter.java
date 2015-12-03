@@ -3,6 +3,12 @@
  */
 package gumbo.structures.conversion;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import gumbo.structures.booleanexpressions.BAndExpression;
 import gumbo.structures.booleanexpressions.BEVisitor;
 import gumbo.structures.booleanexpressions.BExpression;
@@ -11,12 +17,6 @@ import gumbo.structures.booleanexpressions.BOrExpression;
 import gumbo.structures.booleanexpressions.BVariable;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * based on pseudo-code from: http://www.cs.jhu.edu/~jason/tutorials/convert-to-CNF.html

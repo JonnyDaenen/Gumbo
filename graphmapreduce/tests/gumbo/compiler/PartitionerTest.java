@@ -6,6 +6,14 @@ package gumbo.compiler;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.hadoop.fs.Path;
+import org.junit.Test;
+
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnitException;
 import gumbo.compiler.decomposer.GFDecomposerException;
@@ -16,13 +24,6 @@ import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.hadoop.fs.Path;
-import org.junit.Test;
 
 /**
  * @author Jonny Daenen

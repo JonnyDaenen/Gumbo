@@ -1,11 +1,5 @@
 package gumbo.gui.panels;
 
-import gumbo.convertors.GFConversionException;
-import gumbo.convertors.hive.GFHiveConverter;
-import gumbo.convertors.hive.GFHiveConverterLong;
-import gumbo.convertors.hive.GFHiveConverterWide;
-import gumbo.input.GumboQuery;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -21,6 +15,12 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+
+import gumbo.convertors.GFConversionException;
+import gumbo.convertors.hive.GFHiveConverter;
+import gumbo.convertors.hive.GFHiveConverterLong;
+import gumbo.convertors.hive.GFHiveConverterWide;
+import gumbo.input.GumboQuery;
 
 public class HivePanel extends JPanel {
 

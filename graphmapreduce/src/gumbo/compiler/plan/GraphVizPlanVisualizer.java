@@ -3,19 +3,19 @@
  */
 package gumbo.compiler.plan;
 
-import gumbo.compiler.GumboPlan;
-import gumbo.compiler.calculations.BasicGFCalculationUnit;
-import gumbo.compiler.calculations.CalculationUnit;
-import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.structures.data.RelationSchema;
-import gumbo.utils.GraphViz;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.hadoop.fs.Path;
+
+import gumbo.compiler.GumboPlan;
+import gumbo.compiler.calculations.BasicGFCalculationUnit;
+import gumbo.compiler.calculations.CalculationUnit;
+import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.structures.data.RelationSchema;
+import gumbo.utils.GraphViz;
 
 /**
  * @author Jonny Daenen

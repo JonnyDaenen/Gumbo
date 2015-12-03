@@ -3,16 +3,15 @@
  */
 package gumbo.compiler.filemapper;
 
-import gumbo.structures.data.RelationSchema;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.hadoop.fs.ContentSummary;
 import org.apache.hadoop.fs.Path;
+
+import gumbo.structures.data.RelationSchema;
 
 /**
  * Bookkeeping for input/output locations, coupled to relations. 

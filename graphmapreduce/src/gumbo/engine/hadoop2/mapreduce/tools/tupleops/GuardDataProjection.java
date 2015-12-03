@@ -1,16 +1,11 @@
 package gumbo.engine.hadoop2.mapreduce.tools.tupleops;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-
-import org.apache.hadoop.io.BytesWritable;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.io.Pair;
 
 
 /**

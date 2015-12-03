@@ -1,14 +1,14 @@
 package gumbo.engine.general.messagefactories;
 
+import java.io.IOException;
+import java.util.Set;
+
 import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator.TupleIDError;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.io.Triple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
-
-import java.io.IOException;
-import java.util.Set;
 
 public interface Map1GuardMessageFactoryInterface {
 

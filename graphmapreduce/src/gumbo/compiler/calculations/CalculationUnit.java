@@ -3,12 +3,12 @@
  */
 package gumbo.compiler.calculations;
 
-import gumbo.structures.data.RelationSchema;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import gumbo.structures.data.RelationSchema;
 
 /**
  * A CalculationUnit represents an operation that cannot be split up into smaller parts.

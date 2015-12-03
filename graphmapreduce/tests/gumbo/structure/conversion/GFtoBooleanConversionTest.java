@@ -3,6 +3,11 @@ package gumbo.structure.conversion;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import gumbo.structures.booleanexpressions.BEvaluationContext;
 import gumbo.structures.booleanexpressions.BExpression;
 import gumbo.structures.booleanexpressions.BVariable;
@@ -13,10 +18,6 @@ import gumbo.structures.conversion.GFtoBooleanConvertor;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
 public class GFtoBooleanConversionTest {
 

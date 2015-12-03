@@ -4,18 +4,6 @@
 package gumbo.engine;
 
 import static org.junit.Assert.fail;
-import gumbo.compiler.GFCompiler;
-import gumbo.compiler.GumboPlan;
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.compiler.partitioner.HeightPartitioner;
-import gumbo.engine.general.settings.AbstractExecutorSettings;
-import gumbo.engine.hadoop.HadoopEngine;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.input.GumboQuery;
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.gfexpressions.GFExistentialExpression;
-import gumbo.structures.gfexpressions.GFExpression;
-import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -36,6 +24,19 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
+import gumbo.compiler.GFCompiler;
+import gumbo.compiler.GumboPlan;
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.compiler.partitioner.HeightPartitioner;
+import gumbo.engine.general.settings.AbstractExecutorSettings;
+import gumbo.engine.hadoop.HadoopEngine;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.input.GumboQuery;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 
 /**
  * @author Jonny Daenen

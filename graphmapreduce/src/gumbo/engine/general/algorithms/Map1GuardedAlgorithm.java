@@ -1,15 +1,15 @@
 package gumbo.engine.general.algorithms;
 
-import gumbo.engine.general.messagefactories.Map1GuardedMessageFactoryInterface;
-import gumbo.structures.data.Tuple;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
-
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import gumbo.engine.general.messagefactories.Map1GuardedMessageFactoryInterface;
+import gumbo.structures.data.Tuple;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 public class Map1GuardedAlgorithm implements MapAlgorithm {
 

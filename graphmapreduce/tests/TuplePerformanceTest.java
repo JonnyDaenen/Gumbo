@@ -3,7 +3,6 @@ import org.apache.hadoop.io.Text;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
 import gumbo.structures.data.QuickTuple;
 import gumbo.structures.data.Tuple;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
 import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
 

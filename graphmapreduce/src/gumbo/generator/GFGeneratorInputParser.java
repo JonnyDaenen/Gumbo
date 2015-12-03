@@ -1,13 +1,13 @@
 package gumbo.generator;
 
-import gumbo.compiler.filemapper.InputFormat;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import gumbo.compiler.filemapper.InputFormat;
 
 /**
  * Parses a file with input relations for a GFGenerator

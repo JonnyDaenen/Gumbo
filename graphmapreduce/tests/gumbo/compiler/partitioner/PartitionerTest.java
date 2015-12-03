@@ -5,17 +5,18 @@ package gumbo.compiler.partitioner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import gumbo.compiler.calculations.BasicGFCalculationUnit;
-import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import gumbo.compiler.calculations.BasicGFCalculationUnit;
+import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 /**
  * @author Jonny Daenen

@@ -1,11 +1,5 @@
 package gumbo.experiments;
 
-import gumbo.compiler.GFCompiler;
-import gumbo.compiler.GumboPlan;
-import gumbo.engine.hadoop.HadoopEngine;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.input.GumboQuery;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map.Entry;
@@ -14,6 +8,12 @@ import org.apache.commons.cli.MissingArgumentException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
+
+import gumbo.compiler.GFCompiler;
+import gumbo.compiler.GumboPlan;
+import gumbo.engine.hadoop.HadoopEngine;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.input.GumboQuery;
 
 public class ExperimentRunner extends Configured implements Tool {
 

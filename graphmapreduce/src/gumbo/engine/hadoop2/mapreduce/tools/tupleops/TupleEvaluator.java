@@ -17,7 +17,6 @@ import gumbo.structures.booleanexpressions.VariableNotFoundException;
 import gumbo.structures.conversion.GFBooleanMapping;
 import gumbo.structures.conversion.GFtoBooleanConversionException;
 import gumbo.structures.conversion.GFtoBooleanConvertor;
-import gumbo.structures.data.QuickTuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 

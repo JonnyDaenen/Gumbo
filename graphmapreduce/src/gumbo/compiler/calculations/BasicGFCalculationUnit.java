@@ -3,13 +3,13 @@
  */
 package gumbo.compiler.calculations;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Represents 1-level GF expressions.

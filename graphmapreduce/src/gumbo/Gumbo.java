@@ -3,34 +3,27 @@
  */
 package gumbo;
 
-import gumbo.compiler.GFCompiler;
-import gumbo.compiler.GumboPlan;
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.compiler.partitioner.CalculationPartitioner;
-import gumbo.engine.general.grouper.Grouper;
-import gumbo.engine.general.grouper.GrouperFactory;
-import gumbo.engine.general.grouper.costmodel.GumboCostModel;
-import gumbo.engine.general.grouper.costmodel.IOCostModel;
-import gumbo.engine.general.grouper.costmodel.MRSettings;
-import gumbo.engine.general.grouper.costmodel.PaperCostModel;
-import gumbo.engine.general.grouper.policies.CostBasedGrouper;
-import gumbo.engine.general.settings.AbstractExecutorSettings;
-import gumbo.engine.general.utils.FileMappingExtractor;
-import gumbo.engine.hadoop.HadoopEngine;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.engine.hadoop2.HadoopEngine2;
-import gumbo.input.GumboFileParser;
-import gumbo.input.GumboQuery;
-
 import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.io.SequenceFile.ValueBytes;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+
+import gumbo.compiler.GFCompiler;
+import gumbo.compiler.GumboPlan;
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.compiler.partitioner.CalculationPartitioner;
+import gumbo.engine.general.grouper.Grouper;
+import gumbo.engine.general.grouper.GrouperFactory;
+import gumbo.engine.general.settings.AbstractExecutorSettings;
+import gumbo.engine.general.utils.FileMappingExtractor;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.engine.hadoop2.HadoopEngine2;
+import gumbo.input.GumboFileParser;
+import gumbo.input.GumboQuery;
 
 
 /**

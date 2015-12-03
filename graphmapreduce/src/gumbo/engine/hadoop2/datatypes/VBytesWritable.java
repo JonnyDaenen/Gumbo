@@ -1,15 +1,13 @@
 package gumbo.engine.hadoop2.datatypes;
 
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.io.DataInput;
 import java.io.DataOutput;
+import java.io.IOException;
 
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
 import org.apache.hadoop.io.BinaryComparable;
-import org.apache.hadoop.io.DataInputBuffer;
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
 import org.apache.hadoop.io.WritableUtils;

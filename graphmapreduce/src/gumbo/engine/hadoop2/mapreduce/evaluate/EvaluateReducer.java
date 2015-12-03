@@ -4,19 +4,16 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;
-import gumbo.engine.hadoop2.datatypes.VLongPair;
 import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
 import gumbo.engine.hadoop2.mapreduce.tools.buffers.ConfirmBuffer;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleEvaluator;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleOpFactory;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 public class EvaluateReducer extends Reducer<VBytesWritable, GumboMessageWritable, Text, Text> {

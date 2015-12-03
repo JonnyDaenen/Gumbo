@@ -3,10 +3,6 @@
  */
 package gumbo.compiler.partitioner;
 
-import gumbo.compiler.calculations.CalculationUnit;
-import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.structures.data.RelationSchema;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,6 +10,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import gumbo.compiler.calculations.CalculationUnit;
+import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.structures.data.RelationSchema;
 
 /**
  * Adds level information to {@link CalculationUnit}s in a {@link CalculationUnitGroup},

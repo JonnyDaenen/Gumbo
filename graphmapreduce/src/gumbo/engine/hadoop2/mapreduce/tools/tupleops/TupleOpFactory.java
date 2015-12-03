@@ -2,16 +2,10 @@ package gumbo.engine.hadoop2.mapreduce.tools.tupleops;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.mesos.Protos.Filters;
-
-import gumbo.structures.booleanexpressions.BExpression;
-import gumbo.structures.conversion.GFtoBooleanConvertor;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 

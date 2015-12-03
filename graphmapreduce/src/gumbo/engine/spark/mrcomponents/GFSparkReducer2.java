@@ -3,6 +3,10 @@
  */
 package gumbo.engine.spark.mrcomponents;
 
+import java.util.HashSet;
+
+import org.apache.spark.api.java.function.FlatMapFunction;
+
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.structures.booleanexpressions.BEvaluationContext;
 import gumbo.structures.booleanexpressions.BExpression;
@@ -12,11 +16,6 @@ import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
-
-import java.util.HashSet;
-
-import org.apache.spark.api.java.function.FlatMapFunction;
-
 import scala.Tuple2;
 
 /**

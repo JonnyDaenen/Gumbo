@@ -1,12 +1,12 @@
 package gumbo.engine.general.algorithms;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import gumbo.engine.general.messagefactories.Map2GuardMessageInterface;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public class Map2GuardAlgorithm implements MapAlgorithm {
 

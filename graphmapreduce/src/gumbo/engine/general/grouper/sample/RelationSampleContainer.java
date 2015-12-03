@@ -1,11 +1,11 @@
 package gumbo.engine.general.grouper.sample;
 
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.structures.data.RelationSchema;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.structures.data.RelationSchema;
 
 
 /**

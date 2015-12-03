@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.hadoop.io.BytesWritable;
-import org.apache.hadoop.io.DataOutputBuffer;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -17,7 +15,6 @@ import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
 import gumbo.engine.hadoop2.mapreduce.tools.buffers.WritablePacker;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleOpFactory;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleProjection;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.io.Pair;
 

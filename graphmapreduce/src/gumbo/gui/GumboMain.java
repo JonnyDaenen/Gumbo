@@ -1,21 +1,5 @@
 package gumbo.gui;
 
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.engine.hadoop.HadoopEngine;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.gui.gumbogui.GumboMainFrame;
-import gumbo.gui.gumbogui.PanelA;
-import gumbo.gui.gumbogui.PanelB;
-import gumbo.gui.gumbogui.PanelBA;
-import gumbo.gui.gumbogui.PanelC;
-import gumbo.gui.gumbogui.PanelD;
-import gumbo.gui.gumbogui.PanelDC;
-import gumbo.gui.gumbogui.PanelDCBA;
-import gumbo.input.GumboQuery;
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.gfexpressions.GFExpression;
-import gumbo.structures.gfexpressions.io.GFInfixSerializer;
-
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.TextField;
@@ -39,6 +23,22 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
+
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.engine.hadoop.HadoopEngine;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.gui.gumbogui.GumboMainFrame;
+import gumbo.gui.gumbogui.PanelA;
+import gumbo.gui.gumbogui.PanelB;
+import gumbo.gui.gumbogui.PanelBA;
+import gumbo.gui.gumbogui.PanelC;
+import gumbo.gui.gumbogui.PanelD;
+import gumbo.gui.gumbogui.PanelDC;
+import gumbo.gui.gumbogui.PanelDCBA;
+import gumbo.input.GumboQuery;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.GFInfixSerializer;
 
 public class GumboMain extends Configured implements Tool {
 	

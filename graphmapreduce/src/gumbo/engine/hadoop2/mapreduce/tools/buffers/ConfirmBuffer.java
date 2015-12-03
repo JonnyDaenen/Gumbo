@@ -1,6 +1,5 @@
 package gumbo.engine.hadoop2.mapreduce.tools.buffers;
 
-import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;

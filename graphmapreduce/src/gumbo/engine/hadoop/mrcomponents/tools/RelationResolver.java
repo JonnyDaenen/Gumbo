@@ -1,8 +1,5 @@
 package gumbo.engine.hadoop.mrcomponents.tools;
 
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
-
 import java.lang.reflect.Method;
 
 import org.apache.commons.logging.Log;
@@ -11,6 +8,9 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
+
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 /**
  * Used to extract the filename/relationname from a context.

@@ -3,16 +3,16 @@
  */
 package gumbo.engine.general.utils;
 
-import gumbo.compiler.calculations.CalculationUnit;
-import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.compiler.partitioner.PartitionedCUGroup;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import gumbo.compiler.calculations.CalculationUnit;
+import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.compiler.partitioner.PartitionedCUGroup;
 
 /**
  * Represents a queue of partitions, coupled to real hadoop jobs.

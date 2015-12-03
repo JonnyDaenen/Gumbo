@@ -1,13 +1,5 @@
 package gumbo.gui.dialogs;
 
-import gumbo.generator.GFGenerator;
-import gumbo.generator.GFGeneratorException;
-import gumbo.generator.GFGeneratorInput;
-import gumbo.generator.GFGeneratorInput.Relation;
-import gumbo.generator.QueryType;
-import gumbo.gui.panels.QueryInputField;
-import gumbo.input.parser.GumboExporter;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -44,6 +36,14 @@ import javax.swing.table.TableCellRenderer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import gumbo.generator.GFGenerator;
+import gumbo.generator.GFGeneratorException;
+import gumbo.generator.GFGeneratorInput;
+import gumbo.generator.GFGeneratorInput.Relation;
+import gumbo.generator.QueryType;
+import gumbo.gui.panels.QueryInputField;
+import gumbo.input.parser.GumboExporter;
 
 public class GeneratorDialog extends JDialog implements ActionListener {
 	

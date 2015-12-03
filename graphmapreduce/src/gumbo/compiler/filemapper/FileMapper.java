@@ -3,10 +3,10 @@
  */
 package gumbo.compiler.filemapper;
 
+import org.apache.hadoop.fs.Path;
+
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.structures.data.RelationSchema;
-
-import org.apache.hadoop.fs.Path;
 
 /**
  * Creates a {@link FileManager} that assigns an file to each {@link RelationSchema}. 

@@ -3,11 +3,6 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round1.combiners;
 
-import gumbo.engine.hadoop.mrcomponents.tools.ParameterPasser;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.structures.gfexpressions.io.Pair;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,6 +16,11 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
+
+import gumbo.engine.hadoop.mrcomponents.tools.ParameterPasser;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.structures.gfexpressions.io.Pair;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 /**
  * @author Jonny Daenen

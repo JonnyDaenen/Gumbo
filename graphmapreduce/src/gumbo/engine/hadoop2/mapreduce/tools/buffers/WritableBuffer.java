@@ -1,12 +1,7 @@
 package gumbo.engine.hadoop2.mapreduce.tools.buffers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import org.apache.hadoop.io.Writable;
-
-import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 
 /**
  * Keeps a list of objects that can be recycled.

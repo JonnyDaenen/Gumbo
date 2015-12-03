@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Mapper.Context;
@@ -17,7 +16,6 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
-import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.io.DeserializeException;
 import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 

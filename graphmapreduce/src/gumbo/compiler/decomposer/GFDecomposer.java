@@ -3,6 +3,13 @@
  */
 package gumbo.compiler.decomposer;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import gumbo.structures.gfexpressions.GFAndExpression;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
@@ -12,13 +19,6 @@ import gumbo.structures.gfexpressions.GFOrExpression;
 import gumbo.structures.gfexpressions.GFVisitor;
 import gumbo.structures.gfexpressions.GFVisitorException;
 import gumbo.structures.gfexpressions.io.Pair;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 
 

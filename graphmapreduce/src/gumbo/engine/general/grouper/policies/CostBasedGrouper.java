@@ -7,7 +7,6 @@ import java.util.Set;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.engine.general.grouper.costmodel.CostModel;
-import gumbo.engine.general.grouper.costmodel.MRSettings;
 import gumbo.engine.general.grouper.sample.RelationSampleContainer;
 import gumbo.engine.general.grouper.sample.RelationSampler;
 import gumbo.engine.general.grouper.sample.Simulator;
@@ -17,7 +16,6 @@ import gumbo.engine.general.grouper.structures.CostMatrix;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.utils.estimation.SamplingException;
 

@@ -3,18 +3,6 @@
  */
 package gumbo.structures.gfexpressions.operations;
 
-import gumbo.compiler.filemapper.InputFormat;
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.structures.booleanexpressions.BExpression;
-import gumbo.structures.conversion.GFBooleanMapping;
-import gumbo.structures.conversion.GFtoBooleanConversionException;
-import gumbo.structures.conversion.GFtoBooleanConvertor;
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.GFExistentialExpression;
-import gumbo.structures.gfexpressions.io.Pair;
-import gumbo.structures.gfexpressions.io.Triple;
-
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -28,6 +16,18 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.Path;
+
+import gumbo.compiler.filemapper.InputFormat;
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.structures.booleanexpressions.BExpression;
+import gumbo.structures.conversion.GFBooleanMapping;
+import gumbo.structures.conversion.GFtoBooleanConversionException;
+import gumbo.structures.conversion.GFtoBooleanConvertor;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.io.Pair;
+import gumbo.structures.gfexpressions.io.Triple;
 
 /**
  * Wrapper for a set of GF Expressions.

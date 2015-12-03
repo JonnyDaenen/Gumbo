@@ -3,15 +3,15 @@
  */
 package gumbo.compiler.calculations;
 
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.gfexpressions.GFExistentialExpression;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 /**
  * Converts a set of basic GF expressions into {@link CalculationUnit}s.

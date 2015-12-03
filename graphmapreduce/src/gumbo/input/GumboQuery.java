@@ -1,12 +1,12 @@
 package gumbo.input;
 
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.structures.gfexpressions.GFExpression;
-
 import java.util.Collection;
 import java.util.HashSet;
 
 import org.apache.hadoop.fs.Path;
+
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.structures.gfexpressions.GFExpression;
 
 /**
  * Collection of different query components.

@@ -3,13 +3,13 @@
  */
 package gumbo.engine.hadoop.settings;
 
-import gumbo.engine.general.settings.AbstractExecutorSettings;
-
 import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+
+import gumbo.engine.general.settings.AbstractExecutorSettings;
 
 /**
  * Provides access to settings for the gumbo framework in a Hadoop {@link Configuration}.

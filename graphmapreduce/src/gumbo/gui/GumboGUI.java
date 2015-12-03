@@ -3,38 +3,6 @@
  */
 package gumbo.gui;
 
-import gumbo.compiler.GFCompiler;
-import gumbo.compiler.GFCompilerException;
-import gumbo.compiler.GumboPlan;
-import gumbo.compiler.filemapper.InputFormat;
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.compiler.partitioner.CalculationPartitioner;
-import gumbo.compiler.partitioner.DepthPartitioner;
-import gumbo.compiler.partitioner.HeightPartitioner;
-import gumbo.compiler.partitioner.OptimalPartitioner;
-import gumbo.compiler.partitioner.UnitPartitioner;
-import gumbo.compiler.plan.GraphVizPlanVisualizer;
-import gumbo.engine.general.ExecutionException;
-import gumbo.engine.hadoop.HadoopEngine;
-import gumbo.engine.spark.SparkEngine;
-import gumbo.generator.GFGeneratorInput;
-import gumbo.generator.GFGeneratorInputParser;
-import gumbo.gui.dialogs.GeneratorDialog;
-import gumbo.gui.gumbogui.GumboMainFrame;
-import gumbo.gui.gumbogui.PlanViewer;
-import gumbo.gui.panels.ConsolePanel;
-import gumbo.gui.panels.HivePanel;
-import gumbo.gui.panels.PigPanel;
-import gumbo.gui.panels.QueryInputDetails;
-import gumbo.gui.panels.QueryInputField;
-import gumbo.gui.panels.SettingsPanel;
-import gumbo.input.GumboQuery;
-import gumbo.input.parser.GumboScriptFileParser;
-import gumbo.input.parser.GumboScriptFileParser.GumboParseException;
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.gfexpressions.GFExpression;
-import gumbo.structures.gfexpressions.io.GFInfixSerializer;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -76,6 +44,38 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
+
+import gumbo.compiler.GFCompiler;
+import gumbo.compiler.GFCompilerException;
+import gumbo.compiler.GumboPlan;
+import gumbo.compiler.filemapper.InputFormat;
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.compiler.partitioner.CalculationPartitioner;
+import gumbo.compiler.partitioner.DepthPartitioner;
+import gumbo.compiler.partitioner.HeightPartitioner;
+import gumbo.compiler.partitioner.OptimalPartitioner;
+import gumbo.compiler.partitioner.UnitPartitioner;
+import gumbo.compiler.plan.GraphVizPlanVisualizer;
+import gumbo.engine.general.ExecutionException;
+import gumbo.engine.hadoop.HadoopEngine;
+import gumbo.engine.spark.SparkEngine;
+import gumbo.generator.GFGeneratorInput;
+import gumbo.generator.GFGeneratorInputParser;
+import gumbo.gui.dialogs.GeneratorDialog;
+import gumbo.gui.gumbogui.GumboMainFrame;
+import gumbo.gui.gumbogui.PlanViewer;
+import gumbo.gui.panels.ConsolePanel;
+import gumbo.gui.panels.HivePanel;
+import gumbo.gui.panels.PigPanel;
+import gumbo.gui.panels.QueryInputDetails;
+import gumbo.gui.panels.QueryInputField;
+import gumbo.gui.panels.SettingsPanel;
+import gumbo.input.GumboQuery;
+import gumbo.input.parser.GumboScriptFileParser;
+import gumbo.input.parser.GumboScriptFileParser.GumboParseException;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.GFInfixSerializer;
 
 /**
  * 

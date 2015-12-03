@@ -1,16 +1,16 @@
 package gumbo.engine.general.algorithms;
 
-import gumbo.engine.general.messagefactories.MessageFailedException;
-import gumbo.engine.general.messagefactories.Red1MessageFactoryInterface;
-import gumbo.engine.general.settings.AbstractExecutorSettings;
-import gumbo.structures.gfexpressions.io.Pair;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
-
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import gumbo.engine.general.messagefactories.MessageFailedException;
+import gumbo.engine.general.messagefactories.Red1MessageFactoryInterface;
+import gumbo.engine.general.settings.AbstractExecutorSettings;
+import gumbo.structures.gfexpressions.io.Pair;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 public class Red1Algorithm implements ReduceAlgorithm {
 

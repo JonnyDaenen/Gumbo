@@ -14,7 +14,6 @@ import gumbo.engine.general.grouper.policies.CostBasedGrouper;
 import gumbo.engine.general.grouper.policies.GuardedAtomGrouper;
 import gumbo.engine.general.grouper.policies.NoneGrouper;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
-import gumbo.engine.hadoop.converter.GumboHadoopConverter;
 import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
 
 public class GrouperFactory {

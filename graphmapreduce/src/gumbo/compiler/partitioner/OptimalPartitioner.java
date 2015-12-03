@@ -7,8 +7,6 @@ import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.linker.CalculationUnitGroup;
 
-import java.util.Arrays;
-
 /**
  * Partitions the CalculationUnits based on their height in the DAG.
  * @author Jonny Daenen

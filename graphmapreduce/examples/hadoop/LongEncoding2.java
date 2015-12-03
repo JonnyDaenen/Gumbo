@@ -3,9 +3,9 @@
  */
 package hadoop;
 
-import gumbo.utils.LongBase64Converter;
-
 import java.io.IOException;
+
+import gumbo.utils.LongBase64Converter;
 
 /**
  * @author jonny

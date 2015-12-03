@@ -1,5 +1,8 @@
 package gumbo.engine.general.algorithms;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import gumbo.engine.general.messagefactories.Red2MessageFactoryInterface;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.structures.booleanexpressions.BEvaluationContext;
@@ -12,9 +15,6 @@ import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public class Red2Algorithm implements ReduceAlgorithm {
 

@@ -5,6 +5,13 @@ package gumbo.compiler;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.junit.Test;
+
 import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnitException;
 import gumbo.compiler.decomposer.GFDecomposerException;
@@ -12,12 +19,6 @@ import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.junit.Test;
 
 /**
  * @author Jonny Daenen
