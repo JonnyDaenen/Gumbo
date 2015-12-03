@@ -3,6 +3,8 @@ package gumbo.engine.hadoop2.mapreduce.tools.buffers;
 import java.util.ArrayList;
 import java.util.List;
 
+import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
+
 /**
  * Keeps a list of objects that can be recycled.
  * The internal writables are kept to avoid excess memory allocation
@@ -111,5 +113,14 @@ public class WritableBuffer<A extends Recyclable<A>> {
 	 */
 	public void setMaxRemaining(int maxRemaining) {
 		MAX_REMAINING = maxRemaining;
+	}
+
+	/**
+	 * Returns the ith buffer element.
+	 * @param i index
+	 * @return the ith buffer element
+	 */
+	public A get(int i) {
+		return buffer.get(i);
 	}
 }
