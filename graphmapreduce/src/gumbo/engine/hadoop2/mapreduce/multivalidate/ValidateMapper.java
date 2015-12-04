@@ -12,7 +12,7 @@ import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
-import gumbo.engine.hadoop2.mapreduce.tools.buffers.WritablePacker;
+import gumbo.engine.hadoop2.mapreduce.tools.buffers.AssertRequestPacker;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleOpFactory;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleProjection;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
@@ -26,7 +26,7 @@ public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 	protected GumboMessageWritable gw;
 	private TupleProjection [] projections;
 	
-	private WritablePacker packer;
+	private AssertRequestPacker packer;
 	
 	
 	@Override
@@ -39,7 +39,7 @@ public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 		bw = new VBytesWritable();
 		gw = new GumboMessageWritable();
 		
-		packer = new WritablePacker(10);
+		packer = new AssertRequestPacker(10);
 		
 		ContextInspector inspector = new ContextInspector(context);
 		

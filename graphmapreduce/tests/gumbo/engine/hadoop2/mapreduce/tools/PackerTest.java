@@ -10,14 +10,14 @@ import org.junit.Test;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;
-import gumbo.engine.hadoop2.mapreduce.tools.buffers.WritablePacker;
+import gumbo.engine.hadoop2.mapreduce.tools.buffers.AssertRequestPacker;
 import gumbo.structures.gfexpressions.io.Pair;
 
 public class PackerTest {
 
 	@Test 
 	public void testMerge() {
-		WritablePacker p = new WritablePacker(3);
+		AssertRequestPacker p = new AssertRequestPacker(3);
 
 		byte [] atomidskey1 = {1,2,3};
 		VBytesWritable key1 = new VBytesWritable(atomidskey1, 3);

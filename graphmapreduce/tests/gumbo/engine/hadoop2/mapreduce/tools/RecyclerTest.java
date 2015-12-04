@@ -6,13 +6,13 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
-import gumbo.engine.hadoop2.mapreduce.tools.buffers.WritableBuffer;
+import gumbo.engine.hadoop2.mapreduce.tools.buffers.RecyclableBuffer;
 
 public class RecyclerTest {
 	
 	@Test
 	public void testReycle() {
-		WritableBuffer<GumboMessageWritable> buf = new WritableBuffer<>();
+		RecyclableBuffer<GumboMessageWritable> buf = new RecyclableBuffer<>();
 
 		GumboMessageWritable gw = new GumboMessageWritable();
 		byte [] atomids = {1,2,3};

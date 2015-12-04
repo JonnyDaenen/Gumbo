@@ -13,19 +13,19 @@ import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
  *
  * @param <A> recyclable object
  */
-public class WritableBuffer<A extends Recyclable<A>> {
+public class RecyclableBuffer<A extends Recyclable<A>> {
 	
 	int MAX_REMAINING = 0;
 
 	List<A> buffer;
 	int used;
 
-	public WritableBuffer() {
+	public RecyclableBuffer() {
 		used = 0;
 		buffer = new ArrayList<>(10);
 	}
 	
-	public WritableBuffer(int expectedSize) {
+	public RecyclableBuffer(int expectedSize) {
 		used = 0;
 		buffer = new ArrayList<>(expectedSize);
 		MAX_REMAINING = expectedSize;

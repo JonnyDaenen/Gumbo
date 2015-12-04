@@ -28,6 +28,7 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 	private static final Log LOG = LogFactory.getLog(GumboMessageWritable.class);
 
 	public class GumboMessageType {
+		public static final byte GARBAGE = 0;
 		public static final byte ASSERT = 1;
 		public static final byte REQUEST = 2;
 		public static final byte CONFIRM = 3;
@@ -73,6 +74,10 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 	public void write(DataOutput out) throws IOException {
 
 		switch (type.get()) {
+		case GumboMessageType.GARBAGE:
+			type.write(out);
+			break;
+			
 		case GumboMessageType.REQUEST:
 			type.write(out);
 			fileid.write(out);
@@ -93,6 +98,8 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		case GumboMessageType.DATA:
 			type.write(out);
 			data.write(out);
+			break;
+			
 		default:
 			break;
 		}
@@ -119,6 +126,11 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 
 		case GumboMessageType.DATA:
 			data.readFields(in);
+			break;
+			
+		case GumboMessageType.GARBAGE:
+			break;
+			
 		default:
 			break;
 		}
@@ -285,6 +297,10 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 	public boolean isData() {
 		return type.get() == GumboMessageType.DATA;
 	}
+	
+	public boolean isGarbage() {
+		return type.get() == GumboMessageType.GARBAGE;
+	}
 
 
 	public void setAssert(byte[] atomids, int length) {
@@ -310,6 +326,10 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 	public void setData(byte[] data, int length) {
 		this.type.set(GumboMessageType.DATA);
 		this.data.set(data, 0, length);
+	}
+	
+	public void setGarbage() {
+		this.type.set(GumboMessageType.GARBAGE);
 	}
 
 
@@ -382,6 +402,9 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		if (type.get() != gw.type.get())
 			throw new MessageMergeException();
 
+		if (type.get() == GumboMessageType.GARBAGE)
+			return;
+		
 		// merging 2 different request messages
 		if (type.get() == GumboMessageType.REQUEST &&
 				(fileid.get() != gw.fileid.get() || offset.get() != gw.offset.get()))
@@ -410,6 +433,8 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 
 
 	}
+
+	
 
 
 

@@ -12,7 +12,7 @@ import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
 import gumbo.engine.hadoop2.mapreduce.tools.buffers.ConfirmBuffer;
-import gumbo.engine.hadoop2.mapreduce.tools.buffers.WritableBuffer;
+import gumbo.engine.hadoop2.mapreduce.tools.buffers.RecyclableBuffer;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleEvaluator;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleOpFactory;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
@@ -22,7 +22,7 @@ public class MultiSemiJoinReducer  extends Reducer<VBytesWritable, GumboMessageW
 	private Text output;
 
 	private ConfirmBuffer buffer;
-	private WritableBuffer<GumboMessageWritable> dmbuffer; // TODO check if buffer is actually better
+	private RecyclableBuffer<GumboMessageWritable> dmbuffer; // TODO check if buffer is actually better
 	private TupleEvaluator [] projections;
 
 	private MultipleOutputs<Text, Text> mos;
@@ -50,7 +50,7 @@ public class MultiSemiJoinReducer  extends Reducer<VBytesWritable, GumboMessageW
 		// create buffer
 		int maxatomid = inspector.getMaxAtomID();
 		buffer = new ConfirmBuffer(maxatomid);
-		dmbuffer = new WritableBuffer<>(16);
+		dmbuffer = new RecyclableBuffer<>(16);
 
 
 	}
