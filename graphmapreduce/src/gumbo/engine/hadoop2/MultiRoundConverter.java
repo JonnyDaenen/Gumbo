@@ -15,6 +15,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.ContentSummary;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
@@ -199,7 +200,7 @@ public class MultiRoundConverter {
 
 			long size = calculateSize(inputPaths);
 
-			int numRed = (int)Math.max(1, size / (128 * 1024 * 1024)); // FIXME use settings
+			int numRed = (int) Math.max(1, size / (128 * 1024 * 1024)); // FIXME use settings
 			hadoopJob.setNumReduceTasks(numRed); 
 			LOG.info("Setting EVAL Reduce tasks to " + numRed);
 
@@ -396,6 +397,9 @@ public class MultiRoundConverter {
 			Path from = fm.getOutputRoot().suffix(Path.SEPARATOR + partition.getCanonicalOutString() + Path.SEPARATOR + rs.getName()+ "-r-*");
 			Path to = fm.getOutFileMapping().getPaths(rs).iterator().next();
 
+			// FUTURE perform merge using option
+//			FileUtil.copyMerge(dfs, from, dfs, to, true, conf, null);
+			
 			dfs.mkdirs(to);
 			FileStatus[] files = dfs.globStatus(from);
 			for(FileStatus file: files) {
@@ -403,7 +407,6 @@ public class MultiRoundConverter {
 					LOG.info("Moving files: " + from + " " + to);
 					dfs.rename(file.getPath(), to);
 				}
-				// TODO perform merge
 			}
 
 		}
