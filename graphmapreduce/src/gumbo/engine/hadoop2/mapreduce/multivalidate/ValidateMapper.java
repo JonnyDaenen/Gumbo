@@ -20,91 +20,92 @@ import gumbo.structures.gfexpressions.io.Pair;
 
 public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable> {
 
-	
+
 	private QuickWrappedTuple qt;
 	private VBytesWritable bw;
 	private GumboMessageWritable gw;
 	private TupleProjection [] projections;
-	
+
 	private boolean packingEnabled;
 	private AssertRequestPacker packer;
-	
-	
+
+
 	@Override
 	public void setup(Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable>.Context context)
 			throws IOException, InterruptedException {
 		super.setup(context);
-		
+
 		// buffers
 		qt = new QuickWrappedTuple();
 		bw = new VBytesWritable();
 		gw = new GumboMessageWritable();
-		
+
 		packer = new AssertRequestPacker(10);
-		
+
 		ContextInspector inspector = new ContextInspector(context);
-		
+
 		// get fileid
 		long fileid = inspector.getFileId();
-		
+
 		// get relation
 		String relation = inspector.getRelationName(fileid);
-		
+
 		// get queries
 		Set<GFExistentialExpression> queries = inspector.getQueries();
-		
+
 		// get atom id mapping
 		Map<String, Integer> atomidmap = inspector.getAtomIdMap();
-		
+
 		// get projections
 		projections = TupleOpFactory.createMap1Projections(relation, fileid, queries, atomidmap);
-		
+
 		// enable packing
 		packingEnabled = true;
-		
+
 		if (projections.length == 1) {
 			packingEnabled = false;
 		}
 
 		// OPTIMIZE disable packing if there are no key implications
 	}
-	
+
 
 	@Override
 	public void map(LongWritable key, Text value,
 			Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable>.Context context)
 					throws IOException, InterruptedException {
-		
+
 		// create QuickTuple
 		qt.initialize(value);
-		
-		
+
+
 		// for each guard atom
 		for (int i = 0; i < projections.length; i++) {
-			
+
 			TupleProjection pi = projections[i];
-			
+
 			// if matches. store the output in writables
 			if (pi.load(qt, key.get(), bw, gw)){
-				
+
 				// if packing is disabled, write output directly
 				if (!packingEnabled) {
 					context.write(bw, gw);
-				// otherwise, buffer
+					// otherwise, buffer
 				} else
 					packer.add(bw, gw);
-				
+
 			}
-			
+
 		}
-		
-		// cross-message packing
-		for (Pair<VBytesWritable, GumboMessageWritable> kvpair : packer.pack()) {
-			context.write(kvpair.fst, kvpair.snd);
+
+		if (packingEnabled) {
+			// cross-message packing
+			for (Pair<VBytesWritable, GumboMessageWritable> kvpair : packer.pack()) {
+				context.write(kvpair.fst, kvpair.snd);
+			}
+			packer.clear();
 		}
-		packer.clear();
-		
-		
+
 	}
-	
+
 }
