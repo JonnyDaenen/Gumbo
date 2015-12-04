@@ -10,7 +10,7 @@ import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 public class RequestBuffer {
 
 	private boolean [] atomids;
-	private List<GumboMessageWritable> buffer;
+	private RecyclableBuffer<GumboMessageWritable> buffer;
 	private ByteBuffer atombytes;
 
 	public RequestBuffer(int maxAtomID) {
@@ -19,7 +19,7 @@ public class RequestBuffer {
 
 	public void clearAtomsIds(int maxAtomID) {
 		atomids = new boolean[maxAtomID];
-		buffer = new ArrayList<>(32);
+		buffer = new RecyclableBuffer<>(32);
 
 		atombytes = ByteBuffer.wrap(new byte[maxAtomID]);
 	}
@@ -110,8 +110,8 @@ public class RequestBuffer {
 	public void addMessage(GumboMessageWritable value) {
 		// OPTIMIZE re-use older buffer elements
 
-		GumboMessageWritable val = value.duplicate();
-		buffer.add(val);
+//		GumboMessageWritable val = value.duplicate();
+		buffer.addWritable(value);
 	}
 
 

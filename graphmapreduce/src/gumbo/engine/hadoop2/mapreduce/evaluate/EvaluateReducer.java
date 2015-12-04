@@ -65,7 +65,6 @@ public class EvaluateReducer extends Reducer<VBytesWritable, GumboMessageWritabl
 					throws IOException, InterruptedException {
 		
 		
-		buffer.reset();
 		
 		for (GumboMessageWritable value : values) {
 		
@@ -85,6 +84,9 @@ public class EvaluateReducer extends Reducer<VBytesWritable, GumboMessageWritabl
 				mos.write((Text)null, output, pi.getFilename());
 			}
 		}
+		
+
+		buffer.reset();
 		
 	}
 }

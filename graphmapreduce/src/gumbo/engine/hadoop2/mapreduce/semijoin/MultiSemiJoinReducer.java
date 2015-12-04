@@ -68,7 +68,6 @@ public class MultiSemiJoinReducer  extends Reducer<VBytesWritable, GumboMessageW
 					throws IOException, InterruptedException {
 
 
-		buffer.reset();
 
 		for (GumboMessageWritable value : values) {
 
@@ -96,7 +95,9 @@ public class MultiSemiJoinReducer  extends Reducer<VBytesWritable, GumboMessageW
 			}
 		}
 		
+		buffer.reset();
 		dmbuffer.clear();
+		
 
 	}
 
