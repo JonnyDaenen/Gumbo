@@ -275,9 +275,9 @@ implements WritableComparable<BinaryComparable>, Recyclable<VBytesWritable>{
 		}
 
 
-		
+
 	}
-	
+
 	static {                                        // register this comparator
 		WritableComparator.define(VBytesWritable.class, new Comparator());
 	}
@@ -287,6 +287,14 @@ implements WritableComparable<BinaryComparable>, Recyclable<VBytesWritable>{
 		VBytesWritable b = new VBytesWritable();
 		b.set(this);
 		return b;
+	}
+
+	@Override
+	public int compareTo(BinaryComparable other) {
+		if (this == other)
+			return 0;
+		return VBytesWritable.Comparator.compareBytes(getBytes(), 0, getLength(),
+				other.getBytes(), 0, other.getLength());
 	}
 
 }

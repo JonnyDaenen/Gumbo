@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.hadoop.io.BytesWritable;
+
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable.MessageMergeException;
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;
@@ -56,7 +58,7 @@ public class AssertRequestPacker {
 			VBytesWritable k1 = bytesFactory.get(i);
 			GumboMessageWritable v1 = messageFactory.get(i);
 
-			// skip allready merges messages
+			// skip already merged messages
 			if (v1.isGarbage())
 				continue;
 
@@ -67,6 +69,10 @@ public class AssertRequestPacker {
 				GumboMessageWritable v2 = messageFactory.get(j);
 
 				if (v2.isGarbage())
+					continue;
+				
+				// keys must match
+				if (k1.compareTo(k2) != 0)
 					continue;
 
 
