@@ -21,11 +21,12 @@ import gumbo.structures.gfexpressions.io.Pair;
 public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable> {
 
 	
-	protected QuickWrappedTuple qt;
-	protected VBytesWritable bw;
-	protected GumboMessageWritable gw;
+	private QuickWrappedTuple qt;
+	private VBytesWritable bw;
+	private GumboMessageWritable gw;
 	private TupleProjection [] projections;
 	
+	private boolean packingEnabled;
 	private AssertRequestPacker packer;
 	
 	
@@ -58,6 +59,14 @@ public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 		// get projections
 		projections = TupleOpFactory.createMap1Projections(relation, fileid, queries, atomidmap);
 		
+		// enable packing
+		packingEnabled = true;
+		
+		if (projections.length == 1) {
+			packingEnabled = false;
+		}
+
+		// OPTIMIZE disable packing if there are no key implications
 	}
 	
 
@@ -78,9 +87,13 @@ public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 			// if matches. store the output in writables
 			if (pi.load(qt, key.get(), bw, gw)){
 				
-				// and write output
-				// TODO if packing is disabled: context.write(bw, gw);
-				packer.add(bw, gw);
+				// if packing is disabled, write output directly
+				if (!packingEnabled) {
+					context.write(bw, gw);
+				// otherwise, buffer
+				} else
+					packer.add(bw, gw);
+				
 			}
 			
 		}

@@ -429,17 +429,6 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 			throw e;
 		}
 
-
-
-
 	}
-
-	
-
-
-
-
-
-
 
 }

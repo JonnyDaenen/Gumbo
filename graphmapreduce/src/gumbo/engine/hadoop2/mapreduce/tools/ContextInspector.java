@@ -94,8 +94,9 @@ public class ContextInspector {
 	 * Next, the file path - file id mapping in the context is used to determine the file id.
 	 * 
 	 * @return the id of the file that contains the current input split
+	 * @throws InterruptedException 
 	 */
-	public long getFileId()  {
+	public long getFileId() throws InterruptedException  {
 
 		// FUTURE check the following, if it fails, use underscores
 //		String path = System.getenv("mapreduce_map_input_file");
@@ -119,12 +120,8 @@ public class ContextInspector {
 			// String filename= ((FileSplit)context.getInputSplit()).getPath().getName();
 
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new InterruptedException("Error fetching filename for active mapper.");
 		}
-
-		return 0;
-
 
 
 	}
@@ -137,8 +134,9 @@ public class ContextInspector {
 	/**
 	 * Looks up the relation name this mapper is processing.
 	 * @return the current relation name
+	 * @throws InterruptedException 
 	 */
-	public String getRelationName() {
+	public String getRelationName() throws InterruptedException {
 		// get file id
 		long fileid = getFileId();
 		// convert
