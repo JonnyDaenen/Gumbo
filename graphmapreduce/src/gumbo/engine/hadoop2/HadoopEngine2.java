@@ -109,57 +109,58 @@ public class HadoopEngine2 {
 	 */
 	private void createAndExecuteJobs(GumboPlan plan, PartitionedCUGroup partitions) throws InterruptedException {
 
+		try {
+			MultiRoundConverter converter = new MultiRoundConverter(plan, conf);
 
-		MultiRoundConverter converter = new MultiRoundConverter(plan, conf);
+			for (CalculationUnitGroup partition : partitions.getBottomUpList()) {
 
-		for (CalculationUnitGroup partition : partitions.getBottomUpList()) {
-
-			// FUTURE start next level as soon as possible
-
-
-			// check if this partition is eligible for 1-round conversion
-			if (converter.is1Round(partition)) {
-				LOG.info("Using 1-round evaluation for " + partitions);
-				List<ControlledJob> jobs1Round = converter.createValEval(partition);
-				for (ControlledJob job: jobs1Round) {
-					jc.addJob(job);
-				}
-				
-			// if not, split into 2 rounds
-			} else {
-				LOG.info("Using 2-round evaluation for " + partitions);
-
-				// perform grouping on the rest
-				List<CalculationGroup> groups = converter.group(partition);
+				// FUTURE start next level as soon as possible
 
 
-				LOG.info("Starting round 1 (VAL)");
-				// create and execute all round 1 jobs
-				for (CalculationGroup group : groups) {
-					ControlledJob job = converter.createValidateJob(group);
-					jc.addJob(job);
+				// check if this partition is eligible for 1-round conversion
+				if (converter.is1Round(partition)) {
+					LOG.info("Using 1-round evaluation for " + partitions);
+					List<ControlledJob> jobs1Round = converter.createValEval(partition);
+					for (ControlledJob job: jobs1Round) {
+						jc.addJob(job);
+					}
+
+					// if not, split into 2 rounds
+				} else {
+					LOG.info("Using 2-round evaluation for " + partitions);
+
+					// perform grouping on the rest
+					List<CalculationGroup> groups = converter.group(partition);
+
+
+					LOG.info("Starting round 1 (VAL)");
+					// create and execute all round 1 jobs
+					for (CalculationGroup group : groups) {
+						ControlledJob job = converter.createValidateJob(group);
+						jc.addJob(job);
+					}
+
+					// wait for completion
+					waitForJC();
+
+					LOG.info("Starting round 2 (EVAL)");
+					// create and execute round 2 job
+					List<ControlledJob> jobs = converter.createEvaluateJob(partition);
+					for (ControlledJob job: jobs) {
+						jc.addJob(job);
+					}
 				}
 
 				// wait for completion
 				waitForJC();
 
-				LOG.info("Starting round 2 (EVAL)");
-				// create and execute round 2 job
-				List<ControlledJob> jobs = converter.createEvaluateJob(partition);
-				for (ControlledJob job: jobs) {
-					jc.addJob(job);
-				}
-			}
 
-			// wait for completion
-			waitForJC();
-
-			try {
 				converter.moveOutputFiles(partition);
-			} catch (IOException e) {
-				throw new InterruptedException("Moving output files failed: " + e.getMessage());
-			}
 
+
+			}
+		} catch (IOException e) {
+			throw new InterruptedException(e.getMessage());
 		}
 
 	}

@@ -86,11 +86,10 @@ public class MultiRoundConverter {
 		this.extractor = new FileMappingExtractor();
 	}
 
-	public ControlledJob createValidateJob(CalculationGroup group) {
+	public ControlledJob createValidateJob(CalculationGroup group) throws IOException {
 
 
 		Job hadoopJob = null;
-		try {
 			hadoopJob = Job.getInstance(conf); // note: makes a copy of the conf
 
 
@@ -151,18 +150,14 @@ public class MultiRoundConverter {
 				addInfo(hadoopJob, group);
 			}
 			long intermediate = group.getGuardedOutBytes() + group.getGuardOutBytes();
-			int numRed =  (int) Math.max(1, intermediate / (128*1024*1024.0) ); // FIXME extract from settings
+			int numRed =  (int) Math.max(1, intermediate / (256*1024*1024.0) ); // FIXME extract from settings
 			hadoopJob.setNumReduceTasks(numRed); 
 
-			LOG.info("Map output est.: "+intermediate+", setting VAL Reduce tasks to " + numRed);
+			LOG.info("Map output est.: " + intermediate + ", setting VAL Reduce tasks to " + numRed);
 
 
 			return new ControlledJob(hadoopJob, null);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		return null;
+	
 	}
 
 
@@ -215,7 +210,7 @@ public class MultiRoundConverter {
 
 			long size = calculateSize(inputPaths);
 
-			int numRed = (int) Math.max(1, size / (128 * 1024 * 1024)); // FIXME use settings
+			int numRed = (int) Math.max(1, size / (256 * 1024 * 1024)); // FIXME use settings
 			hadoopJob.setNumReduceTasks(numRed); 
 			LOG.info("Setting EVAL Reduce tasks to " + numRed);
 
