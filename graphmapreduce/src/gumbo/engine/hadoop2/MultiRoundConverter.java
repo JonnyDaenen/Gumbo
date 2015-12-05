@@ -34,6 +34,7 @@ import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.engine.general.algorithms.AlgorithmInterruptedException;
 import gumbo.engine.general.grouper.Grouper;
 import gumbo.engine.general.grouper.GrouperFactory;
 import gumbo.engine.general.grouper.sample.RelationSampleContainer;
@@ -47,6 +48,7 @@ import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;
+import gumbo.engine.hadoop2.estimation.MapSimulator;
 import gumbo.engine.hadoop2.mapreduce.evaluate.EvaluateMapper;
 import gumbo.engine.hadoop2.mapreduce.evaluate.EvaluateReducer;
 import gumbo.engine.hadoop2.mapreduce.multivalidate.ValidateMapper;
@@ -86,6 +88,7 @@ public class MultiRoundConverter {
 
 	public ControlledJob createValidateJob(CalculationGroup group) {
 
+
 		Job hadoopJob = null;
 		try {
 			hadoopJob = Job.getInstance(conf); // note: makes a copy of the conf
@@ -107,10 +110,6 @@ public class MultiRoundConverter {
 
 			// REDUCER
 			hadoopJob.setReducerClass(ValidateReducer.class); 
-
-			int numRed =  (int) Math.max(1,group.getGuardedOutBytes() / (128*1024*1024.0) ); // FIXME extract from settings
-			hadoopJob.setNumReduceTasks(numRed); 
-			LOG.info("Setting VAL Reduce tasks to " + numRed);
 
 
 			// SETTINGS
@@ -143,6 +142,20 @@ public class MultiRoundConverter {
 			// pass settings to mapper
 			configure(hadoopJob, calculations);
 
+			// NUM RED TASKS
+			// add missing sample data if necessary
+			// create a job for each group
+
+			if (!group.hasInfo()) {
+				LOG.info("Missing size estimates, sampling data.");
+				addInfo(hadoopJob, group);
+			}
+			long intermediate = group.getGuardedOutBytes() + group.getGuardOutBytes();
+			int numRed =  (int) Math.max(1, intermediate / (128*1024*1024.0) ); // FIXME extract from settings
+			hadoopJob.setNumReduceTasks(numRed); 
+
+			LOG.info("Map output est.: "+intermediate+", setting VAL Reduce tasks to " + numRed);
+
 
 			return new ControlledJob(hadoopJob, null);
 		} catch (IOException e) {
@@ -151,6 +164,8 @@ public class MultiRoundConverter {
 		} 
 		return null;
 	}
+
+
 
 	public List<ControlledJob> createEvaluateJob(CalculationUnitGroup partition) {
 
@@ -265,29 +280,29 @@ public class MultiRoundConverter {
 		// apply grouping
 		List<CalculationGroup> groups = grouper.group(partition);
 
-		// add missing sample data if necessary
-		// create a job for each group
-		for (CalculationGroup group : groups) {
-
-			if (!group.hasInfo()) {
-				LOG.info("Missing size estimates, sampling data.");
-				addInfo(group, mapping, settings);
-			}
-		}
-
 		return groups;
 	}
 
-	private void addInfo(CalculationGroup group, RelationFileMapping mapping, HadoopExecutorSettings settings) {
+	private void addInfo(Job hadoopJob, CalculationGroup group) {
 		// execute algorithm on sample
-		Simulator simulator = new Simulator(samples, fm.getFileMapping(), settings);
-		SimulatorReport report = simulator.execute(group);
+		//		Simulator simulator = new Simulator(samples, fm.getFileMapping(), settings);
 
-		// fill in parameters 
-		group.setGuardInBytes(report.getGuardInBytes());
-		group.setGuardedInBytes(report.getGuardedInBytes());
-		group.setGuardOutBytes(report.getGuardOutBytes());
-		group.setGuardedOutBytes(report.getGuardedOutBytes());
+
+		MapSimulator simulator = new MapSimulator(samples, fm.getFileMapping());
+		SimulatorReport report;
+		try {
+			report = simulator.execute(group.getInputRelations(), hadoopJob.getConfiguration());
+
+
+			// fill in parameters 
+			group.setGuardInBytes(report.getGuardInBytes());
+			group.setGuardedInBytes(report.getGuardedInBytes());
+			group.setGuardOutBytes(report.getGuardOutBytes());
+			group.setGuardedOutBytes(report.getGuardedOutBytes());
+		} catch (AlgorithmInterruptedException e) {
+			LOG.error("Map sample simulation failed. Number of reducers may be wrong.", e);
+		}
+
 	}
 
 	private void updateSamples() {
@@ -398,8 +413,8 @@ public class MultiRoundConverter {
 			Path to = fm.getOutFileMapping().getPaths(rs).iterator().next();
 
 			// FUTURE perform merge using option
-//			FileUtil.copyMerge(dfs, from, dfs, to, true, conf, null);
-			
+			//			FileUtil.copyMerge(dfs, from, dfs, to, true, conf, null);
+
 			dfs.mkdirs(to);
 			FileStatus[] files = dfs.globStatus(from);
 			for(FileStatus file: files) {
@@ -477,8 +492,8 @@ public class MultiRoundConverter {
 			// pass settings
 			Set<GFExistentialExpression> calculations = new HashSet<>();
 			for (CalculationUnit cu : partition.getCalculations()) {
-					calculations.add(((BasicGFCalculationUnit)cu).getBasicExpression());
-				
+				calculations.add(((BasicGFCalculationUnit)cu).getBasicExpression());
+
 			}
 			configure(hadoopJob, calculations);
 

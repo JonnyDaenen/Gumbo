@@ -14,6 +14,8 @@ import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
+import com.esotericsoftware.minlog.Log;
+
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.io.DeserializeException;
@@ -99,16 +101,28 @@ public class ContextInspector {
 	public long getFileId() throws InterruptedException  {
 
 		// FUTURE check the following, if it fails, use underscores
-//		String path = System.getenv("mapreduce_map_input_file");
-//		System.out.println(conf.get("mapreduce_map_input_file"));
-//		System.out.println("path: " + path);
-		
+		//		String path = System.getenv("mapreduce_map_input_file");
+		//		System.out.println(conf.get("mapreduce_map_input_file"));
+		//		System.out.println("path: " + path);
 
-		InputSplit is = contextMap.getInputSplit();
+		// used for sampling only
+		try{
+			Method filemethod = contextMap.getClass().getMethod("getFileID");
+			if (filemethod != null) {
+				long fileid = (long) filemethod.invoke(contextMap);
+				return fileid;
+			}
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+		}
 
-		Method method;
 		try {
-			method = is.getClass().getMethod("getInputSplit");
+
+
+
+			// normal
+			InputSplit is = contextMap.getInputSplit();
+
+			Method 	method = is.getClass().getMethod("getInputSplit");
 
 			method.setAccessible(true);
 			FileSplit fileSplit = (FileSplit) method.invoke(is);
@@ -120,6 +134,7 @@ public class ContextInspector {
 			// String filename= ((FileSplit)context.getInputSplit()).getPath().getName();
 
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			Log.error("Error fetching file id", e);
 			throw new InterruptedException("Error fetching filename for active mapper.");
 		}
 
@@ -137,6 +152,7 @@ public class ContextInspector {
 	 * @throws InterruptedException 
 	 */
 	public String getRelationName() throws InterruptedException {
+
 		// get file id
 		long fileid = getFileId();
 		// convert
@@ -146,8 +162,21 @@ public class ContextInspector {
 	/**
 	 * Looks up the relation name for a given id.
 	 * @return the current relation name
+	 * @throws InterruptedException 
 	 */
 	public String getRelationName(long fileid) {
+
+		// for simulation purposes only
+		try {
+			Method relationmethod = contextMap.getClass().getMethod("getRelationName");
+			if (relationmethod != null ) {
+				String relationname = (String) relationmethod.invoke(contextMap);
+				return relationname;
+			}
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+		}
+
+		// normal file id fetch
 		return filerelationmap.get(fileid);
 	}
 
@@ -162,7 +191,7 @@ public class ContextInspector {
 		}
 		return atoms;
 	}
-	
+
 	public Set<GFAtomicExpression> getGuardAtoms() {
 		HashSet<GFAtomicExpression> atoms = new HashSet<>();
 		for (GFExistentialExpression query : queries){
@@ -195,7 +224,7 @@ public class ContextInspector {
 		return maxatomid;
 	}
 
-	
+
 
 
 
