@@ -60,6 +60,10 @@ public abstract class AbstractExecutorSettings {
 
 
 
+	public static final String unnesterEnabled = "gumbo.compiler.unnest";
+
+
+
 	
 
 	/**
@@ -79,6 +83,7 @@ public abstract class AbstractExecutorSettings {
 		setProperty(REDUCER_SIZE_MB, "1024");
 		
 		// engine v2
+		setBooleanProperty(unnesterEnabled, false); 
 		setBooleanProperty(outputMergeEnabled, false); 
 		setProperty(simulatorClass, gumbo.engine.hadoop2.estimation.MapSimulator.class.getCanonicalName());
 	}

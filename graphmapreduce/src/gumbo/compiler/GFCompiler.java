@@ -42,6 +42,8 @@ public class GFCompiler {
 	protected FileMapper filemapper;
 	protected CalculationPartitioner partitioner;
 
+	private boolean unnesterEnabled;
+
 
 	/**
 	 * Default constructor, uses a {@link UnitPartitioner}.
@@ -52,6 +54,7 @@ public class GFCompiler {
 
 	public GFCompiler(CalculationPartitioner partitioner) {
 		this.partitioner = partitioner;
+		unnesterEnabled = false;
 
 		decomposer = new GFDecomposer();
 		unnester = new GFUnnester();
@@ -93,11 +96,12 @@ public class GFCompiler {
 			LOG.debug(bgfes);
 
 			// unnest if necessary
-			// TODO add settings check
-			LOG.info("Unnesting BGFEs...");
-			bgfes = unnester.unnest(bgfes);
-			LOG.info("New number of BGFEs: " + bgfes.size());
-			LOG.debug(bgfes);
+			if (unnesterEnabled) {
+				LOG.info("Unnesting BGFEs...");
+				bgfes = unnester.unnest(bgfes);
+				LOG.info("New number of BGFEs: " + bgfes.size());
+				LOG.debug(bgfes);
+			}
 
 			// CUConverter 
 			LOG.info("Converting BGFEs into CalculationUnits (CUs)...");
@@ -137,6 +141,11 @@ public class GFCompiler {
 
 
 
+
+	}
+
+	public void setUnnesterEnabled(boolean enabled) {
+		this.unnesterEnabled = enabled;
 
 	}
 
