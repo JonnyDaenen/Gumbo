@@ -40,6 +40,7 @@ import gumbo.engine.general.grouper.sample.RelationSampler;
 import gumbo.engine.general.grouper.sample.SimulatorReport;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
+import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.general.utils.FileMappingExtractor;
 import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
@@ -151,7 +152,7 @@ public class MultiRoundConverter {
 				addInfo(hadoopJob, group);
 			}
 			long intermediate = group.getGuardedOutBytes() + group.getGuardOutBytes();
-			int numRed =  (int) Math.max(1, intermediate / (256*1024*1024.0) ); // FIXME extract from settings
+			int numRed =  (int) Math.max(1, intermediate / (settings.getNumProperty(AbstractExecutorSettings.REDUCER_SIZE_MB)*1024*1024.0) ); 
 			hadoopJob.setNumReduceTasks(numRed); 
 
 			LOG.info("Map output est.: " + intermediate + ", setting VAL Reduce tasks to " + numRed);
@@ -211,7 +212,7 @@ public class MultiRoundConverter {
 
 			long size = calculateSize(inputPaths);
 
-			int numRed = (int) Math.max(1, size / (256 * 1024 * 1024)); // FIXME use settings
+			int numRed = (int) Math.max(1, size / (settings.getNumProperty(AbstractExecutorSettings.REDUCER_SIZE_MB) * 1024 * 1024));
 			hadoopJob.setNumReduceTasks(numRed); 
 			LOG.info("Setting EVAL Reduce tasks to " + numRed);
 
@@ -361,9 +362,7 @@ public class MultiRoundConverter {
 			dfs.delete(outdir, true);
 			
 			// merge files if necessary
-			// TODO make setting
-
-			if (settings.getBooleanProperty(settings.outputMergeEnabled)) {
+			if (settings.getBooleanProperty(AbstractExecutorSettings.outputMergeEnabled)) {
 
 				Path helpDir = to.suffix("_help");
 				dfs.rename(to, helpDir);
@@ -414,9 +413,11 @@ public class MultiRoundConverter {
 			// REDUCER
 			hadoopJob.setReducerClass(MultiSemiJoinReducer.class); 
 
-			long size = calculateSize(inputPaths); // FIXME estimate INTERMEDIATE size
+			// only input is transmitted, no replication rate is required
+			// hence input size is a good estimate
+			long size = calculateSize(inputPaths); 
 
-			int numRed = (int)Math.max(1, size / (128 * 1024 * 1024)); // FIXME use settings
+			int numRed = (int)Math.max(1, size / (settings.getNumProperty(AbstractExecutorSettings.REDUCER_SIZE_MB) * 1024 * 1024));
 			hadoopJob.setNumReduceTasks(numRed); 
 			LOG.info("Setting VALEVAL Reduce tasks to " + numRed);
 

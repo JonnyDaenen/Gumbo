@@ -12,7 +12,6 @@ import org.apache.commons.logging.LogFactory;
 
 import gumbo.compiler.partitioner.HeightPartitioner;
 import gumbo.engine.general.grouper.GroupingPolicies;
-import gumbo.engine.general.grouper.sample.Simulator;
 
 
 

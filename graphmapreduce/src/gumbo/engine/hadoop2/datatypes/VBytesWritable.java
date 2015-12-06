@@ -24,7 +24,6 @@ import gumbo.engine.hadoop2.mapreduce.tools.buffers.Recyclable;
 @InterfaceStability.Stable
 public class VBytesWritable extends BinaryComparable
 implements WritableComparable<BinaryComparable>, Recyclable<VBytesWritable>{
-	private static final int LENGTH_BYTES = 4; // FIXME this is wrong
 	private static final byte[] EMPTY_BYTES = {};
 
 	private int size;
