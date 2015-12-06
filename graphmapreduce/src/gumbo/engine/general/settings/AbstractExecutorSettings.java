@@ -50,6 +50,8 @@ public abstract class AbstractExecutorSettings {
 	public static final String partitionClass = "gumbo.compiler.partitioner";
 	public static final String mapOutputGroupingPolicy = "gumbo.engine.mapOutputGroupingPolicy";
 
+	// engine v2 options
+	public static final String outputMergeEnabled = "gumbo.engine.eval.output.merge";
 	
 	// constants
 	public static final String REDUCER_SIZE_MB = "gumbo.engine.hadoop.reducersize_mb";
@@ -71,6 +73,9 @@ public abstract class AbstractExecutorSettings {
 //		setProperty(mapOutputGroupingClass, AllGrouper.class.getCanonicalName());
 		
 		setProperty(REDUCER_SIZE_MB, "1024");
+		
+		// engine v2
+		setBooleanProperty(outputMergeEnabled, false); 
 	}
 	
 	public void turnOffOptimizations() {

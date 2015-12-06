@@ -408,13 +408,16 @@ public class MultiRoundConverter {
 		FileSystem dfs = FileSystem.get(conf);
 
 		for ( RelationSchema rs:  partition.getOutputRelations()) {
-			Path from = fm.getOutputRoot().suffix(Path.SEPARATOR + partition.getCanonicalOutString() + Path.SEPARATOR + rs.getName()+ "-r-*");
+			Path outdir = fm.getOutputRoot().suffix(Path.SEPARATOR + partition.getCanonicalOutString());
+			Path from = outdir.suffix(Path.SEPARATOR + rs.getName()+ "-r-*");
 			Path to = fm.getOutFileMapping().getPaths(rs).iterator().next();
 
 			// FUTURE perform merge using option
 			//			FileUtil.copyMerge(dfs, from, dfs, to, true, conf, null);
 
+			// move files to target destination
 			dfs.mkdirs(to);
+			
 			FileStatus[] files = dfs.globStatus(from);
 			for(FileStatus file: files) {
 				if (!file.isDirectory()) {
@@ -422,6 +425,24 @@ public class MultiRoundConverter {
 					dfs.rename(file.getPath(), to);
 				}
 			}
+			
+			
+			// delete old destination
+			dfs.delete(outdir, true);
+			
+			// merge files if necessary
+			// TODO make setting
+
+			if (settings.getBooleanProperty(settings.outputMergeEnabled)) {
+
+				Path helpDir = to.suffix("_help");
+				dfs.rename(to, helpDir);
+				
+				Path toFile = to.suffix(Path.SEPARATOR + "data");
+				FileUtil.copyMerge(dfs, helpDir, dfs, toFile, true, conf, null);
+				dfs.delete(helpDir, true);
+
+			} 
 
 		}
 
@@ -469,7 +490,7 @@ public class MultiRoundConverter {
 
 			long size = calculateSize(inputPaths); // FIXME estimate INTERMEDIATE size
 
-			int numRed = (int)Math.max(1, size / (128 * 1024 * 1024)); // FIXME use settings
+			int numRed = 10; //(int)Math.max(1, size / (128 * 1024 * 1024)); // FIXME use settings
 			hadoopJob.setNumReduceTasks(numRed); 
 			LOG.info("Setting VALEVAL Reduce tasks to " + numRed);
 

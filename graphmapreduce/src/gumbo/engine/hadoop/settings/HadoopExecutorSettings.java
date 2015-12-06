@@ -24,6 +24,7 @@ public class HadoopExecutorSettings extends AbstractExecutorSettings{
 	private static final Log LOG = LogFactory.getLog(HadoopExecutorSettings.class);
 	
 	private Configuration conf;
+
 	
 	
 	public HadoopExecutorSettings() {
