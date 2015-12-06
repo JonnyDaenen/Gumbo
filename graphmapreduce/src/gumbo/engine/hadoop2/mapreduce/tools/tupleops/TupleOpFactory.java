@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 
@@ -16,6 +20,9 @@ import gumbo.structures.gfexpressions.GFExistentialExpression;
  *
  */
 public class TupleOpFactory {
+	
+
+	private static final Log LOG = LogFactory.getLog(TupleOpFactory.class);
 
 	public static TupleProjection[] createMap1Projections(String relation, long fileid,
 			Set<GFExistentialExpression> queries, Map<String, Integer> atomidmap, boolean merge) {
@@ -24,13 +31,14 @@ public class TupleOpFactory {
 		List<TupleProjection> projections = getGuardProjections(relation, fileid, queries, atomidmap);
 		projections.addAll(getGuardedProjections(relation, queries, atomidmap));
 
-		System.out.println("Projections before merge:");
-		System.out.println(projections);
+		LOG.info("Projections before merge:");
+		LOG.info(projections);
 		// is requested, merge projections where possible
 		if (merge)
 			projections = mergeProjections(projections);
-		System.out.println("Projections after merge:");
-		System.out.println(projections);
+		LOG.info("Projections after merge:");
+		LOG.info(projections);
+		
 		// OPTIMIZE projection dependencies
 
 		return projections.toArray(new TupleProjection[0]);
@@ -155,12 +163,18 @@ public class TupleOpFactory {
 	}
 
 	public static TupleProjection[] createMapMSJProjections(String relation, long fileid,
-			Set<GFExistentialExpression> queries, Map<String, Integer> atomidmap) {
+			Set<GFExistentialExpression> queries, Map<String, Integer> atomidmap, boolean merge) {
 
 		List<TupleProjection> projections = getGuardedProjections(relation, queries, atomidmap);
 		projections.addAll(getGuardedDataProjections(relation, queries, atomidmap));
 
-		// TODO add merging
+		LOG.info("Projections before merge:");
+		LOG.info(projections);
+		// is requested, merge projections where possible
+		if (merge)
+			projections = mergeProjections(projections);
+		LOG.info("Projections after merge:");
+		LOG.info(projections);
 		
 		return projections.toArray(new TupleProjection[0]);
 	}
@@ -173,6 +187,7 @@ public class TupleOpFactory {
 	 * @param relation relation name
 	 * @param queries set of queries
 	 * @param atomidmap atomstring-atomid mapping
+	 * @param merge 
 	 * 
 	 * @return projection array
 	 */
@@ -195,6 +210,7 @@ public class TupleOpFactory {
 
 			}
 		}
+		
 		return projections;
 	}
 

@@ -23,16 +23,17 @@ public class MultiSemiJoinMapper extends Mapper<LongWritable, Text, VBytesWritab
 
 	protected VBytesWritable bw;
 	protected GumboMessageWritable gw;
-	
+
 	// intermediate key buffers
 	private VLongWritable lw1;
 	private VLongWritable lw2;
 	private long offset;
-	
+
 	private QuickWrappedTuple qt;
 	private TupleProjection [] projections;
 	private TupleFilter[] filters;
 	private DataOutputBuffer buffer;
+	private boolean packingEnabled;
 
 
 	@Override
@@ -61,9 +62,15 @@ public class MultiSemiJoinMapper extends Mapper<LongWritable, Text, VBytesWritab
 		Map<String, Integer> atomidmap = inspector.getAtomIdMap();
 
 		// get projections
-		projections = TupleOpFactory.createMapMSJProjections(relation, fileid, queries, atomidmap);
+		boolean merge = inspector.isMSJProjectionMergeEnabled();
+		projections = TupleOpFactory.createMapMSJProjections(relation, fileid, queries, atomidmap, merge);
 
+		// enable packing
+		packingEnabled = true;
 
+		if (projections.length == 1) {
+			packingEnabled = false;
+		}
 
 	}
 
@@ -87,6 +94,7 @@ public class MultiSemiJoinMapper extends Mapper<LongWritable, Text, VBytesWritab
 			if (pi.load(qt, key.get(), bw, gw)){
 
 				// and write output
+				// TODO add packing
 				context.write(bw, gw);
 			}
 
