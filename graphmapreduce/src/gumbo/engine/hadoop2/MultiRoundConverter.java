@@ -37,6 +37,7 @@ import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.engine.general.algorithms.AlgorithmInterruptedException;
 import gumbo.engine.general.grouper.Grouper;
 import gumbo.engine.general.grouper.GrouperFactory;
+import gumbo.engine.general.grouper.GroupingException;
 import gumbo.engine.general.grouper.sample.RelationSampleContainer;
 import gumbo.engine.general.grouper.sample.RelationSampler;
 import gumbo.engine.general.grouper.sample.Simulator;
@@ -69,6 +70,7 @@ public class MultiRoundConverter {
 
 	private GumboPlan plan;
 	private Configuration conf;
+	private Configurator configurator;
 	private FileManager fm;
 	private FileMappingExtractor extractor;
 
@@ -88,6 +90,8 @@ public class MultiRoundConverter {
 
 		this.extractor = new FileMappingExtractor();
 		settings = new HadoopExecutorSettings(conf);
+		
+		this.configurator = new Configurator(plan, fm);
 	}
 
 	public ControlledJob createValidateJob(CalculationGroup group) throws IOException {
@@ -143,7 +147,7 @@ public class MultiRoundConverter {
 
 
 			// pass settings to mapper
-			configure(hadoopJob, calculations);
+			configurator.configure(hadoopJob, calculations);
 
 			// NUM RED TASKS
 			// add missing sample data if necessary
@@ -234,7 +238,7 @@ public class MultiRoundConverter {
 
 
 			// pass settings
-			configure(hadoopJob, calculations);
+			configurator.configure(hadoopJob, calculations);
 
 			joblist.add(new ControlledJob(hadoopJob, null));
 
@@ -262,7 +266,7 @@ public class MultiRoundConverter {
 		return size;
 	}
 
-	public List<CalculationGroup> group(CalculationUnitGroup partition) {
+	public List<CalculationGroup> group(CalculationUnitGroup partition) throws GroupingException {
 
 		// sample new relations
 		updateSamples();
@@ -273,7 +277,10 @@ public class MultiRoundConverter {
 		RelationFileMapping mapping = extractor.extractFileMapping(fm); 
 
 		// get the correct grouper
-		HadoopExecutorSettings settings = new HadoopExecutorSettings(conf);
+		Set<GFExistentialExpression> expressions = partition.getBSGFs();
+		Configuration dummyConf = new Configuration(conf);
+		configurator.configure(dummyConf, expressions);
+		HadoopExecutorSettings settings = new HadoopExecutorSettings(dummyConf);
 		Grouper grouper = GrouperFactory.createGrouper(mapping, settings, samples); // FIXME correct mapping
 
 		// apply grouping
@@ -287,10 +294,11 @@ public class MultiRoundConverter {
 		//		Simulator simulator = new Simulator(samples, fm.getFileMapping(), settings);
 
 
-		MapSimulator simulator = new MapSimulator(samples, fm.getFileMapping());
+		MapSimulator simulator = new MapSimulator();
+		simulator.setInfo(samples, fm.getFileMapping(), new HadoopExecutorSettings(hadoopJob.getConfiguration()));
 		SimulatorReport report;
 		try {
-			report = simulator.execute(group.getInputRelations(), hadoopJob.getConfiguration());
+			report = simulator.execute(group);
 
 
 			// fill in parameters 
@@ -328,78 +336,7 @@ public class MultiRoundConverter {
 		}
 	}
 
-	private void configure(Job hadoopJob, Set<GFExistentialExpression> expressions) {
-		Configuration conf = hadoopJob.getConfiguration();
-
-		// queries
-		GFPrefixSerializer serializer = new GFPrefixSerializer();
-		conf.set("gumbo.queries", serializer.serializeSet(expressions));
-
-		// output mapping
-		HashMap<String, String> outmap = new HashMap<>();
-		for (RelationSchema rs: fm.getOutFileMapping().getSchemas()) {
-			for (Path path : fm.getOutFileMapping().getPaths(rs)) {
-				outmap.put(rs.getName(), path.toString());
-			}
-		}
-		String outmapString = PropertySerializer.objectToString(outmap);
-		conf.set("gumbo.outmap", outmapString);
-
-		// file to id mapping
-		HashMap<String, Long> fileidmap = new HashMap<>();
-		HashMap<Long, String> idrelmap = new HashMap<>();
-
-		// resolve paths
-		extractor.setIncludeOutputDirs(true);
-		RelationFileMapping mapping = extractor.extractFileMapping(fm);
-
-		List<Pair<RelationSchema, Path>> rspath = new ArrayList<>();
-		// for each rel
-		for (RelationSchema rs : mapping.getSchemas()) {
-			// determine paths
-			Set<Path> paths = mapping.getPaths(rs);
-			for (Path p : paths) {
-				rspath.add(new Pair<>(rs,p));
-			}
-
-		}
-
-		Comparator<Pair<RelationSchema, Path>> comp = new Comp();
-		Collections.sort(rspath, comp );
-
-		long i = 0;
-		for (Pair<RelationSchema, Path> p : rspath) {
-			fileidmap.put(p.snd.toString(), i);
-			idrelmap.put(i,p.fst.getName());
-			i++;
-		}
-
-		String fileidmapString = PropertySerializer.objectToString(fileidmap);
-		conf.set("gumbo.fileidmap", fileidmapString);
-
-
-		// file id to relation name mapping
-		String idrelmapString = PropertySerializer.objectToString(idrelmap);
-		conf.set("gumbo.filerelationmap", idrelmapString);
-
-		// atom-id mapping
-		HashMap<String,Integer> atomidmap = new HashMap<>();
-		int maxatomid = 0;
-		for (GFExistentialExpression exp : expressions) {
-			for (GFAtomicExpression atom : exp.getAtomic()) {
-				int id = plan.getAtomId(atom);
-				atomidmap.put(atom.toString(), id);
-				maxatomid = Math.max(id, maxatomid);
-			}
-		}
-
-		String atomidmapString = PropertySerializer.objectToString(atomidmap);
-		conf.set("gumbo.atomidmap", atomidmapString);
-
-
-		// maximal atom id
-		conf.setInt("gumbo.maxatomid", maxatomid);
-	}
+	
 
 	public void moveOutputFiles(CalculationUnitGroup partition) throws IOException {
 
@@ -446,10 +383,6 @@ public class MultiRoundConverter {
 
 		}
 
-
-
-
-
 	}
 
 	/**
@@ -490,7 +423,7 @@ public class MultiRoundConverter {
 
 			long size = calculateSize(inputPaths); // FIXME estimate INTERMEDIATE size
 
-			int numRed = 10; //(int)Math.max(1, size / (128 * 1024 * 1024)); // FIXME use settings
+			int numRed = (int)Math.max(1, size / (128 * 1024 * 1024)); // FIXME use settings
 			hadoopJob.setNumReduceTasks(numRed); 
 			LOG.info("Setting VALEVAL Reduce tasks to " + numRed);
 
@@ -515,7 +448,7 @@ public class MultiRoundConverter {
 				calculations.add(((BasicGFCalculationUnit)cu).getBasicExpression());
 
 			}
-			configure(hadoopJob, calculations);
+			configurator.configure(hadoopJob, calculations);
 
 			joblist.add(new ControlledJob(hadoopJob, null));
 

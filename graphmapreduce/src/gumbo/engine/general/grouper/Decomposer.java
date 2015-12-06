@@ -9,7 +9,8 @@ import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 /**
- * Component used to decompose basic expressions into binary semijoins.
+ * Component used to decompose BSGF queries into binary semijoins.
+ * 
  * @author Jonny Daenen
  *
  */

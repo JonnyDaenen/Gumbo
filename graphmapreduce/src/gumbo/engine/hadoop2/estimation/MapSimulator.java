@@ -17,16 +17,20 @@ import gumbo.engine.general.algorithms.AlgorithmInterruptedException;
 import gumbo.engine.general.algorithms.Map1GuardAlgorithm;
 import gumbo.engine.general.algorithms.Map1GuardedAlgorithm;
 import gumbo.engine.general.algorithms.MapAlgorithm;
+import gumbo.engine.general.grouper.sample.SimulatorInterface;
 import gumbo.engine.general.grouper.sample.SimulatorReport;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.messagefactories.Map1GuardMessageFactoryInterface;
 import gumbo.engine.general.messagefactories.Map1GuardedMessageFactoryInterface;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
+import gumbo.engine.general.settings.ExecutorSettings;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactory;
 import gumbo.engine.hadoop.reporter.FakeMapper;
 import gumbo.engine.hadoop.reporter.LinearExtrapolator;
 import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.engine.hadoop2.Configurator;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.estimation.DummyMapper.DummyContext;
@@ -45,7 +49,7 @@ import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOpera
  * @author Jonny Daenen
  *
  */
-public class MapSimulator {
+public class MapSimulator implements SimulatorInterface {
 
 	private static final Log LOG = LogFactory.getLog(MapSimulator.class);
 
@@ -54,16 +58,30 @@ public class MapSimulator {
 	AbstractExecutorSettings settings;
 	RelationTupleSampleContainer rtsc;
 	LinearExtrapolator extrapolator;
-	ExpressionSetOperations eso;
 
 
-	public MapSimulator(RelationTupleSampleContainer rtsc, RelationFileMapping mapping) {
+	public MapSimulator() {
+		
+	}
+	
+	@Override
+	public void setInfo(RelationTupleSampleContainer rtsc, RelationFileMapping mapping,
+			AbstractExecutorSettings execSettings) {
 		this.mapping = mapping;
 		this.rtsc = rtsc;
+		this.settings = execSettings;
+		
 		this.extrapolator = new LinearExtrapolator();
 	}
 
-	public SimulatorReport execute(Collection<RelationSchema> inputRelations, Configuration configuration) throws AlgorithmInterruptedException {
+	@Override
+	public SimulatorReport execute(CalculationGroup calcJob) throws AlgorithmInterruptedException {
+		Configuration conf = createConfig(calcJob);
+		return execute(calcJob.getInputRelations(), conf);
+	}
+
+
+	private SimulatorReport execute(Collection<RelationSchema> inputRelations, Configuration conf) throws AlgorithmInterruptedException {
 
 		SimulatorReport report = new SimulatorReport();
 
@@ -75,9 +93,7 @@ public class MapSimulator {
 
 
 			// run simulation and calculate intermediate output
-			runSamples(r, configuration, report); 
-
-			
+			runSamples(r, report, conf); 
 
 		}
 
@@ -87,14 +103,14 @@ public class MapSimulator {
 
 
 
-	private void runSamples(RelationSchema rs, Configuration configuration, SimulatorReport report) throws AlgorithmInterruptedException {
+	private void runSamples(RelationSchema rs, SimulatorReport report, Configuration conf) throws AlgorithmInterruptedException {
 
 		// simulate small sample
-		Pair<Boolean, Long> result1 = runOneSample(rs, rtsc.getSmallTuples(rs), configuration);
+		Pair<Boolean, Long> result1 = runOneSample(rs, rtsc.getSmallTuples(rs), conf);
 		long smallOutput = result1.snd;
 
 		// simulate big sample
-		Pair<Boolean, Long> result2 = runOneSample(rs, rtsc.getBigTuples(rs), configuration);
+		Pair<Boolean, Long> result2 = runOneSample(rs, rtsc.getBigTuples(rs), conf);
 		long bigOutput = result2.snd;
 
 		// extrapolate
@@ -117,9 +133,9 @@ public class MapSimulator {
 
 	}
 
-	private Pair<Boolean,Long> runOneSample(RelationSchema rs, Iterable<Tuple> tuples, Configuration configuration) throws AlgorithmInterruptedException {
+	private Pair<Boolean,Long> runOneSample(RelationSchema rs, Iterable<Tuple> tuples, Configuration conf) throws AlgorithmInterruptedException {
 		DummyMapper map = new DummyMapper();
-		DummyContext context = map.getContext(configuration, tuples, rs.getName());
+		DummyContext context = map.getContext(conf, tuples, rs.getName());
 
 		Mapper<LongWritable,Text,VBytesWritable,GumboMessageWritable> mapfunction = new ValidateMapper();
 
@@ -132,5 +148,15 @@ public class MapSimulator {
 		return new Pair<>(context.getRequestBytes() != 0,(long) context.getKeyBytes() + context.getValueBytes());
 	}
 
+	private Configuration createConfig(CalculationGroup calcJob) {
+		Configuration conf;
+		HadoopExecutorSettings set = (HadoopExecutorSettings)settings;
+		conf = new Configuration(set.getConf());
+		Configurator.addQueries(conf, calcJob.getExpressions());
+		
+		return conf;
+	}
+
+	
 
 }

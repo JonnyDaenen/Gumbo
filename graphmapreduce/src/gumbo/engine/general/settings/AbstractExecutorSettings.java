@@ -52,10 +52,14 @@ public abstract class AbstractExecutorSettings {
 
 	// engine v2 options
 	public static final String outputMergeEnabled = "gumbo.engine.eval.output.merge";
+	public static final String simulatorClass = "gumbo.engine.simulator.classname";
 	
 	// constants
 	public static final String REDUCER_SIZE_MB = "gumbo.engine.hadoop.reducersize_mb";
 	public static final String BESTGROUP_STOPINDICATOR = "gumbo.engine.grouper.beststopindicator";
+
+
+
 	
 
 	/**
@@ -76,6 +80,7 @@ public abstract class AbstractExecutorSettings {
 		
 		// engine v2
 		setBooleanProperty(outputMergeEnabled, false); 
+		setProperty(simulatorClass, gumbo.engine.hadoop2.estimation.MapSimulator.class.getCanonicalName());
 	}
 	
 	public void turnOffOptimizations() {

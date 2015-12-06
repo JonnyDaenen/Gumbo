@@ -13,6 +13,7 @@ import gumbo.compiler.GumboPlan;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.engine.general.ExecutionException;
+import gumbo.engine.general.grouper.GroupingException;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 
 public class HadoopEngine2 {
@@ -159,7 +160,7 @@ public class HadoopEngine2 {
 
 
 			}
-		} catch (IOException e) {
+		} catch (IOException | GroupingException e) {
 			throw new InterruptedException(e.getMessage());
 		}
 

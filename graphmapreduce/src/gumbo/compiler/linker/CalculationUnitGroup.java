@@ -9,8 +9,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import gumbo.compiler.calculations.BasicGFCalculationUnit;
 import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 /**
  * Representation of a CalculationUnit DAG (may or may not be connected). 
@@ -376,6 +378,16 @@ public class CalculationUnitGroup implements Iterable<CalculationUnit> {
 			sb.append(cu.getOutputSchema());	
 		}
 		return sb.toString();
+	}
+
+
+	public Set<GFExistentialExpression> getBSGFs() {
+		Set<GFExistentialExpression> calculations = new HashSet<>();
+		for (CalculationUnit cu : getCalculations()) {
+			BasicGFCalculationUnit bcu = (BasicGFCalculationUnit) cu;
+			calculations.add(bcu.getBasicExpression());
+		}
+		return calculations;
 	}
 
 }

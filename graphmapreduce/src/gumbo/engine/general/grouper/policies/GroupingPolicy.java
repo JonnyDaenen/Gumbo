@@ -2,8 +2,15 @@ package gumbo.engine.general.grouper.policies;
 
 import java.util.List;
 
+import gumbo.engine.general.grouper.GroupingException;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 
+/**
+ * Strategy for grouping a set of semijoins.
+ * 
+ * @author Jonny Daenen
+ *
+ */
 public interface GroupingPolicy {
 	
 	
@@ -13,7 +20,8 @@ public interface GroupingPolicy {
 	 * 
 	 * @param semijoins the semijoins that will be partitioned
 	 * @return a list of semijoin groups (sets)
+	 * @throws GroupingException 
 	 */
-	List<CalculationGroup> group(CalculationGroup group);
+	List<CalculationGroup> group(CalculationGroup group) throws GroupingException;
 
 }

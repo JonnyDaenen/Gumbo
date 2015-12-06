@@ -1,5 +1,7 @@
 package gumbo.engine.general.grouper.sample;
 
+import java.util.Collection;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -30,7 +32,7 @@ import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOpera
  * @author Jonny Daenen
  *
  */
-public class Simulator {
+public class Simulator implements SimulatorInterface {
 
 	private static final Log LOG = LogFactory.getLog(Simulator.class);
 
@@ -42,14 +44,22 @@ public class Simulator {
 	ExpressionSetOperations eso;
 
 
-	public Simulator(RelationTupleSampleContainer rtsc, RelationFileMapping mapping, AbstractExecutorSettings settings) {
+	public Simulator() {
+		
+	}
+	
+	@Override
+	public void setInfo(RelationTupleSampleContainer rtsc, RelationFileMapping mapping,
+			AbstractExecutorSettings execSettings) {
 		this.mapping = mapping;
-		this.settings = settings;
+		this.settings = execSettings;
 		this.rtsc = rtsc;
 		this.extrapolator = new LinearExtrapolator();
+		
 	}
 
-	public SimulatorReport execute(CalculationGroup calcJob) {
+	@Override
+	public SimulatorReport execute(CalculationGroup calcJob) throws AlgorithmInterruptedException {
 
 		SimulatorReport report = new SimulatorReport();
 		
@@ -142,5 +152,7 @@ public class Simulator {
 			offset += tuple.size(); // dummy offset
 		}
 	}
+
+	
 
 }

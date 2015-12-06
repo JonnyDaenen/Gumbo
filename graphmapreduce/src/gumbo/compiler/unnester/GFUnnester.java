@@ -41,7 +41,7 @@ public class GFUnnester implements GFVisitor<Set<GFExpression>> {
 		dnfconverter = new DNFConverter();
 	}
 
-	public Set<GFExpression> unnest(GFExpression e) throws GFDecomposerException {
+	public Set<GFExpression> unnest(GFExpression e) throws GFUnnesterException {
 
 		// TODO reject non-existentials
 
@@ -52,7 +52,7 @@ public class GFUnnester implements GFVisitor<Set<GFExpression>> {
 			GFExpression newe = dnfconverter.convert(e);
 			result = newe.accept(this);
 
-		} catch (GFDecomposerException e1) {
+		} catch (GFUnnesterException e1) {
 			throw e1;
 
 		} catch (GFVisitorException | DNFConversionException e1) {
@@ -69,7 +69,7 @@ public class GFUnnester implements GFVisitor<Set<GFExpression>> {
 	 */
 	@Override
 	public Set<GFExpression> visit(GFExpression e) throws GFVisitorException {
-		throw new GFDecomposerException("Unknown GFExpression type");
+		throw new GFUnnesterException("Unknown GFExpression type");
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class GFUnnester implements GFVisitor<Set<GFExpression>> {
 	@Override
 	public Set<GFExpression> visit(GFAtomicExpression e) throws GFVisitorException {
 
-		throw new GFDecomposerException("Atomic expression unnest request occured.");
+		throw new GFUnnesterException("Atomic expression unnest request occured.");
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class GFUnnester implements GFVisitor<Set<GFExpression>> {
 	@Override
 	public Set<GFExpression> visit(GFNotExpression e) throws GFVisitorException {
 
-		throw new GFDecomposerException("Negation expression unnest request occured.");
+		throw new GFUnnesterException("Negation expression unnest request occured.");
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class GFUnnester implements GFVisitor<Set<GFExpression>> {
 		
 	}
 
-	public Set<GFExistentialExpression> unnest(Collection<? extends GFExpression> expressions) throws GFDecomposerException {
+	public Set<GFExistentialExpression> unnest(Collection<? extends GFExpression> expressions) throws GFUnnesterException {
 		HashSet<GFExpression> firstresult = new HashSet<GFExpression>();
 		HashSet<GFExistentialExpression> result = new HashSet<GFExistentialExpression>();
 		for (GFExpression e : expressions) {
