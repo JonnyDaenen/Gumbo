@@ -2,9 +2,6 @@ package gumbo.engine.hadoop2.converter;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,7 +37,6 @@ import gumbo.engine.general.grouper.GrouperFactory;
 import gumbo.engine.general.grouper.GroupingException;
 import gumbo.engine.general.grouper.sample.RelationSampleContainer;
 import gumbo.engine.general.grouper.sample.RelationSampler;
-import gumbo.engine.general.grouper.sample.Simulator;
 import gumbo.engine.general.grouper.sample.SimulatorReport;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
@@ -56,12 +52,9 @@ import gumbo.engine.hadoop2.mapreduce.multivalidate.ValidateMapper;
 import gumbo.engine.hadoop2.mapreduce.multivalidate.ValidateReducer;
 import gumbo.engine.hadoop2.mapreduce.semijoin.MultiSemiJoinMapper;
 import gumbo.engine.hadoop2.mapreduce.semijoin.MultiSemiJoinReducer;
-import gumbo.engine.hadoop2.mapreduce.tools.PropertySerializer;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
-import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
-import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.utils.estimation.SamplingException;
 
 public class MultiRoundConverter {

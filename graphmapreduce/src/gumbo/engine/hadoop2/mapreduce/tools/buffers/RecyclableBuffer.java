@@ -3,8 +3,6 @@ package gumbo.engine.hadoop2.mapreduce.tools.buffers;
 import java.util.ArrayList;
 import java.util.List;
 
-import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
-
 /**
  * Keeps a list of objects that can be recycled.
  * The internal writables are kept to avoid excess memory allocation

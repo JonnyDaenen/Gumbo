@@ -1,11 +1,7 @@
 package gumbo.engine.hadoop2.mapreduce.tools.buffers;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
-
-import org.apache.hadoop.io.BytesWritable;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable.MessageMergeException;

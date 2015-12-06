@@ -2,31 +2,20 @@ package gumbo.engine.hadoop2.estimation;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapred.MapTask;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.engine.general.algorithms.AlgorithmInterruptedException;
-import gumbo.engine.general.algorithms.Map1GuardAlgorithm;
-import gumbo.engine.general.algorithms.Map1GuardedAlgorithm;
-import gumbo.engine.general.algorithms.MapAlgorithm;
 import gumbo.engine.general.grouper.sample.SimulatorInterface;
 import gumbo.engine.general.grouper.sample.SimulatorReport;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
-import gumbo.engine.general.messagefactories.Map1GuardMessageFactoryInterface;
-import gumbo.engine.general.messagefactories.Map1GuardedMessageFactoryInterface;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
-import gumbo.engine.general.settings.ExecutorSettings;
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactory;
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactory;
-import gumbo.engine.hadoop.reporter.FakeMapper;
 import gumbo.engine.hadoop.reporter.LinearExtrapolator;
 import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
@@ -38,8 +27,6 @@ import gumbo.engine.hadoop2.mapreduce.multivalidate.ValidateMapper;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.io.Pair;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 
 
 /**
