@@ -21,6 +21,7 @@ import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.CalculationPartitioner;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.compiler.partitioner.UnitPartitioner;
+import gumbo.compiler.unnester.GFUnnester;
 import gumbo.input.GumboQuery;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
@@ -35,6 +36,7 @@ public class GFCompiler {
 	private static final Log LOG = LogFactory.getLog(GFCompiler.class); 
 
 	protected GFDecomposer decomposer;
+	protected GFUnnester unnester;
 	protected BGFE2CUConverter converter;
 	protected CULinker linker;
 	protected FileMapper filemapper;
@@ -50,8 +52,9 @@ public class GFCompiler {
 
 	public GFCompiler(CalculationPartitioner partitioner) {
 		this.partitioner = partitioner;
-		
+
 		decomposer = new GFDecomposer();
+		unnester = new GFUnnester();
 		converter = new BGFE2CUConverter();
 		linker = new CULinker();
 		filemapper = new FileMapper();
@@ -72,21 +75,28 @@ public class GFCompiler {
 	 */
 	public GumboPlan createPlan(GumboQuery query) throws GFCompilerException {
 
-		// decomposer -> CUConverter -> CULinker -> file mappings -> partition
+		// decomposer -> unnester -> CUConverter -> CULinker -> file mappings -> partition
 
 		try {
-			
+
 			// adjust output directory
 			// FUTURE make option to switch this off
 			String timeStamp = "/"+new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 			LOG.info("Adding suffix to scratch and output paths: "+ timeStamp);
 			query.setOutput(query.getOutput().suffix(timeStamp));
 			query.setScratch(query.getScratch().suffix(timeStamp));
-			
+
 			// decompose expressions into basic ones
 			LOG.info("Decomposing GFEs into basic GFEs (BGFEs)...");
 			Set<GFExistentialExpression> bgfes = decomposer.decomposeAll(query.getQueries());
 			LOG.info("Number of BGFEs: " + bgfes.size());
+			LOG.debug(bgfes);
+
+			// unnest if necessary
+			// TODO add settings check
+			LOG.info("Unnesting BGFEs...");
+			bgfes = unnester.unnest(bgfes);
+			LOG.info("New number of BGFEs: " + bgfes.size());
 			LOG.debug(bgfes);
 
 			// CUConverter 
@@ -98,35 +108,35 @@ public class GFCompiler {
 			// CULinker 
 			LOG.info("Linking Calculation Units (CUs)...");
 			CalculationUnitGroup dag = linker.createDAG(cus);
-//			LOG.info("Input relations: " + dag.size());
-//			LOG.info("Output relations: " + dag.size());
-//			LOG.info("Intermediate relations: " + dag.size());
+			//			LOG.info("Input relations: " + dag.size());
+			//			LOG.info("Output relations: " + dag.size());
+			//			LOG.info("Intermediate relations: " + dag.size());
 			LOG.debug(dag);
 
 			// intitial file mappings 
 			LOG.info("Creating initial file mapping...");
 			FileManager fm = filemapper.createFileMapping(query.getInputs(), query.getOutput(), query.getScratch(), dag);
 			LOG.info("file mapping:\n" + fm);
-//			LOG.info("Output files: " + fm);
-//			LOG.info("Intermediate files: " + fm);
-//			LOG.debug(fm);
+			//			LOG.info("Output files: " + fm);
+			//			LOG.info("Intermediate files: " + fm);
+			//			LOG.debug(fm);
 
 			// partition
 			LOG.info("Partitioning...");
 			PartitionedCUGroup pdag = partitioner.partition(dag,fm);
 			LOG.info("Number of partitions: " + pdag.getNumPartitions());
 			LOG.debug(pdag);
-			
+
 			GumboPlan plan = new GumboPlan(query.getName(), pdag, fm);
-			
+
 			return plan;
-			
+
 		} catch (Exception e) {
 			throw new GFCompilerException("Compiler error: " + e.getMessage(),e);
 		}
 
-		
-		
+
+
 
 	}
 

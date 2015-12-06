@@ -75,6 +75,9 @@ public class MultiRoundConverter {
 
 	private RelationTupleSampleContainer samples;
 	private RelationSampleContainer rawSamples;
+	
+
+	private HadoopExecutorSettings settings;
 
 
 
@@ -84,6 +87,7 @@ public class MultiRoundConverter {
 		this.fm = plan.getFileManager();
 
 		this.extractor = new FileMappingExtractor();
+		settings = new HadoopExecutorSettings(conf);
 	}
 
 	public ControlledJob createValidateJob(CalculationGroup group) throws IOException {

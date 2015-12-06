@@ -24,9 +24,13 @@ import gumbo.structures.gfexpressions.io.Pair;
 
 /**
  * Decomposes GFExpressions into sets of basicexpression.
- * A visitor pattern is used to let each expression resutn the set of basic subexpressions and their clean version.
- * Also, a GFexpression is used fot non-existential expressions to pass intermediate structures; existential expressions
- * just return their output relation.
+ * A visitor pattern is used to let each expression return 
+ * the set of basic subexpressions and their cleaned version 
+ * (i.e., without subexpressions). Also, a GFexpression is 
+ * used for non-existential expressions to pass intermediate 
+ * structures; existential expressions just return their output relation.
+ * 
+ * TODO option for boolean breakup
  * 
  * @author Jonny Daenen
  * 
