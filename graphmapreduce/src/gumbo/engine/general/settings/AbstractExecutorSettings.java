@@ -52,8 +52,11 @@ public abstract class AbstractExecutorSettings {
 	public static final String mapOutputGroupingPolicy = "gumbo.engine.mapOutputGroupingPolicy";
 
 	// engine v2 options
+	public static final String unnesterEnabled = "gumbo.compiler.unnest";
+	
 	public static final String outputMergeEnabled = "gumbo.engine.eval.output.merge";
 	public static final String simulatorClass = "gumbo.engine.simulator.classname";
+	public static final String projectionMergeEnabled = "gumbo.engine.val.projection.merge";
 	
 	// constants
 	public static final String REDUCER_SIZE_MB = "gumbo.engine.hadoop.reducersize_mb";
@@ -61,7 +64,9 @@ public abstract class AbstractExecutorSettings {
 
 
 
-	public static final String unnesterEnabled = "gumbo.compiler.unnest";
+
+
+
 
 
 
@@ -86,6 +91,7 @@ public abstract class AbstractExecutorSettings {
 		// engine v2
 		setBooleanProperty(unnesterEnabled, false); 
 		setBooleanProperty(outputMergeEnabled, false); 
+		setBooleanProperty(projectionMergeEnabled, true); 
 //		setProperty(simulatorClass, Simulator.class.getCanonicalName());
 		setProperty(simulatorClass, gumbo.engine.hadoop2.estimation.MapSimulator.class.getCanonicalName());
 	}

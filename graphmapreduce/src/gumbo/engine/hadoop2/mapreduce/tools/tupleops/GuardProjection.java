@@ -21,27 +21,40 @@ public class GuardProjection implements TupleProjection {
 	byte [] keyEt;
 	EqualityType fields;
 	byte [] atomIds;
-	
-	EqualityFilter ef;
-	
 
-	
+	EqualityFilter ef;
+
+
+
 
 	public GuardProjection(String relationname, long fileid, GFAtomicExpression guard, GFAtomicExpression guarded, byte guardedAtomid) {
-		
+
 		this.name = relationname;
 		this.fileid = fileid;
 		fields = new EqualityType(guard);
-		
+
 		// extract key
 		loadKey(guard, guarded);
-		
+
 		// extract atom id
 		atomIds = new byte[1];
 		atomIds[0] = guardedAtomid;
-		
+
 		ef = new EqualityFilter(fields);
-		
+
+	}
+
+	private GuardProjection(String relationname, long fileid, byte [] keyEt, EqualityType fields, byte [] atomids) {
+
+		this.name = relationname;
+		this.fileid = fileid;
+		this.keyEt = keyEt;
+		this.fields = fields;
+		this.atomIds = atomids;
+
+
+		ef = new EqualityFilter(fields);
+
 	}
 
 
@@ -68,10 +81,10 @@ public class GuardProjection implements TupleProjection {
 		keyEt = convert(parts[1]);
 		fields = new EqualityType(convertInt(parts[2]));
 		atomIds = convert(parts[3]);
-		
+
 		ef.set(fields.equality);
 	}
-	
+
 
 	private int[] convertInt(String s) {
 		String[] parts = s.split(",");
@@ -92,7 +105,7 @@ public class GuardProjection implements TupleProjection {
 		}
 		return result;
 	}
-	
+
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append(name);
@@ -102,11 +115,11 @@ public class GuardProjection implements TupleProjection {
 		sb.append(fields);
 		sb.append(":");
 		addArray(sb, atomIds);
-		
+
 		return sb.toString();
-		
+
 	};
-	
+
 	private void addArray(StringBuffer sb, byte[] a) {
 		int i;
 		for (i = 0; i < a.length; i++) {
@@ -115,7 +128,7 @@ public class GuardProjection implements TupleProjection {
 		}
 		if (i > 0)
 			sb.deleteCharAt(sb.length() - 1);
-		
+
 	}
 
 
@@ -123,8 +136,8 @@ public class GuardProjection implements TupleProjection {
 	public int hashCode() {
 		return name.hashCode() ^ fields.hashCode() ^ Arrays.hashCode(keyEt) ^ Arrays.hashCode(atomIds); 
 	}
-	
-	
+
+
 	public boolean equals(Object obj) {
 		if (obj instanceof GuardProjection) {
 			GuardProjection et = (GuardProjection) obj;
@@ -134,7 +147,7 @@ public class GuardProjection implements TupleProjection {
 					name.equals(et.name);
 		}
 		return false;
-		
+
 	}
 
 
@@ -149,23 +162,57 @@ public class GuardProjection implements TupleProjection {
 	 */
 	@Override
 	public boolean load(QuickWrappedTuple qt, long offset, VBytesWritable bw, GumboMessageWritable gw) {
-		
+
 		// if tuple conforms to fields
 		if (!ef.check(qt))
 			return false;
-		
+
 		// output key
 		qt.project(keyEt, bw);
-		
+
 		// output atom ids
 		gw.setRequest(fileid, offset, atomIds, atomIds.length);
-		
+
 		return true;
+	}
+
+
+	@Override
+	public boolean canMerge(TupleProjection pi) {
+		if (pi instanceof GuardProjection) {
+			GuardProjection pi2 = (GuardProjection) pi;
+			return name.equals(pi2.name) 
+					&& fileid == pi2.fileid 
+					&& Arrays.equals(keyEt, pi2.keyEt) 
+					&& fields.equals(pi2.fields);
+		}
+		return false;
+	}
+
+
+	@Override
+	public TupleProjection merge(TupleProjection pi) {
+		if (pi instanceof GuardProjection) {
+			GuardProjection pi2 = (GuardProjection) pi;
+			
+			// concatenate atom ids
+			byte [] newatomids = new byte [atomIds.length + pi2.atomIds.length];
+			int pos = 0;
+			for (int i = 0; i < atomIds.length; i++, pos++) {
+				newatomids[pos] = atomIds[i];
+			}
+			for (int i = 0; i < pi2.atomIds.length; i++, pos++) {
+				newatomids[pos] = pi2.atomIds[i];
+			}
+			
+			return new GuardProjection(name, fileid, Arrays.copyOf(keyEt, keyEt.length), new EqualityType(fields.equality), newatomids);
+		}
+		return null; // TODO exception
 	};
-	
 
-	
 
-	
+
+
+
 
 }

@@ -30,7 +30,7 @@ import gumbo.engine.hadoop.reporter.FakeMapper;
 import gumbo.engine.hadoop.reporter.LinearExtrapolator;
 import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.engine.hadoop2.Configurator;
+import gumbo.engine.hadoop2.converter.Configurator;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.estimation.DummyMapper.DummyContext;

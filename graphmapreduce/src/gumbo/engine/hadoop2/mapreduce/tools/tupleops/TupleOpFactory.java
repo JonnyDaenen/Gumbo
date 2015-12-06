@@ -18,18 +18,52 @@ import gumbo.structures.gfexpressions.GFExistentialExpression;
 public class TupleOpFactory {
 
 	public static TupleProjection[] createMap1Projections(String relation, long fileid,
-			Set<GFExistentialExpression> queries, Map<String, Integer> atomidmap) {
+			Set<GFExistentialExpression> queries, Map<String, Integer> atomidmap, boolean merge) {
 
 
 		List<TupleProjection> projections = getGuardProjections(relation, fileid, queries, atomidmap);
 		projections.addAll(getGuardedProjections(relation, queries, atomidmap));
 
-
-		// TODO merge where possible
-
+		System.out.println("Projections before merge:");
+		System.out.println(projections);
+		// is requested, merge projections where possible
+		if (merge)
+			projections = mergeProjections(projections);
+		System.out.println("Projections after merge:");
+		System.out.println(projections);
 		// OPTIMIZE projection dependencies
 
 		return projections.toArray(new TupleProjection[0]);
+	}
+
+	private static List<TupleProjection> mergeProjections(List<TupleProjection> projections) {
+
+		List<TupleProjection> mergedProjections = new ArrayList<>(projections.size());
+		List<TupleProjection> todo = new ArrayList<>(projections);
+
+
+		while (!todo.isEmpty()) {
+
+			List<TupleProjection> remainder = new ArrayList<>(todo.size());
+			// get first
+			TupleProjection pi1 = todo.get(0);
+
+			for (int i = 1; i < todo.size(); i++) {
+				TupleProjection pi2 = todo.get(i);
+
+				if (pi1.canMerge(pi2)) {
+					pi1 = pi1.merge(pi2);
+				} else {
+					remainder.add(pi2);
+				}
+			}
+
+			mergedProjections.add(pi1);
+			
+			todo = remainder;
+		}
+
+		return mergedProjections;
 	}
 
 	private static List<TupleProjection> getGuardProjections(String relation, long fileid,
@@ -126,6 +160,8 @@ public class TupleOpFactory {
 		List<TupleProjection> projections = getGuardedProjections(relation, queries, atomidmap);
 		projections.addAll(getGuardedDataProjections(relation, queries, atomidmap));
 
+		// TODO add merging
+		
 		return projections.toArray(new TupleProjection[0]);
 	}
 

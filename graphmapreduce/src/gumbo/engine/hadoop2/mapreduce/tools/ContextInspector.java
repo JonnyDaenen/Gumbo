@@ -16,6 +16,8 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 import com.esotericsoftware.minlog.Log;
 
+import gumbo.engine.general.settings.AbstractExecutorSettings;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.io.DeserializeException;
@@ -222,6 +224,11 @@ public class ContextInspector {
 	 */
 	public int getMaxAtomID() {
 		return maxatomid;
+	}
+
+	public boolean isProjectionMergeEnabled() {
+		HadoopExecutorSettings settings = new HadoopExecutorSettings(conf);
+		return settings.getBooleanProperty(AbstractExecutorSettings.projectionMergeEnabled);
 	}
 
 

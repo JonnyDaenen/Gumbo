@@ -121,6 +121,31 @@ public class GuardDataProjection implements TupleProjection {
 		gw.setData(qt.getData(), qt.getLength());
 		
 		return true;
+	}
+
+
+
+
+
+
+
+
+	@Override
+	public boolean canMerge(TupleProjection pi2) {
+		return false;
+	}
+
+
+
+
+
+
+
+
+	@Override
+	public TupleProjection merge(TupleProjection pi2) {
+		// TODO throw exception
+		return null;
 	};
 	
 

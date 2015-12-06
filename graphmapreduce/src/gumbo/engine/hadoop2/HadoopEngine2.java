@@ -15,6 +15,7 @@ import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.engine.general.ExecutionException;
 import gumbo.engine.general.grouper.GroupingException;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
+import gumbo.engine.hadoop2.converter.MultiRoundConverter;
 
 public class HadoopEngine2 {
 

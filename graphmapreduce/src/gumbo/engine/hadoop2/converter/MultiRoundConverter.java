@@ -1,4 +1,4 @@
-package gumbo.engine.hadoop2;
+package gumbo.engine.hadoop2.converter;
 
 import java.io.IOException;
 import java.util.ArrayList;

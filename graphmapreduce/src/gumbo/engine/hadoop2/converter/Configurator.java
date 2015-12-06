@@ -1,4 +1,4 @@
-package gumbo.engine.hadoop2;
+package gumbo.engine.hadoop2.converter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -83,7 +83,7 @@ public class Configurator {
 
 		}
 
-		Comparator<Pair<RelationSchema, Path>> comp = new Comp();
+		Comparator<Pair<RelationSchema, Path>> comp = new HelpComparator();
 		Collections.sort(rspath, comp );
 
 		long i = 0;

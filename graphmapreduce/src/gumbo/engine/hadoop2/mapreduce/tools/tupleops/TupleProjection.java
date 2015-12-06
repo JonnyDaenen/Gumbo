@@ -14,4 +14,8 @@ public interface TupleProjection {
 
 	public boolean load(QuickWrappedTuple qt, long offset, VBytesWritable bw, GumboMessageWritable gw);
 
+	public boolean canMerge(TupleProjection pi2);
+
+	public TupleProjection merge(TupleProjection pi2);
+
 }

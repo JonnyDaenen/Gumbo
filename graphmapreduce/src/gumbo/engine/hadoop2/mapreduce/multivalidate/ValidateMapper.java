@@ -57,7 +57,8 @@ public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 		Map<String, Integer> atomidmap = inspector.getAtomIdMap();
 
 		// get projections
-		projections = TupleOpFactory.createMap1Projections(relation, fileid, queries, atomidmap);
+		boolean merge = inspector.isProjectionMergeEnabled();
+		projections = TupleOpFactory.createMap1Projections(relation, fileid, queries, atomidmap, merge);
 
 		// enable packing
 		packingEnabled = true;
