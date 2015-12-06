@@ -145,6 +145,11 @@ public class MapSimulator implements SimulatorInterface {
 			LOG.error("Something went wrong during mapper simulation! Trying to continue...", e);
 		}
 
+//		System.out.println("Num assert:" + context.getAssertBytes());
+//		System.out.println("Num req:" + context.getRequestBytes());
+//		System.out.println("Num key:" + context.getKeyBytes());
+//		System.out.println("Num val:" + context.getValueBytes());
+
 		return new Pair<>(context.getRequestBytes() != 0,(long) context.getKeyBytes() + context.getValueBytes());
 	}
 
@@ -153,6 +158,7 @@ public class MapSimulator implements SimulatorInterface {
 		HadoopExecutorSettings set = (HadoopExecutorSettings)settings;
 		conf = new Configuration(set.getConf());
 		Configurator.addQueries(conf, calcJob.getExpressions());
+		
 		
 		return conf;
 	}

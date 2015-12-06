@@ -12,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 
 import gumbo.compiler.partitioner.HeightPartitioner;
 import gumbo.engine.general.grouper.GroupingPolicies;
+import gumbo.engine.general.grouper.sample.Simulator;
 
 
 
@@ -85,6 +86,7 @@ public abstract class AbstractExecutorSettings {
 		// engine v2
 		setBooleanProperty(unnesterEnabled, false); 
 		setBooleanProperty(outputMergeEnabled, false); 
+//		setProperty(simulatorClass, Simulator.class.getCanonicalName());
 		setProperty(simulatorClass, gumbo.engine.hadoop2.estimation.MapSimulator.class.getCanonicalName());
 	}
 	

@@ -136,11 +136,14 @@ public class Simulator implements SimulatorInterface {
 		} else {
 			Map1GuardedMessageFactoryInterface fact = new Map1GuardedMessageFactory(fm.context, settings, eso);
 			fact.enableSampleCounting();
-			algo = new Map1GuardedAlgorithm(eso,fact,settings.getBooleanProperty(AbstractExecutorSettings.mapOutputGroupingOptimizationOn));
+			algo = new Map1GuardedAlgorithm(eso, fact, settings.getBooleanProperty(AbstractExecutorSettings.mapOutputGroupingOptimizationOn));
 		}
 
 		feedTuples(algo, tuples);
-
+		
+//		System.out.println("key bytes: " + fm.context.getOutputKeyBytes());
+//		System.out.println("value bytes: " + fm.context.getOutputValueBytes());
+		
 		return (long) fm.context.getOutputBytes();
 	}
 
