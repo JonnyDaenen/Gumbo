@@ -46,7 +46,7 @@ public class Gumbo extends Configured implements Tool {
 
 	public int run(String[] args) throws Exception {
 		
-//		Thread.sleep(7000);
+		Thread.sleep(7000);
 
 		String tmpdir = getConf().get("java.io.tmpdir");
 		if (tmpdir != null)

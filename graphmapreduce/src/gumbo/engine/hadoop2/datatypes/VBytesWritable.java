@@ -251,7 +251,7 @@ implements WritableComparable<BinaryComparable>, Recyclable<VBytesWritable>{
 				i2 = (i2 << 8) | (b2[s2] & 0xFF);
 				
 				// when int is full, we compare and reset
-				if ( i == 3) {
+				if ( (i+1) % 3 == 0) {
 					if (i1 != i2)
 						return i1 - i2;
 					i1 = 0;
