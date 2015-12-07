@@ -20,7 +20,6 @@ import gumbo.structures.gfexpressions.GFNotExpression;
 import gumbo.structures.gfexpressions.GFOrExpression;
 import gumbo.structures.gfexpressions.GFVisitor;
 import gumbo.structures.gfexpressions.GFVisitorException;
-import gumbo.structures.gfexpressions.io.Pair;
 
 
 
@@ -183,7 +182,7 @@ public class GFUnnester implements GFVisitor<Set<GFExpression>> {
 			for (GFExpression atom : atoms) {
 
 				// create a new expression with new name
-				GFAtomicExpression out = getNewOutputAtom(e.getOutputRelation());
+				GFAtomicExpression out = getNewOutputAtom(guard);
 				conjExp = new GFExistentialExpression(currentGuard, atom, out);
 
 				// add to resulting expression set

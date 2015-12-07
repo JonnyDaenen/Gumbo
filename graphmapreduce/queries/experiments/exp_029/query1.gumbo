@@ -10,4 +10,4 @@ U,1 <- input/experiments/EXP_029/4/U, CSV
 V,1 <- input/experiments/EXP_029/4/V, CSV
 
 
-#Out1(x,y,z,w)&R(x,y,z,w)&S(x)&T(y)&U(z)V(w);
+#Out1(x)&R(x,y,z,w)&S(x)&T(y)&U(z)V(w);
