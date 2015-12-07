@@ -32,6 +32,8 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 	private QuickWrappedTuple qt;
 	private TupleFilter[] filters;
 	private DataOutputBuffer buffer;
+	
+
 
 	@Override
 	public void setup(Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable>.Context context)
@@ -66,6 +68,8 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 		filters = TupleOpFactory.createMap2Filter(atoms, relation);
 		
 	}
+	
+
 
 	@Override
 	public void map(LongWritable key, Text value,
@@ -90,6 +94,7 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 		
 		// prepare key bytes
 		offset = key.get();
+		
 		lw2.set(offset);
 		
 		buffer.reset();

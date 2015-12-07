@@ -53,6 +53,7 @@ public class AssertRequestPacker {
 
 			VBytesWritable k1 = bytesFactory.get(i);
 			GumboMessageWritable v1 = messageFactory.get(i);
+			
 
 			// skip already merged messages
 			if (v1.isGarbage())

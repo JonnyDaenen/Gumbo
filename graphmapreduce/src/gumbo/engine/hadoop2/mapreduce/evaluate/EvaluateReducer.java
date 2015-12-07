@@ -65,13 +65,11 @@ public class EvaluateReducer extends Reducer<VBytesWritable, GumboMessageWritabl
 					throws IOException, InterruptedException {
 		
 		
-		
 		for (GumboMessageWritable value : values) {
 		
 			// extract data message
 			if (value.isData()){
 				buffer.setMessage(value);
-			
 			// keep track of confirmed atoms
 			} else {
 				buffer.addAtomIDs(value);

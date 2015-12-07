@@ -239,7 +239,7 @@ public class QuickWrappedTuple {
 	 */
 	private void project(List<Integer> fields2) {
 		// set extra_buffer limits to full tuple
-		setCapacity(fields2.size() * (maxlength + 1));
+		setCapacity(fields2.size() * (maxlength + commabytes.length));
 
 		// OPTIMIZE make ByteBuffer a field
 		ByteBuffer buffer = ByteBuffer.wrap(extra_buffer);
@@ -274,7 +274,9 @@ public class QuickWrappedTuple {
 
 		// project all fields in order
 		for (byte i : keyFields) {
-			buffer.put(data, startList.get(i), lengthList.get(i));
+			if (startList.size() > i) {
+				buffer.put(data, startList.get(i), lengthList.get(i));
+			}
 			buffer.put(commabytes, 0, commabytes.length);
 		}
 
@@ -284,7 +286,7 @@ public class QuickWrappedTuple {
 
 	}
 
-	
+
 
 
 

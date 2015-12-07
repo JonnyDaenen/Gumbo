@@ -229,6 +229,10 @@ implements WritableComparable<BinaryComparable>, Recyclable<VBytesWritable>{
 		public int compare(byte[] b1, int s1, int l1,
 				byte[] b2, int s2, int l2) {
 
+				
+			
+			
+			
 			// compare byte length
 			if (l1 != l2)
 				return l1 - l2;
@@ -242,9 +246,10 @@ implements WritableComparable<BinaryComparable>, Recyclable<VBytesWritable>{
 			int extra = l1 % 8;
 			for (int i = 0; i < extra; i++){
 
-				i1 = (i1 << 8) | b1[s1];
-				i2 = (i2 << 8) | b2[s2];
-
+				// ff conversion is necessary!
+				i1 = (i1 << 8) | (b1[s1] & 0xFF);
+				i2 = (i2 << 8) | (b2[s2] & 0xFF);
+				
 				// when int is full, we compare and reset
 				if ( i == 3) {
 					if (i1 != i2)

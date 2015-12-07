@@ -67,6 +67,7 @@ public class ValidateReducer extends Reducer<VBytesWritable, GumboMessageWritabl
 			
 		}
 		
+		
 		// for all buffered messages
 		for (int i = 0; i < buffer.size(); i++) {
 			

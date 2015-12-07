@@ -85,8 +85,8 @@ public class DummyMapper extends ValidateMapper {
 			if (!it.hasNext())
 				return false;
 
-			key.set(offset);
-			value.set(it.next().toString());
+			key.set(offset++);
+			value.set(it.next().generateString(true));
 
 			return true;
 		}
