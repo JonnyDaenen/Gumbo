@@ -350,9 +350,9 @@ public class MultiRoundConverter {
 			dfs.mkdirs(to);
 			
 			FileStatus[] files = dfs.globStatus(from);
+			LOG.info("Moving files: " + from + " " + to);
 			for(FileStatus file: files) {
 				if (!file.isDirectory()) {
-					LOG.info("Moving files: " + from + " " + to);
 					dfs.rename(file.getPath(), to);
 				}
 			}
