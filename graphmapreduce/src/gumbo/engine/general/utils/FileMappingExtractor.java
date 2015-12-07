@@ -55,7 +55,7 @@ public class FileMappingExtractor {
 		RelationFileMapping expandedIns = expand(ins);
 
 		if (includeOut) {
-			System.out.println("Adding output paths");
+//			System.out.println("Adding output paths");
 			expandedIns.putAll(expand(outs));
 		}
 		return expandedIns;
