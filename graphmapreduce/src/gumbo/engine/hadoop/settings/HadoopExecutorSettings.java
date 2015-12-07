@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 
+import gumbo.engine.general.grouper.sample.Simulator;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 
 /**
@@ -63,6 +64,11 @@ public class HadoopExecutorSettings extends AbstractExecutorSettings{
 		for (Entry<String, String> a : conf) {
 			setProperty(a.getKey(), a.getValue());
 		}
+	}
+
+	public void setV1Simulator() {
+		setProperty(simulatorClass, Simulator.class.getCanonicalName());
+		
 	}
 
 

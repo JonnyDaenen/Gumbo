@@ -70,10 +70,12 @@ public class Rank1Test {
 		Configuration on = new Configuration();
 		(new HadoopExecutorSettings(on)).loadDefaults();
 		(new HadoopExecutorSettings(on)).turnOnOptimizations();
+		(new HadoopExecutorSettings(on)).setV1Simulator();
 
 		Configuration off = new Configuration();
 		(new HadoopExecutorSettings(off)).loadDefaults();
 		(new HadoopExecutorSettings(off)).turnOffOptimizations();
+		(new HadoopExecutorSettings(off)).setV1Simulator();
 
 		Object [] onconf = {on, "optOn"};
 		Object [] offconf = {off, "optOff"};
@@ -90,6 +92,7 @@ public class Rank1Test {
 			hc.loadDefaults();
 			hc.turnOffOptimizations();
 			hc.setBooleanProperty(key, true);
+			hc.setV1Simulator();
 
 			Object [] oneOnTest = {hc.getConf(), key};
 //			if (key.contains("Group"))

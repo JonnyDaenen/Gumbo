@@ -144,6 +144,10 @@ public class ContextInspector {
 	}
 
 	private long getPathID(Path filePath) {
+		// OPTIMIZE filter out unexisting paths before call
+		if (!fileidmap.containsKey(filePath.toString())) {
+			return -1;
+		}
 		return fileidmap.get(filePath.toString());
 	}
 

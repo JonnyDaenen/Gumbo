@@ -362,7 +362,7 @@ public class MultiRoundConverter {
 			dfs.delete(outdir, true);
 			
 			// merge files if necessary
-			if (settings.getBooleanProperty(AbstractExecutorSettings.outputMergeEnabled)) {
+			if (settings.getBooleanProperty(settings.outputMergeEnabled)) {
 
 				Path helpDir = to.suffix("_help");
 				dfs.rename(to, helpDir);
