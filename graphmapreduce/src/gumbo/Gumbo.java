@@ -46,7 +46,6 @@ public class Gumbo extends Configured implements Tool {
 
 	public int run(String[] args) throws Exception {
 		
-		Thread.sleep(7000);
 
 		String tmpdir = getConf().get("java.io.tmpdir");
 		if (tmpdir != null)
@@ -92,6 +91,8 @@ public class Gumbo extends Configured implements Tool {
 			}
 			else if (arg.equals("--grouponly")) {
 				groupOnly = true;
+			} else if (arg.equals("--sleeponstart")) {
+				Thread.sleep(10000);
 			}
 			else if (arg.equals("-j")) {
 				pickupname = true;

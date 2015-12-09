@@ -71,7 +71,7 @@ public class MultiRoundConverter {
 
 	private RelationTupleSampleContainer samples;
 	private RelationSampleContainer rawSamples;
-	
+
 
 	private HadoopExecutorSettings settings;
 
@@ -84,7 +84,7 @@ public class MultiRoundConverter {
 
 		this.extractor = new FileMappingExtractor();
 		settings = new HadoopExecutorSettings(conf);
-		
+
 		this.configurator = new Configurator(plan, fm);
 	}
 
@@ -92,74 +92,74 @@ public class MultiRoundConverter {
 
 
 		Job hadoopJob = null;
-			hadoopJob = Job.getInstance(conf); // note: makes a copy of the conf
+		hadoopJob = Job.getInstance(conf); // note: makes a copy of the conf
 
 
-			hadoopJob.setJarByClass(getClass());
-			hadoopJob.setJobName(plan.getName() + "_VAL_"+ group.getCanonicalName());
+		hadoopJob.setJarByClass(getClass());
+		hadoopJob.setJobName(plan.getName() + "_VAL_"+ group.getCanonicalName());
 
-			// MAPPER
-			// couple all input files to mapper
-			for (RelationSchema rs : group.getInputRelations()) {
-				Set<Path> paths = fm.getFileMapping().getPaths(rs);
-				for (Path path : paths) {
-					LOG.info("Adding path " + path + " to mapper");
-					MultipleInputs.addInputPath(hadoopJob, path, 
-							TextInputFormat.class, ValidateMapper.class);
-				}
+		// MAPPER
+		// couple all input files to mapper
+		for (RelationSchema rs : group.getInputRelations()) {
+			Set<Path> paths = fm.getFileMapping().getPaths(rs);
+			for (Path path : paths) {
+				LOG.info("Adding path " + path + " to mapper");
+				MultipleInputs.addInputPath(hadoopJob, path, 
+						TextInputFormat.class, ValidateMapper.class);
 			}
+		}
 
-			// REDUCER
-			hadoopJob.setReducerClass(ValidateReducer.class); 
-
-
-			// SETTINGS
-			// set map output types
-			hadoopJob.setMapOutputKeyClass(VBytesWritable.class);
-			hadoopJob.setMapOutputValueClass(GumboMessageWritable.class);
-
-			// set reduce output types
-			hadoopJob.setOutputKeyClass(VBytesWritable.class);
-			hadoopJob.setOutputValueClass(GumboMessageWritable.class);
-			hadoopJob.setOutputFormatClass(SequenceFileOutputFormat.class);
+		// REDUCER
+		hadoopJob.setReducerClass(ValidateReducer.class); 
 
 
-			// set output path
+		// SETTINGS
+		// set map output types
+		hadoopJob.setMapOutputKeyClass(VBytesWritable.class);
+		hadoopJob.setMapOutputValueClass(GumboMessageWritable.class);
 
-			// register path for all semi-joins
-			HashSet<String> labels = new HashSet<>();
-			Set<GFExistentialExpression> calculations = new HashSet<>();
-			for (GuardedSemiJoinCalculation sj : group.getAll()) {
-				String label = sj.getCanonicalString();
-				labels.add(label);
-
-				calculations.add(sj.getExpression());
-			}
-			Path intermediatePath = fm.getNewTmpPath(group.getCanonicalName(), labels);
-
-			FileOutputFormat.setOutputPath(hadoopJob, intermediatePath);
+		// set reduce output types
+		hadoopJob.setOutputKeyClass(VBytesWritable.class);
+		hadoopJob.setOutputValueClass(GumboMessageWritable.class);
+		hadoopJob.setOutputFormatClass(SequenceFileOutputFormat.class);
 
 
-			// pass settings to mapper
-			configurator.configure(hadoopJob, calculations);
+		// set output path
 
-			// NUM RED TASKS
-			// add missing sample data if necessary
-			// create a job for each group
+		// register path for all semi-joins
+		HashSet<String> labels = new HashSet<>();
+		Set<GFExistentialExpression> calculations = new HashSet<>();
+		for (GuardedSemiJoinCalculation sj : group.getAll()) {
+			String label = sj.getCanonicalString();
+			labels.add(label);
 
-			if (!group.hasInfo()) {
-				LOG.info("Missing size estimates, sampling data.");
-				addInfo(hadoopJob, group);
-			}
-			long intermediate = group.getGuardedOutBytes() + group.getGuardOutBytes();
-			int numRed =  (int) Math.max(1, intermediate / (settings.getNumProperty(AbstractExecutorSettings.REDUCER_SIZE_MB)*1024*1024.0) ); 
-			hadoopJob.setNumReduceTasks(numRed); 
+			calculations.add(sj.getExpression());
+		}
+		Path intermediatePath = fm.getNewTmpPath(group.getCanonicalName(), labels);
 
-			LOG.info("Map output est.: " + intermediate + ", setting VAL Reduce tasks to " + numRed);
+		FileOutputFormat.setOutputPath(hadoopJob, intermediatePath);
 
 
-			return new ControlledJob(hadoopJob, null);
-	
+		// pass settings to mapper
+		configurator.configure(hadoopJob, calculations);
+
+		// NUM RED TASKS
+		// add missing sample data if necessary
+		// create a job for each group
+
+		if (!group.hasInfo()) {
+			LOG.info("Missing size estimates, sampling data.");
+			addInfo(hadoopJob, group);
+		}
+		long intermediate = group.getGuardedOutBytes() + group.getGuardOutBytes();
+		int numRed =  (int) Math.max(1, intermediate / (settings.getNumProperty(AbstractExecutorSettings.REDUCER_SIZE_MB)*1024*1024.0) ); 
+		hadoopJob.setNumReduceTasks(numRed); 
+
+		LOG.info("Map output est.: " + intermediate + ", setting VAL Reduce tasks to " + numRed);
+
+
+		return new ControlledJob(hadoopJob, null);
+
 	}
 
 
@@ -330,13 +330,15 @@ public class MultiRoundConverter {
 		}
 	}
 
-	
+
 
 	public void moveOutputFiles(CalculationUnitGroup partition) throws IOException {
 
 
 
 		FileSystem dfs = FileSystem.get(conf);
+
+		Set<Path> outdirs = new HashSet<Path>();
 
 		for ( RelationSchema rs:  partition.getOutputRelations()) {
 			Path outdir = fm.getOutputRoot().suffix(Path.SEPARATOR + partition.getCanonicalOutString());
@@ -348,7 +350,7 @@ public class MultiRoundConverter {
 
 			// move files to target destination
 			dfs.mkdirs(to);
-			
+
 			FileStatus[] files = dfs.globStatus(from);
 			LOG.info("Moving files: " + from + " " + to);
 			for(FileStatus file: files) {
@@ -356,23 +358,28 @@ public class MultiRoundConverter {
 					dfs.rename(file.getPath(), to);
 				}
 			}
-			
-			
-			// delete old destination
-			dfs.delete(outdir, true);
-			
+
+			// add outdir to remove afterwards (not now, as it can contain multiple outputs!)
+			outdirs.add(outdir);
+
+
 			// merge files if necessary
 			if (settings.getBooleanProperty(settings.outputMergeEnabled)) {
 
 				Path helpDir = to.suffix("_help");
 				dfs.rename(to, helpDir);
-				
+
 				Path toFile = to.suffix(Path.SEPARATOR + "data");
 				FileUtil.copyMerge(dfs, helpDir, dfs, toFile, true, conf, null);
 				dfs.delete(helpDir, true);
 
 			} 
 
+		}
+
+		// delete old destinations
+		for (Path outdir : outdirs) {
+			dfs.delete(outdir, true);
 		}
 
 	}
