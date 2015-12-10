@@ -16,35 +16,35 @@ gumbo.compiler.unnest=false
 gumbo.engine.grouper.beststopindicator=0
 gumbo.engine.requestAtomIdOptimizationOn=true
 gumbo.engine.guardKeepAliveOptimizationOn=true
-[INFO] 15/12/10 13:49:59 gumbo.Gumbo: Input: 
+[INFO] 15/12/10 14:54:10 gumbo.Gumbo: Input: 
 R(x0,x1,x2);input/experiments/EXP_030/1/R;csv;'S(x0);input/experiments/EXP_030/1/S;csv;'T(x0);input/experiments/EXP_030/1/T;csv;'U(x0);input/experiments/EXP_030/1/U;csv;
 Output: output/EXP_030
 Scratch: scratch/EXP_030
 Queries: 
-[(Out1(x,y,z) : R(x,y,z) & S(x)), (Out3(x,y,z) : R(x,y,z) & S(z)), (Out2(x,y,z) : R(x,y,z) & S(y))]
+[(Out1(x,y,z) : R(x,y,z) & S(x)), (Out2(x,y,z) : R(x,y,z) & S(y)), (Out3(x,y,z) : R(x,y,z) & S(z))]
 
-[INFO] 15/12/10 13:49:59 compiler.GFCompiler: Adding suffix to scratch and output paths: /20151210_134959
-[INFO] 15/12/10 13:49:59 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
-[INFO] 15/12/10 13:49:59 compiler.GFCompiler: Number of BGFEs: 3
-[INFO] 15/12/10 13:49:59 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
-[INFO] 15/12/10 13:49:59 compiler.GFCompiler: Number of CUs: 3
-[INFO] 15/12/10 13:49:59 compiler.GFCompiler: Linking Calculation Units (CUs)...
-[INFO] 15/12/10 13:49:59 compiler.GFCompiler: Creating initial file mapping...
-[INFO] 15/12/10 13:49:59 compiler.GFCompiler: file mapping:
-Out root: output/EXP_030/20151210_134959
-Scratch root: scratch/EXP_030/20151210_134959
-Temp root: scratch/EXP_030/20151210_134959/tmp
+[INFO] 15/12/10 14:54:10 compiler.GFCompiler: Adding suffix to scratch and output paths: /20151210_145410
+[INFO] 15/12/10 14:54:10 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
+[INFO] 15/12/10 14:54:10 compiler.GFCompiler: Number of BGFEs: 3
+[INFO] 15/12/10 14:54:10 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
+[INFO] 15/12/10 14:54:10 compiler.GFCompiler: Number of CUs: 3
+[INFO] 15/12/10 14:54:10 compiler.GFCompiler: Linking Calculation Units (CUs)...
+[INFO] 15/12/10 14:54:10 compiler.GFCompiler: Creating initial file mapping...
+[INFO] 15/12/10 14:54:10 compiler.GFCompiler: file mapping:
+Out root: output/EXP_030/20151210_145410
+Scratch root: scratch/EXP_030/20151210_145410
+Temp root: scratch/EXP_030/20151210_145410/tmp
 R(x0,x1,x2) <- [input/experiments/EXP_030/1/R]
 S(x0) <- [input/experiments/EXP_030/1/S]
 T(x0) <- [input/experiments/EXP_030/1/T]
 U(x0) <- [input/experiments/EXP_030/1/U]
-Out3(x0,x1,x2) -> [output/EXP_030/20151210_134959/OUT_0_Out3]
-Out2(x0,x1,x2) -> [output/EXP_030/20151210_134959/OUT_1_Out2]
-Out1(x0,x1,x2) -> [output/EXP_030/20151210_134959/OUT_2_Out1]
+Out3(x0,x1,x2) -> [output/EXP_030/20151210_145410/OUT_0_Out3]
+Out2(x0,x1,x2) -> [output/EXP_030/20151210_145410/OUT_1_Out2]
+Out1(x0,x1,x2) -> [output/EXP_030/20151210_145410/OUT_2_Out1]
 Temp dirs: 
 
-[INFO] 15/12/10 13:49:59 compiler.GFCompiler: Partitioning...
-[INFO] 15/12/10 13:49:59 compiler.GFCompiler: Number of partitions: 1
+[INFO] 15/12/10 14:54:10 compiler.GFCompiler: Partitioning...
+[INFO] 15/12/10 14:54:10 compiler.GFCompiler: Number of partitions: 1
 
 Query:
 query3a.gumbo
@@ -52,128 +52,225 @@ query3a.gumbo
 Partitions:
 -----------
 Calculation Unit Partitions: {
-{id : 0 Depends on: None. - (Out1(x,y,z) : R(x,y,z) & S(x))id : 1 Depends on: None. - (Out3(x,y,z) : R(x,y,z) & S(z))id : 2 Depends on: None. - (Out2(x,y,z) : R(x,y,z) & S(y))}
+{id : 0 Depends on: None. - (Out1(x,y,z) : R(x,y,z) & S(x))id : 1 Depends on: None. - (Out2(x,y,z) : R(x,y,z) & S(y))id : 2 Depends on: None. - (Out3(x,y,z) : R(x,y,z) & S(z))}
 }
 Folders:
 -------
-Out root: output/EXP_030/20151210_134959
-Scratch root: scratch/EXP_030/20151210_134959
-Temp root: scratch/EXP_030/20151210_134959/tmp
+Out root: output/EXP_030/20151210_145410
+Scratch root: scratch/EXP_030/20151210_145410
+Temp root: scratch/EXP_030/20151210_145410/tmp
 R(x0,x1,x2) <- [input/experiments/EXP_030/1/R]
 S(x0) <- [input/experiments/EXP_030/1/S]
 T(x0) <- [input/experiments/EXP_030/1/T]
 U(x0) <- [input/experiments/EXP_030/1/U]
-Out3(x0,x1,x2) -> [output/EXP_030/20151210_134959/OUT_0_Out3]
-Out2(x0,x1,x2) -> [output/EXP_030/20151210_134959/OUT_1_Out2]
-Out1(x0,x1,x2) -> [output/EXP_030/20151210_134959/OUT_2_Out1]
+Out3(x0,x1,x2) -> [output/EXP_030/20151210_145410/OUT_0_Out3]
+Out2(x0,x1,x2) -> [output/EXP_030/20151210_145410/OUT_1_Out2]
+Out1(x0,x1,x2) -> [output/EXP_030/20151210_145410/OUT_2_Out1]
 Temp dirs: 
 
-[INFO] 15/12/10 13:49:59 hadoop2.HadoopEngine2: Creating Job Control for: query3a.gumbo
-[INFO] 15/12/10 13:49:59 hadoop2.HadoopEngine2: Starting Job-control thread: Gumbo-Workflow-Thread_query3a.gumbo
-[WARN] 15/12/10 13:49:59 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-[INFO] 15/12/10 13:49:59 hadoop2.HadoopEngine2: Using 1-round evaluation for Calculation Unit Partitions: {
-{id : 0 Depends on: None. - (Out1(x,y,z) : R(x,y,z) & S(x))id : 1 Depends on: None. - (Out3(x,y,z) : R(x,y,z) & S(z))id : 2 Depends on: None. - (Out2(x,y,z) : R(x,y,z) & S(y))}
+[INFO] 15/12/10 14:54:10 hadoop2.HadoopEngine2: Creating Job Control for: query3a.gumbo
+[INFO] 15/12/10 14:54:10 hadoop2.HadoopEngine2: Starting Job-control thread: Gumbo-Workflow-Thread_query3a.gumbo
+[WARN] 15/12/10 14:54:10 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[INFO] 15/12/10 14:54:10 hadoop2.HadoopEngine2: Using 1-round evaluation for Calculation Unit Partitions: {
+{id : 0 Depends on: None. - (Out1(x,y,z) : R(x,y,z) & S(x))id : 1 Depends on: None. - (Out2(x,y,z) : R(x,y,z) & S(y))id : 2 Depends on: None. - (Out3(x,y,z) : R(x,y,z) & S(z))}
 }
-[INFO] 15/12/10 13:49:59 converter.MultiRoundConverter: Adding path input/experiments/EXP_030/1/R to mapper
-[INFO] 15/12/10 13:49:59 converter.MultiRoundConverter: Adding path input/experiments/EXP_030/1/S to mapper
-[INFO] 15/12/10 13:49:59 converter.MultiRoundConverter: Setting VALEVAL Reduce tasks to 1
-[INFO] 15/12/10 13:49:59 hadoop2.HadoopEngine2: Waiting for jobs
-[INFO] 15/12/10 13:50:04 Configuration.deprecation: session.id is deprecated. Instead, use dfs.metrics.session-id
-[INFO] 15/12/10 13:50:04 jvm.JvmMetrics: Initializing JVM Metrics with processName=JobTracker, sessionId=
-[WARN] 15/12/10 13:50:04 mapreduce.JobSubmitter: No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
-[INFO] 15/12/10 13:50:04 input.FileInputFormat: Total input paths to process : 2
-[INFO] 15/12/10 13:50:04 mapreduce.JobSubmitter: number of splits:2
-[INFO] 15/12/10 13:50:04 Configuration.deprecation: io.bytes.per.checksum is deprecated. Instead, use dfs.bytes-per-checksum
-[INFO] 15/12/10 13:50:04 mapreduce.JobSubmitter: Submitting tokens for job: job_local1113357652_0001
-[WARN] 15/12/10 13:50:04 conf.Configuration: file:/tmp/hadoop-jonny/mapred/staging/jonny1113357652/.staging/job_local1113357652_0001/job.xml:an attempt to override final parameter: mapreduce.job.end-notification.max.retry.interval;  Ignoring.
-[WARN] 15/12/10 13:50:04 conf.Configuration: file:/tmp/hadoop-jonny/mapred/staging/jonny1113357652/.staging/job_local1113357652_0001/job.xml:an attempt to override final parameter: mapreduce.job.end-notification.max.attempts;  Ignoring.
-[WARN] 15/12/10 13:50:04 conf.Configuration: file:/tmp/hadoop-jonny/mapred/local/localRunner/jonny/job_local1113357652_0001/job_local1113357652_0001.xml:an attempt to override final parameter: mapreduce.job.end-notification.max.retry.interval;  Ignoring.
-[WARN] 15/12/10 13:50:04 conf.Configuration: file:/tmp/hadoop-jonny/mapred/local/localRunner/jonny/job_local1113357652_0001/job_local1113357652_0001.xml:an attempt to override final parameter: mapreduce.job.end-notification.max.attempts;  Ignoring.
-[INFO] 15/12/10 13:50:04 mapreduce.Job: The url to track the job: http://localhost:8080/
-[INFO] 15/12/10 13:50:04 mapred.LocalJobRunner: OutputCommitter set in config null
-[INFO] 15/12/10 13:50:04 mapred.LocalJobRunner: OutputCommitter is org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter
-[INFO] 15/12/10 13:50:04 mapred.LocalJobRunner: Waiting for map tasks
-[INFO] 15/12/10 13:50:04 mapred.LocalJobRunner: Starting task: attempt_local1113357652_0001_m_000000_0
-[INFO] 15/12/10 13:50:04 util.ProcfsBasedProcessTree: ProcfsBasedProcessTree currently is supported only on Linux.
-[INFO] 15/12/10 13:50:04 mapred.Task:  Using ResourceCalculatorProcessTree : null
-[INFO] 15/12/10 13:50:04 mapred.MapTask: Processing split: file:/Users/jonny/Develop/Gumbo/graphmapreduce/input/experiments/EXP_030/1/R/R.txt:0+11676
-[INFO] 15/12/10 13:50:04 mapred.MapTask: Map output collector class = org.apache.hadoop.mapred.MapTask$MapOutputBuffer
-[INFO] 15/12/10 13:50:04 mapred.MapTask: (EQUATOR) 0 kvi 26214396(104857584)
-[INFO] 15/12/10 13:50:04 mapred.MapTask: mapreduce.task.io.sort.mb: 100
-[INFO] 15/12/10 13:50:04 mapred.MapTask: soft limit at 83886080
-[INFO] 15/12/10 13:50:04 mapred.MapTask: bufstart = 0; bufvoid = 104857600
-[INFO] 15/12/10 13:50:04 mapred.MapTask: kvstart = 26214396; length = 6553600
-[INFO] 15/12/10 13:50:04 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 15/12/10 13:50:04 tupleops.TupleOpFactory: [R:0:0,1,2, R:1:0,1,2, R:2:0,1,2]
-[INFO] 15/12/10 13:50:13 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 15/12/10 13:50:13 tupleops.TupleOpFactory: [R:0:0,1,2, R:1:0,1,2, R:2:0,1,2]
-[INFO] 15/12/10 13:50:13 mapred.LocalJobRunner: 
-[INFO] 15/12/10 13:50:13 mapred.MapTask: Starting flush of map output
-[INFO] 15/12/10 13:50:13 mapred.MapTask: Spilling map output
-[INFO] 15/12/10 13:50:13 mapred.MapTask: bufstart = 0; bufend = 49704; bufvoid = 104857600
-[INFO] 15/12/10 13:50:13 mapred.MapTask: kvstart = 26214396(104857584); kvend = 26202400(104809600); length = 11997/6553600
-[INFO] 15/12/10 13:50:13 mapred.MapTask: Finished spill 0
-[INFO] 15/12/10 13:50:13 mapred.Task: Task:attempt_local1113357652_0001_m_000000_0 is done. And is in the process of committing
-[INFO] 15/12/10 13:50:13 mapred.LocalJobRunner: map
-[INFO] 15/12/10 13:50:13 mapred.Task: Task 'attempt_local1113357652_0001_m_000000_0' done.
-[INFO] 15/12/10 13:50:13 mapred.LocalJobRunner: Finishing task: attempt_local1113357652_0001_m_000000_0
-[INFO] 15/12/10 13:50:13 mapred.LocalJobRunner: Starting task: attempt_local1113357652_0001_m_000001_0
-[INFO] 15/12/10 13:50:13 util.ProcfsBasedProcessTree: ProcfsBasedProcessTree currently is supported only on Linux.
-[INFO] 15/12/10 13:50:13 mapred.Task:  Using ResourceCalculatorProcessTree : null
-[INFO] 15/12/10 13:50:13 mapred.MapTask: Processing split: file:/Users/jonny/Develop/Gumbo/graphmapreduce/input/experiments/EXP_030/1/S/S.txt:0+3891
-[INFO] 15/12/10 13:50:13 mapred.MapTask: Map output collector class = org.apache.hadoop.mapred.MapTask$MapOutputBuffer
-[INFO] 15/12/10 13:50:13 mapred.MapTask: (EQUATOR) 0 kvi 26214396(104857584)
-[INFO] 15/12/10 13:50:13 mapred.MapTask: mapreduce.task.io.sort.mb: 100
-[INFO] 15/12/10 13:50:13 mapred.MapTask: soft limit at 83886080
-[INFO] 15/12/10 13:50:13 mapred.MapTask: bufstart = 0; bufvoid = 104857600
-[INFO] 15/12/10 13:50:13 mapred.MapTask: kvstart = 26214396; length = 6553600
-[INFO] 15/12/10 13:50:13 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 15/12/10 13:50:13 tupleops.TupleOpFactory: [S:0:0:1, S:0:0:2, S:0:0:3]
-[INFO] 15/12/10 13:50:13 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 15/12/10 13:50:13 tupleops.TupleOpFactory: [S:0:0:1,2,3]
-[INFO] 15/12/10 13:50:13 mapred.LocalJobRunner: 
-[INFO] 15/12/10 13:50:13 mapred.MapTask: Starting flush of map output
-[INFO] 15/12/10 13:50:13 mapred.MapTask: Spilling map output
-[INFO] 15/12/10 13:50:13 mapred.MapTask: bufstart = 0; bufend = 8891; bufvoid = 104857600
-[INFO] 15/12/10 13:50:13 mapred.MapTask: kvstart = 26214396(104857584); kvend = 26210400(104841600); length = 3997/6553600
-[INFO] 15/12/10 13:50:13 mapred.MapTask: Finished spill 0
-[INFO] 15/12/10 13:50:13 mapred.Task: Task:attempt_local1113357652_0001_m_000001_0 is done. And is in the process of committing
-[INFO] 15/12/10 13:50:13 mapred.LocalJobRunner: map
-[INFO] 15/12/10 13:50:13 mapred.Task: Task 'attempt_local1113357652_0001_m_000001_0' done.
-[INFO] 15/12/10 13:50:13 mapred.LocalJobRunner: Finishing task: attempt_local1113357652_0001_m_000001_0
-[INFO] 15/12/10 13:50:13 mapred.LocalJobRunner: map task executor complete.
-[INFO] 15/12/10 13:50:13 mapred.LocalJobRunner: Waiting for reduce tasks
-[INFO] 15/12/10 13:50:13 mapred.LocalJobRunner: Starting task: attempt_local1113357652_0001_r_000000_0
-[INFO] 15/12/10 13:50:13 util.ProcfsBasedProcessTree: ProcfsBasedProcessTree currently is supported only on Linux.
-[INFO] 15/12/10 13:50:13 mapred.Task:  Using ResourceCalculatorProcessTree : null
-[INFO] 15/12/10 13:50:13 mapred.ReduceTask: Using ShuffleConsumerPlugin: org.apache.hadoop.mapreduce.task.reduce.Shuffle@74d3f47c
-[INFO] 15/12/10 13:50:13 reduce.MergeManagerImpl: MergerManager: memoryLimit=1503238528, maxSingleShuffleLimit=375809632, mergeThreshold=992137472, ioSortFactor=10, memToMemMergeOutputsThreshold=10
-[INFO] 15/12/10 13:50:13 reduce.EventFetcher: attempt_local1113357652_0001_r_000000_0 Thread started: EventFetcher for fetching Map Completion Events
-[INFO] 15/12/10 13:50:13 reduce.LocalFetcher: localfetcher#1 about to shuffle output of map attempt_local1113357652_0001_m_000001_0 decomp: 10893 len: 10897 to MEMORY
-[INFO] 15/12/10 13:50:13 reduce.InMemoryMapOutput: Read 10893 bytes from map-output for attempt_local1113357652_0001_m_000001_0
-[INFO] 15/12/10 13:50:13 reduce.MergeManagerImpl: closeInMemoryFile -> map-output of size: 10893, inMemoryMapOutputs.size() -> 1, commitMemory -> 0, usedMemory ->10893
-[INFO] 15/12/10 13:50:13 reduce.LocalFetcher: localfetcher#1 about to shuffle output of map attempt_local1113357652_0001_m_000000_0 decomp: 55706 len: 55710 to MEMORY
-[INFO] 15/12/10 13:50:13 reduce.InMemoryMapOutput: Read 55706 bytes from map-output for attempt_local1113357652_0001_m_000000_0
-[INFO] 15/12/10 13:50:13 reduce.MergeManagerImpl: closeInMemoryFile -> map-output of size: 55706, inMemoryMapOutputs.size() -> 2, commitMemory -> 10893, usedMemory ->66599
-[INFO] 15/12/10 13:50:13 reduce.EventFetcher: EventFetcher is interrupted.. Returning
-[INFO] 15/12/10 13:50:13 mapred.LocalJobRunner: 2 / 2 copied.
-[INFO] 15/12/10 13:50:13 reduce.MergeManagerImpl: finalMerge called with 2 in-memory map-outputs and 0 on-disk map-outputs
-[INFO] 15/12/10 13:50:13 mapred.Merger: Merging 2 sorted segments
-[INFO] 15/12/10 13:50:13 mapred.Merger: Down to the last merge-pass, with 2 segments left of total size: 66591 bytes
-[INFO] 15/12/10 13:50:13 reduce.MergeManagerImpl: Merged 2 segments, 66599 bytes to disk to satisfy reduce memory limit
-[INFO] 15/12/10 13:50:13 reduce.MergeManagerImpl: Merging 1 files, 66601 bytes from disk
-[INFO] 15/12/10 13:50:13 reduce.MergeManagerImpl: Merging 0 segments, 0 bytes from memory into reduce
-[INFO] 15/12/10 13:50:13 mapred.Merger: Merging 1 sorted segments
-[INFO] 15/12/10 13:50:13 mapred.Merger: Down to the last merge-pass, with 1 segments left of total size: 66593 bytes
-[INFO] 15/12/10 13:50:13 mapred.LocalJobRunner: 2 / 2 copied.
-[INFO] 15/12/10 13:50:13 Configuration.deprecation: mapred.skip.on is deprecated. Instead, use mapreduce.job.skiprecords
-[INFO] 15/12/10 13:50:19 mapred.LocalJobRunner: reduce > reduce
-[INFO] 15/12/10 13:54:25 mapred.LocalJobRunner: reduce > reduce
-[INFO] 15/12/10 13:56:16 mapred.LocalJobRunner: reduce > reduce
-[INFO] 15/12/10 13:57:19 mapred.LocalJobRunner: reduce > reduce
-[INFO] 15/12/10 13:57:34 mapred.LocalJobRunner: reduce > reduce
-[INFO] 15/12/10 13:57:49 mapred.LocalJobRunner: reduce > reduce
-[INFO] 15/12/10 13:57:58 mapred.LocalJobRunner: reduce > reduce
-[INFO] 15/12/10 13:58:10 mapred.LocalJobRunner: reduce > reduce
-[INFO] 15/12/10 13:58:38 mapred.LocalJobRunner: reduce > reduce
-[INFO] 15/12/10 13:59:08 mapred.LocalJobRunner: reduce > reduce
+[INFO] 15/12/10 14:54:10 converter.MultiRoundConverter: Adding path input/experiments/EXP_030/1/R to mapper
+[INFO] 15/12/10 14:54:10 converter.MultiRoundConverter: Adding path input/experiments/EXP_030/1/S to mapper
+[INFO] 15/12/10 14:54:10 converter.MultiRoundConverter: Setting VALEVAL Reduce tasks to 1
+[INFO] 15/12/10 14:54:10 hadoop2.HadoopEngine2: Waiting for jobs
+[INFO] 15/12/10 14:54:15 Configuration.deprecation: session.id is deprecated. Instead, use dfs.metrics.session-id
+[INFO] 15/12/10 14:54:15 jvm.JvmMetrics: Initializing JVM Metrics with processName=JobTracker, sessionId=
+[WARN] 15/12/10 14:54:15 mapreduce.JobSubmitter: No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+[INFO] 15/12/10 14:54:15 input.FileInputFormat: Total input paths to process : 2
+[INFO] 15/12/10 14:54:15 mapreduce.JobSubmitter: number of splits:2
+[INFO] 15/12/10 14:54:15 Configuration.deprecation: io.bytes.per.checksum is deprecated. Instead, use dfs.bytes-per-checksum
+[INFO] 15/12/10 14:54:15 mapreduce.JobSubmitter: Submitting tokens for job: job_local1631865727_0001
+[WARN] 15/12/10 14:54:15 conf.Configuration: file:/tmp/hadoop-jonny/mapred/staging/jonny1631865727/.staging/job_local1631865727_0001/job.xml:an attempt to override final parameter: mapreduce.job.end-notification.max.retry.interval;  Ignoring.
+[WARN] 15/12/10 14:54:15 conf.Configuration: file:/tmp/hadoop-jonny/mapred/staging/jonny1631865727/.staging/job_local1631865727_0001/job.xml:an attempt to override final parameter: mapreduce.job.end-notification.max.attempts;  Ignoring.
+[WARN] 15/12/10 14:54:15 conf.Configuration: file:/tmp/hadoop-jonny/mapred/local/localRunner/jonny/job_local1631865727_0001/job_local1631865727_0001.xml:an attempt to override final parameter: mapreduce.job.end-notification.max.retry.interval;  Ignoring.
+[WARN] 15/12/10 14:54:15 conf.Configuration: file:/tmp/hadoop-jonny/mapred/local/localRunner/jonny/job_local1631865727_0001/job_local1631865727_0001.xml:an attempt to override final parameter: mapreduce.job.end-notification.max.attempts;  Ignoring.
+[INFO] 15/12/10 14:54:15 mapreduce.Job: The url to track the job: http://localhost:8080/
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: OutputCommitter set in config null
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: OutputCommitter is org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: Waiting for map tasks
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: Starting task: attempt_local1631865727_0001_m_000000_0
+[INFO] 15/12/10 14:54:15 util.ProcfsBasedProcessTree: ProcfsBasedProcessTree currently is supported only on Linux.
+[INFO] 15/12/10 14:54:15 mapred.Task:  Using ResourceCalculatorProcessTree : null
+[INFO] 15/12/10 14:54:15 mapred.MapTask: Processing split: file:/Users/jonny/Develop/Gumbo/graphmapreduce/input/experiments/EXP_030/1/R/R.txt:0+11676
+[INFO] 15/12/10 14:54:15 mapred.MapTask: Map output collector class = org.apache.hadoop.mapred.MapTask$MapOutputBuffer
+[INFO] 15/12/10 14:54:15 mapred.MapTask: (EQUATOR) 0 kvi 26214396(104857584)
+[INFO] 15/12/10 14:54:15 mapred.MapTask: mapreduce.task.io.sort.mb: 100
+[INFO] 15/12/10 14:54:15 mapred.MapTask: soft limit at 83886080
+[INFO] 15/12/10 14:54:15 mapred.MapTask: bufstart = 0; bufvoid = 104857600
+[INFO] 15/12/10 14:54:15 mapred.MapTask: kvstart = 26214396; length = 6553600
+[INFO] 15/12/10 14:54:15 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 15/12/10 14:54:15 tupleops.TupleOpFactory: [R:2:0,1,2, R:1:0,1,2, R:0:0,1,2]
+[INFO] 15/12/10 14:54:15 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 15/12/10 14:54:15 tupleops.TupleOpFactory: [R:2:0,1,2, R:1:0,1,2, R:0:0,1,2]
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: 
+[INFO] 15/12/10 14:54:15 mapred.MapTask: Starting flush of map output
+[INFO] 15/12/10 14:54:15 mapred.MapTask: Spilling map output
+[INFO] 15/12/10 14:54:15 mapred.MapTask: bufstart = 0; bufend = 52704; bufvoid = 104857600
+[INFO] 15/12/10 14:54:15 mapred.MapTask: kvstart = 26214396(104857584); kvend = 26202400(104809600); length = 11997/6553600
+[INFO] 15/12/10 14:54:15 mapred.MapTask: Finished spill 0
+[INFO] 15/12/10 14:54:15 mapred.Task: Task:attempt_local1631865727_0001_m_000000_0 is done. And is in the process of committing
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: map
+[INFO] 15/12/10 14:54:15 mapred.Task: Task 'attempt_local1631865727_0001_m_000000_0' done.
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: Finishing task: attempt_local1631865727_0001_m_000000_0
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: Starting task: attempt_local1631865727_0001_m_000001_0
+[INFO] 15/12/10 14:54:15 util.ProcfsBasedProcessTree: ProcfsBasedProcessTree currently is supported only on Linux.
+[INFO] 15/12/10 14:54:15 mapred.Task:  Using ResourceCalculatorProcessTree : null
+[INFO] 15/12/10 14:54:15 mapred.MapTask: Processing split: file:/Users/jonny/Develop/Gumbo/graphmapreduce/input/experiments/EXP_030/1/S/S.txt:0+3891
+[INFO] 15/12/10 14:54:15 mapred.MapTask: Map output collector class = org.apache.hadoop.mapred.MapTask$MapOutputBuffer
+[INFO] 15/12/10 14:54:15 mapred.MapTask: (EQUATOR) 0 kvi 26214396(104857584)
+[INFO] 15/12/10 14:54:15 mapred.MapTask: mapreduce.task.io.sort.mb: 100
+[INFO] 15/12/10 14:54:15 mapred.MapTask: soft limit at 83886080
+[INFO] 15/12/10 14:54:15 mapred.MapTask: bufstart = 0; bufvoid = 104857600
+[INFO] 15/12/10 14:54:15 mapred.MapTask: kvstart = 26214396; length = 6553600
+[INFO] 15/12/10 14:54:15 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 15/12/10 14:54:15 tupleops.TupleOpFactory: [S:0:0:3, S:0:0:1, S:0:0:2]
+[INFO] 15/12/10 14:54:15 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 15/12/10 14:54:15 tupleops.TupleOpFactory: [S:0:0:3,1,2]
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: 
+[INFO] 15/12/10 14:54:15 mapred.MapTask: Starting flush of map output
+[INFO] 15/12/10 14:54:15 mapred.MapTask: Spilling map output
+[INFO] 15/12/10 14:54:15 mapred.MapTask: bufstart = 0; bufend = 8891; bufvoid = 104857600
+[INFO] 15/12/10 14:54:15 mapred.MapTask: kvstart = 26214396(104857584); kvend = 26210400(104841600); length = 3997/6553600
+[INFO] 15/12/10 14:54:15 mapred.MapTask: Finished spill 0
+[INFO] 15/12/10 14:54:15 mapred.Task: Task:attempt_local1631865727_0001_m_000001_0 is done. And is in the process of committing
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: map
+[INFO] 15/12/10 14:54:15 mapred.Task: Task 'attempt_local1631865727_0001_m_000001_0' done.
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: Finishing task: attempt_local1631865727_0001_m_000001_0
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: map task executor complete.
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: Waiting for reduce tasks
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: Starting task: attempt_local1631865727_0001_r_000000_0
+[INFO] 15/12/10 14:54:15 util.ProcfsBasedProcessTree: ProcfsBasedProcessTree currently is supported only on Linux.
+[INFO] 15/12/10 14:54:15 mapred.Task:  Using ResourceCalculatorProcessTree : null
+[INFO] 15/12/10 14:54:15 mapred.ReduceTask: Using ShuffleConsumerPlugin: org.apache.hadoop.mapreduce.task.reduce.Shuffle@6c7deda6
+[INFO] 15/12/10 14:54:15 reduce.MergeManagerImpl: MergerManager: memoryLimit=1503238528, maxSingleShuffleLimit=375809632, mergeThreshold=992137472, ioSortFactor=10, memToMemMergeOutputsThreshold=10
+[INFO] 15/12/10 14:54:15 reduce.EventFetcher: attempt_local1631865727_0001_r_000000_0 Thread started: EventFetcher for fetching Map Completion Events
+[INFO] 15/12/10 14:54:15 reduce.LocalFetcher: localfetcher#1 about to shuffle output of map attempt_local1631865727_0001_m_000001_0 decomp: 10893 len: 10897 to MEMORY
+[INFO] 15/12/10 14:54:15 reduce.InMemoryMapOutput: Read 10893 bytes from map-output for attempt_local1631865727_0001_m_000001_0
+[INFO] 15/12/10 14:54:15 reduce.MergeManagerImpl: closeInMemoryFile -> map-output of size: 10893, inMemoryMapOutputs.size() -> 1, commitMemory -> 0, usedMemory ->10893
+[INFO] 15/12/10 14:54:15 reduce.LocalFetcher: localfetcher#1 about to shuffle output of map attempt_local1631865727_0001_m_000000_0 decomp: 58706 len: 58710 to MEMORY
+[INFO] 15/12/10 14:54:15 reduce.InMemoryMapOutput: Read 58706 bytes from map-output for attempt_local1631865727_0001_m_000000_0
+[INFO] 15/12/10 14:54:15 reduce.MergeManagerImpl: closeInMemoryFile -> map-output of size: 58706, inMemoryMapOutputs.size() -> 2, commitMemory -> 10893, usedMemory ->69599
+[INFO] 15/12/10 14:54:15 reduce.EventFetcher: EventFetcher is interrupted.. Returning
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: 2 / 2 copied.
+[INFO] 15/12/10 14:54:15 reduce.MergeManagerImpl: finalMerge called with 2 in-memory map-outputs and 0 on-disk map-outputs
+[INFO] 15/12/10 14:54:15 mapred.Merger: Merging 2 sorted segments
+[INFO] 15/12/10 14:54:15 mapred.Merger: Down to the last merge-pass, with 2 segments left of total size: 69591 bytes
+[INFO] 15/12/10 14:54:15 reduce.MergeManagerImpl: Merged 2 segments, 69599 bytes to disk to satisfy reduce memory limit
+[INFO] 15/12/10 14:54:15 reduce.MergeManagerImpl: Merging 1 files, 69601 bytes from disk
+[INFO] 15/12/10 14:54:15 reduce.MergeManagerImpl: Merging 0 segments, 0 bytes from memory into reduce
+[INFO] 15/12/10 14:54:15 mapred.Merger: Merging 1 sorted segments
+[INFO] 15/12/10 14:54:15 mapred.Merger: Down to the last merge-pass, with 1 segments left of total size: 69593 bytes
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: 2 / 2 copied.
+[INFO] 15/12/10 14:54:15 Configuration.deprecation: mapred.skip.on is deprecated. Instead, use mapreduce.job.skiprecords
+[INFO] 15/12/10 14:54:15 mapred.Task: Task:attempt_local1631865727_0001_r_000000_0 is done. And is in the process of committing
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: 2 / 2 copied.
+[INFO] 15/12/10 14:54:15 mapred.Task: Task attempt_local1631865727_0001_r_000000_0 is allowed to commit now
+[INFO] 15/12/10 14:54:15 output.FileOutputCommitter: Saved output of task 'attempt_local1631865727_0001_r_000000_0' to file:/Users/jonny/Develop/Gumbo/graphmapreduce/output/EXP_030/20151210_145410/Out1(x0,x1,x2)Out2(x0,x1,x2)Out3(x0,x1,x2)/_temporary/0/task_local1631865727_0001_r_000000
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: reduce > reduce
+[INFO] 15/12/10 14:54:15 mapred.Task: Task 'attempt_local1631865727_0001_r_000000_0' done.
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: Finishing task: attempt_local1631865727_0001_r_000000_0
+[INFO] 15/12/10 14:54:15 mapred.LocalJobRunner: reduce task executor complete.
+[INFO] 15/12/10 14:54:20 hadoop2.HadoopEngine2: Jobs are done.
+[INFO] 15/12/10 14:54:20 converter.MultiRoundConverter: Moving files: output/EXP_030/20151210_145410/Out1(x0,x1,x2)Out2(x0,x1,x2)Out3(x0,x1,x2)/Out3-r-* output/EXP_030/20151210_145410/OUT_0_Out3
+[INFO] 15/12/10 14:54:20 converter.MultiRoundConverter: Moving files: output/EXP_030/20151210_145410/Out1(x0,x1,x2)Out2(x0,x1,x2)Out3(x0,x1,x2)/Out2-r-* output/EXP_030/20151210_145410/OUT_1_Out2
+[INFO] 15/12/10 14:54:20 converter.MultiRoundConverter: Moving files: output/EXP_030/20151210_145410/Out1(x0,x1,x2)Out2(x0,x1,x2)Out3(x0,x1,x2)/Out1-r-* output/EXP_030/20151210_145410/OUT_2_Out1
+[INFO] 15/12/10 14:54:20 hadoop2.HadoopEngine2: Running time: 10371ms
+[INFO] 15/12/10 14:54:20 hadoop2.HadoopEngine2: SUCCESS: all jobs (1) completed!
+[INFO] 15/12/10 14:54:20 hadoop2.HadoopEngine2: Stopping job control
+Counters for job: query3a.gumbo_VALEVAL_Out1(x0,x1,x2)Out2(x0,x1,x2)Out3(x0,x1,x2)
+--------------------------------------------------------------------------------
+File System Counters
+org.apache.hadoop.mapreduce.FileSystemCounter
+	FILE: Number of bytes read=185519
+	FILE: Number of bytes written=1025280
+	FILE: Number of read operations=0
+	FILE: Number of large read operations=0
+	FILE: Number of write operations=0
+Map-Reduce Framework
+org.apache.hadoop.mapreduce.TaskCounter
+	Map input records=2000
+	Map output records=4000
+	Map output bytes=61595
+	Map output materialized bytes=69607
+	Input split bytes=632
+	Combine input records=0
+	Combine output records=0
+	Reduce input groups=982
+	Reduce shuffle bytes=69607
+	Reduce input records=4000
+	Reduce output records=0
+	Spilled Records=8000
+	Shuffled Maps =2
+	Failed Shuffles=0
+	Merged Map outputs=2
+	GC time elapsed (ms)=0
+	Total committed heap usage (bytes)=983040000
+gumbo.engine.hadoop2.mapreduce.GumboCounters
+gumbo.engine.hadoop2.mapreduce.GumboCounters
+	ASSERT_IN=1000
+	ASSERT_OUT=1000
+	DATA_IN=3000
+	DATA_OUT=3000
+	RECORDS_OUT=1929
+File Input Format Counters 
+org.apache.hadoop.mapreduce.lib.input.FileInputFormatCounter
+	Bytes Read=0
+File Output Format Counters 
+org.apache.hadoop.mapreduce.lib.output.FileOutputFormatCounter
+	Bytes Written=8
+Map-Reduce Framework
+org.apache.hadoop.mapred.Task$Counter
+	Map input records=2000
+	Map output records=4000
+	Map output bytes=61595
+	Map output materialized bytes=69607
+	Input split bytes=632
+	Combine input records=0
+	Combine output records=0
+	Reduce input groups=982
+	Reduce shuffle bytes=69607
+	Reduce input records=4000
+	Reduce output records=0
+	Spilled Records=8000
+	Shuffled Maps =2
+	Failed Shuffles=0
+	Merged Map outputs=2
+	GC time elapsed (ms)=0
+	Total committed heap usage (bytes)=983040000
+
+Overall Counters
+--------------------------------------------------------------------------------
+File System Counters
+	FILE: Number of bytes read=185519
+	FILE: Number of bytes written=1025280
+	FILE: Number of read operations=0
+	FILE: Number of large read operations=0
+	FILE: Number of write operations=0
+Map-Reduce Framework
+	Map input records=4000
+	Map output records=8000
+	Map output bytes=123190
+	Map output materialized bytes=139214
+	Input split bytes=1264
+	Combine input records=0
+	Combine output records=0
+	Reduce input groups=1964
+	Reduce shuffle bytes=139214
+	Reduce input records=8000
+	Reduce output records=0
+	Spilled Records=16000
+	Shuffled Maps =4
+	Failed Shuffles=0
+	Merged Map outputs=4
+	GC time elapsed (ms)=0
+	Total committed heap usage (bytes)=1966080000
+File Input Format Counters 
+	Bytes Read=0
+File Output Format Counters 
+	Bytes Written=8
+

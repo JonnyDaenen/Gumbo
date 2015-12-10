@@ -82,7 +82,7 @@ public class MultiSemiJoinReducer  extends Reducer<VBytesWritable, GumboMessageW
 		for (GumboMessageWritable value : values) {
 
 			// buffer the data objects
-			if (value.isData()){
+			if (value.isDataRequest()){
 				dmbuffer.addWritable(value); // TODO make it byteswritable
 				numData++;
 

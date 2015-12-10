@@ -165,7 +165,7 @@ public class TupleOpFactory {
 			Set<GFExistentialExpression> queries, Map<String, Integer> atomidmap, boolean merge) {
 
 		List<TupleProjection> projections = getGuardedProjections(relation, queries, atomidmap);
-		projections.addAll(getGuardedDataProjections(relation, queries, atomidmap));
+		projections.addAll(getGuardDataProjections(relation, queries, atomidmap));
 
 		LOG.info("Projections before merge:");
 		LOG.info(projections);
@@ -190,7 +190,7 @@ public class TupleOpFactory {
 	 * 
 	 * @return projection array
 	 */
-	private static Collection<? extends TupleProjection> getGuardedDataProjections(String relation,
+	private static Collection<? extends TupleProjection> getGuardDataProjections(String relation,
 			Set<GFExistentialExpression> queries, Map<String, Integer> atomidmap) {
 
 		List<TupleProjection> projections = new ArrayList<>();
@@ -200,10 +200,11 @@ public class TupleOpFactory {
 			GFAtomicExpression guard = query.getGuard();
 			if (guard.getName().equals(relation)) {
 
+				// key of all atoms is the same, so we just need one!
 				GFAtomicExpression guarded = query.getGuardedAtoms().iterator().next();
 
 				// create projection
-				GuardDataProjection pi = new GuardDataProjection(relation, guard, guarded); 
+				GuardDataProjection pi = new GuardDataProjection(relation, guard, guarded, query.getId()); 
 				projections.add(pi);
 
 

@@ -22,10 +22,13 @@ public class GuardDataProjection implements TupleProjection {
 	
 	EqualityFilter ef;
 	
+	int queryid;
+	
 
-	public GuardDataProjection(String relation, GFAtomicExpression guard, GFAtomicExpression guarded) {
+	public GuardDataProjection(String relation, GFAtomicExpression guard, GFAtomicExpression guarded, int queryid) {
 		this.name = relation;
 		fields = new EqualityType(guard);
+		this.queryid = queryid;
 		
 		// extract key
 		loadKey(guard, guarded);
@@ -33,12 +36,6 @@ public class GuardDataProjection implements TupleProjection {
 		ef = new EqualityFilter(fields);
 	}
 	
-
-
-
-
-	
-
 
 	private void loadKey(GFAtomicExpression guard, GFAtomicExpression guarded) {
 		String [] gvars = guard.getVars();
@@ -54,8 +51,6 @@ public class GuardDataProjection implements TupleProjection {
 		}
 	}
 
-
-	
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append(name);
@@ -66,7 +61,7 @@ public class GuardDataProjection implements TupleProjection {
 		
 		return sb.toString();
 		
-	};
+	}
 	
 	private void addArray(StringBuffer sb, byte[] a) {
 		int i;
@@ -118,16 +113,10 @@ public class GuardDataProjection implements TupleProjection {
 		qt.project(keyEt, bw);
 		
 		// output atom ids
-		gw.setData(qt.getData(), qt.getLength());
+		gw.setDataRequest(queryid, qt.getData(), qt.getLength());
 		
 		return true;
 	}
-
-
-
-
-
-
 
 
 	@Override
@@ -136,21 +125,11 @@ public class GuardDataProjection implements TupleProjection {
 	}
 
 
-
-
-
-
-
-
 	@Override
 	public TupleProjection merge(TupleProjection pi2) {
 		// TODO throw exception
 		return null;
 	};
-	
-
-	
-
 	
 
 }

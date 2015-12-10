@@ -40,8 +40,10 @@ public class TupleEvaluator {
 	
 	private List<Integer> fields;
 	private String filename;
+	private int queryid;
 	
-	EqualityFilter ef;
+	private EqualityFilter ef;
+	
 	
 	public TupleEvaluator(GFExistentialExpression e, String filename, Map<String, Integer> atomidmap) {
 		
@@ -49,6 +51,7 @@ public class TupleEvaluator {
 		
 		GFAtomicExpression guard = e.getGuard();
 		ef = new EqualityFilter(guard);
+		queryid = e.getId();
 		
 		//  get output fields
 		fields = new ArrayList<>();
@@ -123,10 +126,10 @@ public class TupleEvaluator {
 	 * @param atomids 
 	 * @return 
 	 */
-	public boolean project(QuickWrappedTuple qt, Text output, boolean[] atomids) {
+	public boolean project(int queryid, QuickWrappedTuple qt, Text output, boolean[] atomids) {
 		
 		// check guard and formula satisfaction
-		if (!ef.check(qt) || !eval(atomids))
+		if (this.queryid != queryid || !ef.check(qt) || !eval(atomids))
 			return false;
 		
 		qt.project(fields, output);

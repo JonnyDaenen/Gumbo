@@ -33,6 +33,7 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		public static final byte REQUEST = 2;
 		public static final byte CONFIRM = 3;
 		public static final byte DATA = 4;
+		public static final byte DATAREQUEST = 5;
 	}
 
 
@@ -42,7 +43,6 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 	private VLongWritable offset;
 	private VBytesWritable data;
 
-	private ByteWritable mergeCount;
 
 	private DataOutputBuffer buffer;
 
@@ -100,6 +100,12 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 			data.write(out);
 			break;
 			
+		case GumboMessageType.DATAREQUEST:
+			type.write(out);
+			fileid.write(out); // acts as query id
+			data.write(out);
+			break;
+			
 		default:
 			break;
 		}
@@ -125,6 +131,11 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 			break;
 
 		case GumboMessageType.DATA:
+			data.readFields(in);
+			break;
+		
+		case GumboMessageType.DATAREQUEST:
+			fileid.readFields(in); // acts as query id
 			data.readFields(in);
 			break;
 			
@@ -186,6 +197,9 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 			sb.append(fileid);
 			sb.append(":");
 			sb.append(offset);
+			sb.append(":");
+		} else if (type.get() == GumboMessageType.DATAREQUEST) {
+			sb.append(fileid);
 			sb.append(":");
 		}
 		byte[] bytes = data.getBytes();
@@ -298,6 +312,10 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		return type.get() == GumboMessageType.DATA;
 	}
 	
+	public boolean isDataRequest() {
+		return type.get() == GumboMessageType.DATAREQUEST;
+	}
+	
 	public boolean isGarbage() {
 		return type.get() == GumboMessageType.GARBAGE;
 	}
@@ -328,6 +346,12 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		this.data.set(data, 0, length);
 	}
 	
+	public void setDataRequest(int queryid, byte[] atomids, int length) {
+		this.type.set(GumboMessageType.DATAREQUEST);
+		this.fileid.set(queryid);
+		this.data.set(atomids, 0, length);
+	}
+	
 	public void setGarbage() {
 		this.type.set(GumboMessageType.GARBAGE);
 	}
@@ -346,6 +370,10 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 
 	public VBytesWritable getData() {
 		return data;
+	}
+	
+	public int getQueryId() {
+		return (int) fileid.get();
 	}
 
 
@@ -403,6 +431,10 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 			throw new MessageMergeException();
 
 		if (type.get() == GumboMessageType.GARBAGE)
+			return;
+		
+		// FUTURE can we merge?
+		if (type.get() == GumboMessageType.DATAREQUEST)
 			return;
 		
 		// merging 2 different request messages

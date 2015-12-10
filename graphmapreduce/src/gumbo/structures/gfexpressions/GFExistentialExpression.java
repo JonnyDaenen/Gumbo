@@ -15,6 +15,7 @@ public class GFExistentialExpression extends GFExpression {
 	int rank;
 	GFAtomicExpression output;
 	
+	int id;
 	
 	
 	/**
@@ -258,6 +259,14 @@ public class GFExistentialExpression extends GFExpression {
 	}
 
 
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 	
 	

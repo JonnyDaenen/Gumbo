@@ -2,6 +2,8 @@ package gumbo.engine.hadoop2.mapreduce.tools;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -18,6 +20,7 @@ import com.esotericsoftware.minlog.Log;
 
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.engine.hadoop2.converter.HelpComparator2;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.io.DeserializeException;
@@ -67,6 +70,13 @@ public class ContextInspector {
 			GFPrefixSerializer serializer = new GFPrefixSerializer();
 			String queryString = conf.get("gumbo.queries");
 			queries = serializer.deserializeExSet(queryString);
+			
+			int i = 0;
+			ArrayList<GFExistentialExpression> querylist = new ArrayList<>(queries);
+			Collections.sort(querylist, new HelpComparator2());
+			for (GFExistentialExpression query : querylist) {
+				query.setId(i++);
+			}
 
 			// output mapping
 			String outmapString = conf.get("gumbo.outmap");
@@ -85,7 +95,7 @@ public class ContextInspector {
 			atomidmap = PropertySerializer.stringToObject(atomidMapString, HashMap.class);
 
 			// highest id
-			maxatomid = conf.getInt("gumbo.maxatomid", 32);
+			maxatomid = conf.getInt("gumbo.maxatomid", 64);
 
 		} catch (DeserializeException e) {
 			throw new InterruptedException("Error during parameter fetching: " + e.getMessage());

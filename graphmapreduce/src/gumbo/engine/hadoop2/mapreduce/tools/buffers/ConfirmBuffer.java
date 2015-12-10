@@ -14,6 +14,7 @@ public class ConfirmBuffer {
 	int length;
 
 	QuickWrappedTuple qt;
+	private int queryid;
 
 
 	public ConfirmBuffer(int maxAtomID) {
@@ -40,6 +41,7 @@ public class ConfirmBuffer {
 	public void setMessage(GumboMessageWritable value) {
 		// copy content data to local buffer
 		VBytesWritable bw = value.getData();
+		this.queryid = value.getQueryId();
 		setCapacity(bw.getLength());
 		System.arraycopy(bw.getBytes(), 0, data, 0, length);
 	}
@@ -89,7 +91,7 @@ public class ConfirmBuffer {
 	public boolean load(TupleEvaluator pi, Text output) {
 
 		qt.initialize(data, length);
-		return pi.project(qt, output, atomids);
+		return pi.project(queryid, qt, output, atomids);
 
 	}
 
