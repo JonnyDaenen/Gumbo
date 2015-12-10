@@ -44,7 +44,7 @@ public class GuardProjection implements TupleProjection {
 
 	}
 
-	private GuardProjection(String relationname, long fileid, byte [] keyEt, EqualityType fields, byte [] atomids) {
+	protected GuardProjection(String relationname, long fileid, byte [] keyEt, EqualityType fields, byte [] atomids) {
 
 		this.name = relationname;
 		this.fileid = fileid;
@@ -179,6 +179,7 @@ public class GuardProjection implements TupleProjection {
 
 	@Override
 	public boolean canMerge(TupleProjection pi) {
+		// FIXME guarded and guarded cannot merge!
 		if (pi instanceof GuardProjection) {
 			GuardProjection pi2 = (GuardProjection) pi;
 			return name.equals(pi2.name) 

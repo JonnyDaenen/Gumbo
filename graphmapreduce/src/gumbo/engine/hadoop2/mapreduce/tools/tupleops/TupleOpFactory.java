@@ -58,7 +58,7 @@ public class TupleOpFactory {
 			for (int i = 1; i < todo.size(); i++) {
 				TupleProjection pi2 = todo.get(i);
 
-				if (pi1.canMerge(pi2)) {
+				if (pi1.canMerge(pi2) && pi2.canMerge(pi1)) {
 					pi1 = pi1.merge(pi2);
 				} else {
 					remainder.add(pi2);
