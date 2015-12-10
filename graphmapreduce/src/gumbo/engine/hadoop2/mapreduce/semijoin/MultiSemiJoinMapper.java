@@ -12,6 +12,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;
+import gumbo.engine.hadoop2.mapreduce.GumboCounters;
 import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleFilter;
@@ -34,6 +35,10 @@ public class MultiSemiJoinMapper extends Mapper<LongWritable, Text, VBytesWritab
 	private TupleFilter[] filters;
 	private DataOutputBuffer buffer;
 	private boolean packingEnabled;
+	
+	long numAsserts;
+	long numData;
+	
 
 
 	@Override
@@ -73,6 +78,15 @@ public class MultiSemiJoinMapper extends Mapper<LongWritable, Text, VBytesWritab
 		}
 
 	}
+	
+	@Override
+	protected void cleanup(Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable>.Context context)
+			throws IOException, InterruptedException {
+		super.cleanup(context);
+		
+		context.getCounter(GumboCounters.ASSERT_OUT).increment(numAsserts);
+		context.getCounter(GumboCounters.DATA_OUT).increment(numData);
+	}
 
 	@Override
 	protected void map(LongWritable key, Text value,
@@ -92,6 +106,12 @@ public class MultiSemiJoinMapper extends Mapper<LongWritable, Text, VBytesWritab
 
 			// if matches. store the output in writables
 			if (pi.load(qt, key.get(), bw, gw)){
+				
+				if (gw.isAssert()) {
+					numAsserts++;
+				} else {
+					numData++;
+				}
 
 				// and write output
 				// TODO add packing

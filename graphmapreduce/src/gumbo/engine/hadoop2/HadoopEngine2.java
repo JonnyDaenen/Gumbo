@@ -74,6 +74,9 @@ public class HadoopEngine2 {
 
 		LOG.info("Stopping job control");
 		jc.stop();
+		
+		HadoopReporter reporter = new HadoopReporter();
+		reporter.printCounters(jc);
 	}
 
 
