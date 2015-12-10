@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.Text;
 
+import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
 import gumbo.structures.booleanexpressions.BEvaluationContext;
 import gumbo.structures.booleanexpressions.BExpression;
@@ -40,7 +41,7 @@ public class TupleEvaluator {
 	
 	private List<Integer> fields;
 	private String filename;
-	private int queryid;
+	private byte queryid;
 	
 	private EqualityFilter ef;
 	
@@ -126,10 +127,10 @@ public class TupleEvaluator {
 	 * @param atomids 
 	 * @return 
 	 */
-	public boolean project(int queryid, QuickWrappedTuple qt, Text output, boolean[] atomids) {
+	public boolean project(VBytesWritable queryids, QuickWrappedTuple qt, Text output, boolean[] atomids) {
 		
 		// check guard and formula satisfaction
-		if (this.queryid != queryid || !ef.check(qt) || !eval(atomids))
+		if (!containsQueryId(queryids) || !ef.check(qt) || !eval(atomids))
 			return false;
 		
 		qt.project(fields, output);
@@ -137,6 +138,15 @@ public class TupleEvaluator {
 		return true;
 	}
 	
+
+	private boolean containsQueryId(VBytesWritable queryids) {
+		byte [] rawids = queryids.getBytes();
+		for (int i = 0; i < queryids.getLength(); i++) {
+			if (rawids[i] == queryid)
+				return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Returns the location the output of this projection should go to.

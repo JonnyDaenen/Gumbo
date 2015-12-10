@@ -33,7 +33,7 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		public static final byte REQUEST = 2;
 		public static final byte CONFIRM = 3;
 		public static final byte DATA = 4;
-		public static final byte DATAREQUEST = 5;
+		public static final byte DATAREQUEST = 5; // Used in VALEVAL
 	}
 
 
@@ -43,30 +43,49 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 	private VLongWritable offset;
 	private VBytesWritable data;
 
+	private VBytesWritable queryids;
+
 
 	private DataOutputBuffer buffer;
 
 
 
 	public GumboMessageWritable() {
-		set(new ByteWritable(), new VLongWritable(), new VLongWritable(), new VBytesWritable());
+		set(new ByteWritable(), new VLongWritable(), new VLongWritable(), new VBytesWritable(), null);
 	}
 
-	public GumboMessageWritable(byte type, long fileid, long offset, byte [] data, int length) {
-
+	private GumboMessageWritable(byte type, long fileid, long offset, byte [] data, int length) {
 		VBytesWritable b = new VBytesWritable();
 		b.set(data, 0, length);
+
+		VBytesWritable b2 = new VBytesWritable();
+
 		set(new ByteWritable(type),
 				new VLongWritable(fileid),
 				new VLongWritable(offset),
-				b);
+				b, b2);
 	}
 
-	public void set(ByteWritable type, VLongWritable fileid, VLongWritable offset, VBytesWritable data) {
+	private GumboMessageWritable(byte type, long fileid, long offset, byte [] data, int length, byte[] data2, int length2) {
+
+		VBytesWritable b = new VBytesWritable();
+		b.set(data, 0, length);
+
+		VBytesWritable b2 = new VBytesWritable();
+		b2.set(data2, 0, length2);
+
+		set(new ByteWritable(type),
+				new VLongWritable(fileid),
+				new VLongWritable(offset),
+				b, b2);
+	}
+
+	public void set(ByteWritable type, VLongWritable fileid, VLongWritable offset, VBytesWritable data, VBytesWritable data2) {
 		this.type = type;
 		this.fileid = fileid;
 		this.offset = offset;
 		this.data = data;
+		this.queryids = data2;
 
 	}
 
@@ -77,7 +96,7 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		case GumboMessageType.GARBAGE:
 			type.write(out);
 			break;
-			
+
 		case GumboMessageType.REQUEST:
 			type.write(out);
 			fileid.write(out);
@@ -99,13 +118,13 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 			type.write(out);
 			data.write(out);
 			break;
-			
+
 		case GumboMessageType.DATAREQUEST:
 			type.write(out);
-			fileid.write(out); // acts as query id
 			data.write(out);
+			queryids.write(out);
 			break;
-			
+
 		default:
 			break;
 		}
@@ -133,15 +152,17 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		case GumboMessageType.DATA:
 			data.readFields(in);
 			break;
-		
+
 		case GumboMessageType.DATAREQUEST:
-			fileid.readFields(in); // acts as query id
+			if (queryids == null)
+				queryids = new VBytesWritable();
 			data.readFields(in);
+			queryids.readFields(in);
 			break;
-			
+
 		case GumboMessageType.GARBAGE:
 			break;
-			
+
 		default:
 			break;
 		}
@@ -167,8 +188,16 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 			return cmp;
 		}
 
+		cmp = data.compareTo(mw.data);
+		if (cmp != 0) {
+			return cmp;
+		}
 
-		return data.compareTo(mw.data);
+		if (queryids == null)
+			return 0;
+
+		return queryids.compareTo(mw.queryids);
+
 	}
 
 	@Override
@@ -176,7 +205,7 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		if (obj instanceof GumboMessageWritable) {
 			GumboMessageWritable m2 = (GumboMessageWritable) obj;
 			return type.equals(m2.type) && offset.equals(m2.offset)
-					&& fileid.equals(m2.fileid) && data.equals(m2.data);
+					&& fileid.equals(m2.fileid) && data.equals(m2.data)  && (queryids == null || queryids.equals(m2.queryids));
 
 		}
 		return false;
@@ -184,7 +213,7 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 
 	@Override
 	public int hashCode() {
-		return type.hashCode() ^ fileid.hashCode() ^ offset.hashCode() ^ data.hashCode();
+		return type.hashCode() ^ fileid.hashCode() ^ offset.hashCode() ^ data.hashCode() ^ (queryids == null?0:queryids.hashCode());
 	}
 
 	@Override
@@ -198,14 +227,20 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 			sb.append(":");
 			sb.append(offset);
 			sb.append(":");
-		} else if (type.get() == GumboMessageType.DATAREQUEST) {
-			sb.append(fileid);
-			sb.append(":");
 		}
 		byte[] bytes = data.getBytes();
 		for (int i = 0; i < data.getLength(); i++) {
 			sb.append(bytes[i]);
 			sb.append(",");
+		}
+
+		if (type.get() == GumboMessageType.DATAREQUEST) {
+			sb.append(":");
+			byte[] qbytes = queryids.getBytes();
+			for (int i = 0; i < queryids.getLength(); i++) {
+				sb.append(qbytes[i]);
+				sb.append(",");
+			}
 		}
 
 		return sb.toString();
@@ -271,11 +306,13 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 	static {
 		WritableComparator.define(GumboMessageWritable.class, new Comparator());
 	}
-	public void set(byte type2, long fileid2, long offset2, byte[] data) {
+	private void set(byte type2, long fileid2, long offset2, byte[] data) {
 		type.set(type2);
 		fileid.set(fileid2);
 		offset.set(offset2);
 		this.data.set(data, 0, data.length);
+		this.queryids.setSize(0);
+		this.queryids = null;
 	}
 
 	public long getFileId() {
@@ -311,11 +348,11 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 	public boolean isData() {
 		return type.get() == GumboMessageType.DATA;
 	}
-	
+
 	public boolean isDataRequest() {
 		return type.get() == GumboMessageType.DATAREQUEST;
 	}
-	
+
 	public boolean isGarbage() {
 		return type.get() == GumboMessageType.GARBAGE;
 	}
@@ -345,13 +382,15 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		this.type.set(GumboMessageType.DATA);
 		this.data.set(data, 0, length);
 	}
-	
-	public void setDataRequest(int queryid, byte[] atomids, int length) {
+
+	public void setDataRequest(byte[] queryids, byte[] atomids, int length) {
 		this.type.set(GumboMessageType.DATAREQUEST);
-		this.fileid.set(queryid);
+		if (this.queryids == null)
+			this.queryids = new VBytesWritable();
+		this.queryids.set(queryids, 0, queryids.length);
 		this.data.set(atomids, 0, length);
 	}
-	
+
 	public void setGarbage() {
 		this.type.set(GumboMessageType.GARBAGE);
 	}
@@ -371,14 +410,17 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 	public VBytesWritable getData() {
 		return data;
 	}
-	
-	public int getQueryId() {
-		return (int) fileid.get();
+
+	public VBytesWritable getQueryIds() {
+		return queryids;
 	}
 
 
 	public GumboMessageWritable duplicate() {
-		return new GumboMessageWritable(type.get(), fileid.get(), offset.get(), data.getBytes(), data.getLength());
+		if (queryids == null)
+			return new GumboMessageWritable(type.get(), fileid.get(), offset.get(), data.getBytes(), data.getLength());
+		else
+			return new GumboMessageWritable(type.get(), fileid.get(), offset.get(), data.getBytes(), data.getLength(), queryids.getBytes(), queryids.getLength());
 	}
 
 	public void getAddressBytes(VBytesWritable bw) {
@@ -414,6 +456,13 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 		offset.set(obj.offset.get());
 		data.set(obj.data);
 
+
+		if (obj.queryids != null) {
+			if (queryids == null)
+				queryids = new VBytesWritable();
+			queryids.set(obj.queryids);
+		}
+
 	}
 
 
@@ -432,11 +481,11 @@ public class GumboMessageWritable implements WritableComparable<GumboMessageWrit
 
 		if (type.get() == GumboMessageType.GARBAGE)
 			return;
-		
+
 		// FUTURE can we merge?
 		if (type.get() == GumboMessageType.DATAREQUEST)
-			return;
-		
+			throw new MessageMergeException();
+
 		// merging 2 different request messages
 		if (type.get() == GumboMessageType.REQUEST &&
 				(fileid.get() != gw.fileid.get() || offset.get() != gw.offset.get()))

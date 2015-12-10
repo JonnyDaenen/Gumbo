@@ -10,6 +10,7 @@ import java.util.Map;
 import org.apache.hadoop.io.Text;
 import org.junit.Test;
 
+import gumbo.engine.hadoop2.datatypes.VBytesWritable;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleEvaluator;
 import gumbo.structures.gfexpressions.GFAndExpression;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
@@ -29,6 +30,7 @@ public class TupleEvaluatorTest {
 		GFAndExpression child = new GFAndExpression(guarded1, guarded2);
 		
 		GFExistentialExpression e = new GFExistentialExpression(guard, child, out);
+		e.setId((byte) 1);
 		
 		Map<String, Integer> atomids;
 		atomids = new HashMap<String, Integer>();
@@ -63,12 +65,14 @@ public class TupleEvaluatorTest {
 		QuickWrappedTuple qt = new QuickWrappedTuple();
 		Text output = new Text();
 		qt.initialize(new Text("1,2,4,5"));
-		result = te.project(qt, output, context);
+		byte [] qids = {1};
+		VBytesWritable qidsw = new VBytesWritable(qids);
+		result = te.project(qidsw, qt, output, context);
 		assertFalse("bad tuple", result);
 		
 
 		qt.initialize(new Text("1,2,1,3"));
-		result = te.project(qt, output, context);
+		result = te.project(qidsw, qt, output, context);
 		assertTrue("good tuple", result);
 		assertEquals("text output", "2,3,1,3", output.toString());
 	}

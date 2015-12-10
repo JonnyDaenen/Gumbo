@@ -52,7 +52,6 @@ public class GuardedProjection extends GuardProjection {
 	
 	@Override
 	public boolean canMerge(TupleProjection pi) {
-		// FIXME guarded and guarded cannot merge!
 		if (pi instanceof GuardedProjection) {
 			GuardedProjection pi2 = (GuardedProjection) pi;
 			return name.equals(pi2.name) 

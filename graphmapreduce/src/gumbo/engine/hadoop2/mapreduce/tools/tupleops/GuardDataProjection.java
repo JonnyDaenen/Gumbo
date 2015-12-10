@@ -22,16 +22,27 @@ public class GuardDataProjection implements TupleProjection {
 	
 	EqualityFilter ef;
 	
-	int queryid;
+	byte [] queryids;
 	
 
-	public GuardDataProjection(String relation, GFAtomicExpression guard, GFAtomicExpression guarded, int queryid) {
+	public GuardDataProjection(String relation, GFAtomicExpression guard, GFAtomicExpression guarded, byte queryid) {
 		this.name = relation;
 		fields = new EqualityType(guard);
-		this.queryid = queryid;
+		this.queryids = new byte[1];
+		queryids[0] = queryid;
 		
 		// extract key
 		loadKey(guard, guarded);
+		
+		ef = new EqualityFilter(fields);
+	}
+	
+	
+	private GuardDataProjection(String relation, byte [] keyEt, EqualityType fields, byte [] queryids) {
+		this.name = relation;
+		this.fields = fields;
+		this.queryids = queryids;
+		this.keyEt = keyEt;
 		
 		ef = new EqualityFilter(fields);
 	}
@@ -58,6 +69,8 @@ public class GuardDataProjection implements TupleProjection {
 		addArray(sb, keyEt);
 		sb.append(":");
 		sb.append(fields);
+		sb.append(":");
+		addArray(sb, queryids);
 		
 		return sb.toString();
 		
@@ -113,22 +126,42 @@ public class GuardDataProjection implements TupleProjection {
 		qt.project(keyEt, bw);
 		
 		// output atom ids
-		gw.setDataRequest(queryid, qt.getData(), qt.getLength());
+		gw.setDataRequest(queryids, qt.getData(), qt.getLength());
 		
 		return true;
 	}
 
 
 	@Override
-	public boolean canMerge(TupleProjection pi2) {
+	public boolean canMerge(TupleProjection pi) {
+		if (pi instanceof GuardDataProjection) {
+			GuardDataProjection pi2 = (GuardDataProjection) pi;
+			return name.equals(pi2.name) 
+					&& Arrays.equals(keyEt, pi2.keyEt) 
+					&& fields.equals(pi2.fields);
+		}
 		return false;
 	}
 
 
 	@Override
-	public TupleProjection merge(TupleProjection pi2) {
-		// TODO throw exception
-		return null;
+	public TupleProjection merge(TupleProjection pi) {
+		if (pi instanceof GuardDataProjection) {
+			GuardDataProjection pi2 = (GuardDataProjection) pi;
+			
+			// concatenate atom ids
+			byte [] newatomids = new byte [queryids.length + pi2.queryids.length];
+			int pos = 0;
+			for (int i = 0; i < queryids.length; i++, pos++) {
+				newatomids[pos] = queryids[i];
+			}
+			for (int i = 0; i < pi2.queryids.length; i++, pos++) {
+				newatomids[pos] = pi2.queryids[i];
+			}
+			
+			return new GuardDataProjection(name, Arrays.copyOf(keyEt, keyEt.length), new EqualityType(fields.equality), newatomids);
+		}
+		return null; // TODO exception
 	};
 	
 

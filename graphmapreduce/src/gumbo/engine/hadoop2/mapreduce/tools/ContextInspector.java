@@ -71,7 +71,7 @@ public class ContextInspector {
 			String queryString = conf.get("gumbo.queries");
 			queries = serializer.deserializeExSet(queryString);
 			
-			int i = 0;
+			byte i = 0;
 			ArrayList<GFExistentialExpression> querylist = new ArrayList<>(queries);
 			Collections.sort(querylist, new HelpComparator2());
 			for (GFExistentialExpression query : querylist) {

@@ -10,40 +10,25 @@ import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleEvaluator;
 public class ConfirmBuffer {
 
 	boolean [] atomids;
-	byte [] data;
-	int length;
+	GumboMessageWritable data;
 
 	QuickWrappedTuple qt;
-	private int queryid;
 
 
 	public ConfirmBuffer(int maxAtomID) {
 		atomids = new boolean[maxAtomID+1];
 		qt = new QuickWrappedTuple();
-		setCapacity(64);
+		data = new GumboMessageWritable();
 	}
 
-	/**
-	 * Sets the capacity of the internal data buffer.
-	 * @param i
-	 */
-	private void setCapacity(int i) {
-		if (data == null || data.length < i) {
-			data = new byte[i];
-		}
-		length = i;
-	}
 
 	/**
-	 * Sets the guard tuple data.
+	 * Sets the guard tuple data. A copy is made.
 	 * @param value a message containing the guard tuple data
 	 */
 	public void setMessage(GumboMessageWritable value) {
-		// copy content data to local buffer
-		VBytesWritable bw = value.getData();
-		this.queryid = value.getQueryId();
-		setCapacity(bw.getLength());
-		System.arraycopy(bw.getBytes(), 0, data, 0, length);
+		// copy content data to local buffer object
+		data.set(value);
 	}
 
 	/**
@@ -69,7 +54,7 @@ public class ConfirmBuffer {
 	 */
 	public void reset() {
 		clearAtomIds();
-		setCapacity(0);
+		data.setGarbage();
 	}
 
 
@@ -90,8 +75,12 @@ public class ConfirmBuffer {
 	 */
 	public boolean load(TupleEvaluator pi, Text output) {
 
-		qt.initialize(data, length);
-		return pi.project(queryid, qt, output, atomids);
+		if (data.isGarbage())
+			return false;
+		
+		byte [] rawbytes = data.getData().getBytes();
+		qt.initialize(rawbytes, data.getData().getLength());
+		return pi.project(data.getQueryIds(), qt, output, atomids);
 
 	}
 

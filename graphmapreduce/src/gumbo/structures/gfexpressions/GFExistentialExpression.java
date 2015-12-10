@@ -15,7 +15,7 @@ public class GFExistentialExpression extends GFExpression {
 	int rank;
 	GFAtomicExpression output;
 	
-	int id;
+	byte id;
 	
 	
 	/**
@@ -260,11 +260,11 @@ public class GFExistentialExpression extends GFExpression {
 
 
 	
-	public int getId() {
+	public byte getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(byte id) {
 		this.id = id;
 	}
 	

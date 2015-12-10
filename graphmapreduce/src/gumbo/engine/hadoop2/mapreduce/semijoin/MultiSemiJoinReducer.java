@@ -83,7 +83,7 @@ public class MultiSemiJoinReducer  extends Reducer<VBytesWritable, GumboMessageW
 
 			// buffer the data objects
 			if (value.isDataRequest()){
-				dmbuffer.addWritable(value); // TODO make it byteswritable
+				dmbuffer.addWritable(value);
 				numData++;
 
 				// keep track of ASSERTED atoms
@@ -94,6 +94,7 @@ public class MultiSemiJoinReducer  extends Reducer<VBytesWritable, GumboMessageW
 		}
 
 		// TODO check if data value is missing
+		// TODO if for one tuple the expression is false, it will remain false?
 		for (TupleEvaluator pi : projections) {
 
 			// for each cached message
