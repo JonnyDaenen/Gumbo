@@ -12,6 +12,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable.GumboMessageType;
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;
+import gumbo.engine.hadoop2.mapreduce.GumboCounters;
 import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleFilter;
@@ -23,16 +24,20 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 
 	private VBytesWritable bw;
 	private GumboMessageWritable gw;
-	
+
 	// intermediate key buffers
 	private VLongWritable lw1;
 	private VLongWritable lw2;
 	private long offset;
-	
+
 	private QuickWrappedTuple qt;
 	private TupleFilter[] filters;
 	private DataOutputBuffer buffer;
-	
+
+
+	private long numData;
+	private long numRecords;
+
 
 
 	@Override
@@ -60,15 +65,30 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 
 		// get relation
 		String relation = inspector.getRelationName(fileid);
-		
+
 		// get guard atoms
 		Set<GFAtomicExpression> atoms = inspector.getGuardAtoms();
 
 		// create filter
 		filters = TupleOpFactory.createMap2Filter(atoms, relation);
-		
+
+
+		// counter
+		numData = 0;
+		numRecords++;
+
 	}
-	
+
+	@Override
+	protected void cleanup(Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable>.Context context)
+			throws IOException, InterruptedException {
+		super.cleanup(context);
+
+		context.getCounter(GumboCounters.RECORDS_IN).increment(numRecords);
+		
+		context.getCounter(GumboCounters.DATA_OUT).increment(numData);
+	}
+
 
 
 	@Override
@@ -78,7 +98,8 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 
 
 		qt.initialize(value);
-		
+		numRecords++;
+
 		// tuple should match at least one guard atom
 		boolean match = false;
 		for (TupleFilter filter : filters) {
@@ -90,26 +111,27 @@ public class EvaluateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 		
 		if (!match)
 			return;
-		
-		
+
+
 		// prepare key bytes
 		offset = key.get();
-		
+
 		lw2.set(offset);
-		
+
 		buffer.reset();
 		lw1.write(buffer);
 		lw2.write(buffer);
 		byte[] data = buffer.getData();
 		int dataLength = buffer.getLength();
 		bw.set(data, 0, dataLength);
-		
+
 		// prepare message
 		// OPTIMIZE cut out irrelevant attributes
 		gw.setDataBytes(value.getBytes(), value.getLength());
 
 		// write to output
 		context.write(bw, gw);
+		numData++;
 
 	}
 }

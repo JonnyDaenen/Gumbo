@@ -10,6 +10,7 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;
+import gumbo.engine.hadoop2.mapreduce.GumboCounters;
 import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
 import gumbo.engine.hadoop2.mapreduce.tools.buffers.ConfirmBuffer;
 import gumbo.engine.hadoop2.mapreduce.tools.tupleops.TupleEvaluator;
@@ -25,6 +26,10 @@ public class EvaluateReducer extends Reducer<VBytesWritable, GumboMessageWritabl
 
 	private MultipleOutputs<Text, Text> mos;
 
+	private long numData;
+	private long numConfirm;
+	private long numOut;
+	
 	@Override
 	protected void setup(Reducer<VBytesWritable, GumboMessageWritable, Text, Text>.Context context)
 			throws IOException, InterruptedException {
@@ -49,6 +54,10 @@ public class EvaluateReducer extends Reducer<VBytesWritable, GumboMessageWritabl
 		int maxatomid = inspector.getMaxAtomID();
 		buffer = new ConfirmBuffer(maxatomid);
 		
+		// counters
+		numData = 0;
+		numConfirm = 0;
+		numOut = 0;
 		
 	}
 	
@@ -57,6 +66,11 @@ public class EvaluateReducer extends Reducer<VBytesWritable, GumboMessageWritabl
 			throws IOException, InterruptedException {
 		super.cleanup(context);
 		mos.close();
+		
+		context.getCounter(GumboCounters.DATA_IN).increment(numData);
+		context.getCounter(GumboCounters.CONFIRM_IN).increment(numConfirm);
+		
+		context.getCounter(GumboCounters.RECORDS_OUT).increment(numOut);
 	}
 	
 	@Override
@@ -70,9 +84,11 @@ public class EvaluateReducer extends Reducer<VBytesWritable, GumboMessageWritabl
 			// extract data message
 			if (value.isData()){
 				buffer.setMessage(value);
+				numData++;
 			// keep track of confirmed atoms
 			} else {
 				buffer.addAtomIDs(value);
+				numConfirm++;
 			}
 		}
 		
@@ -80,6 +96,7 @@ public class EvaluateReducer extends Reducer<VBytesWritable, GumboMessageWritabl
 		for (TupleEvaluator pi : projections) {
 			if (buffer.load(pi, output)) {
 				mos.write((Text)null, output, pi.getFilename());
+				numOut++;
 			}
 		}
 		

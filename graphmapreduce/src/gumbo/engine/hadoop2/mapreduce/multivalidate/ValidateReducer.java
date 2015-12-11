@@ -9,6 +9,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import gumbo.engine.hadoop.mrcomponents.round1.reducers.GFReducer1Optimized;
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;
+import gumbo.engine.hadoop2.mapreduce.GumboCounters;
 import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
 import gumbo.engine.hadoop2.mapreduce.tools.buffers.RequestBuffer;
 
@@ -22,6 +23,10 @@ public class ValidateReducer extends Reducer<VBytesWritable, GumboMessageWritabl
 
 	private RequestBuffer buffer;
 
+	
+	private long numAssert;
+	private long numRequest;
+	private long numOut;
 
 	/**
 	 * @see org.apache.hadoop.mapreduce.Mapper#setup(org.apache.hadoop.mapreduce.Mapper.Context)
@@ -41,7 +46,25 @@ public class ValidateReducer extends Reducer<VBytesWritable, GumboMessageWritabl
 		int maxAtomID = ci.getMaxAtomID();
 		
 		buffer = new RequestBuffer(maxAtomID);
+		
+		// counters
+		numAssert = 0;
+		numRequest = 0;
+		numOut = 0;
 	
+	}
+	
+	@Override
+	protected void cleanup(
+			Reducer<VBytesWritable, GumboMessageWritable, VBytesWritable, GumboMessageWritable>.Context context)
+					throws IOException, InterruptedException {
+		super.cleanup(context);
+		
+
+		context.getCounter(GumboCounters.REQUEST_IN).increment(numRequest);
+		context.getCounter(GumboCounters.ASSERT_IN).increment(numAssert);
+		
+		context.getCounter(GumboCounters.RECORDS_OUT).increment(numOut);
 	}
 
 	
@@ -59,10 +82,12 @@ public class ValidateReducer extends Reducer<VBytesWritable, GumboMessageWritabl
 			// check atoms ids that are present
 			if (value.isAssert()) {
 				buffer.addAtomIds(value);
+				numAssert++;
 				
 			// buffer requests
 			} else {
 				buffer.addMessage(value);
+				numRequest++;
 			}
 			
 		}
@@ -74,6 +99,7 @@ public class ValidateReducer extends Reducer<VBytesWritable, GumboMessageWritabl
 			// process and output them if necessary
 			if (buffer.load(i, bw, gw)) {
 				context.write(bw, gw);
+				numOut++;
 			}
 		}
 		

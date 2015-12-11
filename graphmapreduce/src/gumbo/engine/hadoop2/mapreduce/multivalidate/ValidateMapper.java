@@ -32,6 +32,7 @@ public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 	
 	private long numAsserts;
 	private long numRequests;
+	private long numIn;
 
 
 	@Override
@@ -76,12 +77,15 @@ public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 		// counters
 		numAsserts = 0;
 		numRequests = 0;
+		numIn = 0;
 	}
 	
 	@Override
 	protected void cleanup(Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable>.Context context)
 			throws IOException, InterruptedException {
 		super.cleanup(context);
+
+		context.getCounter(GumboCounters.RECORDS_IN).increment(numIn);
 		
 		context.getCounter(GumboCounters.ASSERT_OUT).increment(numAsserts);
 		context.getCounter(GumboCounters.REQUEST_OUT).increment(numRequests);
@@ -95,7 +99,7 @@ public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 
 		// create QuickTuple
 		qt.initialize(value);
-
+		numIn++;
 
 		// for each guard atom
 		for (int i = 0; i < projections.length; i++) {
