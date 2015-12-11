@@ -395,63 +395,70 @@ public class MultiRoundConverter {
 	public List<ControlledJob> createValEval(CalculationUnitGroup partition) {
 
 
+		// apply grouping
+		List<CalculationUnitGroup> groups = groupValEval(partition);
+
 		List<ControlledJob> joblist = new ArrayList<>();
-		Job hadoopJob;
 		try {
-			hadoopJob = Job.getInstance(conf); // note: makes a copy of the conf
+			for (CalculationUnitGroup group : groups) {
+
+				Job hadoopJob;
+				hadoopJob = Job.getInstance(conf); // note: makes a copy of the conf
 
 
-			hadoopJob.setJarByClass(getClass());
-			hadoopJob.setJobName(plan.getName() + "_VALEVAL_" + partition.getCanonicalOutString());
+				hadoopJob.setJarByClass(getClass());
+				hadoopJob.setJobName(plan.getName() + "_VALEVAL_" + group.getCanonicalOutString());
 
-			// MAPPER
-			// couple all input files to mapper
-			Set<Path> inputPaths = new HashSet<>();
-			for (RelationSchema rs : partition.getInputRelations()) {
-				Set<Path> paths = fm.getFileMapping().getPaths(rs);
-				for (Path path : paths) {
-					LOG.info("Adding path " + path + " to mapper");
-					MultipleInputs.addInputPath(hadoopJob, path, 
-							TextInputFormat.class, MultiSemiJoinMapper.class);
-					inputPaths.add(path);
+				// MAPPER
+				// couple all input files to mapper
+				Set<Path> inputPaths = new HashSet<>();
+				for (RelationSchema rs : group.getInputRelations()) {
+					Set<Path> paths = fm.getFileMapping().getPaths(rs);
+					for (Path path : paths) {
+						LOG.info("Adding path " + path + " to mapper");
+						MultipleInputs.addInputPath(hadoopJob, path, 
+								TextInputFormat.class, MultiSemiJoinMapper.class);
+						inputPaths.add(path);
+					}
 				}
+
+				// REDUCER
+				hadoopJob.setReducerClass(MultiSemiJoinReducer.class); 
+
+				// only input is transmitted, no replication rate is required
+				// hence input size is a good estimate
+				long size = calculateSize(inputPaths); 
+
+				int numRed = (int)Math.max(1, size / (settings.getNumProperty(AbstractExecutorSettings.REDUCER_SIZE_MB) * 1024 * 1024));
+				hadoopJob.setNumReduceTasks(numRed); 
+				LOG.info("Setting VALEVAL Reduce tasks to " + numRed);
+
+				// SETTINGS
+				// set map output types
+				hadoopJob.setMapOutputKeyClass(VBytesWritable.class);
+				hadoopJob.setMapOutputValueClass(GumboMessageWritable.class);
+
+				// set reduce output types
+				hadoopJob.setOutputKeyClass(NullWritable.class);
+				hadoopJob.setOutputValueClass(Text.class);
+
+
+				// set output path base (subdirs will be made)
+				Path dummyPath = fm.getOutputRoot().suffix(Path.SEPARATOR +group.getCanonicalOutString());
+				FileOutputFormat.setOutputPath(hadoopJob, dummyPath);
+
+
+				// pass settings
+				Set<GFExistentialExpression> calculations = new HashSet<>();
+				for (CalculationUnit cu : group.getCalculations()) {
+					calculations.add(((BasicGFCalculationUnit)cu).getBasicExpression());
+
+				}
+				configurator.configure(hadoopJob, calculations);
+
+				joblist.add(new ControlledJob(hadoopJob, null));
 			}
 
-			// REDUCER
-			hadoopJob.setReducerClass(MultiSemiJoinReducer.class); 
-
-			// only input is transmitted, no replication rate is required
-			// hence input size is a good estimate
-			long size = calculateSize(inputPaths); 
-
-			int numRed = (int)Math.max(1, size / (settings.getNumProperty(AbstractExecutorSettings.REDUCER_SIZE_MB) * 1024 * 1024));
-			hadoopJob.setNumReduceTasks(numRed); 
-			LOG.info("Setting VALEVAL Reduce tasks to " + numRed);
-
-			// SETTINGS
-			// set map output types
-			hadoopJob.setMapOutputKeyClass(VBytesWritable.class);
-			hadoopJob.setMapOutputValueClass(GumboMessageWritable.class);
-
-			// set reduce output types
-			hadoopJob.setOutputKeyClass(NullWritable.class);
-			hadoopJob.setOutputValueClass(Text.class);
-
-
-			// set output path base (subdirs will be made)
-			Path dummyPath = fm.getOutputRoot().suffix(Path.SEPARATOR +partition.getCanonicalOutString());
-			FileOutputFormat.setOutputPath(hadoopJob, dummyPath);
-
-
-			// pass settings
-			Set<GFExistentialExpression> calculations = new HashSet<>();
-			for (CalculationUnit cu : partition.getCalculations()) {
-				calculations.add(((BasicGFCalculationUnit)cu).getBasicExpression());
-
-			}
-			configurator.configure(hadoopJob, calculations);
-
-			joblist.add(new ControlledJob(hadoopJob, null));
 
 
 		} catch (IOException e) {
@@ -463,6 +470,25 @@ public class MultiRoundConverter {
 
 	}
 
+	private List<CalculationUnitGroup> groupValEval(CalculationUnitGroup partition) {
+
+		List<CalculationUnitGroup> groups = new ArrayList<>();
+
+		if (settings.getBooleanProperty(AbstractExecutorSettings.VALEVAL_GROUP)) {
+			LOG.info("Using 1 job for all VALEVAL operations");
+			groups.add(partition);
+		} else {
+			LOG.info("Using separate jobs for all VALEVAL operations");
+
+			for (CalculationUnit cu : partition.getCalculations()){
+				CalculationUnitGroup newPartition = new CalculationUnitGroup();
+				newPartition.add(cu);
+				groups.add(newPartition);
+			}
+		}
+		return groups;
+	}
+
 	/**
 	 * Checks whether all queries in the partition are eligible
 	 * for 1-round evaluation.
@@ -471,10 +497,10 @@ public class MultiRoundConverter {
 	 * @return true iff 1-round evaluation is possible
 	 */
 	public boolean is1Round(CalculationUnitGroup partition) {
-		
+
 		if (!settings.getBooleanProperty(AbstractExecutorSettings.VALEVAL_ON))
 			return false;
-		
+
 		for (CalculationUnit cu : partition.getCalculations()) {
 			if (!is1Round(cu)) {
 				return false;
@@ -498,6 +524,13 @@ public class MultiRoundConverter {
 		}
 
 		return true;
+	}
+
+	public void move1RoundOutputFiles(CalculationUnitGroup partition) throws IOException {
+		List<CalculationUnitGroup> groups = groupValEval(partition);
+		for (CalculationUnitGroup group : groups) {
+			moveOutputFiles(group);
+		}
 	}
 
 

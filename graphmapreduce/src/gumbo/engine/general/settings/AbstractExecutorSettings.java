@@ -58,6 +58,7 @@ public abstract class AbstractExecutorSettings {
 	public static final String EVAL_OUTMERGE = "gumbo.engine.eval.output.merge";
 	public static final String VALEVAL_PREPACK = "gumbo.engine.valeval.projection.prepack";
 	public static final String VALEVAL_ON = "gumbo.engine.valeval.enabled";
+	public static final String VALEVAL_GROUP = "gumbo.engine.valeval.group";
 	
 	// constants
 	public static final String REDUCER_SIZE_MB = "gumbo.engine.hadoop.reducersize_mb";
@@ -98,6 +99,7 @@ public abstract class AbstractExecutorSettings {
 		setBooleanProperty(EVAL_OUTMERGE, false); 
 		setBooleanProperty(VALEVAL_PREPACK, true); 
 		setBooleanProperty(VALEVAL_ON, true); 
+		setBooleanProperty(VALEVAL_GROUP, true); 
 //		setProperty(simulatorClass, Simulator.class.getCanonicalName());
 		setProperty(SIMULATOR_CLASS, gumbo.engine.hadoop2.estimation.MapSimulator.class.getCanonicalName());
 	}

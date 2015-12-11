@@ -129,6 +129,11 @@ public class HadoopEngine2 {
 					for (ControlledJob job: jobs1Round) {
 						jc.addJob(job);
 					}
+					
+					// wait for completion
+					waitForJC();
+
+					converter.move1RoundOutputFiles(partition);
 
 					// if not, split into 2 rounds
 				} else {
@@ -154,13 +159,15 @@ public class HadoopEngine2 {
 					for (ControlledJob job: jobs) {
 						jc.addJob(job);
 					}
+					
+					// wait for completion
+					waitForJC();
+
+
+					converter.moveOutputFiles(partition);
 				}
 
-				// wait for completion
-				waitForJC();
-
-
-				converter.moveOutputFiles(partition);
+				
 
 
 			}
