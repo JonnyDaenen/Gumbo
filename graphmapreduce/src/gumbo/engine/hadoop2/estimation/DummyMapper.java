@@ -1,5 +1,7 @@
 package gumbo.engine.hadoop2.estimation;
 
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Iterator;
@@ -157,12 +159,13 @@ public class DummyMapper extends ValidateMapper {
 
 		@Override
 		public Counter getCounter(Enum<?> counterName) {
-			return null;
+			return new DummyCounter(counterName.toString());
 		}
 
 		@Override
 		public Counter getCounter(String groupName, String counterName) {
-			return null;
+
+			return new DummyCounter(groupName + counterName);
 		}
 
 		@Override
@@ -409,6 +412,66 @@ public class DummyMapper extends ValidateMapper {
 			return relationname;
 		}
 
+
+	}
+	
+	public class DummyCounter implements Counter {
+		long c;
+		String name;
+
+		public DummyCounter(String name) {
+			this.name = name;
+			c = 0;
+		}
+
+		@Override
+		public void write(DataOutput out) throws IOException {
+
+
+		}
+
+		@Override
+		public void readFields(DataInput in) throws IOException {
+
+
+		}
+
+		@Override
+		public void setDisplayName(String displayName) {
+			name = displayName;
+		}
+
+		@Override
+		public String getName() {
+			return name;
+		}
+
+		@Override
+		public String getDisplayName() {
+			return name;
+		}
+
+		@Override
+		public long getValue() {
+			return c;
+		}
+
+		@Override
+		public void setValue(long value) {
+			c = value;
+
+		}
+
+		@Override
+		public void increment(long incr) {
+			c += incr;
+
+		}
+
+		@Override
+		public Counter getUnderlyingCounter() {
+			return null;
+		}
 
 	}
 }

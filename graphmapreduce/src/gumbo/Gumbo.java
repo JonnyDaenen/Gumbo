@@ -123,7 +123,7 @@ public class Gumbo extends Configured implements Tool {
 		partitioner = (CalculationPartitioner) this.getClass().getClassLoader().loadClass(partClassName).newInstance();
 
 		GFCompiler compiler = new GFCompiler(partitioner);
-		compiler.setUnnesterEnabled(settings.getBooleanProperty(AbstractExecutorSettings.unnesterEnabled));
+		compiler.setUnnesterEnabled(settings.getBooleanProperty(AbstractExecutorSettings.UNNEST_ON));
 		GumboPlan plan = compiler.createPlan(query);
 
 		System.out.println(plan);

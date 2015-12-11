@@ -242,12 +242,12 @@ public class ContextInspector {
 
 	public boolean isProjectionMergeEnabled() {
 		HadoopExecutorSettings settings = new HadoopExecutorSettings(conf);
-		return settings.getBooleanProperty(AbstractExecutorSettings.valPrePackEnabled);
+		return settings.getBooleanProperty(AbstractExecutorSettings.VAL_PREPACK);
 	}
 
 	public boolean isMSJProjectionMergeEnabled() {
 		HadoopExecutorSettings settings = new HadoopExecutorSettings(conf);
-		return settings.getBooleanProperty(AbstractExecutorSettings.MSJPrePackEnabled);
+		return settings.getBooleanProperty(AbstractExecutorSettings.VALEVAL_PREPACK);
 	}
 
 

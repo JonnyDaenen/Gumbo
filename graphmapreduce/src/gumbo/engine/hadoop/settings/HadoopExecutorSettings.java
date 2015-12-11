@@ -67,7 +67,7 @@ public class HadoopExecutorSettings extends AbstractExecutorSettings{
 	}
 
 	public void setV1Simulator() {
-		setProperty(simulatorClass, Simulator.class.getCanonicalName());
+		setProperty(SIMULATOR_CLASS, Simulator.class.getCanonicalName());
 		
 	}
 

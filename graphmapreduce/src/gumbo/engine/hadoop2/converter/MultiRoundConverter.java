@@ -364,7 +364,7 @@ public class MultiRoundConverter {
 
 
 			// merge files if necessary
-			if (settings.getBooleanProperty(settings.outputMergeEnabled)) {
+			if (settings.getBooleanProperty(settings.EVAL_OUTMERGE)) {
 
 				Path helpDir = to.suffix("_help");
 				dfs.rename(to, helpDir);
@@ -471,6 +471,10 @@ public class MultiRoundConverter {
 	 * @return true iff 1-round evaluation is possible
 	 */
 	public boolean is1Round(CalculationUnitGroup partition) {
+		
+		if (!settings.getBooleanProperty(AbstractExecutorSettings.VALEVAL_ON))
+			return false;
+		
 		for (CalculationUnit cu : partition.getCalculations()) {
 			if (!is1Round(cu)) {
 				return false;

@@ -178,7 +178,7 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 		}
 		
 		try {
-			String className = execSettings.getProperty(execSettings.simulatorClass);
+			String className = execSettings.getProperty(execSettings.SIMULATOR_CLASS);
 			simulator = (SimulatorInterface) this.getClass().getClassLoader().loadClass(className).newInstance();
 			simulator.setInfo(samples, rfm, execSettings);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {

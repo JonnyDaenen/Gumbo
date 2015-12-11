@@ -51,12 +51,13 @@ public abstract class AbstractExecutorSettings {
 	public static final String mapOutputGroupingPolicy = "gumbo.engine.mapOutputGroupingPolicy";
 
 	// engine v2 options
-	public static final String unnesterEnabled = "gumbo.compiler.unnest";
+	public static final String UNNEST_ON = "gumbo.compiler.unnest";
 	
-	public static final String outputMergeEnabled = "gumbo.engine.eval.output.merge";
-	public static final String simulatorClass = "gumbo.engine.simulator.classname";
-	public static final String valPrePackEnabled = "gumbo.engine.val.projection.prepack";
-	public static final String MSJPrePackEnabled = "gumbo.engine.valeval.projection.prepack";
+	public static final String SIMULATOR_CLASS = "gumbo.engine.simulator.classname";
+	public static final String VAL_PREPACK = "gumbo.engine.val.projection.prepack";
+	public static final String EVAL_OUTMERGE = "gumbo.engine.eval.output.merge";
+	public static final String VALEVAL_PREPACK = "gumbo.engine.valeval.projection.prepack";
+	public static final String VALEVAL_ON = "gumbo.engine.valeval.enabled";
 	
 	// constants
 	public static final String REDUCER_SIZE_MB = "gumbo.engine.hadoop.reducersize_mb";
@@ -92,12 +93,13 @@ public abstract class AbstractExecutorSettings {
 		setProperty(REDUCER_SIZE_MB, "1024");
 		
 		// engine v2
-		setBooleanProperty(unnesterEnabled, false); 
-		setBooleanProperty(outputMergeEnabled, false); 
-		setBooleanProperty(valPrePackEnabled, true); 
-		setBooleanProperty(MSJPrePackEnabled, true); 
+		setBooleanProperty(UNNEST_ON, false); 
+		setBooleanProperty(VAL_PREPACK, true); 
+		setBooleanProperty(EVAL_OUTMERGE, false); 
+		setBooleanProperty(VALEVAL_PREPACK, true); 
+		setBooleanProperty(VALEVAL_ON, true); 
 //		setProperty(simulatorClass, Simulator.class.getCanonicalName());
-		setProperty(simulatorClass, gumbo.engine.hadoop2.estimation.MapSimulator.class.getCanonicalName());
+		setProperty(SIMULATOR_CLASS, gumbo.engine.hadoop2.estimation.MapSimulator.class.getCanonicalName());
 	}
 	
 	public void turnOffOptimizations() {
