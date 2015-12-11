@@ -85,7 +85,7 @@ public class MultiSemiJoinMapper extends Mapper<LongWritable, Text, VBytesWritab
 		super.cleanup(context);
 		
 		context.getCounter(GumboCounters.ASSERT_OUT).increment(numAsserts);
-		context.getCounter(GumboCounters.DATA_OUT).increment(numData);
+		context.getCounter(GumboCounters.DATAREQUEST_OUT).increment(numData);
 	}
 
 	@Override

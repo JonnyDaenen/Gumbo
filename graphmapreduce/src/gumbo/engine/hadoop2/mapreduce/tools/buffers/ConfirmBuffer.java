@@ -80,8 +80,13 @@ public class ConfirmBuffer {
 		
 		byte [] rawbytes = data.getData().getBytes();
 		qt.initialize(rawbytes, data.getData().getLength());
-		return pi.project(data.getQueryIds(), qt, output, atomids);
-
+		
+		if (data.isDataRequest())
+			return pi.project(data.getQueryIds(), qt, output, atomids);
+		else if (data.isData())
+			return pi.project(null, qt, output, atomids);
+		
+		return false;
 	}
 
 	public boolean containsAtomID(int id) {

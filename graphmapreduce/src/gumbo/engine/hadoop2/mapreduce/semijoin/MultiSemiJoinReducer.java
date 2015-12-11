@@ -68,7 +68,7 @@ public class MultiSemiJoinReducer  extends Reducer<VBytesWritable, GumboMessageW
 		mos.close();
 		
 		context.getCounter(GumboCounters.ASSERT_IN).increment(numAsserts);
-		context.getCounter(GumboCounters.DATA_IN).increment(numData);
+		context.getCounter(GumboCounters.DATAREQUEST_IN).increment(numData);
 		context.getCounter(GumboCounters.RECORDS_OUT).increment(numOut);
 	}
 

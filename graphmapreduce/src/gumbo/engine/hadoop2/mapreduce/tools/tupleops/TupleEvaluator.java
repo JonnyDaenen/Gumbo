@@ -130,7 +130,10 @@ public class TupleEvaluator {
 	public boolean project(VBytesWritable queryids, QuickWrappedTuple qt, Text output, boolean[] atomids) {
 		
 		// check guard and formula satisfaction
-		if (!containsQueryId(queryids) || !ef.check(qt) || !eval(atomids))
+		// as well as the correct query id
+		if ((queryids != null && !containsQueryId(queryids)) 
+				|| !ef.check(qt) 
+				|| !eval(atomids))
 			return false;
 		
 		qt.project(fields, output);

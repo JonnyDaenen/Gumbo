@@ -10,6 +10,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import gumbo.engine.hadoop2.datatypes.GumboMessageWritable;
 import gumbo.engine.hadoop2.datatypes.VBytesWritable;
+import gumbo.engine.hadoop2.mapreduce.GumboCounters;
 import gumbo.engine.hadoop2.mapreduce.tools.ContextInspector;
 import gumbo.engine.hadoop2.mapreduce.tools.QuickWrappedTuple;
 import gumbo.engine.hadoop2.mapreduce.tools.buffers.AssertRequestPacker;
@@ -28,6 +29,9 @@ public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 
 	private boolean packingEnabled;
 	private AssertRequestPacker packer;
+	
+	private long numAsserts;
+	private long numRequests;
 
 
 	@Override
@@ -68,6 +72,19 @@ public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 		}
 
 		// OPTIMIZE disable packing if there are no key implications
+		
+		// counters
+		numAsserts = 0;
+		numRequests = 0;
+	}
+	
+	@Override
+	protected void cleanup(Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable>.Context context)
+			throws IOException, InterruptedException {
+		super.cleanup(context);
+		
+		context.getCounter(GumboCounters.ASSERT_OUT).increment(numAsserts);
+		context.getCounter(GumboCounters.REQUEST_OUT).increment(numRequests);
 	}
 
 
@@ -88,6 +105,12 @@ public class ValidateMapper extends Mapper<LongWritable, Text, VBytesWritable, G
 			// if matches. store the output in writables
 			if (pi.load(qt, key.get(), bw, gw)){
 
+				if (gw.isAssert()) {
+					numAsserts++;
+				} else {
+					numRequests++;
+				}
+				
 				// if packing is disabled, write output directly
 				if (!packingEnabled) {
 					context.write(bw, gw);
