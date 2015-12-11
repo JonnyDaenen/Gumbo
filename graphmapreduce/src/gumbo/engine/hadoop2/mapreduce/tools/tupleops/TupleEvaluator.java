@@ -122,6 +122,7 @@ public class TupleEvaluator {
 	 * Projects the guard tuple to the correct fields 
 	 * and puts them in the output writable.
 	 * 
+	 * @param queryids list of query ids that the request is for, or null when it is for all query ids
 	 * @param data guarded data
 	 * @param output
 	 * @param atomids 
@@ -131,6 +132,7 @@ public class TupleEvaluator {
 		
 		// check guard and formula satisfaction
 		// as well as the correct query id
+		// FIXME the query == null thing is not so nice...
 		if ((queryids != null && !containsQueryId(queryids)) 
 				|| !ef.check(qt) 
 				|| !eval(atomids))
