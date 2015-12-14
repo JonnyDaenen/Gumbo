@@ -1,5 +1,8 @@
 package gumbo.engine.general.grouper.structures;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 
@@ -25,8 +28,10 @@ public class GuardedSemiJoinCalculation {
 		return guard;
 	}
 	
-	public GFAtomicExpression getGuarded() {
-		return guarded;
+	public List<GFAtomicExpression> getGuarded() {
+		List<GFAtomicExpression> result = new ArrayList<>(1);
+		result.add(guarded);
+		return result;
 	}
 	
 	

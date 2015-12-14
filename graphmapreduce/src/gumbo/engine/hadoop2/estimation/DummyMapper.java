@@ -126,6 +126,8 @@ public class DummyMapper extends ValidateMapper {
 			else if (value.isRequest()) {
 				requests++;
 				requestBytes += messageBytes;
+			} else {
+				// TODO
 			}
 
 

@@ -39,6 +39,7 @@ import gumbo.engine.general.grouper.sample.RelationSampleContainer;
 import gumbo.engine.general.grouper.sample.RelationSampler;
 import gumbo.engine.general.grouper.sample.SimulatorReport;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
+import gumbo.engine.general.grouper.structures.GFCalculation;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.general.utils.FileMappingExtractor;
@@ -149,7 +150,7 @@ public class MultiRoundConverter {
 
 		if (!group.hasInfo()) {
 			LOG.info("Missing size estimates, sampling data.");
-			addInfo(hadoopJob, group);
+			addInfo(hadoopJob, group, false);
 		}
 		long intermediate = group.getGuardedOutBytes() + group.getGuardOutBytes();
 		int numRed =  (int) Math.max(1, intermediate / (settings.getNumProperty(AbstractExecutorSettings.REDUCER_SIZE_MB)*1024*1024.0) ); 
@@ -283,12 +284,19 @@ public class MultiRoundConverter {
 		return groups;
 	}
 
-	private void addInfo(Job hadoopJob, CalculationGroup group) {
+	private void addInfo(Job hadoopJob, CalculationGroup group, boolean msj) {
 		// execute algorithm on sample
 		//		Simulator simulator = new Simulator(samples, fm.getFileMapping(), settings);
 
 
 		MapSimulator simulator = new MapSimulator();
+
+		if (msj) {
+			simulator.setMapClass(MultiSemiJoinMapper.class);
+		} else {
+			simulator.setMapClass(ValidateMapper.class);
+		}
+
 		simulator.setInfo(samples, fm.getFileMapping(), new HadoopExecutorSettings(hadoopJob.getConfiguration()));
 		SimulatorReport report;
 		try {
@@ -425,13 +433,7 @@ public class MultiRoundConverter {
 				// REDUCER
 				hadoopJob.setReducerClass(MultiSemiJoinReducer.class); 
 
-				// only input is transmitted, no replication rate is required
-				// hence input size is a good estimate
-				long size = calculateSize(inputPaths); 
 
-				int numRed = (int)Math.max(1, size / (settings.getNumProperty(AbstractExecutorSettings.REDUCER_SIZE_MB) * 1024 * 1024));
-				hadoopJob.setNumReduceTasks(numRed); 
-				LOG.info("Setting VALEVAL Reduce tasks to " + numRed);
 
 				// SETTINGS
 				// set map output types
@@ -456,6 +458,22 @@ public class MultiRoundConverter {
 				}
 				configurator.configure(hadoopJob, calculations);
 
+				// estimate number of reducers
+				CalculationGroup cg = new CalculationGroup(group.getBSGFs());
+				for (GFExistentialExpression e : group.getBSGFs()) {
+					cg.add(new GFCalculation(e));
+				}
+
+				if (!cg.hasInfo()) {
+					LOG.info("Missing size estimates, sampling data.");
+					addInfo(hadoopJob, cg, true);
+				}
+				long intermediate = cg.getGuardedOutBytes() + cg.getGuardOutBytes();
+				LOG.info("est. map output size:" + intermediate);
+				int numRed =  (int) Math.max(1, intermediate / (settings.getNumProperty(AbstractExecutorSettings.REDUCER_SIZE_MB)*1024*1024.0) ); 
+				hadoopJob.setNumReduceTasks(numRed); 
+				LOG.info("Setting VALEVAL Reduce tasks to " + numRed);
+
 				joblist.add(new ControlledJob(hadoopJob, null));
 			}
 
@@ -471,6 +489,9 @@ public class MultiRoundConverter {
 	}
 
 	private List<CalculationUnitGroup> groupValEval(CalculationUnitGroup partition) {
+
+		// sample new relations
+		updateSamples();
 
 		List<CalculationUnitGroup> groups = new ArrayList<>();
 

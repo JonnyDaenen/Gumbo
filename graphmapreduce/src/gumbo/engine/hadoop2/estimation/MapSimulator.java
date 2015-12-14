@@ -46,18 +46,24 @@ public class MapSimulator implements SimulatorInterface {
 	RelationTupleSampleContainer rtsc;
 	LinearExtrapolator extrapolator;
 
+	Class<? extends Mapper<?,?,?,?>> mapClass;
+
 
 	public MapSimulator() {
-		
+		mapClass = ValidateMapper.class;
 	}
 	
+	public void setMapClass(Class<? extends Mapper<?, ?, ?, ?>> map) {
+		mapClass = map;
+	}
+
 	@Override
 	public void setInfo(RelationTupleSampleContainer rtsc, RelationFileMapping mapping,
 			AbstractExecutorSettings execSettings) {
 		this.mapping = mapping;
 		this.rtsc = rtsc;
 		this.settings = execSettings;
-		
+
 		this.extrapolator = new LinearExtrapolator();
 	}
 
@@ -113,29 +119,29 @@ public class MapSimulator implements SimulatorInterface {
 			report.addGuardedInBytes(inputBytes);
 			report.addGuardedOutBytes(intermediateBytes);
 		}
-		
+
 		LOG.info("Map Input bytes:" + inputBytes);
 		LOG.info("Est. Map Output bytes: " + intermediateBytes);
-		
+
 
 	}
 
 	private Pair<Boolean,Long> runOneSample(RelationSchema rs, Iterable<Tuple> tuples, Configuration conf) throws AlgorithmInterruptedException {
 		DummyMapper map = new DummyMapper();
 		DummyContext context = map.getContext(conf, tuples, rs.getName());
-
-		Mapper<LongWritable,Text,VBytesWritable,GumboMessageWritable> mapfunction = new ValidateMapper();
-
+		
+		// create and run mapper
 		try {
+			Mapper<LongWritable,Text,VBytesWritable,GumboMessageWritable> mapfunction = (Mapper<LongWritable, Text, VBytesWritable, GumboMessageWritable>) mapClass.newInstance();
 			mapfunction.run(context);
-		} catch (IOException | InterruptedException e) {
+		} catch (IOException | InterruptedException | InstantiationException | IllegalAccessException e) {
 			LOG.error("Something went wrong during mapper simulation! Trying to continue...", e);
 		}
 
-//		System.out.println("Num assert:" + context.getAssertBytes());
-//		System.out.println("Num req:" + context.getRequestBytes());
-//		System.out.println("Num key:" + context.getKeyBytes());
-//		System.out.println("Num val:" + context.getValueBytes());
+		//		System.out.println("Num assert:" + context.getAssertBytes());
+		//		System.out.println("Num req:" + context.getRequestBytes());
+		//		System.out.println("Num key:" + context.getKeyBytes());
+		//		System.out.println("Num val:" + context.getValueBytes());
 
 		return new Pair<>(context.getRequestBytes() != 0,(long) context.getKeyBytes() + context.getValueBytes());
 	}
@@ -145,11 +151,11 @@ public class MapSimulator implements SimulatorInterface {
 		HadoopExecutorSettings set = (HadoopExecutorSettings)settings;
 		conf = new Configuration(set.getConf());
 		Configurator.addQueries(conf, calcJob.getExpressions());
-		
-		
+
+
 		return conf;
 	}
 
-	
+
 
 }
