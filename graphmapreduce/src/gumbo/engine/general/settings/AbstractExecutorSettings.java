@@ -88,7 +88,8 @@ public abstract class AbstractExecutorSettings {
 		
 		setProperty(PROOF_SYMBOL, "#");
 		setProperty(partitionClass, HeightPartitioner.class.getCanonicalName());
-		setProperty(mapOutputGroupingPolicy, GroupingPolicies.COSTGROUP_GUMBO.toString());
+		setProperty(mapOutputGroupingPolicy, GroupingPolicies.ALLGROUP.toString());
+//		setProperty(mapOutputGroupingPolicy, GroupingPolicies.COSTGROUP_GUMBO.toString());
 //		setProperty(mapOutputGroupingClass, AllGrouper.class.getCanonicalName());
 		
 		setProperty(REDUCER_SIZE_MB, "1024");

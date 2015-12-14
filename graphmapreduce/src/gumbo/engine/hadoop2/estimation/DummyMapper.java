@@ -65,7 +65,7 @@ public class DummyMapper extends ValidateMapper {
 
 		public DummyContext(Configuration conf, Iterable<Tuple> tuples, String relationname) {
 			this.tuples = tuples;
-			it = tuples.iterator();
+			it = tuples.iterator(); // FIXME this crashes when input file does not exist
 			this.conf = conf;
 			this.relationname = relationname;
 
