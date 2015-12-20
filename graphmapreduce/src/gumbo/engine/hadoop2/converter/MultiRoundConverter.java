@@ -459,6 +459,7 @@ public class MultiRoundConverter {
 				configurator.configure(hadoopJob, calculations);
 
 				// estimate number of reducers
+				// relevant expressions and expressions are the same, so added twice separately
 				CalculationGroup cg = new CalculationGroup(group.getBSGFs());
 				for (GFExistentialExpression e : group.getBSGFs()) {
 					cg.add(new GFCalculation(e));

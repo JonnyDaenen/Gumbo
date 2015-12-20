@@ -21,7 +21,7 @@ public class HadoopEngine2 {
 
 
 	private static final Log LOG = LogFactory.getLog(HadoopEngine2.class);
-	private static final int WAIT = 1000;
+	private static final int WAIT = 100;
 
 
 	private JobControl jc;
@@ -178,6 +178,7 @@ public class HadoopEngine2 {
 	}
 
 	private void waitForJC() throws InterruptedException{
+
 		LOG.info("Waiting for jobs");
 		while (!jc.allFinished()){
 			Thread.yield();
