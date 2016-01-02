@@ -3,8 +3,11 @@
  */
 package gumbo.compiler.unnester;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -31,6 +34,7 @@ import gumbo.structures.gfexpressions.GFVisitorException;
  * 
  */
 public class GFUnnester implements GFVisitor<Set<GFExpression>> {
+
 
 
 	private static final Log LOG = LogFactory.getLog(GFUnnester.class);
@@ -176,10 +180,16 @@ public class GFUnnester implements GFVisitor<Set<GFExpression>> {
 
 			// unravel into normal and negated atoms
 			Set<GFExpression> atoms = gf.accept(this);
+			
+			// sort atoms to optimize grouping later on
+			List<GFExpression> sortedAtoms = new ArrayList<>(atoms.size());
+			sortedAtoms.addAll(atoms);
+			sortedAtoms.sort(new AtomComparator());
+			
 
 			// make linear AND tree of the atoms
 			GFAtomicExpression currentGuard = guard;
-			for (GFExpression atom : atoms) {
+			for (GFExpression atom : sortedAtoms) {
 
 				// create a new expression with new name
 				GFAtomicExpression out = getNewOutputAtom(guard);
@@ -240,6 +250,28 @@ public class GFUnnester implements GFVisitor<Set<GFExpression>> {
 
 		System.out.println(result);
 		return result;
+	}
+	
+	
+	public class AtomComparator implements Comparator<GFExpression> {
+
+		@Override
+		public int compare(GFExpression o1, GFExpression o2) {
+			Collection<GFAtomicExpression> c1 = o1.getAtomic();
+			Collection<GFAtomicExpression> c2 = o2.getAtomic();
+			
+			String s1 = "";
+			String s2 = "";
+			for (GFAtomicExpression atom : c1) {
+				s1 += atom.toString();
+			}
+			
+			for (GFAtomicExpression atom : c2) {
+				s2 += atom.toString();
+			}
+			return s1.compareTo(s2);
+		}
+
 	}
 
 
