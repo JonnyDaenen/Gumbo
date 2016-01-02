@@ -5,6 +5,7 @@ package gumbo.compiler.unnester;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -184,7 +185,7 @@ public class GFUnnester implements GFVisitor<Set<GFExpression>> {
 			// sort atoms to optimize grouping later on
 			List<GFExpression> sortedAtoms = new ArrayList<>(atoms.size());
 			sortedAtoms.addAll(atoms);
-			sortedAtoms.sort(new AtomComparator());
+			Collections.sort(sortedAtoms, new AtomComparator());
 			
 
 			// make linear AND tree of the atoms
