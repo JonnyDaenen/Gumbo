@@ -249,7 +249,6 @@ public class GFUnnester implements GFVisitor<Set<GFExpression>> {
 			result.add((GFExistentialExpression) e);
 		}
 
-		System.out.println(result);
 		return result;
 	}
 	

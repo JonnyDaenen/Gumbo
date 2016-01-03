@@ -152,7 +152,7 @@ public class RelationFileMapping {
 	public InputFormat getFormat(RelationSchema s) {
 		if (format.containsKey(s))
 			return format.get(s);
-		return InputFormat.REL; // default
+		return InputFormat.CSV; // default
 	}
 
 
