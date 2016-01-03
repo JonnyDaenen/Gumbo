@@ -52,6 +52,7 @@ public abstract class AbstractExecutorSettings {
 
 	// engine v2 options
 	public static final String UNNEST_ON = "gumbo.compiler.unnest";
+	public static final String UNNEST_SORT_ON = "gumbo.compiler.unnest.sort";
 	
 	public static final String SIMULATOR_CLASS = "gumbo.engine.simulator.classname";
 	public static final String VAL_PREPACK = "gumbo.engine.val.projection.prepack";
@@ -96,6 +97,7 @@ public abstract class AbstractExecutorSettings {
 		
 		// engine v2
 		setBooleanProperty(UNNEST_ON, false); 
+		setBooleanProperty(UNNEST_SORT_ON, true); 
 		setBooleanProperty(VAL_PREPACK, true); 
 		setBooleanProperty(EVAL_OUTMERGE, false); 
 		setBooleanProperty(VALEVAL_PREPACK, true); 

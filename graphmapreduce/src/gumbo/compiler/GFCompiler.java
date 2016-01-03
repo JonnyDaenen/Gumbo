@@ -43,6 +43,7 @@ public class GFCompiler {
 	protected CalculationPartitioner partitioner;
 
 	private boolean unnesterEnabled;
+	private boolean unnesterSortEnabled;
 
 
 	/**
@@ -55,6 +56,7 @@ public class GFCompiler {
 	public GFCompiler(CalculationPartitioner partitioner) {
 		this.partitioner = partitioner;
 		unnesterEnabled = false;
+		unnesterSortEnabled = true;
 
 		decomposer = new GFDecomposer();
 		unnester = new GFUnnester();
@@ -98,6 +100,7 @@ public class GFCompiler {
 			// unnest if necessary
 			if (unnesterEnabled) {
 				LOG.info("Unnesting BGFEs...");
+				unnester.setSortEnabled(unnesterSortEnabled);
 				bgfes = unnester.unnest(bgfes);
 				LOG.info("New number of BGFEs: " + bgfes.size());
 				LOG.debug(bgfes);
@@ -144,8 +147,9 @@ public class GFCompiler {
 
 	}
 
-	public void setUnnesterEnabled(boolean enabled) {
+	public void setUnnesterEnabled(boolean enabled, boolean sortEnabled) {
 		this.unnesterEnabled = enabled;
+		this.unnesterSortEnabled = sortEnabled;
 
 	}
 

@@ -41,8 +41,12 @@ public class GFUnnester implements GFVisitor<Set<GFExpression>> {
 	private static final Log LOG = LogFactory.getLog(GFUnnester.class);
 
 	DNFConverter dnfconverter;
+
+	private boolean sortAtoms;
+	
 	public GFUnnester() {
 		dnfconverter = new DNFConverter();
+		sortAtoms = true;
 	}
 
 	public Set<GFExpression> unnest(GFExpression e) throws GFUnnesterException {
@@ -185,7 +189,9 @@ public class GFUnnester implements GFVisitor<Set<GFExpression>> {
 			// sort atoms to optimize grouping later on
 			List<GFExpression> sortedAtoms = new ArrayList<>(atoms.size());
 			sortedAtoms.addAll(atoms);
-			Collections.sort(sortedAtoms, new AtomComparator());
+			
+			if (sortAtoms)
+				Collections.sort(sortedAtoms, new AtomComparator());
 			
 
 			// make linear AND tree of the atoms
@@ -272,6 +278,11 @@ public class GFUnnester implements GFVisitor<Set<GFExpression>> {
 			return s1.compareTo(s2);
 		}
 
+	}
+
+
+	public void setSortEnabled(boolean unnesterSortEnabled) {
+		sortAtoms = unnesterSortEnabled;
 	}
 
 
