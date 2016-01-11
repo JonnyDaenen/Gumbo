@@ -14,12 +14,8 @@ import org.apache.hadoop.util.ToolRunner;
 
 import gumbo.compiler.GFCompiler;
 import gumbo.compiler.GumboPlan;
-import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.partitioner.CalculationPartitioner;
-import gumbo.engine.general.grouper.Grouper;
-import gumbo.engine.general.grouper.GrouperFactory;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
-import gumbo.engine.general.utils.FileMappingExtractor;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.engine.hadoop2.HadoopEngine2;
 import gumbo.input.GumboFileParser;
@@ -129,23 +125,24 @@ public class Gumbo extends Configured implements Tool {
 		System.out.println(plan);
 
 
-		if (groupOnly) {
-			
-			long start = System.nanoTime();
-			FileMappingExtractor fme = new FileMappingExtractor(false);
-			RelationFileMapping mapping2 = fme.extractFileMapping(plan.getFileManager());
-			Grouper grouper = GrouperFactory.createGrouper(mapping2, settings, null);
-			grouper.group(plan.getPartitions().getPartition(0));
-//
-			System.out.println((System.nanoTime() - start)/(1000000000.0D));
-			System.exit(0);
-		} else {
+//		if (groupOnly) {
+//			
+//			long start = System.nanoTime();
+//			FileMappingExtractor fme = new FileMappingExtractor(false);
+//			RelationFileMapping mapping2 = fme.extractFileMapping(plan.getFileManager());
+//			Grouper grouper = GrouperFactory.createGrouper(mapping2, settings, null);
+//			grouper.group(plan.getPartitions().getPartition(0));
+////
+//			System.out.println((System.nanoTime() - start)/(1000000000.0D));
+//			System.exit(0);
+//		} 
 
 			HadoopEngine2 engine = new HadoopEngine2();
+			engine.setGroupingStop(groupOnly);
 			engine.executePlan(plan,settings.getConf());
 
 //			System.out.println(engine.getCounters());
-		}
+		
 		return 0;
 		
 	}

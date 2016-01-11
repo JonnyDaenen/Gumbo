@@ -28,7 +28,7 @@ public class HadoopEngine2 {
 	private GumboPlan plan;
 	private Configuration conf;
 
-
+	private boolean stopAfterGroup = false;
 
 	/**
 	 * Executes a MR plan using Hadoop.
@@ -41,6 +41,10 @@ public class HadoopEngine2 {
 		execute();
 		cleanup();
 
+	}
+	
+	public void setGroupingStop(boolean stop) {
+		stopAfterGroup = stop;
 	}
 
 	private void cleanup() {
@@ -142,6 +146,8 @@ public class HadoopEngine2 {
 					// perform grouping on the rest
 					List<CalculationGroup> groups = converter.group(partition);
 
+					if (stopAfterGroup)
+						return;
 
 					LOG.info("Starting round 1 (VAL)");
 					// create and execute all round 1 jobs
