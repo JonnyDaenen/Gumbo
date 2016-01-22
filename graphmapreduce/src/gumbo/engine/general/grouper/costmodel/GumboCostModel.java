@@ -37,6 +37,7 @@ public class GumboCostModel implements CostModel {
 		double red_tasks = Math.ceil((float)total_interm / settings.getRedChunkSizeMB());
 		double map_tasks = Math.ceil((float)total_input / settings.getMapChunkSizeMB());
 		double penalty_cost = red_tasks * map_tasks * settings.getTransferPenaltyCost();
+//		penalty_cost;
 
 		// merge cost
 		int red_inmem_correction = 1;

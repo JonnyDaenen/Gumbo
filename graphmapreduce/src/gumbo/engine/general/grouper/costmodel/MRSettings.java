@@ -17,7 +17,7 @@ public class MRSettings {
 	protected double cost_transfer = 5;
 	protected double cost_sort = 52;
 	protected double cost_red = 0.12;
-	protected double cost_transfer_penalty = 50;
+	protected double cost_transfer_penalty = 5;
 
 	//	protected double cost_local_r = 1;
 	//	protected double cost_local_w = 1;

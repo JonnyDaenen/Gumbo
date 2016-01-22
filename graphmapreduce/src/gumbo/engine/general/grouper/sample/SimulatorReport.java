@@ -9,6 +9,8 @@ public class SimulatorReport {
 	private long guardOutBytes;
 	private long guardedOutBytes;
 	
+	private long scale = 1;//115; // remove!!
+	
 	
 	public SimulatorReport() {
 		this(0,0,0,0);
@@ -24,19 +26,19 @@ public class SimulatorReport {
 	
 
 	public long getGuardInBytes() {
-		return guardInBytes;
+		return guardInBytes * scale;
 	}
 
 	public long getGuardedInBytes() {
-		return guardedInBytes;
+		return guardedInBytes * scale;
 	}
 
 	public long getGuardOutBytes() {
-		return guardOutBytes;
+		return guardOutBytes * scale;
 	}
 
 	public long getGuardedOutBytes() {
-		return guardedOutBytes;
+		return guardedOutBytes * scale;
 	}
 
 	public void setGuardInBytes(long guardInBytes) {
