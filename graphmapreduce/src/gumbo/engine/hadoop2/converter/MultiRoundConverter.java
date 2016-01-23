@@ -134,20 +134,44 @@ public class MultiRoundConverter {
 		// pass settings to mapper
 		configurator.configure(hadoopJob, calculations);
 
-		// NUM RED TASKS
+
+		// estimate output
 		// add missing sample data if necessary
 		// create a job for each group
-
 		if (!group.hasInfo()) {
 			LOG.info("Missing size estimates, sampling data.");
 			addInfo(hadoopJob, group, false);
 		}
-		long intermediate = group.getGuardedOutBytes() + group.getGuardOutBytes();
-		int numRed = (int) Math.max(1,
-				intermediate / (settings.getNumProperty(AbstractExecutorSettings.REDUCER_SIZE_MB) * 1024 * 1024.0));
-		hadoopJob.setNumReduceTasks(numRed);
 
-		LOG.info("Map output est.: " + intermediate + ", setting VAL Reduce tasks to " + numRed);
+		long inputsize = group.getGuardInBytes() + group.getGuardedInBytes();
+		long intermediate = group.getGuardedOutBytes() + group.getGuardOutBytes();
+
+
+		// NUM MAP TASKS
+
+		// only set it if we want flexible maps, otherwise, hadoop uses HDFS block size as default split size
+		if (settings.getBooleanProperty(AbstractExecutorSettings.FLEXIBLE_MAPPERS_ENABLED)) {
+			int numMap = (int) Math.max(1, intermediate / 100 * 1024 * 1024.0); // 100 MB output per mapper
+			long splitsize = inputsize / numMap;
+			hadoopJob.getConfiguration().set("mapreduce.input.fileinputformat.split.maxsize", ""+splitsize) ;
+
+			LOG.info("Map output est.: " + intermediate + ", setting VAL map tasks to " + numMap);
+		}
+
+		// NUM RED TASKS
+
+		if (settings.getBooleanProperty(AbstractExecutorSettings.FLEXIBLE_REDUCERS_ENABLED)) {
+			int numRed = (int) Math.max(1,
+					intermediate / (settings.getNumProperty(AbstractExecutorSettings.REDUCER_SIZE_MB) * 1024 * 1024.0));
+			hadoopJob.setNumReduceTasks(numRed);
+
+			LOG.info("Map output est.: " + intermediate + ", setting VAL Reduce tasks to " + numRed);
+		} else {
+			int numRed = (int) Math.max(1,
+					inputsize / (settings.getNumProperty(AbstractExecutorSettings.REDUCER_SIZE_MB) * 1024 * 1024.0));
+			hadoopJob.setNumReduceTasks(numRed);
+			LOG.info("Map input: " + inputsize + ", setting VAL Reduce tasks to " + numRed);
+		}
 
 		return new ControlledJob(hadoopJob, null);
 
@@ -260,8 +284,8 @@ public class MultiRoundConverter {
 		configurator.configure(dummyConf, expressions);
 		HadoopExecutorSettings settings = new HadoopExecutorSettings(dummyConf);
 		Grouper grouper = GrouperFactory.createGrouper(mapping, settings, samples); // FIXME
-																					// correct
-																					// mapping
+		// correct
+		// mapping
 
 		// apply grouping
 		List<CalculationGroup> groups = grouper.group(partition);
@@ -392,7 +416,7 @@ public class MultiRoundConverter {
 
 				Job hadoopJob;
 				hadoopJob = Job.getInstance(conf); // note: makes a copy of the
-													// conf
+				// conf
 
 				hadoopJob.setJarByClass(getClass());
 				hadoopJob.setJobName(plan.getName() + "_VALEVAL_" + group.getCanonicalOutString());

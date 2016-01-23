@@ -51,6 +51,9 @@ public class Configurator {
 	
 	public void configure(Configuration conf, Set<GFExistentialExpression> expressions) {
 
+		// control the map split size:
+//		conf.set("mapreduce.input.fileinputformat.split.maxsize", ""+128*1024) ;
+		
 		// queries
 		addQueries(conf, expressions);
 

@@ -1,6 +1,6 @@
 gumbo.engine.guardAddressOptimizationOn=true
 gumbo.engine.proofsymbol=#
-gumbo.engine.mapOutputGroupingPolicy=BESTCOSTGROUP_GUMBO
+gumbo.engine.mapOutputGroupingPolicy=COSTGROUP_GUMBO
 gumbo.engine.valeval.enabled=false
 gumbo.engine.simulator.classname=gumbo.engine.hadoop2.estimation.MapSimulator
 gumbo.engine.guardedCombinerOptimizationOn=false
@@ -10,44 +10,46 @@ gumbo.compiler.partitioner=gumbo.compiler.partitioner.HeightPartitioner
 gumbo.engine.valeval.projection.prepack=true
 gumbo.engine.valeval.group=true
 gumbo.engine.round1FiniteMemoryOptimizationOn=false
+gumbo.engine.flexmappers=false
 gumbo.engine.hadoop.reducersize_mb=256
 gumbo.engine.val.projection.prepack=true
 gumbo.engine.reduceOutputGroupingOptimizationOn=true
 gumbo.engine.mapOutputGroupingOptimizationOn=true
+gumbo.engine.flexreducers=true
 gumbo.engine.eval.output.merge=false
 gumbo.compiler.unnest=false
 gumbo.engine.grouper.beststopindicator=0
 gumbo.engine.requestAtomIdOptimizationOn=true
 gumbo.engine.guardKeepAliveOptimizationOn=true
-[INFO] 16/01/22 14:13:43 gumbo.Gumbo: Input: 
+[INFO] 16/01/23 14:27:58 gumbo.Gumbo: Input: 
 R(x0,x1,x2);input/experiments/EXP_032/2/R;csv;'S(x0);input/experiments/EXP_032/2/S;csv;'T(x0);input/experiments/EXP_032/2/T;csv;'U(x0);input/experiments/EXP_032/2/U;csv;'G(x0,x1,x2);input/experiments/EXP_032/2/G;csv;
 Output: output/EXP_032
 Scratch: scratch/EXP_032
 Queries: 
 [(Out2(x,y,z) : G(x,y,z) & S(x)), (Out1(x,y,z) : R(x,y,z) & (S(x) & (T(x) & U(x))))]
 
-[INFO] 16/01/22 14:13:43 compiler.GFCompiler: Adding suffix to scratch and output paths: /20160122_141343
-[INFO] 16/01/22 14:13:43 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
-[INFO] 16/01/22 14:13:43 compiler.GFCompiler: Number of BGFEs: 2
-[INFO] 16/01/22 14:13:43 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
-[INFO] 16/01/22 14:13:43 compiler.GFCompiler: Number of CUs: 2
-[INFO] 16/01/22 14:13:43 compiler.GFCompiler: Linking Calculation Units (CUs)...
-[INFO] 16/01/22 14:13:43 compiler.GFCompiler: Creating initial file mapping...
-[INFO] 16/01/22 14:13:43 compiler.GFCompiler: file mapping:
-Out root: output/EXP_032/20160122_141343
-Scratch root: scratch/EXP_032/20160122_141343
-Temp root: scratch/EXP_032/20160122_141343/tmp
+[INFO] 16/01/23 14:27:59 compiler.GFCompiler: Adding suffix to scratch and output paths: /20160123_142759
+[INFO] 16/01/23 14:27:59 compiler.GFCompiler: Decomposing GFEs into basic GFEs (BGFEs)...
+[INFO] 16/01/23 14:27:59 compiler.GFCompiler: Number of BGFEs: 2
+[INFO] 16/01/23 14:27:59 compiler.GFCompiler: Converting BGFEs into CalculationUnits (CUs)...
+[INFO] 16/01/23 14:27:59 compiler.GFCompiler: Number of CUs: 2
+[INFO] 16/01/23 14:27:59 compiler.GFCompiler: Linking Calculation Units (CUs)...
+[INFO] 16/01/23 14:27:59 compiler.GFCompiler: Creating initial file mapping...
+[INFO] 16/01/23 14:27:59 compiler.GFCompiler: file mapping:
+Out root: output/EXP_032/20160123_142759
+Scratch root: scratch/EXP_032/20160123_142759
+Temp root: scratch/EXP_032/20160123_142759/tmp
 R(x0,x1,x2) <- [input/experiments/EXP_032/2/R]
 S(x0) <- [input/experiments/EXP_032/2/S]
 T(x0) <- [input/experiments/EXP_032/2/T]
 U(x0) <- [input/experiments/EXP_032/2/U]
 G(x0,x1,x2) <- [input/experiments/EXP_032/2/G]
-Out2(x0,x1,x2) -> [output/EXP_032/20160122_141343/OUT_0_Out2]
-Out1(x0,x1,x2) -> [output/EXP_032/20160122_141343/OUT_1_Out1]
+Out2(x0,x1,x2) -> [output/EXP_032/20160123_142759/OUT_0_Out2]
+Out1(x0,x1,x2) -> [output/EXP_032/20160123_142759/OUT_1_Out1]
 Temp dirs: 
 
-[INFO] 16/01/22 14:13:43 compiler.GFCompiler: Partitioning...
-[INFO] 16/01/22 14:13:43 compiler.GFCompiler: Number of partitions: 1
+[INFO] 16/01/23 14:27:59 compiler.GFCompiler: Partitioning...
+[INFO] 16/01/23 14:27:59 compiler.GFCompiler: Number of partitions: 1
 
 Query:
 query1.gumbo
@@ -59,57 +61,57 @@ Calculation Unit Partitions: {
 }
 Folders:
 -------
-Out root: output/EXP_032/20160122_141343
-Scratch root: scratch/EXP_032/20160122_141343
-Temp root: scratch/EXP_032/20160122_141343/tmp
+Out root: output/EXP_032/20160123_142759
+Scratch root: scratch/EXP_032/20160123_142759
+Temp root: scratch/EXP_032/20160123_142759/tmp
 R(x0,x1,x2) <- [input/experiments/EXP_032/2/R]
 S(x0) <- [input/experiments/EXP_032/2/S]
 T(x0) <- [input/experiments/EXP_032/2/T]
 U(x0) <- [input/experiments/EXP_032/2/U]
 G(x0,x1,x2) <- [input/experiments/EXP_032/2/G]
-Out2(x0,x1,x2) -> [output/EXP_032/20160122_141343/OUT_0_Out2]
-Out1(x0,x1,x2) -> [output/EXP_032/20160122_141343/OUT_1_Out1]
+Out2(x0,x1,x2) -> [output/EXP_032/20160123_142759/OUT_0_Out2]
+Out1(x0,x1,x2) -> [output/EXP_032/20160123_142759/OUT_1_Out1]
 Temp dirs: 
 
-[INFO] 16/01/22 14:13:43 hadoop2.HadoopEngine2: Creating Job Control for: query1.gumbo
-[INFO] 16/01/22 14:13:43 hadoop2.HadoopEngine2: Starting Job-control thread: Gumbo-Workflow-Thread_query1.gumbo
-[WARN] 16/01/22 14:13:44 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-[INFO] 16/01/22 14:13:44 hadoop2.HadoopEngine2: Using 2-round evaluation for Calculation Unit Partitions: {
+[INFO] 16/01/23 14:27:59 hadoop2.HadoopEngine2: Creating Job Control for: query1.gumbo
+[INFO] 16/01/23 14:27:59 hadoop2.HadoopEngine2: Starting Job-control thread: Gumbo-Workflow-Thread_query1.gumbo
+[WARN] 16/01/23 14:27:59 util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[INFO] 16/01/23 14:27:59 hadoop2.HadoopEngine2: Using 2-round evaluation for Calculation Unit Partitions: {
 {id : 0 Depends on: None. - (Out2(x,y,z) : G(x,y,z) & S(x))id : 1 Depends on: None. - (Out1(x,y,z) : R(x,y,z) & (S(x) & (T(x) & U(x))))}
 }
-[INFO] 16/01/22 14:13:44 sample.RelationSampler: Fetching samples for relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 sample.RelationSampler: Fetching samples for relation S(x0)
-[INFO] 16/01/22 14:13:44 sample.RelationSampler: Fetching samples for relation T(x0)
-[INFO] 16/01/22 14:13:44 sample.RelationSampler: Fetching samples for relation U(x0)
-[INFO] 16/01/22 14:13:44 sample.RelationSampler: Fetching samples for relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Parsing samples for relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Number of blocks: 10
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Number of blocks used for small sample: 1
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Small tuples: 195
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Big tuples: 1755
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Parsing samples for relation S(x0)
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Number of blocks: 10
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Number of blocks used for small sample: 1
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Small tuples: 581
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Big tuples: 4916
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Parsing samples for relation T(x0)
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Number of blocks: 10
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Number of blocks used for small sample: 1
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Small tuples: 585
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Big tuples: 4916
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Parsing samples for relation U(x0)
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Number of blocks: 10
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Number of blocks used for small sample: 1
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Small tuples: 583
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Big tuples: 4914
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Parsing samples for relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Number of blocks: 10
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Number of blocks used for small sample: 1
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Small tuples: 195
-[INFO] 16/01/22 14:13:44 reporter.RelationTupleSampleContainer: Big tuples: 1755
-[INFO] 16/01/22 14:13:44 grouper.GrouperFactory: Creating a grouper with policy BESTCOSTGROUP_GUMBO
-[WARN] 16/01/22 14:13:44 settings.AbstractExecutorSettings: Failed to find setting with key 'mapreduce.reduce.memory.mb', reverting to default value 1024.0
-[INFO] 16/01/22 14:13:44 grouper.Grouper: Decomposition complete: 	R(x,y,z) |X S(x)
+[INFO] 16/01/23 14:27:59 sample.RelationSampler: Fetching samples for relation R(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 sample.RelationSampler: Fetching samples for relation S(x0)
+[INFO] 16/01/23 14:27:59 sample.RelationSampler: Fetching samples for relation T(x0)
+[INFO] 16/01/23 14:27:59 sample.RelationSampler: Fetching samples for relation U(x0)
+[INFO] 16/01/23 14:27:59 sample.RelationSampler: Fetching samples for relation G(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Parsing samples for relation R(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Number of blocks: 10
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Number of blocks used for small sample: 1
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Small tuples: 195
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Big tuples: 1755
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Parsing samples for relation S(x0)
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Number of blocks: 10
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Number of blocks used for small sample: 1
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Small tuples: 546
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Big tuples: 4913
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Parsing samples for relation T(x0)
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Number of blocks: 10
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Number of blocks used for small sample: 1
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Small tuples: 584
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Big tuples: 4928
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Parsing samples for relation U(x0)
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Number of blocks: 10
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Number of blocks used for small sample: 1
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Small tuples: 548
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Big tuples: 4908
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Parsing samples for relation G(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Number of blocks: 10
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Number of blocks used for small sample: 1
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Small tuples: 195
+[INFO] 16/01/23 14:27:59 reporter.RelationTupleSampleContainer: Big tuples: 1755
+[INFO] 16/01/23 14:27:59 grouper.GrouperFactory: Creating a grouper with policy COSTGROUP_GUMBO
+[WARN] 16/01/23 14:27:59 settings.AbstractExecutorSettings: Failed to find setting with key 'mapreduce.reduce.memory.mb', reverting to default value 1024.0
+[INFO] 16/01/23 14:27:59 grouper.Grouper: Decomposition complete: 	R(x,y,z) |X S(x)
 	R(x,y,z) |X T(x)
 	R(x,y,z) |X U(x)
 	G(x,y,z) |X S(x)
@@ -119,1515 +121,459 @@ Temp dirs:
 	Guarded Out Bytes0
 	Cost:0.0
 
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation T(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444911
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402392
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation U(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444995
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10401468
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:20666854
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 13730117
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation T(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444911
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402392
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation U(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444995
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10401468
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:20666854
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 13730117
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: Candidate solution found! 1 440.90413188934326
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: [	R(x,y,z) |X S(x)
-	Guard In Bytes2100033
-	Guarded In Bytes7444127
-	Guard Out Bytes1394785
-	Guarded Out Bytes10402886
-	Cost:81.60883522033691
-, 	R(x,y,z) |X T(x)
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:2100033
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 1393855
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation S(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444127
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 10425736
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation T(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444911
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 10410672
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:4]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:2100033
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 1393855
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation U(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444995
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 10420138
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:3]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:2100033
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 1393855
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:20666854
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 13728202
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation S(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444127
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 10425736
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation T(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444911
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 10410672
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation U(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444995
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 10420138
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:3, R:0:0,1,2:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:3,4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:3, R:0:0,1,2:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:3,4]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:2100033
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 1493718
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:4]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:2100033
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 1393855
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation S(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444127
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 10425736
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation T(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444911
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 10410672
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:20666854
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 13728202
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:3]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:2100033
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 1393855
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation S(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444127
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 10425736
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation U(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444995
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 10420138
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:20666854
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 13728202
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:2100033
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 1393855
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation S(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0,0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0,0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444127
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 11418999
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:20666854
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 13728202
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation U(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444995
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 10420138
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0, R:0:0,1,2:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0,3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:3, R:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:3,0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:2100033
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 1493718
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation S(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444127
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 10425736
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation T(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444911
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 10410672
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0, R:0:0,1,2:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0,4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:4, R:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:4,0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:2100033
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 1493718
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation S(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444127
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 10425736
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:4, R:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:4,0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0, R:0:0,1,2:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0,4]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:2100033
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 1493718
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation S(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0,0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0,0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444127
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 11418999
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation T(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [T:0:0:4]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444911
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 10410672
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:20666854
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 13728202
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:2100033
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 1393855
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation S(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0,0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0,0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444127
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 11418999
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:20666854
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 13728202
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0, R:0:0,1,2:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:0,3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:3, R:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [R:0:0,1,2:3,0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:2100033
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 1493718
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation S(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0,0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [S:0:0:0,0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444127
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 11418999
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation U(x0)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [U:0:0:3]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:7444995
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 10420138
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections before merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: Projections after merge:
+[INFO] 16/01/23 14:27:59 tupleops.TupleOpFactory: [G:0:0,1,2:0]
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Map Input bytes:20666854
+[INFO] 16/01/23 14:27:59 estimation.MapSimulator: Est. Map Output bytes: 13728202
+[INFO] 16/01/23 14:27:59 grouper.Grouper: Grouping complete: 3 group(s)
+[INFO] 16/01/23 14:27:59 grouper.Grouper: Grouping: [	R(x,y,z) |X T(x)
 	Guard In Bytes2100033
 	Guarded In Bytes7444911
-	Guard Out Bytes1394785
-	Guarded Out Bytes10402392
-	Cost:81.60675621032715
+	Guard Out Bytes1393855
+	Guarded Out Bytes10410672
+	Cost:81.64881324768066
+, 	R(x,y,z) |X S(x)
+	G(x,y,z) |X S(x)
+	Guard In Bytes22766887
+	Guarded In Bytes7444127
+	Guard Out Bytes15122057
+	Guarded Out Bytes11418999
+	Cost:236.30365562438965
 , 	R(x,y,z) |X U(x)
 	Guard In Bytes2100033
 	Guarded In Bytes7444995
-	Guard Out Bytes1394785
-	Guarded Out Bytes10401468
-	Cost:81.60154914855957
-, 	G(x,y,z) |X S(x)
-	Guard In Bytes20666854
-	Guarded In Bytes7444127
-	Guard Out Bytes13730117
-	Guarded Out Bytes10402886
-	Cost:196.08699131011963
+	Guard Out Bytes1393855
+	Guarded Out Bytes10420138
+	Cost:81.70305824279785
 ]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0,0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0,0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 11388608
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:20666854
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 13730117
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation T(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444911
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402392
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation U(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444995
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10401468
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: Candidate solution found! 2 399.30180168151855
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: [	R(x,y,z) |X S(x)
-	G(x,y,z) |X S(x)
-	Guard In Bytes22766887
-	Guarded In Bytes7444127
-	Guard Out Bytes15124902
-	Guarded Out Bytes11388608
-	Cost:236.09349632263184
-, 	R(x,y,z) |X T(x)
-	Guard In Bytes2100033
-	Guarded In Bytes7444911
-	Guard Out Bytes1394785
-	Guarded Out Bytes10402392
-	Cost:81.60675621032715
-, 	R(x,y,z) |X U(x)
-	Guard In Bytes2100033
-	Guarded In Bytes7444995
-	Guard Out Bytes1394785
-	Guarded Out Bytes10401468
-	Cost:81.60154914855957
-]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation T(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444911
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402392
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:20666854
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 13730117
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation U(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444995
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10401468
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: Candidate solution found! 3 478.24739170074463
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: [	R(x,y,z) |X S(x)
-	Guard In Bytes2100033
-	Guarded In Bytes7444127
-	Guard Out Bytes1394785
-	Guarded Out Bytes10402886
-	Cost:81.60883522033691
-, 	R(x,y,z) |X T(x)
-	G(x,y,z) |X S(x)
-	Guard In Bytes22766887
-	Guarded In Bytes14889038
-	Guard Out Bytes15124902
-	Guarded Out Bytes20805278
-	Cost:315.03700733184814
-, 	R(x,y,z) |X U(x)
-	Guard In Bytes2100033
-	Guarded In Bytes7444995
-	Guard Out Bytes1394785
-	Guarded Out Bytes10401468
-	Cost:81.60154914855957
-]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation T(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444911
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402392
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation U(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444995
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10401468
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:20666854
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 13730117
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: Candidate solution found! 4 478.2456293106079
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: [	R(x,y,z) |X S(x)
-	Guard In Bytes2100033
-	Guarded In Bytes7444127
-	Guard Out Bytes1394785
-	Guarded Out Bytes10402886
-	Cost:81.60883522033691
-, 	R(x,y,z) |X T(x)
-	Guard In Bytes2100033
-	Guarded In Bytes7444911
-	Guard Out Bytes1394785
-	Guarded Out Bytes10402392
-	Cost:81.60675621032715
-, 	R(x,y,z) |X U(x)
-	G(x,y,z) |X S(x)
-	Guard In Bytes22766887
-	Guarded In Bytes14889122
-	Guard Out Bytes15124902
-	Guarded Out Bytes20804354
-	Cost:315.03003787994385
-]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation U(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444995
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10401468
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0, R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0,3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0, R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0,3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1494710
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation T(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444911
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402392
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:20666854
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 13730117
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: Candidate solution found! 5 466.1732921600342
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: [	R(x,y,z) |X S(x)
-	R(x,y,z) |X U(x)
-	Guard In Bytes2100033
-	Guarded In Bytes14889122
-	Guard Out Bytes1494710
-	Guarded Out Bytes20804354
-	Cost:188.4795446395874
-, 	R(x,y,z) |X T(x)
-	Guard In Bytes2100033
-	Guarded In Bytes7444911
-	Guard Out Bytes1394785
-	Guarded Out Bytes10402392
-	Cost:81.60675621032715
-, 	G(x,y,z) |X S(x)
-	Guard In Bytes20666854
-	Guarded In Bytes7444127
-	Guard Out Bytes13730117
-	Guarded Out Bytes10402886
-	Cost:196.08699131011963
-]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3, R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3,0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0, R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0,3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1494710
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0,0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0,0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 11388608
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation U(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444995
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10401468
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:20666854
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 13730117
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation T(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444911
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402392
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: Candidate solution found! 6 404.91962337493896
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: [	R(x,y,z) |X S(x)
-	R(x,y,z) |X U(x)
-	G(x,y,z) |X S(x)
-	Guard In Bytes22766887
-	Guarded In Bytes14889122
-	Guard Out Bytes15224827
-	Guarded Out Bytes21790076
-	Cost:323.3128671646118
-, 	R(x,y,z) |X T(x)
-	Guard In Bytes2100033
-	Guarded In Bytes7444911
-	Guard Out Bytes1394785
-	Guarded Out Bytes10402392
-	Cost:81.60675621032715
-]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation U(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444995
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10401468
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0, R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0,3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0, R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0,3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1494710
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation T(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444911
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402392
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:20666854
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 13730117
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: Candidate solution found! 7 503.51655197143555
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: [	R(x,y,z) |X S(x)
-	R(x,y,z) |X U(x)
-	Guard In Bytes2100033
-	Guarded In Bytes14889122
-	Guard Out Bytes1494710
-	Guarded Out Bytes20804354
-	Cost:188.4795446395874
-, 	R(x,y,z) |X T(x)
-	G(x,y,z) |X S(x)
-	Guard In Bytes22766887
-	Guarded In Bytes14889038
-	Guard Out Bytes15124902
-	Guarded Out Bytes20805278
-	Cost:315.03700733184814
-]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation T(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444911
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402392
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation U(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444995
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10401468
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4, R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4,3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4, R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4,3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1494710
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:20666854
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 13730117
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: Candidate solution found! 8 466.17234992980957
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: [	R(x,y,z) |X S(x)
-	Guard In Bytes2100033
-	Guarded In Bytes7444127
-	Guard Out Bytes1394785
-	Guarded Out Bytes10402886
-	Cost:81.60883522033691
-, 	R(x,y,z) |X T(x)
-	R(x,y,z) |X U(x)
-	Guard In Bytes2100033
-	Guarded In Bytes14889906
-	Guard Out Bytes1494710
-	Guarded Out Bytes20803860
-	Cost:188.47652339935303
-, 	G(x,y,z) |X S(x)
-	Guard In Bytes20666854
-	Guarded In Bytes7444127
-	Guard Out Bytes13730117
-	Guarded Out Bytes10402886
-	Cost:196.08699131011963
-]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0,0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0,0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 11388608
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:20666854
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 13730117
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation T(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444911
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402392
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation U(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444995
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10401468
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4, R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4,3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4, R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4,3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1494710
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: Candidate solution found! 9 424.57001972198486
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: [	R(x,y,z) |X S(x)
-	G(x,y,z) |X S(x)
-	Guard In Bytes22766887
-	Guarded In Bytes7444127
-	Guard Out Bytes15124902
-	Guarded Out Bytes11388608
-	Cost:236.09349632263184
-, 	R(x,y,z) |X T(x)
-	R(x,y,z) |X U(x)
-	Guard In Bytes2100033
-	Guarded In Bytes14889906
-	Guard Out Bytes1494710
-	Guarded Out Bytes20803860
-	Cost:188.47652339935303
-]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4, R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4,3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4, R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4,3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1494710
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation T(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444911
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402392
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation U(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444995
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10401468
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:20666854
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 13730117
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: Candidate solution found! 10 483.86521339416504
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: [	R(x,y,z) |X S(x)
-	Guard In Bytes2100033
-	Guarded In Bytes7444127
-	Guard Out Bytes1394785
-	Guarded Out Bytes10402886
-	Cost:81.60883522033691
-, 	R(x,y,z) |X T(x)
-	R(x,y,z) |X U(x)
-	G(x,y,z) |X S(x)
-	Guard In Bytes22766887
-	Guarded In Bytes22334033
-	Guard Out Bytes15224827
-	Guarded Out Bytes31206746
-	Cost:402.2563781738281
-]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation T(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444911
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402392
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4, R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4,0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4, R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4,0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1494710
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation U(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444995
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10401468
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:20666854
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 13730117
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: Candidate solution found! 11 466.1750545501709
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: [	R(x,y,z) |X S(x)
-	R(x,y,z) |X T(x)
-	Guard In Bytes2100033
-	Guarded In Bytes14889038
-	Guard Out Bytes1494710
-	Guarded Out Bytes20805278
-	Cost:188.4865140914917
-, 	R(x,y,z) |X U(x)
-	Guard In Bytes2100033
-	Guarded In Bytes7444995
-	Guard Out Bytes1394785
-	Guarded Out Bytes10401468
-	Cost:81.60154914855957
-, 	G(x,y,z) |X S(x)
-	Guard In Bytes20666854
-	Guarded In Bytes7444127
-	Guard Out Bytes13730117
-	Guarded Out Bytes10402886
-	Cost:196.08699131011963
-]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0, R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0,4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4, R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4,0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1494710
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0,0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0,0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 11388608
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation T(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444911
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402392
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:20666854
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 13730117
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation U(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444995
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10401468
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: Candidate solution found! 12 404.9213857650757
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: [	R(x,y,z) |X S(x)
-	R(x,y,z) |X T(x)
-	G(x,y,z) |X S(x)
-	Guard In Bytes22766887
-	Guarded In Bytes14889038
-	Guard Out Bytes15224827
-	Guarded Out Bytes21791000
-	Cost:323.3198366165161
-, 	R(x,y,z) |X U(x)
-	Guard In Bytes2100033
-	Guarded In Bytes7444995
-	Guard Out Bytes1394785
-	Guarded Out Bytes10401468
-	Cost:81.60154914855957
-]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation T(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444911
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402392
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4, R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4,0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0, R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:0,4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1494710
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1394785
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation U(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444995
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10401468
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:20666854
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 13730117
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: Candidate solution found! 13 503.51655197143555
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: [	R(x,y,z) |X S(x)
-	R(x,y,z) |X T(x)
-	Guard In Bytes2100033
-	Guarded In Bytes14889038
-	Guard Out Bytes1494710
-	Guarded Out Bytes20805278
-	Cost:188.4865140914917
-, 	R(x,y,z) |X U(x)
-	G(x,y,z) |X S(x)
-	Guard In Bytes22766887
-	Guarded In Bytes14889122
-	Guard Out Bytes15124902
-	Guarded Out Bytes20804354
-	Cost:315.03003787994385
-]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3, R:0:0,1,2:0, R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3,0,4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4, R:0:0,1,2:3, R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4,3,0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1594636
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation T(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444911
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402392
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation U(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444995
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10401468
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:20666854
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 13730117
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402886
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: Candidate solution found! 14 471.6022901535034
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: [	R(x,y,z) |X S(x)
-	R(x,y,z) |X T(x)
-	R(x,y,z) |X U(x)
-	Guard In Bytes2100033
-	Guarded In Bytes22334033
-	Guard Out Bytes1594636
-	Guarded Out Bytes31206746
-	Cost:275.5152988433838
-, 	G(x,y,z) |X S(x)
-	Guard In Bytes20666854
-	Guarded In Bytes7444127
-	Guard Out Bytes13730117
-	Guarded Out Bytes10402886
-	Cost:196.08699131011963
-]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation R(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4, R:0:0,1,2:3, R:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:4,3,0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3, R:0:0,1,2:0, R:0:0,1,2:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [R:0:0,1,2:3,0,4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:2100033
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 1594636
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation S(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0,0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0, S:0:0:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [S:0:0:0,0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444127
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 11388608
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation T(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [T:0:0:4]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444911
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10402392
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation U(x0)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [U:0:0:3]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:7444995
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 10401468
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Simulating relation G(x0,x1,x2)
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections before merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: Projections after merge:
-[INFO] 16/01/22 14:13:44 tupleops.TupleOpFactory: [G:0:0,1,2:0]
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Map Input bytes:20666854
-[INFO] 16/01/22 14:13:44 estimation.MapSimulator: Est. Map Output bytes: 13730117
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: Candidate solution found! 15 410.5392150878906
-[INFO] 16/01/22 14:13:44 policies.BestCostBasedGrouper: [	R(x,y,z) |X S(x)
-	R(x,y,z) |X T(x)
-	R(x,y,z) |X U(x)
-	G(x,y,z) |X S(x)
-	Guard In Bytes22766887
-	Guarded In Bytes22334033
-	Guard Out Bytes15324753
-	Guarded Out Bytes32192468
-	Cost:410.5392150878906
-]
-[INFO] 16/01/22 14:13:44 grouper.Grouper: Grouping complete: 3 group(s)
-[INFO] 16/01/22 14:13:44 grouper.Grouper: Grouping: [	R(x,y,z) |X S(x)
-	G(x,y,z) |X S(x)
-	Guard In Bytes22766887
-	Guarded In Bytes7444127
-	Guard Out Bytes15124902
-	Guarded Out Bytes11388608
-	Cost:236.09349632263184
-, 	R(x,y,z) |X T(x)
-	Guard In Bytes2100033
-	Guarded In Bytes7444911
-	Guard Out Bytes1394785
-	Guarded Out Bytes10402392
-	Cost:81.60675621032715
-, 	R(x,y,z) |X U(x)
-	Guard In Bytes2100033
-	Guarded In Bytes7444995
-	Guard Out Bytes1394785
-	Guarded Out Bytes10401468
-	Cost:81.60154914855957
-]
-[INFO] 16/01/22 14:13:44 hadoop2.HadoopEngine2: Running time: 979ms
-[INFO] 16/01/22 14:13:44 hadoop2.HadoopEngine2: SUCCESS: all jobs (0) completed!
-[INFO] 16/01/22 14:13:44 hadoop2.HadoopEngine2: Stopping job control
+[INFO] 16/01/23 14:27:59 hadoop2.HadoopEngine2: Running time: 792ms
+[INFO] 16/01/23 14:27:59 hadoop2.HadoopEngine2: SUCCESS: all jobs (0) completed!
+[INFO] 16/01/23 14:27:59 hadoop2.HadoopEngine2: Stopping job control
 
 Overall Counters
 --------------------------------------------------------------------------------

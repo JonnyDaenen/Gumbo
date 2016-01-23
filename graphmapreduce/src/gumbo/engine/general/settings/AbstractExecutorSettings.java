@@ -61,9 +61,16 @@ public abstract class AbstractExecutorSettings {
 	public static final String VALEVAL_ON = "gumbo.engine.valeval.enabled";
 	public static final String VALEVAL_GROUP = "gumbo.engine.valeval.group";
 	
+
+	public static final String FLEXIBLE_MAPPERS_ENABLED = "gumbo.engine.flexmappers";
+	public static final String FLEXIBLE_REDUCERS_ENABLED = "gumbo.engine.flexreducers";
+	
 	// constants
 	public static final String REDUCER_SIZE_MB = "gumbo.engine.hadoop.reducersize_mb";
 	public static final String BESTGROUP_STOPINDICATOR = "gumbo.engine.grouper.beststopindicator";
+
+
+
 
 
 
@@ -105,6 +112,10 @@ public abstract class AbstractExecutorSettings {
 		setBooleanProperty(VALEVAL_GROUP, true); 
 //		setProperty(simulatorClass, Simulator.class.getCanonicalName());
 		setProperty(SIMULATOR_CLASS, gumbo.engine.hadoop2.estimation.MapSimulator.class.getCanonicalName());
+	
+		
+		setBooleanProperty(FLEXIBLE_MAPPERS_ENABLED, false); 
+		setBooleanProperty(FLEXIBLE_REDUCERS_ENABLED, true); 
 	}
 	
 	public void turnOffOptimizations() {
