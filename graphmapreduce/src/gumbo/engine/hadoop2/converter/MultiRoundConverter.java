@@ -151,11 +151,12 @@ public class MultiRoundConverter {
 
 		// only set it if we want flexible maps, otherwise, hadoop uses HDFS block size as default split size
 		if (settings.getBooleanProperty(AbstractExecutorSettings.FLEXIBLE_MAPPERS_ENABLED)) {
-			int numMap = (int) Math.max(1, intermediate / 100 * 1024 * 1024.0); // 100 MB output per mapper
+			int numMap = (int) Math.max(1, intermediate / (128 * 1024 * 1024.0)); // 128 MB output per mapper
 			long splitsize = inputsize / numMap;
 			hadoopJob.getConfiguration().set("mapreduce.input.fileinputformat.split.maxsize", ""+splitsize) ;
 
 			LOG.info("Map output est.: " + intermediate + ", setting VAL map tasks to " + numMap);
+			LOG.info("Split size set to " + splitsize);
 		}
 
 		// NUM RED TASKS
