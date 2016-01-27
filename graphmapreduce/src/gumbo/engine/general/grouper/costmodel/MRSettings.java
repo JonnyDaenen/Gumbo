@@ -9,15 +9,25 @@ import gumbo.engine.general.settings.AbstractExecutorSettings;
  */
 public class MRSettings {
 
-	// costs
-	protected double cost_local_r = 1;
-	protected double cost_local_w = 1;
-	protected double cost_hdfs_w = 330;
-	protected double cost_hdfs_r = 59;
-	protected double cost_transfer = 5;
+	// costs (s per MB)
+	protected double cost_local_r = 0.1;
+	protected double cost_local_w = 0.24;
+	protected double cost_hdfs_w = 0.18; // done
+	protected double cost_hdfs_r = 0.10;
+	protected double cost_transfer = 0.018; // done
 	protected double cost_sort = 52;
-	protected double cost_red = 0.12;
-	protected double cost_transfer_penalty = 5;
+	protected double cost_red = 0.17; // done
+	protected double cost_transfer_penalty = 0.005;
+	
+
+//	protected double cost_local_r = 1;
+//	protected double cost_local_w = 1;
+//	protected double cost_hdfs_w = 330;
+//	protected double cost_hdfs_r = 59;
+//	protected double cost_transfer = 5;
+//	protected double cost_sort = 52;
+//	protected double cost_red = 0.12;
+//	protected double cost_transfer_penalty = 5;
 
 	//	protected double cost_local_r = 1;
 	//	protected double cost_local_w = 1;

@@ -25,8 +25,10 @@ public class GumboCostModel implements CostModel {
 	public double getReduceCost(CalculationGroup job) {
 		double total_interm = job.getGuardOutBytes() + job.getGuardedOutBytes();
 		double total_input = job.getGuardInBytes() + job.getGuardedInBytes();
-		
+		double guard_interm = job.getGuardOutBytes();
+				
 		// convert to MegaBytes
+		guard_interm /= (1024*1024);
 		total_interm /= (1024*1024);
 		total_input /= (1024*1024);
 
@@ -40,16 +42,20 @@ public class GumboCostModel implements CostModel {
 //		penalty_cost;
 
 		// merge cost
-		int red_inmem_correction = 1;
+		int red_inmem_correction = 0;
 		double red_pieces = Math.max(1, settings.getRedChunkSizeMB() / (float)settings.getRedSortBufferMB());
 		double red_merge_levels = Math.log(red_pieces)/ Math.log(settings.getRedMergeFactor()) + red_inmem_correction;
 		double merge_cost = red_merge_levels * (total_interm) * (settings.getLocalReadCost() + settings.getLocalWriteCost());
 
 		// reduce cost
-		double reduce_cost = total_interm * settings.getReduceCost();
+		double reduce_cost = 0.5 * guard_interm * settings.getReduceCost();
 		//reduce_cost += guard_interm * mr_settings.cost_hdfs_w
-		reduce_cost = 0;
-
+//		reduce_cost = 0;
+		System.out.println("Transfer:" + transfer_cost);
+		System.out.println("Penalty:" + penalty_cost);
+		System.out.println("Merge:" + merge_cost);
+		System.out.println("Reduce:" + reduce_cost);
+		System.out.println("RED:" + (transfer_cost + penalty_cost + merge_cost + reduce_cost));
 		return transfer_cost + penalty_cost + merge_cost + reduce_cost;
 	}
 
@@ -73,7 +79,7 @@ public class GumboCostModel implements CostModel {
 		// sort cost
 		double mappers = Math.ceil((double)input / settings.getMapChunkSizeMB());
 		double one_map_output_size = (double)intermediate / mappers;
-		double one_map_sort_chunks = one_map_output_size / settings.getMapSortBufferMB();
+		double one_map_sort_chunks = Math.max(1,one_map_output_size / settings.getMapSortBufferMB());
 		double sort_cost = one_map_sort_chunks * settings.getMapChunkSizeMB() * settings.getSortCost();
 		sort_cost = 0;
 
@@ -84,6 +90,11 @@ public class GumboCostModel implements CostModel {
 		// store cost
 		double store_cost = intermediate * settings.getLocalWriteCost();
 
+		System.out.println("Read:" + read_cost);
+		System.out.println("Sort:" + sort_cost);
+		System.out.println("Merge:" + merge_cost);
+		System.out.println("Store:" + store_cost);
+		System.out.println("MAP:" + (read_cost + sort_cost + merge_cost + store_cost));
 		return read_cost + sort_cost + merge_cost + store_cost;
 	}
 

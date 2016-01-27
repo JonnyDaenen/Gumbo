@@ -11,6 +11,7 @@ U,1 <- input/experiments/EXP_032/1/U, CSV
 V,1 <- input/experiments/EXP_032/1/V, CSV
 
 
-#Out1(x,y,z)&R(x,y,z)&S(x)&T(y)&U(x)V(y);
+-- #Out1(x,y,z)&R(x,y,z)&G(x,x,x)&G(x,x,y)&G(x,x,z)&G(x,y,x)&G(x,y,y)&G(x,y,z)&G(x,z,x)&G(x,z,y)&G(x,z,z)&G(y,x,x)&G(y,x,y)&G(y,x,z)&G(y,y,x)&G(y,y,y)&G(y,y,z)&G(y,z,x)&G(y,z,y)G(y,z,z);
 
+#Out1(x,y,z)&R(x,y,z)&G(x,y,z)&G(x,z,y)&G(y,x,z)&G(y,z,x)&G(z,x,y)&G(z,y,x)&S(x)&S(y)S(z);
 

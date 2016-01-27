@@ -20,7 +20,7 @@ public class PaperCostModel implements CostModel {
 		double interm_mb = (job.getGuardedOutBytes() + job.getGuardOutBytes());
 		interm_mb /= (1024*1024);
 		
-		int reduceCorrection = 1; // FIXME get from setting
+		int reduceCorrection = 0; // FIXME get from setting
 
 		double redPieces = settings.getRedChunkSizeMB() / settings.getRedSortBufferMB();
 		double redMergeLevels = Math.ceil(Math.log10(redPieces) / Math.log10(settings.getRedMergeFactor())) + reduceCorrection;

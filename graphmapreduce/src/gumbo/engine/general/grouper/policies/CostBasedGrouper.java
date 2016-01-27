@@ -11,7 +11,6 @@ import gumbo.engine.general.grouper.GroupingException;
 import gumbo.engine.general.grouper.costmodel.CostModel;
 import gumbo.engine.general.grouper.sample.RelationSampleContainer;
 import gumbo.engine.general.grouper.sample.RelationSampler;
-import gumbo.engine.general.grouper.sample.Simulator;
 import gumbo.engine.general.grouper.sample.SimulatorInterface;
 import gumbo.engine.general.grouper.sample.SimulatorReport;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
@@ -146,6 +145,7 @@ public class CostBasedGrouper implements GroupingPolicy {
 		// calculate and set cost
 		double cost = costModel.calculateCost(calcJob);
 		calcJob.setCost(cost);
+		System.out.println(calcJob);
 
 	}
 
@@ -155,8 +155,8 @@ public class CostBasedGrouper implements GroupingPolicy {
 		// greedy approach
 
 		while (costMatrix.hasPositiveCost()) {
-			//			costMatrix.printMatrix(true);
-			//			costMatrix.printGroups();
+//						costMatrix.printMatrix(true);
+//						costMatrix.printGroups();
 
 			// pick best merge option
 			Pair<CalculationGroup, CalculationGroup> oldGroups = costMatrix.getBestOldGroups();
