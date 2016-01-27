@@ -9,7 +9,7 @@ public class SimulatorReport {
 	private long guardOutBytes;
 	private long guardedOutBytes;
 	
-	private long scale = 150;//1500; // remove!!
+	private long scale = 1;//1500; // remove!!
 	
 	
 	public SimulatorReport() {
