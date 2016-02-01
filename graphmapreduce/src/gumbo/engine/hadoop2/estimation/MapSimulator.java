@@ -113,11 +113,9 @@ public class MapSimulator implements SimulatorInterface {
 
 		boolean guard = result2.fst;
 		if (guard) {
-			report.addGuardInBytes(inputBytes);
-			report.addGuardOutBytes(intermediateBytes);
+			report.addGuardDetails(inputBytes, intermediateBytes);
 		} else {
-			report.addGuardedInBytes(inputBytes);
-			report.addGuardedOutBytes(intermediateBytes);
+			report.addGuardedDetails(inputBytes, intermediateBytes);
 		}
 
 		LOG.info("Map Input bytes:" + inputBytes);

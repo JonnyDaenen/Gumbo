@@ -1,6 +1,8 @@
 package gumbo.engine.general.grouper.costmodel;
 
+import gumbo.engine.general.grouper.sample.SimulatorReport;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
+import gumbo.structures.gfexpressions.io.Pair;
 
 public class GumboCostModel implements CostModel {
 
@@ -13,8 +15,13 @@ public class GumboCostModel implements CostModel {
 	
 	@Override
 	public double calculateCost(CalculationGroup job) {
+		
 
-		return getMapCost(job) + getReduceCost(job);
+		double total_interm = job.getGuardOutBytes() + job.getGuardedOutBytes();
+		double total_input = job.getGuardInBytes() + job.getGuardedInBytes();
+		double guard_interm = job.getGuardOutBytes();
+
+		return getMapCost(job) + getReduceCost(total_input, total_interm, guard_interm);
 	}
 
 
@@ -22,10 +29,7 @@ public class GumboCostModel implements CostModel {
 		return getMapGuardCost(job) + getMapGuardedCost(job);
 	}
 
-	public double getReduceCost(CalculationGroup job) {
-		double total_interm = job.getGuardOutBytes() + job.getGuardedOutBytes();
-		double total_input = job.getGuardInBytes() + job.getGuardedInBytes();
-		double guard_interm = job.getGuardOutBytes();
+	public double getReduceCost(double total_input, double total_interm, double guard_interm) {
 				
 		// convert to MegaBytes
 		guard_interm /= (1024*1024);
@@ -88,6 +92,7 @@ public class GumboCostModel implements CostModel {
 
 		// merge cost
 		double map_merge_levels = Math.ceil(Math.log10(one_map_sort_chunks)/Math.log10(settings.getMapMergeFactor()));
+		System.out.println("Map merge levels:" + map_merge_levels);
 		double merge_cost = map_merge_levels * intermediate * (settings.getLocalReadCost() + settings.getLocalWriteCost());
 
 		// store cost
@@ -99,6 +104,29 @@ public class GumboCostModel implements CostModel {
 		System.out.println("Store:" + store_cost);
 		System.out.println("MAP:" + (read_cost + sort_cost + merge_cost + store_cost));
 		return read_cost + sort_cost + merge_cost + store_cost;
+	}
+
+	@Override
+	public double calculateCost(SimulatorReport report) {
+		
+		double total_interm = report.getGuardOutBytes() + report.getGuardedOutBytes();
+		double total_input = report.getGuardInBytes() + report.getGuardedInBytes();
+		double guard_interm = report.getGuardOutBytes();
+
+		return getMapCost(report) + getReduceCost(total_input, total_interm, guard_interm);
+	}
+
+	private double getMapCost(SimulatorReport report) {
+		double total = 0;
+		for (Pair<Long, Long> p: report.getGuardDetails()) {
+			total += getMapCost(p.fst, p.snd);
+		}
+		
+		for (Pair<Long, Long> p: report.getGuardedDetails()) {
+			total += getMapCost(p.fst, p.snd);
+		}
+		
+		return total;
 	}
 
 

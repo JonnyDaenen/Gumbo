@@ -1,5 +1,6 @@
 package gumbo.engine.general.grouper.costmodel;
 
+import gumbo.engine.general.grouper.sample.SimulatorReport;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 
 public class PaperCostModel implements CostModel {
@@ -13,6 +14,15 @@ public class PaperCostModel implements CostModel {
 	@Override
 	public double calculateCost(CalculationGroup job) {
 		return calculateMapCost(job) + calculateReduceCost(job);
+	}
+	
+	public double calculateCost(SimulatorReport report) {
+		CalculationGroup job = new CalculationGroup(null);
+		job.setGuardedInBytes(report.getGuardedInBytes());
+		job.setGuardedOutBytes(report.getGuardedOutBytes());
+		job.setGuardInBytes(report.getGuardInBytes() );
+		job.setGuardOutBytes(report.getGuardOutBytes());
+		return calculateCost(job);
 	}
 
 	private double calculateReduceCost(CalculationGroup job) {

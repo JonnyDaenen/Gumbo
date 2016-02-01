@@ -143,7 +143,13 @@ public class CostBasedGrouper implements GroupingPolicy {
 		calcJob.setGuardedOutBytes(report.getGuardedOutBytes());
 
 		// calculate and set cost
-		double cost = costModel.calculateCost(calcJob);
+		double cost = 0;
+		if (report.hasDetails()) {
+			System.out.println(report);
+			cost = costModel.calculateCost(report);
+		} else {
+			cost = costModel.calculateCost(calcJob);
+		}
 		calcJob.setCost(cost);
 		System.out.println(calcJob);
 

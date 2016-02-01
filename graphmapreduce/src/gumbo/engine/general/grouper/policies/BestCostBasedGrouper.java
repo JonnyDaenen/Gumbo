@@ -12,7 +12,6 @@ import gumbo.engine.general.grouper.GroupingException;
 import gumbo.engine.general.grouper.costmodel.CostModel;
 import gumbo.engine.general.grouper.sample.RelationSampleContainer;
 import gumbo.engine.general.grouper.sample.RelationSampler;
-import gumbo.engine.general.grouper.sample.Simulator;
 import gumbo.engine.general.grouper.sample.SimulatorInterface;
 import gumbo.engine.general.grouper.sample.SimulatorReport;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
@@ -203,7 +202,13 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 		calcJob.setGuardedOutBytes(report.getGuardedOutBytes());
 
 		// calculate and set cost
-		double cost = costModel.calculateCost(calcJob);
+		double cost = 0;
+		if (report.hasDetails()) {
+			System.out.println(report);
+			cost = costModel.calculateCost(report);
+		} else {
+			cost = costModel.calculateCost(calcJob);
+		}
 		calcJob.setCost(cost);
 
 	}
