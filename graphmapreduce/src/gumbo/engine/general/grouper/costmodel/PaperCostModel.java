@@ -43,7 +43,7 @@ public class PaperCostModel implements CostModel {
 
 
 		double mapTasks = Math.ceil(input_mb/ settings.getMapChunkSizeMB());
-		double mapPieces = settings.getMapChunkSizeMB() / settings.getMapSortBufferMB();
+		double mapPieces = settings.getMapChunkSizeMB() / settings.getMapSplitBufferMB();
 		double mapMergeLevels = Math.ceil(Math.log10(mapPieces) / Math.log10(settings.getMapMergeFactor()));
 
 		double mapInReadCost = input_mb * settings.getLocalReadCost();

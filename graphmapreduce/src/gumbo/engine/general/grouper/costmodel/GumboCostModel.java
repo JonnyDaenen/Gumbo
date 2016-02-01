@@ -79,7 +79,7 @@ public class GumboCostModel implements CostModel {
 		// sort cost
 		double mappers = Math.ceil((double)input / settings.getMapChunkSizeMB());
 		double one_map_output_size = (double)intermediate / mappers;
-		double one_map_sort_chunks = Math.max(1,one_map_output_size / settings.getMapSortBufferMB());
+		double one_map_sort_chunks = Math.max(1,one_map_output_size / settings.getMapSplitBufferMB());
 		System.out.println("Map out:" + one_map_output_size);
 		System.out.println("Mappers:" + mappers);
 		System.out.println("Map chunks:" + one_map_sort_chunks);
