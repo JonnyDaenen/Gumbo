@@ -41,6 +41,7 @@ public class MRSettings {
 	// map settings
 	private double mapChunkSizeMB = 128;
 	private double mapSortBufferMB = 100;
+	private double mapSortThreshold = 0.8;
 	private double mapMergeFactor = 10;
 
 	// reduce settings
@@ -52,7 +53,8 @@ public class MRSettings {
 	public MRSettings(AbstractExecutorSettings systemSettings) {
 
 		mapChunkSizeMB = systemSettings.getNumProperty("dfs.blocksize") / (1024*1024);
-		mapSortBufferMB = systemSettings.getNumProperty("mapreduce.task.io.sort.mb");
+		mapSortThreshold = systemSettings.getNumProperty("mapreduce.map.sort.spill.percent", 0.8);
+		mapSortBufferMB = systemSettings.getNumProperty("mapreduce.task.io.sort.mb") * mapSortThreshold;
 		mapMergeFactor = systemSettings.getNumProperty("mapreduce.task.io.sort.factor");
 
 		redChunkSizeMB = systemSettings.getNumProperty(AbstractExecutorSettings.REDUCER_SIZE_MB);
@@ -97,6 +99,9 @@ public class MRSettings {
 	public double getMapSortBufferMB() {
 		return mapSortBufferMB;
 	}
+	public double getMapSplitBufferMB() {
+		return mapSortBufferMB * mapSortThreshold;
+	}
 	public double getMapMergeFactor() {
 		return mapMergeFactor;
 	}
@@ -116,6 +121,7 @@ public class MRSettings {
 		sb.append("MRSettings:" + System.lineSeparator());
 		sb.append("mapChunkSizeMB:" + mapChunkSizeMB + System.lineSeparator());
 		sb.append("mapSortBufferMB:" + mapSortBufferMB + System.lineSeparator());
+		sb.append("mapSortThreshold:" + mapSortThreshold + System.lineSeparator());
 		sb.append("mapMergeFactor:" + mapMergeFactor + System.lineSeparator());
 		sb.append("redChunkSizeMB:" + redChunkSizeMB + System.lineSeparator());
 		sb.append("redSortBufferMB:" + redSortBufferMB + System.lineSeparator());
