@@ -11,12 +11,12 @@ public class MRSettings {
 
 	// costs (s per MB)
 	protected double cost_local_r = 0.016;
-	protected double cost_local_w = 0.06;
-	protected double cost_hdfs_w = 0.17; // done
-	protected double cost_hdfs_r = 0.06;
-	protected double cost_transfer = 0.018; // done
+	protected double cost_local_w = 0.25; // 0.06
+	protected double cost_hdfs_w = 0.21; // done
+	protected double cost_hdfs_r = 0.01; // 0.06
+	protected double cost_transfer = 0.017; // done
 	protected double cost_sort = 52;
-	protected double cost_red = 0.17; // done
+	protected double cost_red = 0.21; // done
 	protected double cost_transfer_penalty = 0.005;
 	
 
