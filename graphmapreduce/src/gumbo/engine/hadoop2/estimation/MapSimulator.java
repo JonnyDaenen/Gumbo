@@ -26,7 +26,6 @@ import gumbo.engine.hadoop2.estimation.DummyMapper.DummyContext;
 import gumbo.engine.hadoop2.mapreduce.multivalidate.ValidateMapper;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.Tuple;
-import gumbo.structures.gfexpressions.io.Pair;
 
 
 /**
@@ -99,33 +98,38 @@ public class MapSimulator implements SimulatorInterface {
 	private void runSamples(RelationSchema rs, SimulatorReport report, Configuration conf) throws AlgorithmInterruptedException {
 
 		// simulate small sample
-		Pair<Boolean, Long> result1 = runOneSample(rs, rtsc.getSmallTuples(rs), conf);
-		long smallOutput = result1.snd;
+		SimResult result1 = runOneSample(rs, rtsc.getSmallTuples(rs), conf);
 
 		// simulate big sample
-		Pair<Boolean, Long> result2 = runOneSample(rs, rtsc.getBigTuples(rs), conf);
-		long bigOutput = result2.snd;
+		SimResult result2 = runOneSample(rs, rtsc.getBigTuples(rs), conf);
 
-		// extrapolate
+		// extrapolate map output size
 		long inputBytes = mapping.getRelationSize(rs);
-		extrapolator.loadValues(rtsc.getSmallSize(rs), smallOutput, rtsc.getBigSize(rs), bigOutput);
+		extrapolator.loadValues(rtsc.getSmallSize(rs), result1.bytes, rtsc.getBigSize(rs), result2.bytes);
 		long intermediateBytes =  (long)extrapolator.extrapolate(inputBytes);
-
-		boolean guard = result2.fst;
-		if (guard) {
-			report.addGuardDetails(inputBytes, (long) (1.05 * intermediateBytes));
+		
+		// extrapolate map output tuples
+		extrapolator.loadValues(result1.bytes, result1.records, result2.bytes, result2.records);
+		long intermRec =  (long)extrapolator.extrapolate(intermediateBytes);
+		
+		// extrapolate map input tuples
+		extrapolator.loadValues(rtsc.getSmallSize(rs), result1.inRecords, rtsc.getBigSize(rs), result2.inRecords);
+		long inRec =  (long)extrapolator.extrapolate(inputBytes);
+		
+		
+		if (result2.guard) {
+			report.addGuardDetails(inputBytes, (long) intermediateBytes, inRec, intermRec);
 		} else {
-			report.addGuardedDetails(inputBytes, (long) (1.05 * intermediateBytes));
+			report.addGuardedDetails(inputBytes, (long) intermediateBytes, inRec, intermRec);
 		}
 
 		LOG.info("Map Input bytes:" + inputBytes);
 		LOG.info("Est. Map Output bytes: " + intermediateBytes);
-		LOG.info("Est. Mat. Map Output bytes: " + (long) (1.05 * intermediateBytes));
 
 
 	}
 
-	private Pair<Boolean,Long> runOneSample(RelationSchema rs, Iterable<Tuple> tuples, Configuration conf) throws AlgorithmInterruptedException {
+	private SimResult runOneSample(RelationSchema rs, Iterable<Tuple> tuples, Configuration conf) throws AlgorithmInterruptedException {
 		DummyMapper map = new DummyMapper();
 		DummyContext context = map.getContext(conf, tuples, rs.getName());
 		
@@ -142,7 +146,12 @@ public class MapSimulator implements SimulatorInterface {
 		//		System.out.println("Num key:" + context.getKeyBytes());
 		//		System.out.println("Num val:" + context.getValueBytes());
 
-		return new Pair<>(context.getRequestBytes() != 0,(long) context.getKeyBytes() + context.getValueBytes());
+		SimResult result = new SimResult();
+		result.guard = context.getRequestBytes() != 0;
+		result.bytes = context.getOutBytes();
+		result.records = context.getNumRecords();
+		result.inRecords = context.getNumInRecords();
+		return result;
 	}
 
 	private Configuration createConfig(CalculationGroup calcJob) {
@@ -153,6 +162,13 @@ public class MapSimulator implements SimulatorInterface {
 
 
 		return conf;
+	}
+	
+	public class SimResult {
+		public boolean guard = false;
+		public long bytes;
+		public long records;
+		public long inRecords;
 	}
 
 

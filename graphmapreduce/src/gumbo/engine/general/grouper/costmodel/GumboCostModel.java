@@ -1,8 +1,8 @@
 package gumbo.engine.general.grouper.costmodel;
 
 import gumbo.engine.general.grouper.sample.SimulatorReport;
+import gumbo.engine.general.grouper.sample.SimulatorReport.RelationMapReport;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
-import gumbo.structures.gfexpressions.io.Pair;
 
 public class GumboCostModel implements CostModel {
 
@@ -21,7 +21,7 @@ public class GumboCostModel implements CostModel {
 		double total_input = job.getGuardInBytes() + job.getGuardedInBytes();
 		double guard_interm = job.getGuardOutBytes();
 
-		return getMapCost(job) + getReduceCost(total_input, total_interm, guard_interm);
+		return getMapCost(job) + getReduceCost(total_input, total_interm, guard_interm, 0);
 	}
 
 
@@ -29,12 +29,15 @@ public class GumboCostModel implements CostModel {
 		return getMapGuardCost(job) + getMapGuardedCost(job);
 	}
 
-	public double getReduceCost(double total_input, double total_interm, double guard_interm) {
+	public double getReduceCost(double total_input, double total_interm, double guard_interm, long intermediateRecords) {
 				
 		// convert to MegaBytes
 		guard_interm /= (1024*1024);
 		total_interm /= (1024*1024);
 		total_input /= (1024*1024);
+		
+		// add overhead
+		total_interm = total_interm + ((intermediateRecords * 2) / (double)(1024*1024));
 
 		// transfer cost
 		double transfer_cost = total_interm * settings.getTransferCost();
@@ -52,7 +55,8 @@ public class GumboCostModel implements CostModel {
 		double merge_cost = red_merge_levels * (total_interm) * (settings.getLocalReadCost() + settings.getLocalWriteCost());
 
 		// reduce cost
-		double reduce_cost = 0.5 * guard_interm * settings.getReduceCost();
+		double reduce_cost = 0.25 * guard_interm * settings.getReduceCost(); // FIXME use guard value bytes
+//		double reduce_cost = 0.25 * intermediateRecords * 0.000003;
 		//reduce_cost += guard_interm * mr_settings.cost_hdfs_w
 //		reduce_cost = 0;
 		System.out.println("Transfer:" + transfer_cost);
@@ -70,23 +74,35 @@ public class GumboCostModel implements CostModel {
 	public double getMapGuardedCost(CalculationGroup job) {
 		return getMapCost(job.getGuardedInBytes(), job.getGuardedOutBytes());
 	}
+	
+	protected double getMapCost(long inputBytes, long intermedateBytes) {
+		return getMapCost(inputBytes, intermedateBytes, 0, 0);
+	}
 
-	protected double getMapCost(long inputBytes, long intermedateBytes){
+	protected double getMapCost(long inputBytes, long intermedateBytes, long inputRecords, long intermediateRecords){
 
 		// convert to MegaBytes
 		double input = inputBytes / (double)(1024*1024);
 		double intermediate = intermedateBytes / (double)(1024*1024);
 
 		// read cost
-		double read_cost = settings.getLocalReadCost() * input;
+		double read_cost = settings.getHdfsReadCost() * input;
 
-		// sort cost
+		
+		// we add a meta-data overhead to the output buffer size
+		// for small data records this is very important, because this causes a significant overhead
+		// that invokes early buffer spilling
+		double buffercontent = intermediate + ((intermediateRecords * 16) / (double)(1024*1024));
 		double mappers = Math.ceil((double)input / settings.getMapChunkSizeMB());
-		double one_map_output_size = (double)intermediate / mappers;
+		double one_map_output_size = (double)buffercontent / mappers;
 		double one_map_sort_chunks = Math.max(1,one_map_output_size / settings.getMapSplitBufferMB());
+		System.out.println("Total Map out:" + intermediate);
+		System.out.println("Total Map out buffer:" + buffercontent);
 		System.out.println("Map out:" + one_map_output_size);
 		System.out.println("Mappers:" + mappers);
 		System.out.println("Map chunks:" + one_map_sort_chunks);
+		
+		// sort cost
 		double sort_cost = one_map_sort_chunks * settings.getMapChunkSizeMB() * settings.getSortCost();
 		sort_cost = 0;
 
@@ -96,7 +112,9 @@ public class GumboCostModel implements CostModel {
 		double merge_cost = map_merge_levels * intermediate * (settings.getLocalReadCost() + settings.getLocalWriteCost());
 
 		// store cost
-		double store_cost = intermediate * settings.getLocalWriteCost();
+		double materialized = intermediate + ((intermediateRecords * 2) / (double)(1024*1024));
+		double store_cost = materialized * settings.getLocalWriteCost();
+		System.out.println("Map mat. bytes:" + materialized);
 
 		System.out.println("Read:" + read_cost);
 		System.out.println("Sort:" + sort_cost);
@@ -113,18 +131,15 @@ public class GumboCostModel implements CostModel {
 		double total_input = report.getGuardInBytes() + report.getGuardedInBytes();
 		double guard_interm = report.getGuardOutBytes();
 
-		return getMapCost(report) + getReduceCost(total_input, total_interm, guard_interm);
+		return getMapCost(report) + getReduceCost(total_input, total_interm, guard_interm, report.getTotalMapOutRec());
 	}
 
 	private double getMapCost(SimulatorReport report) {
 		double total = 0;
-		for (Pair<Long, Long> p: report.getGuardDetails()) {
-			total += getMapCost(p.fst, p.snd);
+		for (RelationMapReport p: report.getDetails()) {
+			total += getMapCost(p.getInBytes(), p.getOutBytes(), p.getInRecords(), p.getOutRecords());
 		}
 		
-		for (Pair<Long, Long> p: report.getGuardedDetails()) {
-			total += getMapCost(p.fst, p.snd);
-		}
 		
 		return total;
 	}

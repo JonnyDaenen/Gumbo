@@ -145,8 +145,8 @@ public class CostBasedGrouper implements GroupingPolicy {
 		// calculate and set cost
 		double cost = 0;
 		if (report.hasDetails()) {
-			System.out.println(report);
 			cost = costModel.calculateCost(report);
+			System.out.println(report);
 		} else {
 			cost = costModel.calculateCost(calcJob);
 		}

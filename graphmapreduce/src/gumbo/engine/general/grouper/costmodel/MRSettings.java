@@ -10,10 +10,10 @@ import gumbo.engine.general.settings.AbstractExecutorSettings;
 public class MRSettings {
 
 	// costs (s per MB)
-	protected double cost_local_r = 0.1;
-	protected double cost_local_w = 0.24;
-	protected double cost_hdfs_w = 0.18; // done
-	protected double cost_hdfs_r = 0.10;
+	protected double cost_local_r = 0.016;
+	protected double cost_local_w = 0.06;
+	protected double cost_hdfs_w = 0.17; // done
+	protected double cost_hdfs_r = 0.06;
 	protected double cost_transfer = 0.018; // done
 	protected double cost_sort = 52;
 	protected double cost_red = 0.17; // done
@@ -55,6 +55,7 @@ public class MRSettings {
 		mapChunkSizeMB = systemSettings.getNumProperty("dfs.blocksize") / (1024*1024);
 		mapSortThreshold = systemSettings.getNumProperty("mapreduce.map.sort.spill.percent", 0.8);
 		mapSortBufferMB = systemSettings.getNumProperty("mapreduce.task.io.sort.mb");
+//		mapSortBufferMB = 512;
 		mapMergeFactor = systemSettings.getNumProperty("mapreduce.task.io.sort.factor");
 
 		redChunkSizeMB = systemSettings.getNumProperty(AbstractExecutorSettings.REDUCER_SIZE_MB);

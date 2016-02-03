@@ -53,6 +53,7 @@ public class DummyMapper extends ValidateMapper {
 
 		long asserts;
 		long requests;
+		long inRecords;
 
 		private long keyBytes;
 		private long valueBytes;
@@ -86,10 +87,10 @@ public class DummyMapper extends ValidateMapper {
 
 			if (!it.hasNext())
 				return false;
-
 			key.set(offset++);
 			value.set(it.next().generateString(true));
 
+			inRecords++;
 			return true;
 		}
 
@@ -370,6 +371,7 @@ public class DummyMapper extends ValidateMapper {
 
 			keyBytes = 0;
 			valueBytes = 0;
+			inRecords = 0;
 
 			asserts = 0;
 			assertBytes = 0;
@@ -388,6 +390,18 @@ public class DummyMapper extends ValidateMapper {
 
 		public long getRequests() {
 			return requests;
+		}
+		
+		public long getNumInRecords() {
+			return inRecords;
+		}
+		
+		public long getNumRecords() {
+			return asserts + requests;
+		}
+		
+		public long getOutBytes() {
+			return keyBytes + valueBytes;
 		}
 
 		public long getKeyBytes() {
