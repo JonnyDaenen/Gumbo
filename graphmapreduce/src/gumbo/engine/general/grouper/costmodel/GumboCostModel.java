@@ -92,10 +92,22 @@ public class GumboCostModel implements CostModel {
 		// we add a meta-data overhead to the output buffer size
 		// for small data records this is very important, because this causes a significant overhead
 		// that invokes early buffer spilling
-		double buffercontent = intermediate + ((intermediateRecords * 16) / (double)(1024*1024));
+		double meta = ((intermediateRecords * 16) / (double)(1024*1024));
+		double buffercontent = intermediate + meta;
 		double mappers = Math.ceil((double)input / settings.getMapChunkSizeMB());
 		double one_map_output_size = (double)buffercontent / mappers;
 		double one_map_sort_chunks = Math.max(1,one_map_output_size / settings.getMapSplitBufferMB());
+		
+		// record spill initiation is different:
+		double spilbuf = settings.getMapSplitBufferMB() / 4; // 1/4th is used for meta data
+		double spil_output_per_mapper = meta / mappers;
+		double spil_chunks =  Math.ceil(spil_output_per_mapper / spilbuf);
+		System.out.println("Spilbuf:" + spilbuf);
+		System.out.println("spil per mapper:" + spil_output_per_mapper);
+		System.out.println("Total Map spil chunks:" + spil_chunks);
+		System.out.println("Total Map data chunks:" + one_map_sort_chunks);
+		one_map_sort_chunks = Math.max(spil_chunks, one_map_sort_chunks);
+		
 		System.out.println("Total Map out:" + intermediate);
 		System.out.println("Total Map out buffer:" + buffercontent);
 		System.out.println("Map out:" + one_map_output_size);
@@ -116,11 +128,13 @@ public class GumboCostModel implements CostModel {
 		double store_cost = materialized * settings.getLocalWriteCost();
 		System.out.println("Map mat. bytes:" + materialized);
 
+		System.out.println("-----------------------");
 		System.out.println("Read:" + read_cost);
 		System.out.println("Sort:" + sort_cost);
 		System.out.println("Merge:" + merge_cost);
 		System.out.println("Store:" + store_cost);
 		System.out.println("MAP:" + (read_cost + sort_cost + merge_cost + store_cost));
+		System.out.println("-----------------------");
 		return read_cost + sort_cost + merge_cost + store_cost;
 	}
 

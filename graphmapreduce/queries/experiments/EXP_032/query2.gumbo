@@ -15,5 +15,5 @@ V,1 <- input/experiments/EXP_032/1/V, CSV
 
 --#Out1(x,y,z)&R(x,y,z)&S(x)T(x);
 --#Out2(x,y,z)&G(x,y,z)&U(y)V(y);
-#Out1(x,y,z)&R(x,y,z)&G(x,y,z)&G(x,z,y)&S(x)&U(y)S(z);
+#Out1(x,y,z)&R(x,y,z)&G(x,y,z)&G(x,z,y)&S(x)&T(y)U(z);
 
