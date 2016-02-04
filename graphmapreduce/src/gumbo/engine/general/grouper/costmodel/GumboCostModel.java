@@ -50,7 +50,7 @@ public class GumboCostModel implements CostModel {
 
 		// merge cost
 		int red_inmem_correction = 0;
-		double red_pieces = Math.max(1, settings.getRedChunkSizeMB() / (float)settings.getRedSortBufferMB());
+		double red_pieces = Math.ceil(Math.max(1, settings.getRedChunkSizeMB() / (float)settings.getRedSortBufferMB()));
 		double red_merge_levels = Math.log(red_pieces)/ Math.log(settings.getRedMergeFactor()) + red_inmem_correction;
 		double merge_cost = red_merge_levels * (total_interm) * (settings.getLocalReadCost() + settings.getLocalWriteCost());
 
@@ -96,7 +96,7 @@ public class GumboCostModel implements CostModel {
 		double buffercontent = intermediate + meta;
 		double mappers = Math.ceil((double)input / settings.getMapChunkSizeMB());
 		double one_map_output_size = (double)buffercontent / mappers;
-		double one_map_sort_chunks = Math.max(1,one_map_output_size / settings.getMapSplitBufferMB());
+		double one_map_sort_chunks = Math.ceil(Math.max(1,one_map_output_size / settings.getMapSplitBufferMB()));
 		
 		// record spill initiation is different:
 		double spilbuf = settings.getMapSplitBufferMB() / 4; // 1/4th is used for meta data
@@ -106,7 +106,7 @@ public class GumboCostModel implements CostModel {
 		System.out.println("spil per mapper:" + spil_output_per_mapper);
 		System.out.println("Total Map spil chunks:" + spil_chunks);
 		System.out.println("Total Map data chunks:" + one_map_sort_chunks);
-		one_map_sort_chunks = Math.max(spil_chunks, one_map_sort_chunks);
+//		one_map_sort_chunks = Math.max(spil_chunks, one_map_sort_chunks);
 		
 		System.out.println("Total Map out:" + intermediate);
 		System.out.println("Total Map out buffer:" + buffercontent);
