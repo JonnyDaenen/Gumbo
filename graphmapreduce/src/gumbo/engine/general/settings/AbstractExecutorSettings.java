@@ -70,15 +70,7 @@ public abstract class AbstractExecutorSettings {
 	public static final String BESTGROUP_STOPINDICATOR = "gumbo.engine.grouper.beststopindicator";
 
 
-
-
-
-
-
-
-
-
-
+	public static final String ABSTRACT_COST = "gumbo.engine.costmodel.abstract";
 
 
 

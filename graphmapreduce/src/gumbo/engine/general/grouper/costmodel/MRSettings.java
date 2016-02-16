@@ -11,6 +11,16 @@ public class MRSettings {
 
 	// mark
 	// costs (s per MB)
+//	protected double cost_local_r = 1;
+//	protected double cost_local_w = 1; // 0.06
+//	protected double cost_hdfs_w = 2; // done
+//	protected double cost_hdfs_r = 1; // 0.06
+//	protected double cost_transfer = 1.4; // done
+//	protected double cost_sort = 52;
+//	protected double cost_red = 2; // done FIXME make this same as hdfs write
+//	protected double cost_transfer_penalty = 0;
+	
+	
 	protected double cost_local_r = 0.03;
 	protected double cost_local_w = 0.085; // 0.06
 	protected double cost_hdfs_w = 0.25; // done
@@ -52,6 +62,14 @@ public class MRSettings {
 
 
 	public MRSettings(AbstractExecutorSettings systemSettings) {
+		
+		if ( systemSettings.getBooleanProperty(systemSettings.ABSTRACT_COST)) {
+			System.out.println("Abstract cost constants");
+			loadAbstractSettings();
+		} else {
+			System.out.println("Default cost constants");
+			loadDefaultSettings();
+		}
 
 		mapChunkSizeMB = systemSettings.getNumProperty("dfs.blocksize") / (1024*1024);
 		mapSortThreshold = systemSettings.getNumProperty("mapreduce.map.sort.spill.percent", 0.8);
@@ -67,6 +85,28 @@ public class MRSettings {
 		System.out.println("settings:" + toString());
 
 		// FIXME #group extract settings
+	}
+	private void loadAbstractSettings() {
+		cost_local_r = 1;
+		cost_local_w = 1; 
+		cost_hdfs_w = 2; 
+		cost_hdfs_r = 1; 
+		cost_transfer = 1.4; 
+		cost_sort = 52;
+		cost_red = cost_hdfs_w;
+		cost_transfer_penalty = 0;
+		
+	}
+	private void loadDefaultSettings() {
+		cost_local_r = 0.03;
+		cost_local_w = 0.085; // 0.06
+		cost_hdfs_w = 0.25; // done
+		cost_hdfs_r = 0.15; // 0.06
+		cost_transfer = 0.017; // done
+		cost_sort = cost_hdfs_w;
+		cost_red = 0.25; 
+		cost_transfer_penalty = 0.005;
+		
 	}
 	public double getLocalReadCost() {
 		return cost_local_r;
