@@ -153,8 +153,8 @@ public class MultiRoundConverter {
 		if (settings.getBooleanProperty(AbstractExecutorSettings.FLEXIBLE_MAPPERS_ENABLED)) {
 			int numMap = (int) Math.max(1, intermediate / (128 * 1024 * 1024.0)); // 128 MB output per mapper
 			double splitsize1 = inputsize / (float)numMap;
-			
-			long splitsize = (long) Math.ceil((128 / Math.floor(128 / splitsize1)));
+			long splitsize = (long) Math.ceil(splitsize1);
+			//long splitsize = (long) Math.ceil((128 / Math.floor(128 / splitsize1)));
 			
 			
 			hadoopJob.getConfiguration().set("mapreduce.input.fileinputformat.split.maxsize", ""+splitsize) ;
