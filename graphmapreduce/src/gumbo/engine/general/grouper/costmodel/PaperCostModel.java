@@ -17,8 +17,12 @@ public class PaperCostModel implements CostModel {
 	}
 	
 	public double calculateCost(SimulatorReport report) {
+		
+		long metadataBytes = report.getTotalMapOutRec() * 16;
+		// System.out.println("ALERT: meta:" + metadataBytes);
+		
 		CalculationGroup job = new CalculationGroup(null);
-		job.setGuardedInBytes(report.getGuardedInBytes());
+		job.setGuardedInBytes(report.getGuardedInBytes() + metadataBytes);
 		job.setGuardedOutBytes(report.getGuardedOutBytes());
 		job.setGuardInBytes(report.getGuardInBytes() );
 		job.setGuardOutBytes(report.getGuardOutBytes());
