@@ -61,6 +61,7 @@ public class HadoopExecutorSettings extends AbstractExecutorSettings{
 	 */
 	public void loadConfig(Configuration conf) {
 		
+		
 		for (Entry<String, String> a : conf) {
 			setProperty(a.getKey(), a.getValue());
 		}

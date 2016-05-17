@@ -13,7 +13,8 @@ public class MaxTemperatureMapper extends
 		Mapper<LongWritable, Text, Text, IntWritable> {
 
 	private static final int MISSING = 9999;
-
+	
+	
 	public void map(LongWritable key, Text value, Context context)
 			throws IOException, InterruptedException {
 
