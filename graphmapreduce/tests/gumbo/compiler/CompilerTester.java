@@ -7,6 +7,14 @@ package gumbo.compiler;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.hadoop.fs.Path;
+import org.junit.Before;
+import org.junit.Test;
+
 import gumbo.compiler.calculations.BGFE2CUConverter;
 import gumbo.compiler.decomposer.GFDecomposer;
 import gumbo.compiler.filemapper.FileMapper;
@@ -20,13 +28,6 @@ import gumbo.structures.gfexpressions.GFAndExpression;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.hadoop.fs.Path;
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  * @author Jonny Daenen
