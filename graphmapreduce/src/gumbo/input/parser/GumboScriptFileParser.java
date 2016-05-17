@@ -1,9 +1,5 @@
 package gumbo.input.parser;
 
-import gumbo.input.GumboQuery;
-import gumbo.input.parser.antlr.GumboLexer;
-import gumbo.input.parser.antlr.GumboParser;
-
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,6 +9,10 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import gumbo.input.GumboQuery;
+import gumbo.input.parser.antlr.GumboLexer;
+import gumbo.input.parser.antlr.GumboParser;
 
 /**
  * Class to parse a Gumbo script into a GumboQuery

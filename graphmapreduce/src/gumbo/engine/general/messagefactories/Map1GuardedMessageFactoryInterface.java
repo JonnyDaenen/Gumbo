@@ -1,9 +1,9 @@
 package gumbo.engine.general.messagefactories;
 
-import gumbo.structures.data.Tuple;
-
 import java.io.IOException;
 import java.util.Set;
+
+import gumbo.structures.data.Tuple;
 
 public interface Map1GuardedMessageFactoryInterface {
 

@@ -3,14 +3,6 @@
  */
 package gumbo.experiments;
 
-import gumbo.compiler.filemapper.InputFormat;
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.input.GumboQuery;
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.gfexpressions.GFExpression;
-import gumbo.structures.gfexpressions.io.DeserializeException;
-import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
@@ -20,6 +12,14 @@ import java.util.Set;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.ToolRunner;
+
+import gumbo.compiler.filemapper.InputFormat;
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.input.GumboQuery;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.DeserializeException;
+import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 
 /**
  * @author jonny

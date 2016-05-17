@@ -3,17 +3,16 @@
  */
 package gumbo.engine.spark.mrcomponents;
 
+import java.util.HashSet;
+
+import org.apache.spark.api.java.function.PairFlatMapFunction;
+
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
-
-import java.util.HashSet;
-
-import org.apache.spark.api.java.function.PairFlatMapFunction;
-
 import scala.Tuple2;
 
 /**

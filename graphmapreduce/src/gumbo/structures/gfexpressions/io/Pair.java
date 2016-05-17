@@ -40,4 +40,5 @@ public class Pair<type1,type2> {
 	public int hashCode() {
 		return fst.hashCode() ^ snd.hashCode();
 	}
+
 }

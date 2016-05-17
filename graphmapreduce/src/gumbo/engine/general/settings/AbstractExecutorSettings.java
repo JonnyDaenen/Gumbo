@@ -50,10 +50,31 @@ public abstract class AbstractExecutorSettings {
 	public static final String partitionClass = "gumbo.compiler.partitioner";
 	public static final String mapOutputGroupingPolicy = "gumbo.engine.mapOutputGroupingPolicy";
 
+	// engine v2 options
+	public static final String UNNEST_ON = "gumbo.compiler.unnest";
+	public static final String UNNEST_SORT_ON = "gumbo.compiler.unnest.sort";
+	
+	public static final String SIMULATOR_CLASS = "gumbo.engine.simulator.classname";
+	public static final String VAL_PREPACK = "gumbo.engine.val.projection.prepack";
+	public static final String EVAL_OUTMERGE = "gumbo.engine.eval.output.merge";
+	public static final String VALEVAL_PREPACK = "gumbo.engine.valeval.projection.prepack";
+	public static final String VALEVAL_ON = "gumbo.engine.valeval.enabled";
+	public static final String VALEVAL_GROUP = "gumbo.engine.valeval.group";
+	
+
+	public static final String FLEXIBLE_MAPPERS_ENABLED = "gumbo.engine.flexmappers";
+	public static final String FLEXIBLE_REDUCERS_ENABLED = "gumbo.engine.flexreducers";
 	
 	// constants
 	public static final String REDUCER_SIZE_MB = "gumbo.engine.hadoop.reducersize_mb";
 	public static final String BESTGROUP_STOPINDICATOR = "gumbo.engine.grouper.beststopindicator";
+
+
+	public static final String ABSTRACT_COST = "gumbo.engine.costmodel.abstract";
+
+
+
+
 	
 
 	/**
@@ -67,10 +88,26 @@ public abstract class AbstractExecutorSettings {
 		
 		setProperty(PROOF_SYMBOL, "#");
 		setProperty(partitionClass, HeightPartitioner.class.getCanonicalName());
-		setProperty(mapOutputGroupingPolicy, GroupingPolicies.COSTGROUP_GUMBO.toString());
+		setProperty(mapOutputGroupingPolicy, GroupingPolicies.ALLGROUP.toString());
+//		setProperty(mapOutputGroupingPolicy, GroupingPolicies.COSTGROUP_GUMBO.toString());
 //		setProperty(mapOutputGroupingClass, AllGrouper.class.getCanonicalName());
 		
 		setProperty(REDUCER_SIZE_MB, "1024");
+		
+		// engine v2
+		setBooleanProperty(UNNEST_ON, false); 
+		setBooleanProperty(UNNEST_SORT_ON, true); 
+		setBooleanProperty(VAL_PREPACK, true); 
+		setBooleanProperty(EVAL_OUTMERGE, false); 
+		setBooleanProperty(VALEVAL_PREPACK, true); 
+		setBooleanProperty(VALEVAL_ON, true); 
+		setBooleanProperty(VALEVAL_GROUP, true); 
+//		setProperty(simulatorClass, Simulator.class.getCanonicalName());
+		setProperty(SIMULATOR_CLASS, gumbo.engine.hadoop2.estimation.MapSimulator.class.getCanonicalName());
+	
+		
+		setBooleanProperty(FLEXIBLE_MAPPERS_ENABLED, false); 
+		setBooleanProperty(FLEXIBLE_REDUCERS_ENABLED, true); 
 	}
 	
 	public void turnOffOptimizations() {

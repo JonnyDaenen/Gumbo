@@ -3,11 +3,6 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round2.mappers;
 
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.engine.hadoop.mrcomponents.tools.ParameterPasser;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
-
 import java.io.IOException;
 
 import org.apache.commons.logging.Log;
@@ -17,6 +12,11 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.engine.hadoop.mrcomponents.tools.ParameterPasser;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 
 /**
  * Also outputs the atoms when a guard is projected onto them.

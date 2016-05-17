@@ -1,12 +1,12 @@
 package gumbo.structures.conversion;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import gumbo.structures.booleanexpressions.BVariable;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.GFExpression;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**

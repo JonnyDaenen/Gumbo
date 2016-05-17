@@ -3,6 +3,14 @@
  */
 package gumbo.experiments.profiling;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.hadoop.fs.Path;
+
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.experiments.Experiment;
@@ -11,14 +19,6 @@ import gumbo.structures.data.RelationSchema;
 import gumbo.structures.gfexpressions.GFExpression;
 import gumbo.structures.gfexpressions.io.DeserializeException;
 import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.hadoop.fs.Path;
 
 /**
  * @author Jonny Daenen

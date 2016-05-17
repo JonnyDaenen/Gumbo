@@ -3,14 +3,15 @@
  */
 package gumbo.compiler.filemapper;
 
-import gumbo.structures.data.RelationSchema;
-
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.hadoop.fs.Path;
+
+import gumbo.structures.data.RelationSchema;
 
 /**
  * Bookkeeping for input/output locations, coupled to relations. 
@@ -36,6 +37,9 @@ public class FileManager {
 
 	RelationFileMapping inMapping;
 	RelationFileMapping outMapping; 
+	
+
+	protected HashMap<String, Path> references;
 
 
 	public FileManager(RelationFileMapping infiles, Path output, Path scratch) {
@@ -58,6 +62,9 @@ public class FileManager {
 		this.tempdirs = new HashSet<Path>();
 		this.outdirs = new HashSet<Path>();
 
+		// app specific path refrences
+		references = new HashMap<>();
+		
 		// used to make unique directories
 		this.counter = 0;
 
@@ -70,6 +77,34 @@ public class FileManager {
 
 		return tmp;
 
+	}
+	
+	/**
+	 * Create a new temp path, but add references to it for easy lookup later.
+	 * 
+	 * @param suffix
+	 * @param labels set of references to link to the path
+	 * 
+	 * @return a new tmp path in the tmp dir
+	 */
+	public Path getNewTmpPath(String suffix, HashSet<String> labels) {
+
+		Path tmp = getNewTmpPath(suffix);
+		
+		for (String label : labels) {
+			addReference(label, tmp);
+		}
+
+		return tmp;
+
+	}
+	
+	public void addReference(String label, Path tmp) {
+		references.put(label, tmp);
+	}
+	
+	public Path getReference(String label) {
+		return references.get(label);
 	}
 
 	public Path getNewOutPath(String suffix) {

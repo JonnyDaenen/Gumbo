@@ -3,18 +3,18 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round2.mappers;
 
-import gumbo.engine.general.algorithms.Map2GuardAlgorithm;
-import gumbo.engine.general.messagefactories.Map2GuardMessageInterface;
-import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1Identity;
-import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Map2GuardMessageFactory;
-import gumbo.structures.data.Tuple;
-
 import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
+
+import gumbo.engine.general.algorithms.Map2GuardAlgorithm;
+import gumbo.engine.general.messagefactories.Map2GuardMessageInterface;
+import gumbo.engine.hadoop.mrcomponents.round1.mappers.GFMapper1Identity;
+import gumbo.engine.hadoop.mrcomponents.round2.algorithms.Map2GuardMessageFactory;
+import gumbo.structures.data.Tuple;
 
 /**
  * Also outputs the atoms when a guard is projected onto them.

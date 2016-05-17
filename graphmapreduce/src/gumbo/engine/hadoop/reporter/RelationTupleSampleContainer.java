@@ -1,12 +1,5 @@
 package gumbo.engine.hadoop.reporter;
 
-import gumbo.compiler.filemapper.InputFormat;
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.engine.general.grouper.sample.RelationSampleContainer;
-import gumbo.engine.general.grouper.sample.RelationSampler;
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.data.Tuple;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -18,6 +11,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.util.LineReader;
+
+import gumbo.compiler.filemapper.InputFormat;
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.engine.general.grouper.sample.RelationSampleContainer;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.data.Tuple;
 
 
 /**

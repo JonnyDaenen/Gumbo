@@ -1,5 +1,10 @@
 package gumbo.input.parser;
 
+import java.io.IOException;
+import java.util.Stack;
+
+import org.apache.hadoop.fs.Path;
+
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.generator.GFGenerator;
@@ -16,11 +21,6 @@ import gumbo.structures.gfexpressions.GFNotExpression;
 import gumbo.structures.gfexpressions.GFOrExpression;
 import gumbo.structures.gfexpressions.GFVisitor;
 import gumbo.structures.gfexpressions.GFVisitorException;
-
-import java.io.IOException;
-import java.util.Stack;
-
-import org.apache.hadoop.fs.Path;
 
 /**
  * Class that can be used to export a GumboQuery to a script

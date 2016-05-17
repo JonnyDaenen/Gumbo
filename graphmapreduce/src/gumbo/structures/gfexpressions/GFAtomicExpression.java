@@ -1,15 +1,15 @@
 package gumbo.structures.gfexpressions;
 
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.data.Tuple;
-import gumbo.structures.gfexpressions.io.Pair;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.data.Tuple;
+import gumbo.structures.gfexpressions.io.Pair;
 
 public class GFAtomicExpression extends GFExpression implements Comparable<Object>{
 

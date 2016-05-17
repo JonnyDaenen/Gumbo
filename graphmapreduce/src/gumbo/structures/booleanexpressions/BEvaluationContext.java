@@ -47,7 +47,7 @@ public class BEvaluationContext {
 		setValue(v.id, b);
 	}
 	
-	protected void setValue(int id, boolean b) {
+	public void setValue(int id, boolean b) {
 		valuemap.put(id, b);
 	}
 	
@@ -57,6 +57,10 @@ public class BEvaluationContext {
 	@Override
 	public String toString() {
 		return valuemap.toString();
+	}
+	public void clear() {
+		valuemap.clear();
+		
 	}
 
 }

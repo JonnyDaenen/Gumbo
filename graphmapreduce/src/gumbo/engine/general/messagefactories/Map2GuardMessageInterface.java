@@ -1,8 +1,8 @@
 package gumbo.engine.general.messagefactories;
 
-import gumbo.structures.data.Tuple;
-
 import java.io.IOException;
+
+import gumbo.structures.data.Tuple;
 
 public interface Map2GuardMessageInterface {
 

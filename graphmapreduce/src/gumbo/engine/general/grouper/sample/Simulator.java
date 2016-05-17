@@ -1,10 +1,6 @@
 package gumbo.engine.general.grouper.sample;
 
-import java.lang.reflect.Field;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,17 +14,13 @@ import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.messagefactories.Map1GuardMessageFactoryInterface;
 import gumbo.engine.general.messagefactories.Map1GuardedMessageFactoryInterface;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
-import gumbo.engine.hadoop.converter.GumboHadoopConverter;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactory;
 import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardedMessageFactory;
 import gumbo.engine.hadoop.reporter.FakeMapper;
 import gumbo.engine.hadoop.reporter.LinearExtrapolator;
-import gumbo.engine.hadoop.reporter.RelationReport;
 import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
 import gumbo.structures.data.RelationSchema;
 import gumbo.structures.data.Tuple;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 
@@ -40,7 +32,7 @@ import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOpera
  * @author Jonny Daenen
  *
  */
-public class Simulator {
+public class Simulator implements SimulatorInterface {
 
 	private static final Log LOG = LogFactory.getLog(Simulator.class);
 
@@ -52,14 +44,22 @@ public class Simulator {
 	ExpressionSetOperations eso;
 
 
-	public Simulator(RelationTupleSampleContainer rtsc, RelationFileMapping mapping, AbstractExecutorSettings settings) {
+	public Simulator() {
+		
+	}
+	
+	@Override
+	public void setInfo(RelationTupleSampleContainer rtsc, RelationFileMapping mapping,
+			AbstractExecutorSettings execSettings) {
 		this.mapping = mapping;
-		this.settings = settings;
+		this.settings = execSettings;
 		this.rtsc = rtsc;
 		this.extrapolator = new LinearExtrapolator();
+		
 	}
 
-	public SimulatorReport execute(CalculationGroup calcJob) {
+	@Override
+	public SimulatorReport execute(CalculationGroup calcJob) throws AlgorithmInterruptedException {
 
 		SimulatorReport report = new SimulatorReport();
 		
@@ -136,11 +136,14 @@ public class Simulator {
 		} else {
 			Map1GuardedMessageFactoryInterface fact = new Map1GuardedMessageFactory(fm.context, settings, eso);
 			fact.enableSampleCounting();
-			algo = new Map1GuardedAlgorithm(eso,fact,settings.getBooleanProperty(AbstractExecutorSettings.mapOutputGroupingOptimizationOn));
+			algo = new Map1GuardedAlgorithm(eso, fact, settings.getBooleanProperty(AbstractExecutorSettings.mapOutputGroupingOptimizationOn));
 		}
 
 		feedTuples(algo, tuples);
-
+		
+//		System.out.println("key bytes: " + fm.context.getOutputKeyBytes());
+//		System.out.println("value bytes: " + fm.context.getOutputValueBytes());
+		
 		return (long) fm.context.getOutputBytes();
 	}
 
@@ -152,5 +155,7 @@ public class Simulator {
 			offset += tuple.size(); // dummy offset
 		}
 	}
+
+	
 
 }

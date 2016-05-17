@@ -3,10 +3,15 @@
  */
 package gumbo.compiler;
 
+import java.util.HashMap;
+
+import gumbo.compiler.calculations.BasicGFCalculationUnit;
+import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
 
 /**
  * A Gumbo query plan.
@@ -25,12 +30,26 @@ public class GumboPlan {
 
 	// file mappings
 	protected FileManager fileManager;
-
+	private HashMap<GFAtomicExpression, Integer> atomidmapping;
 
 	public GumboPlan(String name, PartitionedCUGroup pdag, FileManager fileManager) {
 		queryName = name;
 		this.partitions = pdag;
 		this.fileManager = fileManager;
+		
+		initMapping();
+	}
+
+	private void initMapping() {
+		atomidmapping = new HashMap<>();
+		int i = 0;
+		for (CalculationUnit cu : partitions.getCalculationUnits()) {
+			BasicGFCalculationUnit bscu = (BasicGFCalculationUnit) cu;
+			for (GFAtomicExpression atom : bscu.getBasicExpression().getAtomic()) {
+				if (!atomidmapping.containsKey(atom))
+					atomidmapping.put(atom, i++);
+			}
+		}
 	}
 
 	/**
@@ -100,6 +119,10 @@ public class GumboPlan {
 	 */
 	public PartitionedCUGroup getPartitions() {
 		return partitions;
+	}
+
+	public int getAtomId(GFAtomicExpression atom) {
+		return atomidmapping.get(atom);
 	}
 
 

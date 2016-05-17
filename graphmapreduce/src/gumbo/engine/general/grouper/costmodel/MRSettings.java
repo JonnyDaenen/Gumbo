@@ -9,15 +9,36 @@ import gumbo.engine.general.settings.AbstractExecutorSettings;
  */
 public class MRSettings {
 
-	// costs
-	protected double cost_local_r = 1;
-	protected double cost_local_w = 1;
-	protected double cost_hdfs_w = 330;
-	protected double cost_hdfs_r = 59;
-	protected double cost_transfer = 5;
+	// mark
+	// costs (s per MB)
+//	protected double cost_local_r = 1;
+//	protected double cost_local_w = 1; // 0.06
+//	protected double cost_hdfs_w = 2; // done
+//	protected double cost_hdfs_r = 1; // 0.06
+//	protected double cost_transfer = 1.4; // done
+//	protected double cost_sort = 52;
+//	protected double cost_red = 2; // done FIXME make this same as hdfs write
+//	protected double cost_transfer_penalty = 0;
+	
+	
+	protected double cost_local_r = 0.03;
+	protected double cost_local_w = 0.085; // 0.06
+	protected double cost_hdfs_w = 0.25; // done
+	protected double cost_hdfs_r = 0.15; // 0.06
+	protected double cost_transfer = 0.017; // done
 	protected double cost_sort = 52;
-	protected double cost_red = 0.12;
-	protected double cost_transfer_penalty = 50;
+	protected double cost_red = 0.25; // done FIXME make this same as hdfs write
+	protected double cost_transfer_penalty = 0.005;
+	
+
+//	protected double cost_local_r = 1;
+//	protected double cost_local_w = 1;
+//	protected double cost_hdfs_w = 330;
+//	protected double cost_hdfs_r = 59;
+//	protected double cost_transfer = 5;
+//	protected double cost_sort = 52;
+//	protected double cost_red = 0.12;
+//	protected double cost_transfer_penalty = 5;
 
 	//	protected double cost_local_r = 1;
 	//	protected double cost_local_w = 1;
@@ -31,6 +52,7 @@ public class MRSettings {
 	// map settings
 	private double mapChunkSizeMB = 128;
 	private double mapSortBufferMB = 100;
+	private double mapSortThreshold = 0.8;
 	private double mapMergeFactor = 10;
 
 	// reduce settings
@@ -40,17 +62,51 @@ public class MRSettings {
 
 
 	public MRSettings(AbstractExecutorSettings systemSettings) {
+		
+		if ( systemSettings.getBooleanProperty(systemSettings.ABSTRACT_COST)) {
+			System.out.println("Abstract cost constants");
+			loadAbstractSettings();
+		} else {
+			System.out.println("Default cost constants");
+			loadDefaultSettings();
+		}
 
 		mapChunkSizeMB = systemSettings.getNumProperty("dfs.blocksize") / (1024*1024);
+		mapSortThreshold = systemSettings.getNumProperty("mapreduce.map.sort.spill.percent", 0.8);
 		mapSortBufferMB = systemSettings.getNumProperty("mapreduce.task.io.sort.mb");
+//		mapSortBufferMB = 512;
 		mapMergeFactor = systemSettings.getNumProperty("mapreduce.task.io.sort.factor");
 
 		redChunkSizeMB = systemSettings.getNumProperty(AbstractExecutorSettings.REDUCER_SIZE_MB);
 		redSortBufferMB = systemSettings.getNumProperty("mapreduce.reduce.memory.mb", 1024);
 		redSortBufferMB *= systemSettings.getNumProperty("mapreduce.reduce.shuffle.input.buffer.percent");
 		redMergeFactor = systemSettings.getNumProperty("mapreduce.task.io.sort.factor");
+		
+		System.out.println("settings:" + toString());
 
 		// FIXME #group extract settings
+	}
+	private void loadAbstractSettings() {
+		cost_local_r = 1;
+		cost_local_w = 1; 
+		cost_hdfs_w = 2; 
+		cost_hdfs_r = 1; 
+		cost_transfer = 1.4; 
+		cost_sort = 52;
+		cost_red = cost_hdfs_w;
+		cost_transfer_penalty = 0;
+		
+	}
+	private void loadDefaultSettings() {
+		cost_local_r = 0.03;
+		cost_local_w = 0.085; // 0.06
+		cost_hdfs_w = 0.25; // done
+		cost_hdfs_r = 0.15; // 0.06
+		cost_transfer = 0.017; // done
+		cost_sort = cost_hdfs_w;
+		cost_red = 0.25; 
+		cost_transfer_penalty = 0.005;
+		
 	}
 	public double getLocalReadCost() {
 		return cost_local_r;
@@ -84,8 +140,11 @@ public class MRSettings {
 	public double getMapChunkSizeMB() {
 		return mapChunkSizeMB;
 	}
-	public double getMapSortBufferMB() {
+	private double getMapSortBufferMB() {
 		return mapSortBufferMB;
+	}
+	public double getMapSplitBufferMB() {
+		return getMapSortBufferMB() * mapSortThreshold;
 	}
 	public double getMapMergeFactor() {
 		return mapMergeFactor;
@@ -106,6 +165,7 @@ public class MRSettings {
 		sb.append("MRSettings:" + System.lineSeparator());
 		sb.append("mapChunkSizeMB:" + mapChunkSizeMB + System.lineSeparator());
 		sb.append("mapSortBufferMB:" + mapSortBufferMB + System.lineSeparator());
+		sb.append("mapSortThreshold:" + mapSortThreshold + System.lineSeparator());
 		sb.append("mapMergeFactor:" + mapMergeFactor + System.lineSeparator());
 		sb.append("redChunkSizeMB:" + redChunkSizeMB + System.lineSeparator());
 		sb.append("redSortBufferMB:" + redSortBufferMB + System.lineSeparator());

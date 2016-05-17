@@ -1,5 +1,11 @@
 package gumbo.engine.hadoop.reporter;
 
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.engine.general.algorithms.AlgorithmInterruptedException;
 import gumbo.engine.general.algorithms.Map1GuardAlgorithm;
@@ -17,12 +23,6 @@ import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
-
-import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class RelationReporter {
 

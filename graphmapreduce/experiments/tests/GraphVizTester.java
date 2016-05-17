@@ -3,6 +3,15 @@
  */
 package tests;
 
+import java.util.Map.Entry;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
+
 import gumbo.Gumbo;
 import gumbo.compiler.GFCompiler;
 import gumbo.compiler.GumboPlan;
@@ -12,15 +21,6 @@ import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.input.GumboFileParser;
 import gumbo.input.GumboQuery;
 import gumbo.utils.GraphViz;
-
-import java.util.Map.Entry;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.util.Tool;
-import org.apache.hadoop.util.ToolRunner;
 
 /**
  * Copy of Gumbo application to test Spark.

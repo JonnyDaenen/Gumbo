@@ -31,9 +31,10 @@ import gumbo.compiler.calculations.CalculationUnit;
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.engine.general.grouper.Decomposer;
+import gumbo.engine.general.algorithms.AlgorithmInterruptedException;
 import gumbo.engine.general.grouper.Grouper;
 import gumbo.engine.general.grouper.GrouperFactory;
+import gumbo.engine.general.grouper.GroupingException;
 import gumbo.engine.general.grouper.costmodel.MRSettings;
 import gumbo.engine.general.grouper.sample.RelationSampleContainer;
 import gumbo.engine.general.grouper.sample.RelationSampler;
@@ -176,7 +177,13 @@ public class GumboHadoopConverter {
 		// we need to pass all paths for correct atom ids
 		extractor.setIncludeOutputDirs(true);
 		RelationFileMapping mapping = extractor.extractFileMapping(fileManager);
-		List<CalculationGroup> groups = grouper.group(cug);
+		List<CalculationGroup> groups;
+		try {
+			groups = grouper.group(cug);
+		} catch (GroupingException e) {
+			LOG.error("Conversion was stopped during grouping.");
+			throw new ConversionException("Error during conversion", e);
+		}
 		MRSettings mrSettings = new MRSettings(settings);
 
 		// create a job for each group
@@ -184,7 +191,12 @@ public class GumboHadoopConverter {
 
 			if (!group.hasInfo()) {
 				LOG.info("Missing size estimates, sampling data.");
-				addInfo(group, mapping2, settings);
+				try {
+					addInfo(group, mapping2, settings);
+				} catch (AlgorithmInterruptedException e) {
+
+					LOG.warn("Sampling failed, trying to continue without reduce estimate.");
+				}
 			}
 
 			// get number of reducers 
@@ -221,11 +233,12 @@ public class GumboHadoopConverter {
 		}
 	}
 
-	private void addInfo(CalculationGroup group, RelationFileMapping rfm, AbstractExecutorSettings settings) {
+	private void addInfo(CalculationGroup group, RelationFileMapping rfm, AbstractExecutorSettings settings) throws AlgorithmInterruptedException {
 
 
 		// execute algorithm on sample
-		Simulator simulator = new Simulator(samples, rfm, settings);
+		Simulator simulator = new Simulator();
+		simulator.setInfo(samples, rfm, settings);
 		SimulatorReport report = simulator.execute(group);
 
 		// fill in parameters 

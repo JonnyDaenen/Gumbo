@@ -1,14 +1,14 @@
 package mapreduce.guardedfragment.structure;
 
-import gumbo.structures.data.KeyValuePair;
-import gumbo.structures.data.Tuple;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.GFExpression;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
+import gumbo.structures.data.KeyValuePair;
+import gumbo.structures.data.Tuple;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExpression;
 
 @Deprecated
 public class FirstMapper {

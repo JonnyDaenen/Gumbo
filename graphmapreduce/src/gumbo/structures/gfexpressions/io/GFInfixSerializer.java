@@ -3,14 +3,6 @@
  */
 package gumbo.structures.gfexpressions.io;
 
-import gumbo.structures.gfexpressions.GFAndExpression;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.GFExistentialExpression;
-import gumbo.structures.gfexpressions.GFExpression;
-import gumbo.structures.gfexpressions.GFNotExpression;
-import gumbo.structures.gfexpressions.GFOrExpression;
-import gumbo.structures.gfexpressions.GFXorExpression;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +10,14 @@ import java.util.Stack;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import gumbo.structures.gfexpressions.GFAndExpression;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.GFNotExpression;
+import gumbo.structures.gfexpressions.GFOrExpression;
+import gumbo.structures.gfexpressions.GFXorExpression;
 
 /**
  * @author Jonny Daenen

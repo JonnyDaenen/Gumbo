@@ -3,12 +3,12 @@
  */
 package gumbo.engine.spark;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.compiler.partitioner.PartitionedCUGroup;
 import gumbo.engine.general.utils.PartitionQueue;
-
-import java.util.Collection;
-import java.util.HashSet;
 
 /**
  * @author Jonny Daenen

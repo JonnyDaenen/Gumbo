@@ -3,15 +3,15 @@
  */
 package gumbo.structures.conversion;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import gumbo.structures.booleanexpressions.BAndExpression;
 import gumbo.structures.booleanexpressions.BEVisitor;
 import gumbo.structures.booleanexpressions.BExpression;
 import gumbo.structures.booleanexpressions.BNotExpression;
 import gumbo.structures.booleanexpressions.BOrExpression;
 import gumbo.structures.booleanexpressions.BVariable;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Jonny Daenen

@@ -1,7 +1,5 @@
 package gumbo.engine.hadoop.reporter;
 
-import gumbo.structures.gfexpressions.io.Pair;
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -25,6 +23,8 @@ import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.TaskAttemptID;
 import org.apache.hadoop.security.Credentials;
+
+import gumbo.structures.gfexpressions.io.Pair;
 
 public class FakeMapper extends Mapper<LongWritable, Text, Text, Text> {
 

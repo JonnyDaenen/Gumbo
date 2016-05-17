@@ -3,12 +3,12 @@
  */
 package gumbo.engine.general.grouper;
 
-import gumbo.compiler.partitioner.PartitionedCUGroup;
-import gumbo.engine.general.grouper.structures.CalculationGroup;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import gumbo.compiler.partitioner.PartitionedCUGroup;
+import gumbo.engine.general.grouper.structures.CalculationGroup;
 
 /**
  * A {@link PartitionedCUGroup}, augmented with a set of smaller

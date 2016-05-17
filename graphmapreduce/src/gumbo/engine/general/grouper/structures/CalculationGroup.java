@@ -1,30 +1,30 @@
 package gumbo.engine.general.grouper.structures;
 
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.GFExistentialExpression;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+
 public class CalculationGroup {
-	
+
 	long scale = 1; // FIXME this should remain 1 in release versions!
 
 	Set<GuardedSemiJoinCalculation> semijoins;
-	
+
 	long guardInBytes = 0;
 	long guardedInBytes = 0;
 	long guardOutBytes = 0;
 	long guardedOutBytes = 0;
-	
+
 	double cost = 0;
 
-	private Collection<GFExistentialExpression> sameLevelExpressions;
+	Collection<GFExistentialExpression> sameLevelExpressions;
 
 
-	
+
 	public CalculationGroup(Collection<GFExistentialExpression> relevantExpressions) {
 		semijoins = new HashSet<>();
 		this.sameLevelExpressions = relevantExpressions;
@@ -58,7 +58,7 @@ public class CalculationGroup {
 	public Collection<GFAtomicExpression> getGuardedsDistinct() {
 		Set<GFAtomicExpression> result = new HashSet<>();
 		for (GuardedSemiJoinCalculation sj : semijoins) {
-			result.add(sj.getGuarded());
+			result.addAll(sj.getGuarded());
 		}
 		return result;
 	}
@@ -68,7 +68,8 @@ public class CalculationGroup {
 		Set<RelationSchema> result = new HashSet<>();
 		for (GuardedSemiJoinCalculation sj : semijoins) {
 			result.add(sj.getGuard().getRelationSchema());
-			result.add(sj.getGuarded().getRelationSchema());
+			for (GFAtomicExpression guarded : sj.getGuarded())
+				result.add(guarded.getRelationSchema());
 		}
 		return result;
 	}
@@ -87,7 +88,7 @@ public class CalculationGroup {
 		sb.append("\tGuard Out Bytes" + getGuardOutBytes() + System.lineSeparator());
 		sb.append("\tGuarded Out Bytes" + getGuardedOutBytes() + System.lineSeparator());
 		sb.append("\tCost:" + cost + System.lineSeparator());
-		
+
 
 		return sb.toString();
 
@@ -101,7 +102,7 @@ public class CalculationGroup {
 		}
 		return hash;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof CalculationGroup) {
@@ -110,7 +111,7 @@ public class CalculationGroup {
 		}
 		return false;
 	}
-	
+
 	public double getCost() {
 		return cost;
 	}
@@ -172,7 +173,7 @@ public class CalculationGroup {
 		CalculationGroup result = new CalculationGroup(this.sameLevelExpressions);
 		result.semijoins.addAll(this.semijoins);
 		result.semijoins.addAll(g.semijoins);
-		
+
 		return result;
 	}
 
@@ -180,35 +181,36 @@ public class CalculationGroup {
 
 	public Collection<RelationSchema> getInputRelations() {
 		HashSet<RelationSchema> result = new HashSet<RelationSchema>(semijoins.size());
-		
+
 		for (GuardedSemiJoinCalculation sj : semijoins) {
 			result.add(sj.getGuard().getRelationSchema());
-			result.add(sj.getGuarded().getRelationSchema());
+			for (GFAtomicExpression guarded : sj.getGuarded())
+				result.add(guarded.getRelationSchema());
 		}
-		
+
 		return result;
 	}
-	
+
 	public Collection<RelationSchema> getOutputRelations() {
-		
-		
+
+
 		HashSet<RelationSchema> result = new HashSet<RelationSchema>(semijoins.size());
-		
+
 		for (GuardedSemiJoinCalculation sj : semijoins) {
 			result.add(sj.getExpression().getOutputSchema());
 		}
-		
+
 		return result;
 	}
 
 
 	public Collection<GFExistentialExpression> getExpressions() {
 		HashSet<GFExistentialExpression> result = new HashSet<GFExistentialExpression>(semijoins.size());
-		
+
 		for (GuardedSemiJoinCalculation sj : semijoins) {
 			result.add(sj.getExpression());
 		}
-		
+
 		return result;
 	}
 
@@ -217,16 +219,31 @@ public class CalculationGroup {
 		if (sameLevelExpressions == null)
 			return getExpressions();
 		return sameLevelExpressions;
-		
+
 	}
 
 
 	public boolean hasInfo() {
-		
+
 		return !(guardedInBytes == 0 && guardInBytes == 0 && guardedOutBytes == 0 && guardOutBytes == 0);
 	}
 
 
-	
+	public String getCanonicalName() {
+
+		StringBuffer sb = new StringBuffer(semijoins.size()*20);
+
+		for (GuardedSemiJoinCalculation semijoin : semijoins) {
+			sb.append(semijoin.getGuard().getRelationSchema().getCanonicalName());
+			for (GFAtomicExpression guarded : semijoin.getGuarded())
+				sb.append(guarded.getRelationSchema().getCanonicalName());
+			sb.append("-");
+		}
+
+		return sb.toString();
+	}
+
+
+
 
 }

@@ -1,10 +1,10 @@
 package gumbo.input.parser;
 
+import org.apache.hadoop.fs.Path;
+
 import gumbo.input.parser.antlr.GumboBaseVisitor;
 import gumbo.input.parser.antlr.GumboParser.OutputpathContext;
 import gumbo.input.parser.antlr.GumboParser.ScratchpathContext;
-
-import org.apache.hadoop.fs.Path;
 
 /**
  * Visitor class for the output and scratch path rules in the Gumbo grammar

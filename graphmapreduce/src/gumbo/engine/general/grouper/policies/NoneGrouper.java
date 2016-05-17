@@ -3,11 +3,11 @@
  */
 package gumbo.engine.general.grouper.policies;
 
-import gumbo.engine.general.grouper.structures.CalculationGroup;
-import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import gumbo.engine.general.grouper.structures.CalculationGroup;
+import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 
 /**
  * Grouping policy that performs no grouping at all.

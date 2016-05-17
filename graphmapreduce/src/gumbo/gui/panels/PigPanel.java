@@ -1,11 +1,5 @@
 package gumbo.gui.panels;
 
-import gumbo.convertors.GFConversionException;
-import gumbo.convertors.pig.GFPigConverter;
-import gumbo.convertors.pig.GFPigConverterLong;
-import gumbo.convertors.pig.GFPigConverterWide;
-import gumbo.input.GumboQuery;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -21,6 +15,12 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+
+import gumbo.convertors.GFConversionException;
+import gumbo.convertors.pig.GFPigConverter;
+import gumbo.convertors.pig.GFPigConverterLong;
+import gumbo.convertors.pig.GFPigConverterWide;
+import gumbo.input.GumboQuery;
 
 public class PigPanel extends JPanel {
 

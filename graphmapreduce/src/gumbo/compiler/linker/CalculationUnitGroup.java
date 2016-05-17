@@ -3,14 +3,16 @@
  */
 package gumbo.compiler.linker;
 
-import gumbo.compiler.calculations.CalculationUnit;
-import gumbo.structures.data.RelationSchema;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import gumbo.compiler.calculations.BasicGFCalculationUnit;
+import gumbo.compiler.calculations.CalculationUnit;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 /**
  * Representation of a CalculationUnit DAG (may or may not be connected). 
@@ -368,4 +370,24 @@ public class CalculationUnitGroup implements Iterable<CalculationUnit> {
 	    }
 	    return hashcode;
     }
+
+
+	public String getCanonicalOutString() {
+		StringBuffer sb = new StringBuffer();
+		for (CalculationUnit cu : calculations) {
+			sb.append(cu.getOutputSchema());	
+		}
+		return sb.toString();
+	}
+
+
+	public Set<GFExistentialExpression> getBSGFs() {
+		Set<GFExistentialExpression> calculations = new HashSet<>();
+		for (CalculationUnit cu : getCalculations()) {
+			BasicGFCalculationUnit bcu = (BasicGFCalculationUnit) cu;
+			calculations.add(bcu.getBasicExpression());
+		}
+		return calculations;
+	}
+
 }

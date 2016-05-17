@@ -3,13 +3,6 @@
  */
 package gumbo.input;
 
-import gumbo.compiler.filemapper.InputFormat;
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.gfexpressions.GFExpression;
-import gumbo.structures.gfexpressions.io.DeserializeException;
-import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -22,6 +15,13 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.Path;
+
+import gumbo.compiler.filemapper.InputFormat;
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExpression;
+import gumbo.structures.gfexpressions.io.DeserializeException;
+import gumbo.structures.gfexpressions.io.GFPrefixSerializer;
 
 /**
  * Simple class to load query from file.

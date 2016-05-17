@@ -3,13 +3,14 @@
  */
 package gumbo.engine.hadoop.settings;
 
-import gumbo.engine.general.settings.AbstractExecutorSettings;
-
 import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
+
+import gumbo.engine.general.grouper.sample.Simulator;
+import gumbo.engine.general.settings.AbstractExecutorSettings;
 
 /**
  * Provides access to settings for the gumbo framework in a Hadoop {@link Configuration}.
@@ -24,6 +25,7 @@ public class HadoopExecutorSettings extends AbstractExecutorSettings{
 	private static final Log LOG = LogFactory.getLog(HadoopExecutorSettings.class);
 	
 	private Configuration conf;
+
 	
 	
 	public HadoopExecutorSettings() {
@@ -59,9 +61,15 @@ public class HadoopExecutorSettings extends AbstractExecutorSettings{
 	 */
 	public void loadConfig(Configuration conf) {
 		
+		
 		for (Entry<String, String> a : conf) {
 			setProperty(a.getKey(), a.getValue());
 		}
+	}
+
+	public void setV1Simulator() {
+		setProperty(SIMULATOR_CLASS, Simulator.class.getCanonicalName());
+		
 	}
 
 

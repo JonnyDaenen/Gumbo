@@ -6,18 +6,18 @@ import java.util.List;
 import java.util.Set;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.engine.general.algorithms.AlgorithmInterruptedException;
+import gumbo.engine.general.grouper.GroupingException;
 import gumbo.engine.general.grouper.costmodel.CostModel;
-import gumbo.engine.general.grouper.costmodel.MRSettings;
 import gumbo.engine.general.grouper.sample.RelationSampleContainer;
 import gumbo.engine.general.grouper.sample.RelationSampler;
-import gumbo.engine.general.grouper.sample.Simulator;
+import gumbo.engine.general.grouper.sample.SimulatorInterface;
 import gumbo.engine.general.grouper.sample.SimulatorReport;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.CostMatrix;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
 import gumbo.engine.hadoop.reporter.RelationTupleSampleContainer;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.gfexpressions.io.Pair;
 import gumbo.utils.estimation.SamplingException;
 
@@ -29,7 +29,7 @@ public class CostBasedGrouper implements GroupingPolicy {
 	private AbstractExecutorSettings execSettings;
 
 	private RelationTupleSampleContainer samples;
-	private Simulator simulator;
+	private SimulatorInterface simulator;
 	private CostMatrix costMatrix;
 
 
@@ -38,11 +38,14 @@ public class CostBasedGrouper implements GroupingPolicy {
 		this.costModel = costModel;
 		this.execSettings = execSettings;
 		this.samples = samples;
+		
+		
+		
 	}
 
 
 	@Override
-	public List<CalculationGroup> group(CalculationGroup group) {
+	public List<CalculationGroup> group(CalculationGroup group) throws GroupingException {
 
 		try {
 			// sample relations
@@ -54,28 +57,36 @@ public class CostBasedGrouper implements GroupingPolicy {
 			// perform grouping
 			return performGrouping(group);
 		} catch (SamplingException e) {
-			// FIXME exception
-			return null;
+			throw new GroupingException("Something went wrong during grouping in sampling stage.", e);
 		}
 	}
 
 
 
-	private void fetchSamples() throws SamplingException {
+	private void fetchSamples() throws SamplingException, GroupingException {
 		if (samples == null) {
 			RelationSampler sampler = new RelationSampler(rfm);
 			RelationSampleContainer rawSamples = sampler.sample();
 			samples = new RelationTupleSampleContainer(rawSamples, 0.1);
 		}
-		simulator = new Simulator(samples, rfm, execSettings);
+		
+		try {
+			String className = execSettings.getProperty(execSettings.SIMULATOR_CLASS);
+			simulator = (SimulatorInterface) this.getClass().getClassLoader().loadClass(className).newInstance();
+			simulator.setInfo(samples, rfm, execSettings);
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			throw new GroupingException("Failed to instantiate a simulator", e);
+		}
+		
 	}
 
 
 	/**
 	 * Calculates the costs of the original jobs using the cost model.
 	 * @param group
+	 * @throws GroupingException 
 	 */
-	private void init(CalculationGroup group) {
+	private void init(CalculationGroup group) throws GroupingException {
 
 		Set<CalculationGroup> jobs = new HashSet<CalculationGroup>();
 
@@ -109,16 +120,20 @@ public class CostBasedGrouper implements GroupingPolicy {
 
 
 		}
-		//		costMatrix.printMatrix(false); // TODO remove
 
 
 
 	}
 
 
-	private void estimateParameters(CalculationGroup calcJob) {
+	private void estimateParameters(CalculationGroup calcJob) throws GroupingException {
 		// execute algorithm on sample
-		SimulatorReport report = simulator.execute(calcJob);
+		SimulatorReport report;
+		try {
+			report = simulator.execute(calcJob);
+		} catch (AlgorithmInterruptedException e) {
+			throw new GroupingException("", e);
+		}
 
 
 		// fill in parameters 
@@ -128,19 +143,26 @@ public class CostBasedGrouper implements GroupingPolicy {
 		calcJob.setGuardedOutBytes(report.getGuardedOutBytes());
 
 		// calculate and set cost
-		double cost = costModel.calculateCost(calcJob);
+		double cost = 0;
+		if (report.hasDetails()) {
+			cost = costModel.calculateCost(report);
+			System.out.println(report);
+		} else {
+			cost = costModel.calculateCost(calcJob);
+		}
 		calcJob.setCost(cost);
+		System.out.println(calcJob);
 
 	}
 
 
-	private List<CalculationGroup> performGrouping(CalculationGroup group) {
+	private List<CalculationGroup> performGrouping(CalculationGroup group) throws GroupingException {
 
 		// greedy approach
 
 		while (costMatrix.hasPositiveCost()) {
-			//			costMatrix.printMatrix(true);
-			//			costMatrix.printGroups();
+//						costMatrix.printMatrix(true);
+//						costMatrix.printGroups();
 
 			// pick best merge option
 			Pair<CalculationGroup, CalculationGroup> oldGroups = costMatrix.getBestOldGroups();

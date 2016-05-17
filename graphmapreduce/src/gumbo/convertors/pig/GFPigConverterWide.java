@@ -1,5 +1,8 @@
 package gumbo.convertors.pig;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.convertors.GFConversionException;
@@ -15,9 +18,6 @@ import gumbo.structures.gfexpressions.GFNotExpression;
 import gumbo.structures.gfexpressions.GFOrExpression;
 import gumbo.structures.gfexpressions.GFVisitor;
 import gumbo.structures.gfexpressions.GFVisitorException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class that can be used to convert GF queries to Pig Latin scripts with a wide execution plan
@@ -46,7 +46,7 @@ public class GFPigConverterWide extends GFPigConverter implements GFVisitor<Stri
 		
 		String query = "";
 
-		for (GFAtomicExpression child : gfe.getGuardedRelations()) {
+		for (GFAtomicExpression child : gfe.getGuardedAtoms()) {
 			String guardedGroupSchema = getGuardedGroupSchema(child.getName(), rfm);
 			String guardGroupSchema = getGuardGroupSchema(gfe.getGuard().getRelationSchema(), gfe.getGuard().getVars(), rfm, child.getVars());
 			String childId = generateAlias(child.toString());

@@ -1,5 +1,17 @@
 package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Counter;
+import org.apache.hadoop.mapreduce.Mapper;
+
 import gumbo.engine.general.messagefactories.Map1GuardMessageFactoryInterface;
 import gumbo.engine.general.messagefactories.MessageFailedException;
 import gumbo.engine.general.settings.AbstractExecutorSettings;
@@ -15,18 +27,6 @@ import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 import gumbo.structures.gfexpressions.operations.GFAtomProjection;
 import gumbo.structures.gfexpressions.operations.NonMatchingTupleException;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Counter;
-import org.apache.hadoop.mapreduce.Mapper;
 
 public class Map1GuardMessageFactory implements Map1GuardMessageFactoryInterface {
 

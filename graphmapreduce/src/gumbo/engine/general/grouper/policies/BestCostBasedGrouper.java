@@ -7,11 +7,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.engine.general.algorithms.Red1Algorithm;
+import gumbo.engine.general.algorithms.AlgorithmInterruptedException;
+import gumbo.engine.general.grouper.GroupingException;
 import gumbo.engine.general.grouper.costmodel.CostModel;
 import gumbo.engine.general.grouper.sample.RelationSampleContainer;
 import gumbo.engine.general.grouper.sample.RelationSampler;
-import gumbo.engine.general.grouper.sample.Simulator;
+import gumbo.engine.general.grouper.sample.SimulatorInterface;
 import gumbo.engine.general.grouper.sample.SimulatorReport;
 import gumbo.engine.general.grouper.structures.CalculationGroup;
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
@@ -39,7 +40,7 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 	private AbstractExecutorSettings execSettings;
 
 	private RelationTupleSampleContainer samples;
-	private Simulator simulator;
+	private SimulatorInterface simulator;
 
 	private List<CalculationGroup> bestGrouping;
 	private double bestTotalCost;
@@ -58,7 +59,7 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 
 
 	@Override
-	public List<CalculationGroup> group(CalculationGroup group) {
+	public List<CalculationGroup> group(CalculationGroup group) throws GroupingException {
 
 		try {
 			// sample relations
@@ -71,14 +72,13 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 			return bestGrouping;
 
 		} catch (SamplingException e) {
-			// FIXME exception
-			return null;
+			throw new GroupingException("Something went wrong during grouping in sampling stage.", e);
 		}
 	}
 
 
 
-	private void findBest(CalculationGroup group) {
+	private void findBest(CalculationGroup group) throws GroupingException {
 		List<CalculationGroup> unitjobs = new LinkedList<CalculationGroup>();
 
 		// calculate single costs
@@ -102,7 +102,7 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 
 
 
-	private void findBestGroupingRec(List<CalculationGroup> unitjobs, List<CalculationGroup> candidate) {
+	private void findBestGroupingRec(List<CalculationGroup> unitjobs, List<CalculationGroup> candidate) throws GroupingException {
 
 		if (stopIndicator != 0 && nr >= stopIndicator) {
 			return;
@@ -156,7 +156,7 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 	}
 
 
-	private double totalCost(List<CalculationGroup> jobs) {
+	private double totalCost(List<CalculationGroup> jobs) throws GroupingException {
 
 		double totalCost = 0;
 		for (CalculationGroup cg : jobs) {
@@ -169,20 +169,31 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 	}
 
 
-	private void fetchSamples() throws SamplingException {
+	private void fetchSamples() throws SamplingException, GroupingException {
 		if (samples == null) {
 			RelationSampler sampler = new RelationSampler(rfm);
 			RelationSampleContainer rawSamples = sampler.sample();
 			samples = new RelationTupleSampleContainer(rawSamples, 0.1);
 		}
 		
-		simulator = new Simulator(samples, rfm, execSettings);
+		try {
+			String className = execSettings.getProperty(execSettings.SIMULATOR_CLASS);
+			simulator = (SimulatorInterface) this.getClass().getClassLoader().loadClass(className).newInstance();
+			simulator.setInfo(samples, rfm, execSettings);
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			throw new GroupingException("Failed to instantiate a simulator", e);
+		}
 	}
 
 
-	private void estimateParameters(CalculationGroup calcJob) {
+	private void estimateParameters(CalculationGroup calcJob) throws GroupingException {
 		// execute algorithm on sample
-		SimulatorReport report = simulator.execute(calcJob);
+		SimulatorReport report;
+		try {
+			report = simulator.execute(calcJob);
+		} catch (AlgorithmInterruptedException e) {
+			throw new GroupingException("", e);
+		}
 
 		// fill in parameters 
 		calcJob.setGuardInBytes(report.getGuardInBytes());
@@ -191,7 +202,13 @@ public class BestCostBasedGrouper implements GroupingPolicy {
 		calcJob.setGuardedOutBytes(report.getGuardedOutBytes());
 
 		// calculate and set cost
-		double cost = costModel.calculateCost(calcJob);
+		double cost = 0;
+		if (report.hasDetails()) {
+			System.out.println(report);
+			cost = costModel.calculateCost(report);
+		} else {
+			cost = costModel.calculateCost(calcJob);
+		}
 		calcJob.setCost(cost);
 
 	}

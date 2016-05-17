@@ -3,18 +3,6 @@
  */
 package gumbo.structures.gfexpressions.operations;
 
-import gumbo.compiler.filemapper.InputFormat;
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.structures.booleanexpressions.BExpression;
-import gumbo.structures.conversion.GFBooleanMapping;
-import gumbo.structures.conversion.GFtoBooleanConversionException;
-import gumbo.structures.conversion.GFtoBooleanConvertor;
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.GFExistentialExpression;
-import gumbo.structures.gfexpressions.io.Pair;
-import gumbo.structures.gfexpressions.io.Triple;
-
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -28,6 +16,18 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.Path;
+
+import gumbo.compiler.filemapper.InputFormat;
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.structures.booleanexpressions.BExpression;
+import gumbo.structures.conversion.GFBooleanMapping;
+import gumbo.structures.conversion.GFtoBooleanConversionException;
+import gumbo.structures.conversion.GFtoBooleanConvertor;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
+import gumbo.structures.gfexpressions.io.Pair;
+import gumbo.structures.gfexpressions.io.Triple;
 
 /**
  * Wrapper for a set of GF Expressions.
@@ -123,7 +123,7 @@ public class ExpressionSetOperations implements Externalizable {
 		guardeds.clear();
 
 		for (GFExistentialExpression e : expressionSet) {
-			Collection<GFAtomicExpression> guardedsOfE = e.getGuardedRelations();
+			Collection<GFAtomicExpression> guardedsOfE = e.getGuardedAtoms();
 			guardeds.put(e, guardedsOfE);
 		}
 
@@ -164,7 +164,7 @@ public class ExpressionSetOperations implements Externalizable {
 			GFAtomicExpression guard = e.getGuard();
 			guardsAll.add(guard);
 
-			for (GFAtomicExpression c : e.getGuardedRelations()) {
+			for (GFAtomicExpression c : e.getGuardedAtoms()) {
 				guardedsAll.add(c); // TODO what if an atom is both?
 				ggpairsAll.add(new Pair<>(guard, c));
 			}
@@ -183,7 +183,7 @@ public class ExpressionSetOperations implements Externalizable {
 				guardHasGuard.put(guard, set);
 			}
 
-			for (GFAtomicExpression c : e.getGuardedRelations()) {
+			for (GFAtomicExpression c : e.getGuardedAtoms()) {
 				set.add(c);
 			}
 		}
@@ -240,7 +240,7 @@ public class ExpressionSetOperations implements Externalizable {
 				guardHasGuardAndProjection.put(guard, set);
 			}
 
-			for (GFAtomicExpression c : e.getGuardedRelations()) {
+			for (GFAtomicExpression c : e.getGuardedAtoms()) {
 				GFAtomProjection r = new GFAtomProjection(guard, c);
 				Triple<GFAtomicExpression, GFAtomProjection, Integer> pair = new Triple<>(c, r, atomIDs.get(c));
 				set.add(pair);

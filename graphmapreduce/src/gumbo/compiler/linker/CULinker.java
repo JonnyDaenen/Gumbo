@@ -3,18 +3,18 @@
  */
 package gumbo.compiler.linker;
 
-import gumbo.compiler.GFCompilerException;
-import gumbo.compiler.calculations.BasicGFCalculationUnit;
-import gumbo.compiler.calculations.CalculationUnit;
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.gfexpressions.GFExistentialExpression;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import gumbo.compiler.GFCompilerException;
+import gumbo.compiler.calculations.BasicGFCalculationUnit;
+import gumbo.compiler.calculations.CalculationUnit;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 /**
  * Links {@link CalculationUnit}s in a DAG.

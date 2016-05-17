@@ -3,6 +3,13 @@
  */
 package gumbo.structures.gfexpressions.io;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import gumbo.structures.gfexpressions.GFAndExpression;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
@@ -12,13 +19,6 @@ import gumbo.structures.gfexpressions.GFOrExpression;
 import gumbo.structures.gfexpressions.GFVisitor;
 import gumbo.structures.gfexpressions.GFVisitorException;
 import gumbo.structures.gfexpressions.GFXorExpression;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -93,6 +93,8 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 		return result.fst;
 	}
 	
+	
+	
 	public Collection<GFExpression> deserialize(Collection<String> set) throws DeserializeException {
 		Set<GFExpression> resultSet = new HashSet<GFExpression>();
 		for (String s : set) {
@@ -113,6 +115,28 @@ public class GFPrefixSerializer implements GFVisitor<String>, Serializer<GFExpre
 
 		// flatten
 		return eSet;
+	}
+	
+	public Set<GFExistentialExpression> deserializeExSet(String set) throws DeserializeException {
+
+		Set<String> strings = setSerializer.deserialize(set);
+		HashSet<GFExpression> eSet = new HashSet<>(strings.size());
+
+		// serialize each expression
+		for (String s : strings) {
+			eSet.add(deserialize(s));
+		}
+		
+		// check whether the type is existential
+		HashSet<GFExistentialExpression> formulaSet = new HashSet<GFExistentialExpression>();
+		for (GFExpression exp : eSet) {
+			if (exp instanceof GFExistentialExpression) {
+				formulaSet.add((GFExistentialExpression) exp);
+			}
+		}
+
+		// flatten
+		return formulaSet;
 	}
 
 	/**

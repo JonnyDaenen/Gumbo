@@ -3,6 +3,13 @@
  */
 package gumbo.compiler.decomposer;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import gumbo.structures.gfexpressions.GFAndExpression;
 import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
@@ -13,20 +20,17 @@ import gumbo.structures.gfexpressions.GFVisitor;
 import gumbo.structures.gfexpressions.GFVisitorException;
 import gumbo.structures.gfexpressions.io.Pair;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 
 
 /**
  * Decomposes GFExpressions into sets of basicexpression.
- * A visitor pattern is used to let each expression resutn the set of basic subexpressions and their clean version.
- * Also, a GFexpression is used fot non-existential expressions to pass intermediate structures; existential expressions
- * just return their output relation.
+ * A visitor pattern is used to let each expression return 
+ * the set of basic subexpressions and their cleaned version 
+ * (i.e., without subexpressions). Also, a GFexpression is 
+ * used for non-existential expressions to pass intermediate 
+ * structures; existential expressions just return their output relation.
+ * 
+ * TODO option for boolean breakup
  * 
  * @author Jonny Daenen
  * 

@@ -2,13 +2,13 @@
 Output -> output/EXP_028/
 Scratch -> scratch/EXP_028/
 
-R,3 <- input/experiments/EXP_028/1/R, CSV
-G,3 <- input/experiments/EXP_028/1/G, CSV
-H,3 <- input/experiments/EXP_028/1/H, CSV
+R,3 <- input/experiments/EXP_028/0/R, CSV
+G,3 <- input/experiments/EXP_028/0/G, CSV
+H,3 <- input/experiments/EXP_028/0/H, CSV
 
-S,1 <- input/experiments/EXP_028/1/S, CSV
-T,1 <- input/experiments/EXP_028/1/T, CSV
-U,1 <- input/experiments/EXP_028/1/U, CSV
+S,1 <- input/experiments/EXP_028/0/S, CSV
+T,1 <- input/experiments/EXP_028/0/T, CSV
+U,1 <- input/experiments/EXP_028/0/U, CSV
 
 
 #O11(y)&R(x,y,z)S(x);

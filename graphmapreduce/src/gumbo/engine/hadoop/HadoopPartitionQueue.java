@@ -3,13 +3,6 @@
  */
 package gumbo.engine.hadoop;
 
-import gumbo.compiler.filemapper.FileManager;
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.compiler.partitioner.PartitionedCUGroup;
-import gumbo.engine.general.utils.PartitionQueue;
-import gumbo.structures.data.RelationSchema;
-
 import java.io.IOException;
 
 import org.apache.commons.collections4.BidiMap;
@@ -21,6 +14,13 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
+
+import gumbo.compiler.filemapper.FileManager;
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.compiler.partitioner.PartitionedCUGroup;
+import gumbo.engine.general.utils.PartitionQueue;
+import gumbo.structures.data.RelationSchema;
 
 /**
  * Represents a queue of partitions, coupled to real hadoop jobs.

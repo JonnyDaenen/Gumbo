@@ -3,14 +3,14 @@
  */
 package gumbo.engine.general.utils;
 
+import java.util.Collection;
+
+import org.apache.hadoop.fs.Path;
+
 import gumbo.compiler.filemapper.FileManager;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.compiler.linker.CalculationUnitGroup;
 import gumbo.structures.data.RelationSchema;
-
-import java.util.Collection;
-
-import org.apache.hadoop.fs.Path;
 
 /**
  * Extracts a file mapping from a {@link FileManager}, possibly based on a set of
@@ -55,7 +55,7 @@ public class FileMappingExtractor {
 		RelationFileMapping expandedIns = expand(ins);
 
 		if (includeOut) {
-			System.out.println("Adding output paths");
+//			System.out.println("Adding output paths");
 			expandedIns.putAll(expand(outs));
 		}
 		return expandedIns;

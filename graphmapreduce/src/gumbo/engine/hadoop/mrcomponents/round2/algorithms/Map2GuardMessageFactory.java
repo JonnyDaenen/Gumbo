@@ -1,5 +1,10 @@
 package gumbo.engine.hadoop.mrcomponents.round2.algorithms;
 
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Counter;
+import org.apache.hadoop.mapreduce.Mapper;
+
 import gumbo.engine.general.messagefactories.Map2GuardMessageInterface;
 import gumbo.engine.general.messagefactories.MessageFailedException;
 import gumbo.engine.hadoop.mrcomponents.round2.mappers.GumboMap2Counter;
@@ -7,11 +12,6 @@ import gumbo.engine.hadoop.mrcomponents.tools.TupleIDCreator;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
 import gumbo.structures.data.Tuple;
 import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
-
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Counter;
-import org.apache.hadoop.mapreduce.Mapper;
 
 public class Map2GuardMessageFactory implements Map2GuardMessageInterface {
 

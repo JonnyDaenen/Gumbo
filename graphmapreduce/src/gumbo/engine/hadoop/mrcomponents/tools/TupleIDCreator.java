@@ -3,11 +3,7 @@
  */
 package gumbo.engine.hadoop.mrcomponents.tools;
 
-import gumbo.compiler.filemapper.RelationFileMapping;
-import gumbo.utils.LongBase64Converter;
-
 import java.lang.reflect.Method;
-import org.apache.directory.api.util.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,10 +11,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.directory.api.util.ByteBuffer;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
+
+import gumbo.compiler.filemapper.RelationFileMapping;
+import gumbo.utils.LongBase64Converter;
 
 /**
  * Responsible for keeping an id for each path used.

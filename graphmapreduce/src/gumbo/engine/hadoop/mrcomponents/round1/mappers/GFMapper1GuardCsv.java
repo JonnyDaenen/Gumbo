@@ -3,14 +3,6 @@
  */
 package gumbo.engine.hadoop.mrcomponents.round1.mappers;
 
-import gumbo.engine.general.algorithms.Map1GuardAlgorithm;
-import gumbo.engine.general.messagefactories.Map1GuardMessageFactoryInterface;
-import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactory;
-import gumbo.engine.hadoop.mrcomponents.tools.RelationResolver;
-import gumbo.structures.data.QuickTuple;
-import gumbo.structures.data.RelationSchema;
-import gumbo.structures.data.Tuple;
-
 import java.io.IOException;
 
 import org.apache.commons.logging.Log;
@@ -18,6 +10,14 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+
+import gumbo.engine.general.algorithms.Map1GuardAlgorithm;
+import gumbo.engine.general.messagefactories.Map1GuardMessageFactoryInterface;
+import gumbo.engine.hadoop.mrcomponents.round1.algorithms.Map1GuardMessageFactory;
+import gumbo.engine.hadoop.mrcomponents.tools.RelationResolver;
+import gumbo.structures.data.QuickTuple;
+import gumbo.structures.data.RelationSchema;
+import gumbo.structures.data.Tuple;
 
 /**
  * Outputs the atoms when a guard is projected onto them.

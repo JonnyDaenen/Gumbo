@@ -1,11 +1,11 @@
 package gumbo.structures.gfexpressions;
 
-import gumbo.structures.data.RelationSchema;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import gumbo.structures.data.RelationSchema;
 
 public class GFExistentialExpression extends GFExpression {
 	
@@ -15,6 +15,7 @@ public class GFExistentialExpression extends GFExpression {
 	int rank;
 	GFAtomicExpression output;
 	
+	byte id;
 	
 	
 	/**
@@ -164,7 +165,7 @@ public class GFExistentialExpression extends GFExpression {
 	 * Creates a set of atomics on the "right" side.
 	 * @return the set of guarded relations
 	 */
-	public Collection<GFAtomicExpression> getGuardedRelations() {
+	public Collection<GFAtomicExpression> getGuardedAtoms() {
 		return child.getAtomic();
 	}
 
@@ -258,6 +259,14 @@ public class GFExistentialExpression extends GFExpression {
 	}
 
 
+	
+	public byte getId() {
+		return id;
+	}
+	
+	public void setId(byte id) {
+		this.id = id;
+	}
 	
 	
 	

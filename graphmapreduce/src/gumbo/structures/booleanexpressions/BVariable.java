@@ -50,4 +50,10 @@ public class BVariable extends BExpression {
 	}
 
 
+
+	public int getID() {
+		return id;
+	}
+
+
 }

@@ -1,6 +1,7 @@
 package gumbo.engine.general.grouper.policies;
 
 import gumbo.engine.general.grouper.structures.GuardedSemiJoinCalculation;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
 
 
 /**
@@ -13,7 +14,13 @@ public class RelationGrouper extends AbstractHashGroupingPolicy {
 
 	@Override
 	protected String hash(GuardedSemiJoinCalculation semijoin) {
-		return ""+semijoin.getGuard().getName() + ";"+semijoin.getGuarded().getName();
+		// TODO apply sorting!
+		
+		String all = "";
+		for (GFAtomicExpression guarded : semijoin.getGuarded())
+			all += guarded.getName()+";";
+		
+		return ""+semijoin.getGuard().getName() + ";"+all;
 	}
 
 }

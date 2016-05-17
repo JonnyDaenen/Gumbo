@@ -3,6 +3,13 @@
  */
 package gumbo.engine.hadoop.converter;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import gumbo.compiler.filemapper.InputFormat;
 import gumbo.compiler.filemapper.RelationFileMapping;
 import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
@@ -11,13 +18,6 @@ import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 import gumbo.utils.estimation.RandomTupleEstimator;
 import gumbo.utils.estimation.TupleEstimator;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Estimates the number of reducers needed. 
@@ -89,7 +89,7 @@ public class Round1ReduceJobEstimator {
 	 */
 	private long estimateSize(GFExistentialExpression e, RelationFileMapping rfm) {
 		RelationSchema guard = e.getGuard().getRelationSchema();
-		Collection<GFAtomicExpression> guardedAtoms = e.getGuardedRelations();
+		Collection<GFAtomicExpression> guardedAtoms = e.getGuardedAtoms();
 
 
 		long totalBytes = 0;

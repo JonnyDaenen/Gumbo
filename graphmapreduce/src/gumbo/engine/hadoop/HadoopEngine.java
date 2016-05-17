@@ -3,12 +3,6 @@
  */
 package gumbo.engine.hadoop;
 
-import gumbo.compiler.GumboPlan;
-import gumbo.compiler.linker.CalculationUnitGroup;
-import gumbo.engine.general.ExecutionException;
-import gumbo.engine.hadoop.converter.GumboHadoopConverter;
-import gumbo.engine.hadoop.converter.GumboHadoopConverter.ConversionException;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +15,12 @@ import org.apache.hadoop.mapreduce.CounterGroup;
 import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
+
+import gumbo.compiler.GumboPlan;
+import gumbo.compiler.linker.CalculationUnitGroup;
+import gumbo.engine.general.ExecutionException;
+import gumbo.engine.hadoop.converter.GumboHadoopConverter;
+import gumbo.engine.hadoop.converter.GumboHadoopConverter.ConversionException;
 
 /**
  * 

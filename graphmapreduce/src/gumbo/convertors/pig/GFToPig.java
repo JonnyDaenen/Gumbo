@@ -62,7 +62,7 @@ public class GFToPig {
 		String gName = gSchema.getName();
 		String oName = gSchema.getName(); // in case the loop is not executed, this is the fallback
 		
-		for( GFAtomicExpression gd : gfe.getGuardedRelations()){
+		for( GFAtomicExpression gd : gfe.getGuardedAtoms()){
 			
 			// find out if it is negated (formula is in DNF with non-nested negation!)
 			GFExpression parent = gfe.getParent(gd);

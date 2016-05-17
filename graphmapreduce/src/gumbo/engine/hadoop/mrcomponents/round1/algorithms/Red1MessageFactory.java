@@ -1,15 +1,5 @@
 package gumbo.engine.hadoop.mrcomponents.round1.algorithms;
 
-import gumbo.engine.general.messagefactories.MessageFailedException;
-import gumbo.engine.general.messagefactories.Red1MessageFactoryInterface;
-import gumbo.engine.general.settings.AbstractExecutorSettings;
-import gumbo.engine.hadoop.mrcomponents.round1.reducers.GumboRed1Counter;
-import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
-import gumbo.structures.data.Tuple;
-import gumbo.structures.gfexpressions.GFAtomicExpression;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
-import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,6 +9,16 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
+
+import gumbo.engine.general.messagefactories.MessageFailedException;
+import gumbo.engine.general.messagefactories.Red1MessageFactoryInterface;
+import gumbo.engine.general.settings.AbstractExecutorSettings;
+import gumbo.engine.hadoop.mrcomponents.round1.reducers.GumboRed1Counter;
+import gumbo.engine.hadoop.settings.HadoopExecutorSettings;
+import gumbo.structures.data.Tuple;
+import gumbo.structures.gfexpressions.GFAtomicExpression;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations;
+import gumbo.structures.gfexpressions.operations.ExpressionSetOperations.GFOperationInitException;
 
 public class Red1MessageFactory implements Red1MessageFactoryInterface {
 

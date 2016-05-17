@@ -9,7 +9,8 @@ import gumbo.structures.gfexpressions.GFAtomicExpression;
 import gumbo.structures.gfexpressions.GFExistentialExpression;
 
 /**
- * Component used to decompose basic expressions into binary semijoins.
+ * Component used to decompose BSGF queries into binary semijoins.
+ * 
  * @author Jonny Daenen
  *
  */
@@ -38,7 +39,7 @@ public class Decomposer {
 			// make combinations of guard atom with all guarded atoms
 			if(e.isBasicGF()) {
 				GFAtomicExpression guard = e.getGuard();
-				for (GFAtomicExpression guarded : e.getGuardedRelations()) {
+				for (GFAtomicExpression guarded : e.getGuardedAtoms()) {
 					result.add(new GuardedSemiJoinCalculation(guard,guarded));
 				}
 			}

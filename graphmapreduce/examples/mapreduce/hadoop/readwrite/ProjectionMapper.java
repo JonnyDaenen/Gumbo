@@ -1,13 +1,13 @@
 package mapreduce.hadoop.readwrite;
 
-// cc MaxTemperatureMapper Mapper for maximum temperature example
-// vv MaxTemperatureMapper
-import gumbo.structures.data.Tuple;
-
 import java.io.IOException;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+
+// cc MaxTemperatureMapper Mapper for maximum temperature example
+// vv MaxTemperatureMapper
+import gumbo.structures.data.Tuple;
 
 public class ProjectionMapper extends
 		Mapper<Text, Text, Text, Text> {
